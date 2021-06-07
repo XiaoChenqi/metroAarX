@@ -62,11 +62,14 @@ dependencies {
 //    api(name: 'basicres-debug', ext: 'aar')
 
     //这是引用工程的方式
-    api project(':basiclib')
-    api project(':basicres')
+//    api project(':basiclib')
+//    api project(':basicres')
     //远程aar必须使用下面的方式
 //    api 'com.github.XiaoChenqi.TestFmAarSecond:basicres:3.4'
 //    api 'com.github.XiaoChenqi.TestFmAarSecond:basiclib:3.4'
+    api 'com.github.XiaoChenqi.metroAarX:basiclib:1.1'
+    api 'com.github.XiaoChenqi.metroAarX:basicres:1.1'
+
 }
 
 //uploadArchives {
