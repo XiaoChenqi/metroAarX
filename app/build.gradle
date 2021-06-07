@@ -84,7 +84,11 @@ dependencies {
 //    api 'com.github.XiaoChenqi.TestFmAarSecond:workordercomponent:7.1'
 //    api 'com.github.XiaoChenqi.TestFmAarSecond:maintenancecomponent:7.1'
 //    api 'com.github.XiaoChenqi.TestFmAarSecond:demandcomponent:7.1'
-    api project(':patrolcomponent')
+    //api project(':patrolcomponent')
+    api 'com.github.XiaoChenqi.metroAarX:patrolcomponent:2'
+//    api 'com.github.XiaoChenqi.metroAarX:workordercomponent:2'
+//    api 'com.github.XiaoChenqi.metroAarX:maintenancecomponent:2'
+//    api 'com.github.XiaoChenqi.metroAarX:demandcomponent:2'
 
 
 }
