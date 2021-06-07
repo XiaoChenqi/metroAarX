@@ -1,0 +1,6 @@
+rootProject.name='TestAarX'
+include ':app'
+include ':basicres'
+include ':basiclib'
+include ':arch'
+include ':patrolcomponent'
