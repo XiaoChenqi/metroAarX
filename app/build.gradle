@@ -65,8 +65,8 @@ dependencies {
 
     //TODO 尝试使用离线aar的方式
 
-    api(name: 'basiclib-debug', ext: 'aar')
-    api(name: 'basicres-debug', ext: 'aar')
+//    api(name: 'basiclib-debug', ext: 'aar')
+//    api(name: 'basicres-debug', ext: 'aar')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -85,10 +85,10 @@ dependencies {
 //    api 'com.github.XiaoChenqi.TestFmAarSecond:maintenancecomponent:7.1'
 //    api 'com.github.XiaoChenqi.TestFmAarSecond:demandcomponent:7.1'
     //api project(':patrolcomponent')
-    api 'com.github.XiaoChenqi.metroAarX:patrolcomponent:2'
-//    api 'com.github.XiaoChenqi.metroAarX:workordercomponent:2'
-//    api 'com.github.XiaoChenqi.metroAarX:maintenancecomponent:2'
-//    api 'com.github.XiaoChenqi.metroAarX:demandcomponent:2'
+    api 'com.github.XiaoChenqi.metroAarX:patrolcomponent:3'
+    api 'com.github.XiaoChenqi.metroAarX:workordercomponent:3'
+    api 'com.github.XiaoChenqi.metroAarX:maintenancecomponent:3'
+    api 'com.github.XiaoChenqi.metroAarX:demandcomponent:3'
 
 
 }

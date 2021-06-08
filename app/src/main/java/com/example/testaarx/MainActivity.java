@@ -6,7 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.facilityone.wireless.demand.DemandActivity;
+import com.facilityone.wireless.maintenance.MaintenanceActivity;
 import com.facilityone.wireless.patrol.PatrolActivity;
+import com.facilityone.wireless.workorder.WorkOrderActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,22 +39,22 @@ public class MainActivity extends AppCompatActivity {
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(MainActivity.this, MaintenanceActivity.class);
-                //MainActivity.this.startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, MaintenanceActivity.class);
+                MainActivity.this.startActivity(intent);
             }
         });
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, WorkOrderActivity.class);
-//                MainActivity.this.startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, WorkOrderActivity.class);
+                MainActivity.this.startActivity(intent);
             }
         });
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, DemandActivity.class);
-//                MainActivity.this.startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, DemandActivity.class);
+                MainActivity.this.startActivity(intent);
             }
         });
     }
