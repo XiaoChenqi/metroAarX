@@ -1,14 +1,19 @@
-<manifest package="com.facilityone.wireless.demand"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.facilityone.wireless.demand">
 
-    <application >
-
-        <activity android:name=".DemandActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="keyboardHidden|orientation|screenSize"
-                  android:theme="@style/AppTheme.NoActionBar.NoTranslucent"/>
-
+    <application>
+        <activity android:name=".DemandCreateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent"
+            ></activity>
+        <activity
+            android:name=".DemandActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent" />
     </application>
 
 </manifest>

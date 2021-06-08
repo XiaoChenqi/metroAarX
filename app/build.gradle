@@ -88,7 +88,7 @@ dependencies {
     api 'com.github.XiaoChenqi.metroAarX:patrolcomponent:3'
     api 'com.github.XiaoChenqi.metroAarX:workordercomponent:3'
     api 'com.github.XiaoChenqi.metroAarX:maintenancecomponent:3'
-    api 'com.github.XiaoChenqi.metroAarX:demandcomponent:3'
-
+    //api 'com.github.XiaoChenqi.metroAarX:demandcomponent:3'
+    api project(':demandcomponent')
 
 }
