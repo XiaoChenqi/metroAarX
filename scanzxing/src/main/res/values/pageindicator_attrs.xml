@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- tab page indicator attrs -->
+    <declare-styleable name="AnimateTabPageIndicator">
+        <attr name="textColor" format="reference|color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="tabIndicatorSelectedColor" format="color" />
+        <attr name="selectedHeight" format="dimension" />
+        <attr name="unSelectedHeight" format="dimension"></attr>
+        <attr name="tabIndicatorUnSelectedColor" format="color" />
+        <attr name="paddingLeft" format="dimension" />
+        <attr name="paddingRight" format="dimension" />
+        <attr name="paddingTop" format="dimension" />
+        <attr name="paddingBottom" format="dimension" />
+    </declare-styleable>
+
+    <!-- PagerSlidingTabStrip -->
+    <declare-styleable name="PagerSlidingTabStrip">
+        <attr name="PSTindicatorColor" format="color" />
+        <attr name="PSTunderlineColor" format="color" />
+        <attr name="PSTdividerColor" format="color" />
+        <attr name="PSTindicatorHeight" format="dimension" />
+        <attr name="PSTunderlineHeight" format="dimension" />
+        <attr name="PSTdividerPadding" format="dimension" />
+        <attr name="PSTtabPaddingLeftRight" format="dimension" />
+        <attr name="PSTscrollOffset" format="dimension" />
+        <attr name="PSTtabBackground" format="reference" />
+        <attr name="PSTshouldExpand" format="boolean" />
+        <attr name="PSTtextAllCaps" format="boolean" />
+        <attr name="PSTtextSize" format="dimension" />
+    </declare-styleable>
+
+</resources>

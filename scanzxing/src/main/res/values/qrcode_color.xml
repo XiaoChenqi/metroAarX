@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <!-- Qrcode use -->
+    <color name="qrcode_result_view">#b0000000</color>
+    <color name="qrcode_viewfinder_mask">#60000000</color>
+    <color name="qrcode_possible_result_points">#c0ffff00</color>
+
+</resources>

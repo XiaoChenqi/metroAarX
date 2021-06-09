@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PullToRefresh -->
+    <declare-styleable name="PulltorefreshCustomProgressBar">
+        <attr name="ringradius" format="dimension" />
+        <attr name="ringWidth" format="dimension" />
+        <attr name="ringColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="PullToRefresh">
+        <attr name="adapterViewBackground" format="reference|color" />
+        <attr name="pullheaderBackground" format="reference|color" />
+        <attr name="headerTextColor" format="color" />
+        <attr name="pullmode">
+            <flag name="pullDownFromTop" value="0x1" />
+            <flag name="pullUpFromBottom" value="0x2" />
+            <flag name="both" value="0x3" />
+        </attr>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Custom view attributes -->
+    <declare-styleable name="ClearEditText">
+        <attr name="android:inputType" />
+        <attr name="android:hint" />
+        <attr name="android:text" />
+        <attr name="android:enabled" />
+        <attr name="clret_etBackGround" format="integer" />
+        <attr name="clret_clrBackGround" format="integer" />
+        <attr name="clret_bottomLineColor" format="color" />
+        <attr name="clret_bottomLineSize" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="SettingItemView">
+        <attr name="settingitem_nameText" format="string" />
+        <attr name="settingitem_hintText" format="string" />
+        <attr name="settingitem_iconSrc" format="integer" />
+        <attr name="settingitem_hintShow" format="boolean" />
+        <attr name="settingitem_iconShow" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="FunctionItemView">
+        <attr name="funtionitem_nameText" format="string" />
+        <attr name="funtionitem_readText" format="string" />
+        <attr name="funtionitem_iconSrc" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="EditItemView">
+        <attr name="edititem_nameText" format="string" />
+        <attr name="edititem_ntColor" format="color" />
+        <attr name="edititem_hintText" format="string" />
+        <attr name="edititem_minems" format="integer" />
+        <attr name="edititem_iconShow" format="boolean" />
+        <attr name="edititem_iconSrc" format="integer" />
+        <attr name="edititem_selectShow" format="boolean" />
+        <attr name="edititem_selectSrc" format="integer" />
+        <attr name="edititem_etBackGroundShow" format="boolean" />
+        <attr name="edititem_etBackGround" format="integer" />
+        <attr name="edititem_botLineShow" format="boolean" />
+        <attr name="edititem_botLineColor" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="EditMultiLineView">
+        <attr name="editmultiline_nameText" format="string" />
+        <attr name="editmultiline_hintText" format="string" />
+    </declare-styleable>
+    <declare-styleable name="ErrorView">
+        <attr name="error_view_text" format="string" />
+        <attr name="error_view_icon" format="integer" />
+        <attr name="error_view_text_color" format="color" />
+    </declare-styleable>
+
+    <!-- FloatingEditText Attribute -->
+    <declare-styleable name="FloatingEditText">
+        <attr name="floating_edit_text_hint_scale" format="float"/>
+        <attr name="floating_edit_text_color" format="color"/>
+        <attr name="floating_edit_text_highlighted_color" format="color"/>
+        <attr name="floating_edit_text_error_color" format="color"/>
+        <attr name="floating_edit_text_underline_height" format="dimension"/>
+        <attr name="floating_edit_text_underline_highlighted_height" format="dimension"/>
+        <attr name="android:textColorHint"/>
+    </declare-styleable>
+
+    <!-- CircleImageView Attribute -->
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+    </declare-styleable>
+
+    <!-- CircleProgressView Attribute -->
+    <declare-styleable name="CircleProgressView">
+        <attr name="roundColor" format="color"/>
+        <attr name="roundProgressColor" format="color"/>
+        <attr name="roundWidth" format="dimension"/>
+        <attr name="tvColor" format="color" />
+        <attr name="proOrient" format="boolean" />
+        <attr name="tvSize" format="dimension" />
+        <attr name="down_tvSize" format="dimension" />
+        <attr name="max" format="integer"/>
+        <attr name="textIsDisplayable" format="boolean"/>
+        <attr name="style">
+            <enum name="STROKE" value="0"/>
+            <enum name="FILL" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <!-- MultiTextSizeView Attribute -->
+    <declare-styleable name="MultiTextSizeView">
+        <attr name="multi_tvColor" format="color" />
+        <attr name="multi_tvSize" format="dimension" />
+        <attr name="multi_max" format="integer"/>
+        <attr name="multi_textIsDisplayable" format="boolean"/>
+        <attr name="multi_style">
+            <enum name="STROKE" value="0"/>
+            <enum name="FILL" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <!-- TriMouthView Attribute -->
+    <declare-styleable name="TriMouthView">
+        <attr name="triitem_contentText" format="string" />
+        <attr name="triitem_ctSize" format="dimension" />
+        <attr name="triitem_ctColor" format="color" />
+        <attr name="triitem_minems" format="integer" />
+        <attr name="triitem_ctPaddingTop" format="dimension" />
+        <attr name="triitem_ctPaddingBottom" format="dimension" />
+        <attr name="triitem_ctPaddingLeft" format="dimension" />
+        <attr name="triitem_ctPaddingRight" format="dimension" />
+        <attr name="triitem_leftHeight" format="dimension" />
+    </declare-styleable>
+
+    <!-- FlowLayout -->
+    <declare-styleable name="FlowLayout">
+        <attr name="android:gravity" />
+    </declare-styleable>
+    <declare-styleable name="FlowLayout_Layout">
+        <attr name="android:layout_gravity" />
+    </declare-styleable>
+
+    <!-- ExGridView -->
+    <declare-styleable name="GridView">
+        <attr name="grid_column" format="integer"/>
+        <attr name="grid_as_square" format="boolean"/>
+        <attr name="grid_divider_vertical" format="dimension"/>
+        <attr name="grid_divider_horizontal" format="dimension"/>
+    </declare-styleable>
+
+    <!-- SearchBox -->
+    <declare-styleable name="SearchBox">
+        <attr name="android:hint" />
+        <attr name="sb_clrBackGround" format="integer" />
+    </declare-styleable>
+
+    <!-- SwipeLayout -->
+    <declare-styleable name="SwipeLayout">
+        <attr name="drag_edge">
+            <flag name="left" value="1" />
+            <flag name="right" value="2" />
+            <flag name="top" value="4" />
+            <flag name="bottom" value="8" />
+        </attr>
+        <attr name="leftEdgeSwipeOffset" format="dimension" />
+        <attr name="rightEdgeSwipeOffset" format="dimension" />
+        <attr name="topEdgeSwipeOffset" format="dimension" />
+        <attr name="bottomEdgeSwipeOffset" format="dimension" />
+        <attr name="show_mode" format="enum">
+            <enum name="lay_down" value="0" />
+            <enum name="pull_out" value="1" />
+        </attr>
+        <attr name="clickToClose" format="boolean" />
+    </declare-styleable>
+
+    <!-- ClearEyeEditText -->
+    <declare-styleable name="ClearEyeEditText">
+        <attr name="android:inputType" />
+        <attr name="android:hint" />
+        <attr name="android:text" />
+        <attr name="android:enabled" />
+        <attr name="clreet_etBackGround" format="integer" />
+        <attr name="clreet_bottomLineColor" format="color" />
+        <attr name="clreet_bottomLineSize" format="dimension" />
+        <attr name="clreet_clrBackGround" format="integer" />
+        <attr name="clreet_eyeHideBackGround" format="integer" />
+        <attr name="clreet_eyeShowBackGround" format="integer" />
+    </declare-styleable>
+
+    <!-- MyRadioButton -->
+    <declare-styleable name="MyRadioButton">
+        <attr name="mrb_clrBackGround" format="integer" />
+    </declare-styleable>
+
+    <!-- WheelView -->
+    <declare-styleable name="WheelView">
+        <attr name="wv_selectColor" format="color" />
+        <attr name="wv_unSelectColor" format="color" />
+        <attr name="wv_LineColor" format="color" />
+    </declare-styleable>
+
+    <!-- BrRatingBar -->
+    <declare-styleable name="BrRatingBar">
+        <attr name="drawable_margin" format="dimension" />
+        <attr name="drawable_size" format="dimension"/>
+        <attr name="max_count" format="integer" />
+        <attr name="min_count" format="float" />
+        <attr name="rating" format="float" />
+        <attr name="is_indicator" format="boolean" />
+        <attr name="drawable_empty" format="reference" />
+        <attr name="drawable_filled" format="reference" />
+        <attr name="drawable_half" format="reference" />
+    </declare-styleable>
+</resources>

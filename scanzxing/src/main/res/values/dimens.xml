@@ -1,0 +1,136 @@
+<resources>
+    <!-- 二级标题栏高度 -->
+    <dimen name="first_title_high">50dp</dimen>
+    <dimen name="second_title_high">45dp</dimen>
+    <dimen name="month_title_high">40dp</dimen>
+
+    <!-- 按钮高度 -->
+    <dimen name="button_height_xlarge">60dp</dimen>
+    <dimen name="button_height_mlarge">54dp</dimen>
+    <dimen name="button_height_large">53dp</dimen>
+    <dimen name="button_height_big">46dp</dimen>
+    <dimen name="button_height_sbig">43dp</dimen>
+    <dimen name="button_height_normal">40dp</dimen>
+    <dimen name="button_height_snormal">38dp</dimen>
+    <dimen name="button_height_sxnormal">36dp</dimen>
+    <dimen name="button_height_xnormal">34dp</dimen>
+    <dimen name="button_height_xsmall">24dp</dimen>
+    <dimen name="button_arrow_right">18dp</dimen>
+
+    <!-- 线条高度 -->
+    <dimen name="line_middle_height">0.4dp</dimen>
+    <dimen name="line_small_height">0.4dp</dimen>
+    <dimen name="line_small_width">0.7dp</dimen>
+    <dimen name="line_large_height">1dp</dimen>
+
+    <!-- 字体大小 -->
+    <dimen name="text_size_xxlarge">40sp</dimen>
+    <dimen name="text_size_xllarge">30sp</dimen>
+    <dimen name="text_size_xlarge">24sp</dimen>
+    <dimen name="text_size_title">19sp</dimen>
+    <dimen name="text_size_number">18sp</dimen>
+    <dimen name="text_size_stitle">18sp</dimen>
+    <dimen name="text_size_list">17sp</dimen>
+    <dimen name="text_size_msg_title">16sp</dimen>
+    <dimen name="text_size_info">15sp</dimen>
+    <dimen name="text_size_list_title">14sp</dimen>
+    <dimen name="text_size_hint">13sp</dimen>
+    <dimen name="text_size_msg_content">12sp</dimen>
+    <dimen name="text_size_xsmall">11sp</dimen>
+    <dimen name="text_size_xssmall">10sp</dimen>
+    <dimen name="text_size_small">9sp</dimen>
+    <dimen name="text_size_lsmall">8sp</dimen>
+    <dimen name="text_size_mlsmall">7sp</dimen>
+
+    <!-- 边距大小 -->
+    <dimen name="margin_xxxxlarge">58dp</dimen>
+    <dimen name="margin_xxxlarge">50dp</dimen>
+    <dimen name="margin_large_height">43dp</dimen>
+    <dimen name="margin_xxxxnormal">34dp</dimen>
+    <dimen name="margin_xxlarge">36dp</dimen>
+    <dimen name="margin_xmlarge">33dp</dimen>
+    <dimen name="margin_xsmlarge">30dp</dimen>
+    <dimen name="margin_xxsmlarge">28dp</dimen>
+    <dimen name="margin_smlarge">27dp</dimen>
+    <dimen name="margin_xlarge">26dp</dimen>
+    <dimen name="margin_xllarge">24dp</dimen>
+    <dimen name="margin_xslarge">21dp</dimen>
+    <dimen name="margin_xxslarge">22dp</dimen>
+    <dimen name="margin_large">20dp</dimen>
+    <dimen name="margin_slarge">18dp</dimen>
+    <dimen name="margin_xxnormal">17dp</dimen>
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_xnormal">15dp</dimen>
+    <dimen name="margin_msnormal">14dp</dimen>
+    <dimen name="margin_snormal">13dp</dimen>
+    <dimen name="margin_xsmall">12dp</dimen>
+    <dimen name="margin_xlsmall">11dp</dimen>
+    <dimen name="margin_xmsmall">10dp</dimen>
+    <dimen name="margin_xxmsmall">9dp</dimen>
+    <dimen name="margin_msmall">8dp</dimen>
+    <dimen name="margin_mmsmall">7dp</dimen>
+    <dimen name="margin_small">6dp</dimen>
+    <dimen name="margin_small_f">-12dp</dimen>
+    <dimen name="margin_ssmall">4dp</dimen>
+    <dimen name="margin_lsmall">3dp</dimen>
+    <dimen name="margin_llsmall">2dp</dimen>
+    <dimen name="margin_slsmall">1dp</dimen>
+
+    <!--签到底部菜单高度-->
+    <dimen name="clock_menu_height">50dp</dimen>
+
+    <!-- 圆行大小 -->
+    <dimen name="large_circle_l">80dp</dimen>
+    <dimen name="big_circle_l">66dp</dimen>
+    <dimen name="big_circle_r">60dp</dimen>
+    <dimen name="normal_circle_r">48dp</dimen>
+    <dimen name="mid_circle_r">40dp</dimen>
+
+    <dimen name="margin_text_button_top_bottom">4dp</dimen>
+    <dimen name="margin_text_button_left_right">10dp</dimen>
+
+    <dimen name="margin_text_tag_top_bottom">2dp</dimen>
+    <dimen name="margin_text_tag_left_right">4dp</dimen>
+
+    <!-- actionbar width -->
+    <dimen name="actionbar_icon_width">20dp</dimen>
+    <!-- grid_icon width -->
+    <dimen name="grid_icon_size_normal">32dp</dimen>
+    <dimen name="list_margin_top_normal">13dp</dimen>
+    <dimen name="navigation_bar_height">54dp</dimen>
+    <dimen name="inventory_add_icon_width_height">55dp</dimen>
+    <dimen name="all_btm_icon_width_height">64dp</dimen>
+
+    <dimen name="label_blue_size_height_normal">14dp</dimen>
+    <dimen name="label_blue_size_width_normal">3dp</dimen>
+    <dimen name="clock_setting_position_item_height">76dp</dimen>
+
+    <dimen name="scanqr_height">200dp</dimen>
+
+    <!-- Grid height -->
+    <dimen name="grid_height_large">52dp</dimen>
+
+    <!-- Album -->
+    <dimen name="albumitem_height">100dp</dimen>
+    <dimen name="albumitem_content_height">80dp</dimen>
+    <dimen name="albumitem_image_height">20dp</dimen>
+
+    <!-- CheckBox -->
+    <dimen name="checkbox_height">25dp</dimen>
+
+    <!-- Title -->
+    <dimen name="layout_title_heigh">45dp</dimen>
+    <dimen name="layout_title_content_heigh">30dp</dimen>
+    <dimen name="layout_title_mini_textsize">16sp</dimen>
+    <dimen name="layout_left_back">21dp</dimen>
+
+    <!-- item -->
+    <dimen name="sticky_item_horizontalSpacing">2dp</dimen>
+    <dimen name="sticky_item_verticalSpacing">2dp</dimen>
+    <dimen name="collection_photo_toolbar_height">45dp</dimen>
+
+    <!--inventory-->
+    <dimen name="inventory_select_storage_height">83dp</dimen>
+    <dimen name="affiche_list_item_height">86dp</dimen>
+    <dimen name="affiche_list_image_weight">88dp</dimen>
+</resources>

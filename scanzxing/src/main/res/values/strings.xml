@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">FMLibrary</string>
+    
+
+    <!-- 自定义控件使用 -->
+    <string name="net_request_loading">加载中&#8230;</string>
+    <string name="net_request_loading_error">加载出错，戳我试试~</string>
+    <string name="list_view_empty">暂无数据~</string>
+
+    <string name="dialog_network_btn_confirm">现在设置</string>
+    <string name="dialog_network_btn_cancel">取消</string>
+    <string name="dialog_network_title">提示</string>
+    <string name="dialog_network_content">网络连接失败，是否现在进行设置?</string>
+
+    <!-- 其他使用 -->
+    <string name="phone_number_empty">电话为空，请确认</string>
+
+    <string name="calendar_view_year">年</string>
+    <string name="calendar_view_month">月</string>
+    <string name="calendar_view_pre_month">上一月</string>
+    <string name="calendar_view_next_month">下一月</string>
+    <string name="calendar_view_week_1">一</string>
+    <string name="calendar_view_week_2">二</string>
+    <string name="calendar_view_week_3">三</string>
+    <string name="calendar_view_week_4">四</string>
+    <string name="calendar_view_week_5">五</string>
+    <string name="calendar_view_week_6">六</string>
+    <string name="calendar_view_week_7">日</string>
+    <string name="pull_to_refresh_pull_down_label">下拉即可刷新</string>
+    <string name="search_box_et_hint">请输入项目名(如创新园、cxy、chuangxinyuan)</string>
+    <string name="search_current_project_tip">当前</string>
+    <string name="no_match_search_result">无相关搜索结果</string>
+    <string name="empty_match_search_result">当前无可选项目</string>
+    <string name="phone_number_count">(%d个号码)</string>
+    <string name="click_to_unfold">点击可展开</string>
+    <string name="click_to_hide">点击可隐藏</string>
+    <string name="ex_show_grid_view_tip">共张</string>
+    <string name="current_tip">当前</string>
+    <string name="delete_tip">删除</string>
+    <string name="complete_tip">完成</string>
+
+    <string name="soft_update_no">已经是最新版本</string>
+    <string name="soft_update_title">软件更新</string>
+    <string name="soft_update_info">检测到新版本，立即更新吗？</string>
+    <string name="soft_update_updatebtn">更新</string>
+    <string name="soft_update_later">稍后更新</string>
+    <string name="soft_updating">正在更新</string>
+    <string name="soft_update_cancel">取消</string>
+    <string name="decode_null">未发现二维码/条形码</string>
+    <string name="picture_name_number">%1$s(%2$d张)</string>
+
+    <!--本地相册-->
+    <string name="local_album">本地相册</string>
+    <string name="scanning">正在准备相册…</string>
+    <string name="identifying">正在识别…</string>
+    <string name="no_local_album">没有本地图片</string>
+    <string name="capture">拍照</string>
+    <string name="recent">最近</string>
+    <string name="camera">相机</string>
+    <string name="screen_short">屏幕截图</string>
+    <string name="we_chat">微信</string>
+    <string name="download">下载</string>
+    <string name="picture">图片</string>
+    <string name="no_crop_action">您的设备没有提供裁剪图片功能</string>
+    <string name="no_browser">您的设备没有提供内置浏览器</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+
+    <!--扫描二维码-->
+    <string name="album">相册</string>
+    <string name="scan_result">扫描结果</string>
+    <string name="copy">复制</string>
+    <string name="search">搜索</string>
+    <string name="text_already_copied">已复制到剪贴板</string>
+    <string name="bar_code">条形码：%1$s</string>
+    <string name="Alignment_code">对准二维码/条形码</string>
+    <string name="camera_error">相机错误</string>
+    <string name="scan_code">扫码</string>
+    <!-- 音频播放 -->
+    <string name="play_fail">播放失败</string>
+    <string name="no_result" translatable="false">对不起，没有搜索到相关数据！</string>
+    <!--  上传  -->
+    <string name="upload_fail">上传失败</string>
+    <string name="upload_success">上传成功</string>
+    <string name="upload_ing">上传中</string>
+
+    <string name="map_search_box_et_hint">搜索地点</string>
+    <string name="scan_open_permission">权限管理 → 相机或拍照或摄像 → 允许</string>
+    <string name="more_than_max">超过了上限</string>
+    <string name="preview">预览</string>
+    <string name="recent_photos">最近照片</string>
+    <string name="sure">确定</string>
+    <string name="select_photos">选择照片</string>
+    <string name="back">返回</string>
+    <string name="taking_pictures">拍摄照片</string>
+    <string name="max_img_limit_reached">不能选择超过%d个图像</string>
+    <string name="image_unit">张</string>
+
+    <string name="pull_to_refresh">下拉刷新</string>
+    <string name="release_to_refresh">释放立即刷新</string>
+    <string name="refreshing">正在刷新...</string>
+    <string name="refresh_succeed">刷新成功</string>
+    <string name="refresh_fail">刷新失败</string>
+    <string name="pullup_to_load">上拉加载更多</string>
+    <string name="release_to_load">释放立即加载</string>
+    <string name="loading">正在加载...</string>
+    <string name="load_succeed">加载成功</string>
+    <string name="load_fail">加载失败</string>
+    <!-- 离线下载 -->
+    <string name="out_line_down_load_tip">离线下载</string>
+</resources>

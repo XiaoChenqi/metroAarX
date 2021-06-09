@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 二维码扫描库使用 -->
+    <string name="qrcode_scan_title">二维码扫描</string>
+    <string name="qrcode_scan_text">将二维码放入框内, 即可自动扫描</string>
+</resources>

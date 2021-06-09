@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/mod_ip_title_tv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_normal"
+        android:background="@drawable/fm_tag_fill_grey4_top_background"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/margin_snormal"
+        android:text="@string/soft_update_title"
+        android:textColor="@color/grey_level1"
+        android:textSize="@dimen/text_size_info" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/fm_tag_fill_white_bottom_background"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/update_content_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_xlarge"
+            android:layout_marginLeft="@dimen/margin_snormal"
+            android:layout_marginRight="@dimen/margin_snormal"
+            android:layout_marginTop="@dimen/margin_xlarge"
+            android:background="@color/main_white"
+            android:gravity="left|top"
+            android:minLines="1"
+            android:padding="@dimen/margin_small"
+            android:text="@string/soft_update_info"
+            android:textColor="@color/grey_level1"
+            android:textColorHint="@color/grey_level12"
+            android:textSize="@dimen/text_size_info"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/update_log_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_xlarge"
+            android:layout_marginBottom="@dimen/margin_xlarge"
+            android:layout_marginLeft="@dimen/margin_snormal"
+            android:layout_marginRight="@dimen/margin_snormal"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_small_height"
+            android:layout_marginBottom="@dimen/margin_xmsmall"
+            android:background="@color/main_blue"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_xmsmall"
+            android:paddingLeft="@dimen/margin_snormal"
+            android:paddingRight="@dimen/margin_snormal">
+
+            <Button
+                android:id="@+id/update_cancel_btn"
+                style="@style/level1_btn_white_style"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:text="@string/soft_update_later"
+                android:textColor="@color/main_white" />
+
+            <View
+                android:id="@+id/mod_ip_line"
+                android:layout_width="@dimen/margin_snormal"
+                android:visibility="gone"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/update_sure_btn"
+                style="@style/level1_btn_green_style_normal"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/fm_level1_btn_blue_selector_normal"
+                android:text="@string/soft_update_updatebtn" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

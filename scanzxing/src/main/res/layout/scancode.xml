@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/scancode_qr"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!-- 标题栏 -->
+    <RelativeLayout
+        style="@style/action_llyt"
+        android:background="@color/transparent_black_40">
+
+        <ImageView
+            android:id="@+id/action_back"
+            style="@style/action_icon_for_scan"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/qrcode_icon_title_back"/>
+
+        <TextView
+            style="@style/action_title"
+            android:text="@string/qrcode_scan_title"/>
+
+        <ImageView
+            android:id="@+id/action_light"
+            style="@style/action_tv"
+            android:layout_centerVertical="true"
+            android:layout_width="@dimen/margin_xsmlarge"
+            android:layout_height="@dimen/margin_xsmlarge"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/light_normal"/>
+
+        <TextView
+            android:id="@+id/action_album"
+            style="@style/action_tv"
+            android:layout_alignParentRight="true"
+            android:text="@string/album"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <!-- <FrameLayout android:layout_width="match_parent" android:layout_height="48dp"
+                  android:background="@color/blue">
+         <ImageView android:layout_width="48dp" android:layout_height="match_parent"
+                    android:id="@+id/scancode_back" android:src="@drawable/fm_icon_pre_arrow"
+                    android:scaleType="center"/>
+         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                   android:layout_gravity="center" android:textSize="18sp"
+                   android:text="扫码" android:textColor="@color/main_white"/>
+         <LinearLayout android:layout_width="match_parent" android:layout_height="1dp"
+                       android:background="@color/green" android:layout_gravity="bottom"/>
+     </FrameLayout>-->
+</FrameLayout>

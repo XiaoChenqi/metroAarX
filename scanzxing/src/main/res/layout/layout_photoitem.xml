@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/iv_photo_lpsi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <CheckBox
+        android:id="@+id/cb_photo_lpsi"
+        android:layout_width="@dimen/margin_xlarge"
+        android:layout_height="@dimen/margin_xlarge"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/bg_item_selector_check_box"
+        android:button="@null" />
+</RelativeLayout>

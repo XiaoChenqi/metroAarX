@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/alert_width_s"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/alert_dialog_dialog_background"
+    android:gravity="center"
+    android:padding="20dp"
+    android:orientation="vertical">
+
+    <com.facilityone.wireless.fm_library.widget.RingProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:max="100"
+        app:ringPColor="@color/grey_level23"
+        app:ringProgressColor="@color/main_theme_progress_bar_color"
+        app:ringPWidth="3dp"
+        app:ringStyle="STROKE"
+        app:ringTextColor="@color/main_theme_progress_bar_color"
+        app:textIsShow="true"
+        app:ringTextSize="16sp"/>
+
+    <com.facilityone.wireless.fm_library.widget.loadingview.LVCircularRing
+        android:id="@+id/lv_circularring"
+        android:visibility="gone"
+        android:layout_width="80dp"
+        android:layout_height="80dp"/>
+
+
+    <TextView
+        android:id="@+id/loading_tip_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/margin_slarge"
+        android:textColor="@color/grey_level2"
+        android:textSize="@dimen/text_size_info"/>
+</LinearLayout>

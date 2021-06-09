@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Alert dialog library -->
+    <string name="dialog_default_title">这是一个消息</string>
+    <string name="dialog_ok">确定</string>
+    <string name="dialog_clear">清除</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="LOADING">加载中&#8230;</string>
+
+</resources>

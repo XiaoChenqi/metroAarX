@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/fm_level1_btn_focus_blue_white_bg_large" android:state_focused="true"></item>
+    <item android:drawable="@drawable/fm_level1_btn_focus_blue_white_bg_large" android:state_pressed="true"></item>
+    <item android:drawable="@drawable/fm_level1_btn_focus_blue_white_bg_large" android:state_selected="true"></item>
+    <item android:drawable="@drawable/fm_level1_btn_disable_main_grey_bg_large" android:state_enabled="false"></item>
+    <item android:drawable="@drawable/fm_level1_btn_normal_main_blue_bg_large"></item>
+</selector>

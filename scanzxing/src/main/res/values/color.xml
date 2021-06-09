@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- Shang1.0色值 -->
+    <color name="black_level1">#262626</color>
+    <color name="black_level2">#474747</color>
+    <color name="black_level3">#333333</color>
+    <color name="grey_level1">#666666</color>
+    <color name="grey_level2">#999999</color>
+    <color name="grey_level3">#b2b2b2</color>
+    <color name="grey_level4">#f2f4f3</color>
+    <!--<color name="grey_level4">#f2f2f2</color>-->
+    <color name="grey_level5">#d6d6d6</color>
+    <color name="grey_level6">#fafafa</color>
+    <color name="grey_level7">#EBECEE</color>
+    <color name="grey_level8">#bababa</color>
+    <color name="grey_level9">#878787</color>
+    <color name="grey_level10">#888888</color>
+    <color name="grey_level11">#b3b3b3</color>
+    <color name="grey_level12">#cccccc</color>
+    <color name="grey_level13">#c6cacc</color>
+    <color name="grey_level14">#dfe3e5</color>
+    <color name="grey_level15">#eeeeeeee</color>
+    <color name="grey_level16">#f0f0f0</color>
+    <color name="grey_level17">#f3fffd</color>
+    <color name="grey_level18">#919191</color>
+    <color name="grey_level19">#e0e0e0</color>
+    <color name="grey_level20">#f2f2f2</color>
+    <color name="grey_level21">#808080</color>
+    <color name="grey_level22">#66999999</color>
+    <color name="grey_level23">#cdcdcd</color>
+    <color name="grey_level24">#a6a6a6</color>
+    <color name="grey_level25">#8a9492</color>
+
+    <color name="main_white">#ffffff</color>
+    <color name="main_green">#ff5eba15</color>
+    <color name="main_green_level2">#54a612</color>
+    <color name="main_green_level3">#a0e75a</color>
+    <color name="main_green_level4">#8eca00</color>
+    <color name="main_green_level5">#0D1ab394</color>
+    <color name="main_green_level6">#1ab394</color>
+    <color name="main_red">#ff6666</color>
+    <color name="main_red_cancel">#f55858</color>
+    <color name="main_orange">#ff9900</color>
+    <color name="main_orange_second">#ff9f0e</color>
+    <color name="record_item_orange">#ff8d27</color>
+    <color name="main_light_orange">#FFB544</color>
+    <color name="main_white_orange">#ed8e00</color>
+    <color name="main_blue">#10aeff</color>
+    <color name="main_purple">#9e85dd</color>
+    <color name="main_blue_transparent">#6f10AEFF</color>
+    <color name="main_blue_white">#0e9de7</color>
+    <color name="blue_my_head">#ff8ed9ff</color>
+    <color name="main_blue_white_level1">#C9ffff</color>
+    <color name="main_blue_white_level2">#DCffff</color>
+    <color name="main_blue_white_level3">#F0ffff</color>
+    <color name="main_black">#333333</color>
+    <color name="main_grey">#dedede</color>
+    <color name="main_grey_level2">#d6d6d6</color>
+    <color name="switch_btn_grey">#e5e5e5</color>
+
+    <!-- Custom view color -->
+    <color name="text_btn_normal_color">#101883</color>
+    <color name="text_btn_focus_color">#8CA3D2</color>
+    <color name="text_btn_disable_color">#565656</color>
+
+    <color name="text_btn_red_normal_color">#ff6666</color>
+    <color name="text_btn_red_focus_color">#eb5d5d</color>
+    <color name="text_btn_red_disable_color">#565656</color>
+    <color name="text_btn_red_exit_color">#ff3a30</color>
+    <color name="text_red_color">#f55858</color>
+
+    <color name="work_chart_grade_blue_color">#2f99cf</color>
+    <color name="work_chart_grade_green_color">#3ec1bc</color>
+
+    <color name="outline_red">#ff2626</color>
+    <color name="outline_red_high">#ff6666</color>
+    <color name="outline_orange">#ff9900</color>
+    <color name="outline_green">#5eba15</color>
+
+    <!-- chart gradal color -->
+    <color name="chart_gradual_red">#fe7e50</color>
+    <color name="chart_gradual_blue">#54b5f4</color>
+    <color name="chart_progress_orange">#ff9d00</color>
+    <color name="chart_line_grey">#e5e5e5</color>
+
+    <color name="maintenance_calendar_bg_grey">#7a7f85</color>
+    <color name="maintenance_calendar_font_green">#1cc094</color>
+    <color name="maintenance_calendar_font_white">#66ffffff</color>
+    <color name="maintenance_calendar_gradual_dark_green">#243443</color>
+    <color name="maintenance_calendar_gradual_dark_grey">#645e60</color>
+
+    <color name="asset_header_color_purple">#8262ce</color>
+    <color name="color_purple">#967cd9</color>
+    <color name="asset_bar_chart_white">#99ffffff</color>
+    <color name="patrol_home_green">#a2bf60</color>
+
+    <color name="patrol_query_task_detail_child_grey">#f7f7f7</color>
+    <color name="clock_setting">#159fe6</color>
+    <color name="clock_setting_background">#f2f4f3</color>
+    <color name="clock_setting_disable">#ff9f0e</color>
+
+    <color name="message_menu_orange">#ff9900</color>
+    <color name="message_menu_red">#f93a30</color>
+
+    <color name="bg">#333333</color>
+
+    <color name="main_theme_green">#18a689</color>
+    <color name="affiche_tag_blue">#1c83c6</color>
+    <color name="affiche_tag_orange">#ff9e36</color>
+    
+    <color name="contract_header_color_blue">#5F65D8</color>
+    <color name="contract_tag_color_red">#f55858</color>
+    <color name="contract_tag_color_green">#3cbc70</color>
+
+    <color name="contract_history_tag_creat">#1ab394</color>
+    <color name="contract_history_tag_close">#ff9f0e</color>
+    <color name="contract_history_tag_recover">#3cbc70</color>
+    <color name="contract_history_tag_unpass">#f55858</color>
+    <color name="contract_history_tag_pass">#74bc3a</color>
+    <color name="contract_history_tag_archive">#159fe6</color>
+    <color name="contract_history_tag_update">#74bc3a</color>
+    <!-- 推送开关颜色 -->
+    <color name="push_sw_shape">#0e9de7</color>
+    <color name="push_sw_solid">#10aeff</color>
+    <color name="main_theme_progress_bar_color">#1ab394</color>
+</resources>

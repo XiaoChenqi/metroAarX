@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" >
+            <!-- 背景色 -->
+            <solid android:color="@color/main_grey"/>
+            <!-- 边框色 -->
+            <stroke android:width="0dip" />
+            <!-- 圆角 -->
+            <corners
+                android:radius="4dp"
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp"
+                android:bottomRightRadius="0dp"
+                android:topRightRadius="0dp"/>
+        </shape>
+    </item>
+    <item android:state_pressed="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" >
+            <!-- 背景色 -->
+            <solid android:color="@color/main_blue_transparent"/>
+            <!-- 边框色 -->
+            <stroke android:width="0dip" />
+            <!-- 圆角 -->
+            <corners
+                android:radius="4dp"
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp"
+                android:bottomRightRadius="0dp"
+                android:topRightRadius="0dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" >
+            <!-- 背景色 -->
+            <solid android:color="@color/main_blue"/>
+            <!-- 边框色 -->
+            <stroke android:width="0dip" />
+            <!-- 圆角 -->
+            <corners
+                android:radius="4dp"
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp"
+                android:bottomRightRadius="0dp"
+                android:topRightRadius="0dp"/>
+        </shape>
+    </item>
+</selector>

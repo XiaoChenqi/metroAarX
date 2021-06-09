@@ -1,0 +1,11 @@
+<resources>
+
+    <!-- Alert dialog library -->
+    <dimen name="alert_width_l">340dp</dimen>
+    <dimen name="alert_width_n">290dp</dimen>
+    <dimen name="alert_width_s">200dp</dimen>
+    <dimen name="common_circle_width">3dp</dimen>
+    <dimen name="progress_circle_radius">34dp</dimen>
+    <dimen name="fork_delete_radius">15dp</dimen>
+
+</resources>

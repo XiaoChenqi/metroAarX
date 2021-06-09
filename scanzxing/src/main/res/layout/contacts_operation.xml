@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/contacts_list_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:layout_marginLeft="@dimen/margin_xmsmall"
+        android:layout_marginRight="41.3dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="@dimen/margin_normal"
+        android:scrollbars="none"></ListView>
+
+    <com.facilityone.wireless.fm_library.widget.PinyinSearchListView.QuickAlphabeticBar
+        android:id="@+id/quick_alphabetic_bar"
+        android:layout_width="18.6dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_xmsmall" />
+
+    <com.facilityone.wireless.fm_library.widget.PinyinSearchListView.ContactsIndexView
+        android:id="@+id/contacts_index_view"
+        android:layout_width="@dimen/normal_circle_r"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginRight="50dp"
+        android:background="@color/main_white"
+        android:gravity="center_horizontal"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/select_char_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/sort_icon_bg_click"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@android:color/white"
+        android:textSize="50sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/load_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/loading_view"
+            android:layout_width="57dp"
+            android:layout_height="57dp"
+            android:src="@drawable/pulltorefresh_animation"/>
+
+        <ProgressBar
+            android:visibility="gone"
+            style="@style/progressBarStyleMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/net_request_loading"
+            android:textColor="@color/grey_level11"
+            android:textSize="@dimen/text_size_info" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/search_result_prompt_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_match_search_result"
+        android:textColor="@color/grey_level11"
+        android:textSize="@dimen/text_size_info"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/search_result_empty_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/empty_match_search_result"
+        android:textColor="@color/grey_level11"
+        android:textSize="@dimen/text_size_info"
+        android:visibility="gone" />
+</RelativeLayout>

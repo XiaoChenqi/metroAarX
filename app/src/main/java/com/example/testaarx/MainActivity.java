@@ -6,9 +6,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.scanzxing.ScanZingMainActivity;
 import com.facilityone.wireless.demand.DemandActivity;
 import com.facilityone.wireless.demand.DemandCreateActivity;
-import com.facilityone.wireless.demand.fragment.DemandCreateFragment;
 import com.facilityone.wireless.maintenance.MaintenanceActivity;
 import com.facilityone.wireless.patrol.PatrolActivity;
 import com.facilityone.wireless.workorder.WorkOrderActivity;
@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btn2;
     private Button btn3;
     private Button btn4;
+    private Button btn6;
     private Button button5;
 
     @Override
@@ -67,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+        btn6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ScanZingMainActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
     }
 
     private void initView() {
@@ -74,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         btn2 = (Button) findViewById(R.id.btn2);
         btn3 = (Button) findViewById(R.id.btn3);
         btn4 = (Button) findViewById(R.id.btn4);
+        btn6 = (Button) findViewById(R.id.btn6);
         button5 = (Button) findViewById(R.id.button5);
     }
 }

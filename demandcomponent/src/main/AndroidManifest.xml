@@ -7,10 +7,12 @@
         <activity android:name=".DemandCreateActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:theme="@style/AppTheme.NoActionBar.NoTranslucent"
             ></activity>
         <activity
             android:name=".DemandActivity"
+            android:exported="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.NoTranslucent" />

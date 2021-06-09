@@ -1,0 +1,474 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 一级按钮样式 -->
+    <style name="level1_btn_style_large" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_level1_btn_blue_selector_large</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/button_height_normal</item>
+    </style>
+
+    <!-- 一级按钮样式 -->
+    <style name="level1_btn_style_normal" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_level1_btn_blue_selector_normal</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/button_height_normal</item>
+    </style>
+
+    <!-- 一级按钮样式-绿色 -->
+    <style name="level1_btn_green_style_normal" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_level1_btn_green_selector_normal</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/button_height_normal</item>
+    </style>
+
+    <!-- 一级按钮样式-绿色 -->
+    <style name="level1_btn_green_style_large" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_level1_btn_green_selector_large</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/button_height_normal</item>
+    </style>
+
+    <!-- 一级按钮样式-绿色 -->
+    <style name="level1_btn_white_style" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:background">@drawable/fm_level1_btn_grey_selector_normal</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/button_height_normal</item>
+    </style>
+
+    <!-- 二级按钮样式 -->
+    <style name="level2_btn_style" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/fm_level2_btn_text_color</item>
+        <item name="android:background">@drawable/fm_level2_btn_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/button_height_xsmall</item>
+    </style>
+
+    <!-- 三级按钮样式 -->
+    <style name="level3_btn_style" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/fm_level3_btn_text_orange_color</item>
+        <item name="android:background">@drawable/fm_level3_btn_orange_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/button_height_xsmall</item>
+    </style>
+
+    <!-- 三级按钮样式-绿色 -->
+    <style name="level3_btn_white_style" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_blue</item>
+        <item name="android:background">@drawable/listview_item_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/button_height_large</item>
+    </style>
+    <!-- 二级按钮样式 -->
+    <style name="level2_btn_fill_green_style" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/fm_level2_green_btn_text_color</item>
+        <item name="android:background">@drawable/fm_level2_green_btn_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/button_height_xsmall</item>
+    </style>
+
+    <!-- 一级文本按钮样式 -->
+    <style name="level1_text_btn_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/fm_level1_text_btn_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <!-- 二级文本红色按钮样式 -->
+    <style name="level2_text_btn_red_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/fm_level1_text_red_btn_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <!-- 三级文本红色按钮样式 -->
+    <style name="level3_text_btn_white_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@color/main_red</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:paddingLeft">@dimen/margin_small</item>
+        <item name="android:paddingRight">@dimen/margin_small</item>
+        <item name="android:layout_marginRight">@dimen/margin_normal</item>
+
+    </style>
+
+    <!-- 三级文本按钮样式 -->
+    <style name="level3_text_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/margin_normal</item>
+    </style>
+
+    <!-- 四级文本按钮样式 -->
+    <style name="level4_text_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/margin_xsmall</item>
+        <item name="android:textColor">@color/grey_level1</item>
+    </style>
+
+    <!-- 五级文本按钮样式 -->
+    <style name="level5_text_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/margin_xsmall</item>
+        <item name="android:textColor">@color/grey_level1</item>
+    </style>
+
+    <!-- Item一级文本样式-黑色 -->
+    <style name="item_level1_tv_black_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/black_level2</item>
+    </style>
+
+    <!-- 一级文本样式 -->
+    <style name="level1_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:textColor">@color/grey_level1</item>
+    </style>
+
+    <!-- 二级文本样式 -->
+    <style name="level2_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/grey_level1</item>
+    </style>
+
+    <!-- 三级文本样式 -->
+    <style name="level3_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/grey_level1</item>
+    </style>
+
+    <!-- 四级文本样式 -->
+    <style name="level4_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:textColor">@color/black_level2</item>
+        <item name="android:padding">@dimen/margin_normal</item>
+    </style>
+
+    <!-- 五级文本样式 -->
+    <style name="level5_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:padding">@dimen/margin_normal</item>
+    </style>
+
+    <!-- 六级文本样式 -->
+    <style name="level6_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:padding">@dimen/margin_normal</item>
+    </style>
+
+    <!-- 七级文本样式 -->
+    <style name="level7_tv_style" parent="tag_fill_parent">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- 八级文本样式 -->
+    <style name="level8_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/grey_level1</item>
+    </style>
+
+    <!-- 九级文本样式 -->
+    <style name="level9_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/grey_level1</item>
+        <item name="android:padding">@dimen/margin_lsmall</item>
+    </style>
+
+    <!-- 十级文本样式 -->
+    <style name="level10_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_msg_title</item>
+        <item name="android:textColor">@color/black_level3</item>
+    </style>
+
+    <!-- 十一级文本样式 -->
+    <style name="level11_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/grey_level1</item>
+    </style>
+    <!-- 十一级文本样式 -->
+    <style name="level11_tv_style1" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/grey_level2</item>
+    </style>
+
+    <style name="level11_tv_style2" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/grey_level2</item>
+    </style>
+
+    <!-- 十二级文本样式 -->
+    <style name="level12_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/grey_level2</item>
+    </style>
+
+    <!-- 十三级文本样式 -->
+    <style name="level13_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:textColor">@color/black_level2</item>
+    </style>
+
+    <!-- 十三级文本样式 -->
+    <style name="level14_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_xlarge</item>
+        <item name="android:textColor">@color/main_green_level6</item>
+    </style>
+
+    <!-- 十五级文本样式 -->
+    <style name="level15_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/grey_level2</item>
+    </style>
+
+    <style name="level31_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/main_blue</item>
+    </style>
+
+    <!-- menu文本样式 -->
+    <style name="menu_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:textColor">@color/grey_level1</item>
+    </style>
+
+    <!-- 详情提示文本样式 -->
+    <style name="detail_tip_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/grey_level3</item>
+    </style>
+
+    <style name="detail_title_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/grey_level2</item>
+    </style>
+
+    <style name="detail_level1_tv_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/grey_level1</item>
+        <item name="android:layout_marginLeft">@dimen/margin_lsmall</item>
+    </style>
+
+    <!-- 圆形进度条 -->
+    <style name="progressBarStyleMedium">
+        <item name="android:indeterminateDrawable">@drawable/fm_progress_medium</item>
+        <item name="android:minWidth">40dip</item>
+        <item name="android:maxWidth">40dip</item>
+        <item name="android:minHeight">40dip</item>
+        <item name="android:maxHeight">40dip</item>
+    </style>
+
+    <!-- 标签 -->
+    <!-- 标签-红色 -->
+    <style name="tag_empty_red_tv_style" parent="tag_empty_parent">
+        <item name="android:textColor">@color/main_red</item>
+        <item name="android:background">@drawable/fm_tag_empty_red_background</item>
+    </style>
+    <!-- 标签-橘黄色 -->
+    <style name="tag_empty_orange_tv_style" parent="tag_empty_parent">
+        <item name="android:textSize">@dimen/text_size_xsmall</item>
+        <item name="android:textColor">@color/main_orange</item>
+        <item name="android:background">@drawable/fm_tag_empty_orange_background</item>
+    </style>
+
+    <!-- 标签-蓝色 -->
+    <style name="tag_empty_blue_tv_style" parent="tag_empty_parent">
+        <item name="android:textColor">@color/main_blue</item>
+        <item name="android:background">@drawable/fm_tag_empty_blue_background</item>
+    </style>
+
+    <!-- 标签-灰色 -->
+    <style name="tag_empty_grey_tv_style" parent="tag_empty_parent">
+        <item name="android:textColor">@color/main_black</item>
+        <item name="android:background">@drawable/fm_tag_empty_grey_background</item>
+    </style>
+
+    <!-- 标签-绿色 -->
+    <style name="tag_empty_green_tv_style" parent="tag_empty_parent">
+        <item name="android:textColor">@color/main_green</item>
+        <item name="android:background">@drawable/fm_tag_empty_green_background</item>
+    </style>
+
+    <!-- 标签-蓝色填充 -->
+    <style name="tag_fill_blue_tv_style" parent="tag_fill_parent">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_tag_fill_blue_background</item>
+    </style>
+    <!-- 标签-紫色填充 -->
+    <style name="tag_fill_purple_tv_style" parent="tag_fill_parent">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_tag_fill_purple_background</item>
+    </style>
+
+    <!-- 标签-橙色填充 -->
+    <style name="tag_fill_orange_tv_style" parent="tag_fill_parent">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_tag_fill_orange_background</item>
+    </style>
+    <!-- 标签-灰色填充 -->
+    <style name="tag_fill_grey_tv_style" parent="tag_fill_parent">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_tag_fill_grey5_background</item>
+    </style>
+
+    <!-- 标签-红色填充 -->
+    <style name="tag_fill_red_tv_style" parent="tag_fill_parent">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_tag_fill_red_background</item>
+    </style>
+
+    <!-- 标签-红色圆形填充 -->
+    <style name="tag_fill_red_circle_tv_style" parent="tag_fill_parent">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_tag_fill_red_circle_background</item>
+
+    </style> <!-- 标签-淡红色圆形填充 -->
+    <style name="tag_fill_a_red_circle_tv_style" parent="tag_fill_parent">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_tag_fill_a_red_circle_background</item>
+    </style> <!-- 标签-淡绿色圆形填充 -->
+    <style name="tag_fill_a_green_circle_tv_style" parent="tag_fill_parent">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_tag_fill_a_green_circle_background</item>
+    </style>
+
+    <!-- 标签-绿色填充 -->
+    <style name="tag_fill_green_tv_style" parent="tag_fill_parent">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:background">@drawable/fm_tag_fill_green_background</item>
+    </style>
+
+    <style name="tag_empty_parent" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_xsmall</item>
+        <item name="android:paddingTop">@dimen/margin_text_button_top_bottom</item>
+        <item name="android:paddingBottom">@dimen/margin_text_button_top_bottom</item>
+        <item name="android:paddingLeft">@dimen/margin_text_button_left_right</item>
+        <item name="android:paddingRight">@dimen/margin_text_button_left_right</item>
+    </style>
+
+    <style name="tag_fill_parent" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_xsmall</item>
+        <item name="android:paddingTop">@dimen/margin_text_tag_top_bottom</item>
+        <item name="android:paddingBottom">@dimen/margin_text_tag_top_bottom</item>
+        <item name="android:paddingLeft">@dimen/margin_text_tag_left_right</item>
+        <item name="android:paddingRight">@dimen/margin_text_tag_left_right</item>
+    </style>
+
+    <!--创建需求界面各项属性标题-->
+    <style name="demand_create_title_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:paddingLeft">17dp</item>
+        <item name="android:textColor">@color/grey_level1</item>
+        <item name="android:textColorHint">@color/grey_level12</item>
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:background">@color/main_white</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="more_item_area_ripple">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <style name="action_llyt">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">54dp</item>
+    </style>
+
+    <style name="action_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:alpha">0.9</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="action_icon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/bg_action_bar_button</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="action_icon_for_scan">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/bg_action_bar_button_for_scan</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="action_tv">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@drawable/bg_action_bar_button</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:alpha">0.9</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+    </style>
+
+    <style name="capture_padding_iv_vertical">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="capture_padding_iv_horizontal">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <SurfaceView
+            android:id="@+id/qrcode_preview_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <com.facilityone.wireless.fm_library.zxing.view.ViewfinderView
+            android:id="@+id/qrcode_viewfinder_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/main_blue_transparent">
+
+            <ImageView
+                android:id="@+id/qrcode_scan_back_iv"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="12sp"
+                android:src="@drawable/qrcode_icon_title_back" />
+
+            <TextView
+                android:id="@+id/title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:text="@string/qrcode_scan_title"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>

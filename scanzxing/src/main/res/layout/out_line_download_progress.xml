@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:orientation="vertical"
+	android:layout_height="wrap_content">
+
+	<TextView
+		android:id="@+id/mod_ip_title_tv"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/button_height_normal"
+		android:background="@drawable/fm_tag_fill_grey4_top_background"
+		android:gravity="center_vertical"
+		android:paddingLeft="@dimen/margin_snormal"
+		android:text="@string/out_line_down_load_tip"
+		android:textColor="@color/grey_level1"
+		android:textSize="@dimen/text_size_info" />
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/fm_tag_fill_white_bottom_background"
+		android:orientation="vertical">
+
+		<com.facilityone.wireless.fm_library.widget.MyProgressBar
+			android:id="@+id/update_progress"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/margin_xlarge"
+			android:layout_marginLeft="@dimen/margin_snormal"
+			android:layout_marginRight="@dimen/margin_snormal"
+			android:layout_marginTop="@dimen/margin_xlarge"
+			android:progressDrawable="@drawable/progressbar"
+			style="?android:attr/progressBarStyleHorizontal" />
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/line_small_height"
+			android:layout_marginBottom="@dimen/margin_xmsmall"
+			android:background="@color/main_blue"
+			android:visibility="gone" />
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:visibility="gone"
+			android:paddingBottom="@dimen/margin_xmsmall"
+			android:paddingLeft="@dimen/margin_snormal"
+			android:paddingRight="@dimen/margin_snormal">
+
+			<Button
+				android:id="@+id/update_cancel_btn"
+				style="@style/level1_btn_white_style"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:text="@string/soft_update_cancel"
+				android:textColor="@color/main_white" />
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

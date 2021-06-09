@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RingProgressBar">
+        <attr name="ringPColor" format="color" />
+        <attr name="ringProgressColor" format="color" />
+        <attr name="ringPWidth" format="dimension" />
+        <attr name="ringTextColor" format="color" />
+        <attr name="ringTextSize" format="dimension" />
+        <attr name="ringMax" format="integer" />
+        <attr name="textIsShow" format="boolean" />
+        <attr name="ringStyle">
+            <enum name="STROKE" value="0" />
+            <enum name="FILL" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>

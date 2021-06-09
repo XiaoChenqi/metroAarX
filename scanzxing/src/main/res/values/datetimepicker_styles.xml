@@ -1,0 +1,45 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 日期和时间选择对话框 -->
+	<style name="time_label">
+        <item name="android:textSize">@dimen/time_label_size</item>
+        <item name="android:textColor">@color/numbers_text_color</item>
+    </style>
+
+    <style name="ampm_label">
+        <item name="android:textSize">@dimen/ampm_label_size</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/ampm_text_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="day_of_week_label_condensed" />
+
+    <style name="defaultColorTheme">
+        <item name="headerBackgroundColor">@color/calendar_header</item>
+        <item name="hightlightedTextColor">@color/datetimepicker_date_picker_selector</item>
+        <item name="buttonBackground">@drawable/datetimepicker_done_background_color</item>
+        <item name="buttonTextColor">@color/datetimepicker_done_text_color</item>
+        <item name="circleHighlightColor">@color/circle_background</item>
+        <item name="defaultTextColor">@color/date_picker_text_normal</item>
+        <item name="selectedDayTextSize">@dimen/selected_date_day_size</item>
+        <item name="selectedMonthTextSize">@dimen/selected_date_month_size</item>
+        <item name="selectedYearTextSize">@dimen/selected_date_year_size</item>
+    </style>
+
+    <style name="CalendarWeekName">
+        <item name="android:layout_width">0.0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/maintenance_calendar_font_white</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+    <style name="CalendarMonthName">
+        <item name="android:layout_width">0.0dp</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+</resources>

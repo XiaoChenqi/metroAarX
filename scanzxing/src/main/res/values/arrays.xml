@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 项目类型 -->
+    <string-array name="project_type_stat">
+        <item>1设施</item>
+        <item>1客服</item>
+        <item>混合</item>
+    </string-array>
+
+    <string-array name="gplus_colors">
+        <item>#ffffff</item>
+        <item>#54a612</item>
+        <item>#10aeff</item>
+        <item>#1cc094</item>
+        <item>#8262ce</item>
+    </string-array>
+</resources>

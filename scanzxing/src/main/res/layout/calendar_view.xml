@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/custom_calendar_pre_month_iv"
+            style="@style/CalendarMonthName"
+            android:layout_height="match_parent"
+            android:background="@drawable/fm_histroy_date_bg"
+            android:text="@string/calendar_view_pre_month"
+            android:textColor="@color/grey_level1" />
+
+        <TextView
+            android:id="@+id/custom_calendar_current_month_tv"
+            style="@style/CalendarMonthName"
+            android:layout_height="45dp"
+            android:textColor="@color/grey_level1" />
+
+        <TextView
+            android:id="@+id/custom_calendar_next_month_iv"
+            style="@style/CalendarMonthName"
+            android:layout_height="match_parent"
+            android:background="@drawable/fm_histroy_date_bg"
+            android:text="@string/calendar_view_next_month"
+            android:textColor="@color/grey_level1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/CalendarWeekName"
+            android:text="@string/calendar_view_week_7" />
+
+        <TextView
+            style="@style/CalendarWeekName"
+            android:text="@string/calendar_view_week_1" />
+
+        <TextView
+            style="@style/CalendarWeekName"
+            android:text="@string/calendar_view_week_2" />
+
+        <TextView
+            style="@style/CalendarWeekName"
+            android:text="@string/calendar_view_week_3" />
+
+        <TextView
+            style="@style/CalendarWeekName"
+            android:text="@string/calendar_view_week_4" />
+
+        <TextView
+            style="@style/CalendarWeekName"
+            android:text="@string/calendar_view_week_5" />
+
+        <TextView
+            style="@style/CalendarWeekName"
+            android:text="@string/calendar_view_week_6" />
+    </LinearLayout>
+
+    <ViewFlipper
+        android:id="@+id/custom_calendar_flipper"
+        android:layout_marginTop="11dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

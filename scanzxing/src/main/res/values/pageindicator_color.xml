@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- PagerSliding tab color -->
+    <color name="background_tab_pressed">#6633B5E5</color>
+
+</resources>
