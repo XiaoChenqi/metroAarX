@@ -121,7 +121,9 @@ public abstract class FMFragment extends SwipeBackFragment {
     }
 
     public void leftBackListener() {
-        pop();
+        //TODO xcq
+        getActivity().finish();
+        //pop();
     }
 
     public TextView setTitle(int resId) {

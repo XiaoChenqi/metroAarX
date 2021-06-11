@@ -4,7 +4,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -20,6 +23,7 @@ import com.facilityone.wireless.a.arch.offline.model.service.OnDownloadListener;
 import com.facilityone.wireless.a.arch.offline.model.service.OnPatrolListener;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
 import com.facilityone.wireless.basiclib.app.FM;
+import com.facilityone.wireless.patrol.PatrolActivity;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.module.PatrolConstant;
 import com.facilityone.wireless.patrol.presenter.PatrolMenuPresenter;
@@ -40,6 +44,7 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
     private RecyclerView mRecyclerView;
     private IconTextView mItvScan;
     private TextView mTvScanTip;
+    private LinearLayout topLl;
 
     private static final int TASK_COUNT = 4;
 
@@ -55,11 +60,14 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
     private float mTempBaseSpot;
     private float mTempPatrol;
 
+    private String TAG = "周杨";
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initData();
         initView();
+        Log.d(TAG, "onViewCreated: "+PatrolActivity.themeColor);
+        topLl.setBackgroundColor(PatrolActivity.themeColor);
     }
 
     @Override
@@ -103,6 +111,7 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         mRecyclerView = findViewById(R.id.recyclerView);
         mItvScan = findViewById(R.id.scan_patrol_itv);
         mTvScanTip = findViewById(R.id.scan_tip_tv);
+        topLl = findViewById(R.id.topLl);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), FunctionService.COUNT));
 //        mRecyclerView.addItemDecoration(new GridItemDecoration(getResources().getColor(R.color.grey_d6)));
 

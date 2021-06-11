@@ -58,12 +58,16 @@ public class ScanZingMainActivity extends AppCompatActivity {
             return;
         }
 
+        CaptureActivity.startActivity(ScanZingMainActivity.this,
+                QR_CODE_SCAN_RESULT, "测试6种");
+        this.finish();
+
 
         button888.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CaptureActivity.startActivity(ScanZingMainActivity.this,
-                        QR_CODE_SCAN_RESULT, "测试6种");
+//                CaptureActivity.startActivity(ScanZingMainActivity.this,
+//                        QR_CODE_SCAN_RESULT, "测试6种");
             }
         });
 

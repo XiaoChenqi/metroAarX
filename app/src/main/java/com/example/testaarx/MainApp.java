@@ -22,7 +22,8 @@ public class MainApp extends Application {
 //        DBManager.getInstance();
 
         saveChannelParam();
-        Facility.init(this, "http://192.168.1.66:8080", BuildConfig.DEBUG);
+        //Facility.init(this, "http://192.168.1.66:8080", BuildConfig.DEBUG);
+        Facility.init(this, "http://47.99.236.153:8071/fz_iframe", BuildConfig.DEBUG);
         DBManager.getInstance();
     }
 

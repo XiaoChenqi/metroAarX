@@ -12,6 +12,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/topLl"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_222"
             android:background="@color/patrol_menu_top_bg"

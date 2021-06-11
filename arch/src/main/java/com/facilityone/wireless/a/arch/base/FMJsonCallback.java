@@ -181,6 +181,8 @@ public abstract class FMJsonCallback<T> extends AbsCallback<T> {
 //        if (headers != null) {
 //            String errorMsg = headers.get("WWW-Authenticate");
 //            if (!TextUtils.isEmpty(errorMsg)) {
+
+        if(response.getRawResponse()!=null){
             int code = response.getRawResponse().code();
             if (code == ErrorCode.HTTP_401_NO_AUTHORIZED){
                 //需要重新登录
@@ -194,7 +196,9 @@ public abstract class FMJsonCallback<T> extends AbsCallback<T> {
                     GSON_REQUEST_LIST.add(request);
                 }
 //            }
+            }
         }
+
     }
 
     private void delError(int code) {

@@ -50,10 +50,10 @@ String TAG = "zhouyang";
             loginJson = "";
         }
         //TODO xcq 改ip，不能写死，要写入保存，后面还要用
-        String str = "http://192.168.1.66:8080";
-        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.APP_SERVER, str);
-        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.USER_EDIT_SERVER, true);
-        FM.getConfigurator().withApiHost(str);
+//        String str = "http://192.168.1.66:8080";
+//        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.APP_SERVER, str);
+//        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.USER_EDIT_SERVER, true);
+//        FM.getConfigurator().withApiHost(str);
         //deleteData(dialog);//TODO 这个方法可能需要使用
 
 

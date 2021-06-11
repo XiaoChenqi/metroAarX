@@ -35,6 +35,7 @@ public class MaintenanceActivity extends BaseFragmentActivity implements EmptyFr
 //        UIRouter.getInstance().openUri(this, "DDComp://maintenance/maintenanceHome", bundle);
 
         return mInstance;
+        //return MaintenanceFragment.getInstance();
     }
 
     @Override
@@ -58,12 +59,13 @@ public class MaintenanceActivity extends BaseFragmentActivity implements EmptyFr
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             pop();
         } else {
-            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
-                this.finish();
-            } else {
-                TOUCH_TIME = System.currentTimeMillis();
-                ToastUtils.showShort(R.string.maintenance_press_exit_again);
-            }
+//            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+//                this.finish();
+//            } else {
+//                TOUCH_TIME = System.currentTimeMillis();
+//                ToastUtils.showShort(R.string.maintenance_press_exit_again);
+//            }
+            this.finish();
         }
     }
 

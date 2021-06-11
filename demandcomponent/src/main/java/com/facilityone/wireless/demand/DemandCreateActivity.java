@@ -36,6 +36,7 @@ public class DemandCreateActivity extends BaseFragmentActivity
         mInstance = EmptyFragment.getInstance(CommonConstant.MESSAGE_DEMAND);
         mInstance.setOnGoFragmentListener(this);
         return mInstance;
+        //return DemandCreateFragment.getInstance();
     }
 
     @Override
@@ -55,15 +56,17 @@ public class DemandCreateActivity extends BaseFragmentActivity
 
     @Override
     public void onBackPressedSupport() {
+
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             pop();
         } else {
-            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
-                this.finish();
-            } else {
-                TOUCH_TIME = System.currentTimeMillis();
-                ToastUtils.showShort("再按一次退出");
-            }
+            this.finish();
+//            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+//                this.finish();
+//            } else {
+//                TOUCH_TIME = System.currentTimeMillis();
+//                ToastUtils.showShort("再按一次退出");
+//            }
         }
     }
 }

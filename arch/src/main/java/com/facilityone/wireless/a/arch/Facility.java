@@ -8,6 +8,7 @@ import android.media.AudioFormat;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.facilityone.wireless.a.arch.ec.collect.CrashHandler;
@@ -51,6 +52,7 @@ import okhttp3.OkHttpClient;
  */
 public class Facility {
     private static final String CACHE_PATH = "com.fm.res";
+    private static String TAG="zhouyang";
 
     //static 代码段可以防止内存泄露
     static {
@@ -81,7 +83,7 @@ public class Facility {
 
     public static void init(Context context, String appServer, boolean debug) {
         //TODO
-        saveChannelParam();
+        //saveChannelParam();
         FM.init(context.getApplicationContext())
                 .withIcon(new FontResModule())      //初始化字体图标
                 .withIcon(new FontAwesomeModule())  //初始化字体图标
@@ -177,7 +179,9 @@ public class Facility {
 
     }
 
+
     private static void initParams(String appServer) {
+        Log.d(TAG, "initParams: ");
         String localAppServer = SPUtils.getInstance(SPKey.SP_MODEL).getString(SPKey.APP_SERVER);
         String preAppServer = SPUtils.getInstance(SPKey.SP_MODEL).getString(SPKey.APP_PRE_SERVER);
         if (TextUtils.isEmpty(localAppServer)) {
@@ -196,20 +200,20 @@ public class Facility {
         FM.getConfigurator().withApiHost(localAppServer);
     }
 
-    private static void saveChannelParam() {
-        HashMap<Object, Object> fmConfigs = FM.getFMConfigs();
-        fmConfigs.put(FMChannel.CHANNEL_APP_SERVER, BuildConfig.SERVER_URL);
-        fmConfigs.put(FMChannel.CHANNEL_APP_KEY, BuildConfig.APP_KEY);
-        fmConfigs.put(FMChannel.CHANNEL_APP_SECRET, BuildConfig.APP_SECRET);
-        fmConfigs.put(FMChannel.CHANNEL_UMENG_KEY, BuildConfig.UMENG_CHANNEL_KEY);
-        fmConfigs.put(FMChannel.CHANNEL_UMENG_VALUE, BuildConfig.UMENG_CHANNEL_VALUE);
-        fmConfigs.put(FMChannel.CHANNEL_UPDATE_APP_KEY, BuildConfig.UPDATE_APP_KEY);
-        fmConfigs.put(FMChannel.CHANNEL_UPDATE_CHANNEL, BuildConfig.UPDATE_CHANNEL);
-        fmConfigs.put(FMChannel.CHANNEL_CUSTOMER_CODE, BuildConfig.CUSTOMER_CODE);
-        fmConfigs.put(FMChannel.CHANNEL_QQZONE_KEY, BuildConfig.QQZONE_KEY);
-        fmConfigs.put(FMChannel.CHANNEL_QQZONE_SECRET, BuildConfig.QQZONE_SECRET);
-        fmConfigs.put(FMChannel.CHANNEL_DING_DING_SECRET, BuildConfig.DING_DING_SECRET);
-        fmConfigs.put(FMChannel.CHANNEL_WEI_XIN_KEY, BuildConfig.WEI_XIN_KEY);
-        fmConfigs.put(FMChannel.CHANNEL_WEI_XIN_SECRET, BuildConfig.WEI_XIN_SECRET);
-    }
+//    private static void saveChannelParam() {
+//        HashMap<Object, Object> fmConfigs = FM.getFMConfigs();
+//        fmConfigs.put(FMChannel.CHANNEL_APP_SERVER, BuildConfig.SERVER_URL);
+//        fmConfigs.put(FMChannel.CHANNEL_APP_KEY, BuildConfig.APP_KEY);
+//        fmConfigs.put(FMChannel.CHANNEL_APP_SECRET, BuildConfig.APP_SECRET);
+//        fmConfigs.put(FMChannel.CHANNEL_UMENG_KEY, BuildConfig.UMENG_CHANNEL_KEY);
+//        fmConfigs.put(FMChannel.CHANNEL_UMENG_VALUE, BuildConfig.UMENG_CHANNEL_VALUE);
+//        fmConfigs.put(FMChannel.CHANNEL_UPDATE_APP_KEY, BuildConfig.UPDATE_APP_KEY);
+//        fmConfigs.put(FMChannel.CHANNEL_UPDATE_CHANNEL, BuildConfig.UPDATE_CHANNEL);
+//        fmConfigs.put(FMChannel.CHANNEL_CUSTOMER_CODE, BuildConfig.CUSTOMER_CODE);
+//        fmConfigs.put(FMChannel.CHANNEL_QQZONE_KEY, BuildConfig.QQZONE_KEY);
+//        fmConfigs.put(FMChannel.CHANNEL_QQZONE_SECRET, BuildConfig.QQZONE_SECRET);
+//        fmConfigs.put(FMChannel.CHANNEL_DING_DING_SECRET, BuildConfig.DING_DING_SECRET);
+//        fmConfigs.put(FMChannel.CHANNEL_WEI_XIN_KEY, BuildConfig.WEI_XIN_KEY);
+//        fmConfigs.put(FMChannel.CHANNEL_WEI_XIN_SECRET, BuildConfig.WEI_XIN_SECRET);
+//    }
 }

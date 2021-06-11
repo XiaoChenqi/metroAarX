@@ -35,6 +35,7 @@ public class WorkOrderActivity extends BaseFragmentActivity implements EmptyFrag
         mInstance = EmptyFragment.getInstance(CommonConstant.MESSAGE_WORK_ORDER);
         mInstance.setOnGoFragmentListener(this);
         return mInstance;
+        //return WorkorderMenuFragment.getInstance(new Bundle());
     }
 
     @Override
@@ -58,12 +59,13 @@ public class WorkOrderActivity extends BaseFragmentActivity implements EmptyFrag
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             pop();
         } else {
-            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
-                this.finish();
-            } else {
-                TOUCH_TIME = System.currentTimeMillis();
-                ToastUtils.showShort(R.string.workorder_press_exit_again);
-            }
+            this.finish();
+//            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+//                this.finish();
+//            } else {
+//                TOUCH_TIME = System.currentTimeMillis();
+//                ToastUtils.showShort(R.string.workorder_press_exit_again);
+//            }
         }
     }
 
