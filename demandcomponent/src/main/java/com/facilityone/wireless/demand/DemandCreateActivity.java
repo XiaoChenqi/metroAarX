@@ -19,11 +19,16 @@ public class DemandCreateActivity extends BaseFragmentActivity
     private static final long WAIT_TIME = 2000L;
     private long TOUCH_TIME = 0L;
     private EmptyFragment mInstance;
+    public static int themeColor =0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
+        //TODO xcq 获取色值
+        if(0 != getIntent().getIntExtra("COLOR",0)){
+            themeColor = getIntent().getIntExtra("COLOR",0);
+        }
     }
 
     @Override

@@ -12,15 +12,33 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:label, android:theme">
+<!--        <activity-->
+<!--            android:exported="true"-->
+<!--            android:name=".CcccActivity"></activity>-->
         <activity
             android:exported="true"
-            android:name=".CcccActivity"></activity>
+            android:name="com.facilityone.wireless.demand.DemandActivity"/>
+        <activity
+            android:exported="true"
+            android:name="com.facilityone.wireless.demand.DemandCreateActivity"/>
+        <activity
+            android:exported="true"
+            android:name="com.facilityone.wireless.workorder.WorkOrderActivity"/>
+        <activity
+            android:exported="true"
+            android:name="com.facilityone.wireless.patrol.PatrolActivity"/>
+        <activity
+            android:exported="true"
+            android:name="com.facilityone.wireless.maintenance.MaintenanceActivity"/>
+        <activity
+            android:exported="true"
+            android:name="com.example.scanzxing.ScanZingMainActivity"/>
         <activity android:name=".MainActivity"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-<!--                <data android:host="MainActivity" android:scheme="com.tq.time"-->
-<!--                    tools:ignore="AppLinkUrlError" />-->
+                <!--<data android:host="MainActivity" android:scheme="com.tq.time"
+                    tools:ignore="AppLinkUrlError" />-->
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

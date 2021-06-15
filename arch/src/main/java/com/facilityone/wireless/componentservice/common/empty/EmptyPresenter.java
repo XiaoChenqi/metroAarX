@@ -33,6 +33,7 @@ public class EmptyPresenter extends CommonBasePresenter<EmptyFragment> {
 
     @Override
     public void onLogonSuccess() {
+        //TODO xcq
         Long pId = 10L;
         FM.getConfigurator().withProjectId(pId);
 

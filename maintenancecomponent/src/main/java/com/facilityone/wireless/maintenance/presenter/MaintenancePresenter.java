@@ -51,7 +51,7 @@ public class MaintenancePresenter extends BasePresenter<MaintenanceFragment> {
         final String request = "{\"startTime\":" + startTime + ",\"endTime\":" + endTime + "}";
         String url = FM.getApiHost() + MaintenanceUrl.MAINTENANCE_CALENDAR_URL;
 
-        //TODO xcq 拼参数
+
 
         //String url2 = url+"?app_type=android&app_version=0.0.0&current_project=10";
 

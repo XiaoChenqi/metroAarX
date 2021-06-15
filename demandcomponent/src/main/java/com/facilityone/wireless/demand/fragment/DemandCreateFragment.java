@@ -47,6 +47,7 @@ import com.facilityone.wireless.basiclib.utils.PermissionHelper;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.facilityone.wireless.basiclib.video.SimplePlayer;
 import com.facilityone.wireless.basiclib.widget.FullyGridLayoutManager;
+import com.facilityone.wireless.demand.DemandCreateActivity;
 import com.facilityone.wireless.demand.R;
 import com.facilityone.wireless.demand.module.DemandCreateService;
 import com.facilityone.wireless.demand.presenter.DemandCreatePresenter;
@@ -114,6 +115,9 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        TitleBar tb = new TitleBar(DemandCreateActivity.themeColor);
+        //TitleBar tb = new TitleBar(getActivity().getResources().getColor(R.color.green_1ab394));
+        setTitleBarValues(tb);
         super.onViewCreated(view, savedInstanceState);
         initView();
         getPresenter().getUserInfo();
