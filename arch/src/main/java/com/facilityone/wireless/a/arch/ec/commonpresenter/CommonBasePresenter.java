@@ -292,10 +292,10 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
         String typeJson = "{\"type\":" + type + "}";
 
         String url = FM.getApiHost() + CommonUrl.COMMON_UNDO_URL;
-        String url2 = url+"?app_type=android&app_version=0.0.0&current_project=10&i18n=zh_CN";
+        //String url2 = url+"?app_type=android&app_version=0.0.0&current_project=10&i18n=zh_CN";
 
 
-        OkGo.<BaseResponse<FunctionService.FunctionUndoBean>>post(url2)
+        OkGo.<BaseResponse<FunctionService.FunctionUndoBean>>post(url)
                 .isSpliceUrl(true)
                 .upJson(typeJson)
                 .tag(getV())

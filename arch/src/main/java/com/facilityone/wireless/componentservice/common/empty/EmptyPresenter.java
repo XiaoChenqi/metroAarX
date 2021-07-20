@@ -34,7 +34,8 @@ public class EmptyPresenter extends CommonBasePresenter<EmptyFragment> {
     @Override
     public void onLogonSuccess() {
         //TODO xcq
-        Long pId = 10L;
+        //Long pId = 10L;
+        Long pId = 1L;
         FM.getConfigurator().withProjectId(pId);
 
         SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PROJECT_ID, pId);

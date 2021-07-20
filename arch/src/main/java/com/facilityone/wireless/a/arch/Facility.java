@@ -166,7 +166,8 @@ public class Facility {
 
         //TODO xcq
         Long projectId = SPUtils.getInstance(SPKey.SP_MODEL).getLong(SPKey.PROJECT_ID, -1L);
-        projectId = 10L;
+        //projectId = 10L;
+        projectId = 1L;
 
         FM.getConfigurator().withProjectId(projectId);
 

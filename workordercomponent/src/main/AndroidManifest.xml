@@ -10,7 +10,12 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.NoTranslucent"/>
-
+        <activity android:name=".WorkorderCreateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent"
+            ></activity>
     </application>
 
 </manifest>

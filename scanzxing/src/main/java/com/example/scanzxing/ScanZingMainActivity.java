@@ -60,7 +60,7 @@ public class ScanZingMainActivity extends AppCompatActivity {
 
         CaptureActivity.startActivity(ScanZingMainActivity.this,
                 QR_CODE_SCAN_RESULT, "测试6种");
-        this.finish();
+        //this.finish();
 
 
         button888.setOnClickListener(new View.OnClickListener() {
@@ -98,18 +98,22 @@ public class ScanZingMainActivity extends AppCompatActivity {
                     } else if (userQrcode.isValid()) {//员工二维码
                         //operateUserQrcode(qrcode);
                         Log.d(TAG, "onActivityResult: user");
+                        ToastUtils.toast(ScanZingMainActivity.this, "员工二维码");
                     } else if (materialQrcode.isValid()) {//物资二维码
-                        ToastUtils.toast(ScanZingMainActivity.this, "不能识别这个二维码");
+                        ToastUtils.toast(ScanZingMainActivity.this, "物资二维码");
 //                        operateMaterialQrcode(qrcode);
                     } else if (assetQrcode.isValid()) {//设备二维码
                         Log.d(TAG, "onActivityResult: asset");
+                        ToastUtils.toast(ScanZingMainActivity.this, "设备二维码");
                         //operateAssetQrcode(qrcode);
                     } else if (buildingQrcode.isValid()) {//车站二维码
                         Log.d(TAG, "onActivityResult: build");
+                        ToastUtils.toast(ScanZingMainActivity.this, "车站二维码");
                         // operatePatrolBuildingQrcode(qrcode);
                     } else if (spotQrCode.isValid()) {//点位二维码
                         Log.d(TAG, "onActivityResult: spot");
                         //operatePatrolSpotQrcode(qrcode);
+                        ToastUtils.toast(ScanZingMainActivity.this, "点位二维码");
                     } else {
                         ToastUtils.toast(ScanZingMainActivity.this, "不能识别这个二维码");
                     }

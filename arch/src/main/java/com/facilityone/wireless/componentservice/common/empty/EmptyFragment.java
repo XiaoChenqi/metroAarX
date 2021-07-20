@@ -42,7 +42,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> {
 
         //TODO xcq
         showLoading();
-        getPresenter().logon("admin", "111111");
+        getPresenter().logon("zhangsan", "111111");
         //getPresenter().logon("wangan", "111111");
         //showLogonButton();
         mBtn.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +51,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> {
                 //TODO xcq
 
                 showLoading();
-                getPresenter().logon("admin", "111111");
+                getPresenter().logon("zhangsan", "111111");
 
             }
         });

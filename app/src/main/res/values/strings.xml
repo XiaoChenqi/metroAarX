@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">TestAarX</string>
+
+    <!--未下载-->
+    <string name="app_not_download">未下载</string>
+    <!--已下载-->
+    <string name="app_download">已下载</string>
+    <!--下载失败-->
+    <string name="app_download_fail">下载失败</string>
+    <!--待更新-->
+    <string name="app_download_new">待更新</string>
+    <string name="app_outline_data_one_key_download">一键下载</string>
+    <!--设备信息-->
+    <string name="app_device_info_tip">设备信息</string>
+    <!--设备类型信息-->
+    <string name="app_device_type">设备类型信息</string>
+    <!--位置信息-->
+    <string name="app_location">位置信息</string>
+    <!--部门信息-->
+    <string name="app_department">部门信息</string>
+    <!--优先级信息-->
+    <string name="app_priority">优先级信息</string>
+    <!--工作流程信息-->
+    <string name="app_work_flow">工作流程信息</string>
+    <!--服务类型信息-->
+    <string name="app_service_type">服务类型信息</string>
+    <!--需求类型信息-->
+    <string name="app_requirement_type">需求类型信息</string>
+    <!--离线下载-->
+    <string name="app_outline_load">离线下载</string>
+    <!--下载完成-->
+    <string name="app_download_success">下载完成</string>
 </resources>

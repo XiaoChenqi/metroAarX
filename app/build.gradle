@@ -24,9 +24,9 @@ android {
         //buildConfigField "String", "SERVER_URL", "\"http://shmetro.wuxi.fmone.cn\""
         //buildConfigField "String", "SERVER_URL", "\"http://shdt.wuxi.fmone.cn\""
 
-        //buildConfigField "String", "SERVER_URL", "\"http://47.99.236.153:8071/fz_iframe\""
+        buildConfigField "String", "SERVER_URL", "\"http://47.99.236.153:8071/fz_iframe\""
         //buildConfigField "String", "SERVER_URL", "\"http://192.168.1.89:23456/fz_iframe\""
-        buildConfigField "String", "SERVER_URL", "\"http://192.168.1.66:8080\""
+        //buildConfigField "String", "SERVER_URL", "\"http://10.168.1.189:23456/fz_iframe\""
 
 
         buildConfigField "String", "UPDATE_CHANNEL", "\"AzTj2xWHbEpXnfQw\""

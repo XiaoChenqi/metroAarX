@@ -71,7 +71,8 @@ public class WorkorderCreateFragment extends BaseFragment<WorkorderCreatePresent
     private RecyclerView mDeviceRv;
     private TextView mDeviceTv;
 
-    private static final String EQUIPMENT_ID = "equipment_id";
+    private static final String EQUIPMENT_ID = "equipment_id";//设备id
+    private static final String EQUIPMENT_STR_ID = "equipment_str_id";//设备编码
     private static final String FROM_TYPE = "from_type";
     private static final String LOCATION_NAME = "location_name";
     private static final String LOCATION_INFO = "location_info";
@@ -100,6 +101,7 @@ public class WorkorderCreateFragment extends BaseFragment<WorkorderCreatePresent
 
     private int mFromType;
     private long mEquipmentId;
+    private String  mEquipmentFullName;
     private LocationBean mOtherLocationBean;
     private String mOtherLocationName;
     private List<LocalMedia> mOtherMedia;
@@ -146,6 +148,7 @@ public class WorkorderCreateFragment extends BaseFragment<WorkorderCreatePresent
             mFromType = bundle.getInt(FROM_TYPE, -1);
             mWaterMark = bundle.getBoolean(WATER_MARK, false);
             mEquipmentId = bundle.getLong(EQUIPMENT_ID, -1L);
+            mEquipmentFullName = bundle.getString(EQUIPMENT_STR_ID);
             mItemId = bundle.getLong(ITEM_ID, -1L);
             mDemandId = bundle.getLong(DEMAND_ID, -1L);
             mOtherLocationBean = bundle.getParcelable(LOCATION_INFO);
@@ -241,6 +244,10 @@ public class WorkorderCreateFragment extends BaseFragment<WorkorderCreatePresent
             getPresenter().getEquipmentFromDB(mEquipmentId);
         }
 
+        if(!TextUtils.isEmpty(mEquipmentFullName)){
+            getPresenter().getEquipmentFromDB(mEquipmentFullName);
+        }
+
         mRequest = new WorkorderCreateService.WorkorderCreateReq();
         mRequest.woType = 0L;//工单类型默认自检
         if (mDemandId != null) {
@@ -289,9 +296,18 @@ public class WorkorderCreateFragment extends BaseFragment<WorkorderCreatePresent
                 mRequest.location = device.getLocation();
             }
             mDevices.add(device);
+            //TODO 显示可见
             mDeviceTv.setVisibility(View.VISIBLE);
             mDeviceRv.setVisibility(View.VISIBLE);
             mDeviceAdapter.notifyDataSetChanged();
+
+            if(fromRailWay){
+                if(mDevices.get(0).getName().equals("自动扶梯")){
+
+                }else{
+                    mNumberView.getDescEt().setText("出站端交通卡模块故障");
+                }
+            }
 
         }
     }
@@ -599,9 +615,18 @@ public class WorkorderCreateFragment extends BaseFragment<WorkorderCreatePresent
                         }
                     }
                     mDevices.add(bean);
+                    //TODO 显示可见
                     mDeviceTv.setVisibility(View.VISIBLE);
                     mDeviceRv.setVisibility(View.VISIBLE);
                     mDeviceAdapter.notifyDataSetChanged();
+
+                    if(fromRailWay){
+                        if(mDevices.get(0).getName().equals("自动扶梯")){
+
+                        }else{
+                            mNumberView.getDescEt().setText("出站端交通卡模块故障");
+                        }
+                    }
                     LogUtils.d("device id :" + bean.getId());
                 }
                 break;
@@ -622,6 +647,7 @@ public class WorkorderCreateFragment extends BaseFragment<WorkorderCreatePresent
     }
 
     public static WorkorderCreateFragment getInstance() {
+        fromRailWay = true;
         Bundle bundle = new Bundle();
         bundle.putBoolean(WATER_MARK, true);
         WorkorderCreateFragment fragment = new WorkorderCreateFragment();
@@ -629,7 +655,27 @@ public class WorkorderCreateFragment extends BaseFragment<WorkorderCreatePresent
         return fragment;
     }
 
+    /**
+     * 隧道院会传设备编码过来，是String类型
+     * @param fromType
+     * @param equipmentFullName
+     * @return
+     */
+    public static WorkorderCreateFragment getInstance(int fromType, String equipmentFullName) {
+        fromRailWay = true;
+        WorkorderCreateFragment fragment = new WorkorderCreateFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(FROM_TYPE, fromType);
+        bundle.putString(EQUIPMENT_STR_ID, equipmentFullName);
+        bundle.putBoolean(WATER_MARK, true);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    private static boolean fromRailWay =false;//是不是从隧道院传递过来的参数
+
     public static WorkorderCreateFragment getInstance(int fromType, long equipmentId) {
+        fromRailWay = false;
         WorkorderCreateFragment fragment = new WorkorderCreateFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(FROM_TYPE, fromType);

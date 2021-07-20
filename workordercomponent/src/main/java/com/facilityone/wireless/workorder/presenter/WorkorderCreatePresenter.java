@@ -82,6 +82,69 @@ public class WorkorderCreatePresenter extends CommonBasePresenter<WorkorderCreat
 
     }
 
+    /**
+     * 根据设备编号查询设备信息，用于隧道院
+     * @param equipmentFullName
+     */
+    public void getEquipmentFromDB(final String equipmentFullName) {
+        Observable.create(new ObservableOnSubscribe<SelectDataBean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<SelectDataBean> emitter) throws Exception {
+
+                SelectDataBean selectDataBean = null;
+                EquDao equDao = new EquDao();
+                selectDataBean = equDao.queryEquById(equipmentFullName);
+
+                if (selectDataBean != null) {
+                    String tempName = "";
+                    if (selectDataBean.getLocation() != null) {
+                        if (selectDataBean.getLocation().roomId != null) {
+                            RoomDao dao = new RoomDao();
+                            tempName = dao.queryLocationName(selectDataBean.getLocation().roomId);
+                        } else if (selectDataBean.getLocation().floorId != null) {
+                            FloorDao dao = new FloorDao();
+                            tempName = dao.queryLocationName(selectDataBean.getLocation().floorId);
+                        } else if (selectDataBean.getLocation().buildingId != null) {
+                            BuildingDao dao = new BuildingDao();
+                            tempName = dao.queryLocationName(selectDataBean.getLocation().buildingId);
+                        } else if (selectDataBean.getLocation().siteId != null) {
+                            SiteDao dao = new SiteDao();
+                            tempName = dao.queryLocationName(selectDataBean.getLocation().siteId);
+                        } else if (selectDataBean.getLocation().cityId != null) {
+                            CityDao dao = new CityDao();
+                            tempName = dao.queryLocationName(selectDataBean.getLocation().cityId);
+                        }
+                    }
+                    selectDataBean.setDesc(tempName);
+                }
+
+
+                emitter.onNext(selectDataBean);
+                emitter.onComplete();
+
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DefaultObserver<SelectDataBean>() {
+                    @Override
+                    public void onNext(@NonNull SelectDataBean selectDataBean) {
+                        getV().refreshDevice(selectDataBean);
+                        cancel();
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        getV().refreshDevice(null);
+                        cancel();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
     public void getEquipmentFromDB(final long equipmentId) {
         Observable.create(new ObservableOnSubscribe<SelectDataBean>() {
             @Override

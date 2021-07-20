@@ -265,7 +265,7 @@ public class OfflineService {
                 EquNet.requestEqu(equReq, equListener, new OnDownloadListener() {
                     @Override
                     public void onDownload(int max, int progress) {
-                        
+
                     }
 
                     @Override

@@ -7,11 +7,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.scanzxing.ScanZingMainActivity;
+import com.example.testaarx.download.OutLineDataActivity;
 import com.facilityone.wireless.demand.DemandActivity;
 import com.facilityone.wireless.demand.DemandCreateActivity;
 import com.facilityone.wireless.maintenance.MaintenanceActivity;
 import com.facilityone.wireless.patrol.PatrolActivity;
 import com.facilityone.wireless.workorder.WorkOrderActivity;
+import com.facilityone.wireless.workorder.WorkorderCreateActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btn4;
     private Button btn6;
     private Button button5;
+    private Button mDownBtn;
+    private Button mButton2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initListeners() {
+        mButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, WorkorderCreateActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
         tv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+        mDownBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OutLineDataActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
     }
 
     private void initView() {
@@ -84,5 +102,7 @@ public class MainActivity extends AppCompatActivity {
         btn4 = (Button) findViewById(R.id.btn4);
         btn6 = (Button) findViewById(R.id.btn6);
         button5 = (Button) findViewById(R.id.button5);
+        mDownBtn = (Button) findViewById(R.id.downBtn);
+        mButton2 = (Button) findViewById(R.id.button2);
     }
 }

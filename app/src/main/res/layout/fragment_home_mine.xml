@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.facilityone.wireless.a.arch.widget.CustomListItemView
+        android:id="@+id/item_data"
+        style="@style/listViewItemStyle"
+        android:layout_marginTop="@dimen/dp_10"
+
+        app:fm_list_item_show_red_icon="true"
+        app:fm_list_item_show_right_icon="true"
+        app:fm_list_item_title="@string/app_outline_load" />
+
+
+</RelativeLayout>

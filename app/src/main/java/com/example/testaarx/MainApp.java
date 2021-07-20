@@ -7,6 +7,8 @@ import com.facilityone.wireless.a.arch.Facility;
 import com.facilityone.wireless.a.arch.offline.util.DBManager;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.basiclib.app.FMChannel;
+import com.facilityone.wireless.componentservice.app.AppService;
+import com.luojilab.component.componentlib.router.Router;
 
 import java.util.HashMap;
 
@@ -22,8 +24,10 @@ public class MainApp extends Application {
 //        DBManager.getInstance();
 
         saveChannelParam();
-        Facility.init(this, "http://192.168.1.66:8080", BuildConfig.DEBUG);
+        Router.registerComponent("com.facilityone.wireless.workorder.applike.WorkorderApplike");
+        Facility.init(this, "http://47.99.236.153:8071/fz_iframe", BuildConfig.DEBUG);
         DBManager.getInstance();
+
     }
 
 

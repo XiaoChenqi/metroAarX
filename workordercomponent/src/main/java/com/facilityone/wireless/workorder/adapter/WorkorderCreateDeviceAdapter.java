@@ -1,6 +1,8 @@
 package com.facilityone.wireless.workorder.adapter;
 
 import androidx.annotation.Nullable;
+
+import android.util.Log;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -32,7 +34,7 @@ public class WorkorderCreateDeviceAdapter extends BaseQuickAdapter<SelectDataBea
         helper.setText(R.id.tv_name, StringUtils.formatString(item.getName()));
         helper.setText(R.id.tv_code, StringUtils.formatString(item.getFullName()));
         helper.setText(R.id.tv_location, StringUtils.formatString(item.getDesc()));
-
+        Log.d(TAG, "convert:1824241108010000000002 ");
 
         int currentPosition = helper.getLayoutPosition();
         helper.setGone(R.id.view_long_bottom, currentPosition == getData().size() - 1);

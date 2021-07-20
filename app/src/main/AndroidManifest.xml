@@ -12,41 +12,49 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:label, android:theme">
-<!--        <activity-->
-<!--            android:exported="true"-->
-<!--            android:name=".CcccActivity"></activity>-->
-        <activity
+        <activity android:name=".download.OutLineDataActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:exported="true"
-            android:name="com.facilityone.wireless.demand.DemandActivity"/>
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent"
+            ></activity>
+        <!-- <activity -->
+        <!-- android:exported="true" -->
+        <!-- android:name=".CcccActivity"></activity> -->
         <activity
-            android:exported="true"
-            android:name="com.facilityone.wireless.demand.DemandCreateActivity"/>
+            android:name="com.facilityone.wireless.demand.DemandActivity"
+            android:exported="true" />
         <activity
-            android:exported="true"
-            android:name="com.facilityone.wireless.workorder.WorkOrderActivity"/>
+            android:name="com.facilityone.wireless.demand.DemandCreateActivity"
+            android:exported="true" />
         <activity
-            android:exported="true"
-            android:name="com.facilityone.wireless.patrol.PatrolActivity"/>
+            android:name="com.facilityone.wireless.workorder.WorkOrderActivity"
+            android:exported="true" />
         <activity
-            android:exported="true"
-            android:name="com.facilityone.wireless.maintenance.MaintenanceActivity"/>
+            android:name="com.facilityone.wireless.workorder.WorkorderCreateActivity"
+            android:exported="true" />
         <activity
-            android:exported="true"
-            android:name="com.example.scanzxing.ScanZingMainActivity"/>
-        <activity android:name=".MainActivity"
-            >
+            android:name="com.facilityone.wireless.patrol.PatrolActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.facilityone.wireless.maintenance.MaintenanceActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.example.scanzxing.ScanZingMainActivity"
+            android:exported="true" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <!--<data android:host="MainActivity" android:scheme="com.tq.time"
-                    tools:ignore="AppLinkUrlError" />-->
+                 <data android:host="MainActivity" android:scheme="com.tq.time"
+                 tools:ignore="AppLinkUrlError" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="workorder_create_menu_id" type="id"/>
     <item name="workorder_main_id" type="id"/>
     <item name="workorder_upload_menu_id" type="id"/>
     <item name="workorder_laborer_menu_id" type="id"/>

@@ -1,5 +1,7 @@
 package com.facilityone.wireless.a.arch.offline.dao;
 
+import android.text.TextUtils;
+
 import com.facilityone.wireless.a.arch.ec.module.EquBean;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
@@ -199,6 +201,36 @@ public class EquDao {
         }
 
         return temp;
+    }
+
+    /**
+     * 根据设备编码查询
+     * @param equipmentFullName
+     * @return
+     */
+    public SelectDataBean queryEquById(String equipmentFullName) {
+
+        SelectDataBean bean = null;
+        if (!TextUtils.isEmpty(equipmentFullName)) {
+            Long projectId = FM.getProjectId();
+            String sql = "SELECT * FROM DBEQU WHERE PROJECT_ID = ? AND CODE = ?;";
+            String[] args = { projectId + "", equipmentFullName + "" };
+
+            Cursor cursor = mDbManager.query(args, sql);
+
+            if (cursor != null && cursor.moveToNext()) {
+                bean = new SelectDataBean();
+                bean.setId(cursor.getLong(cursor.getColumnIndex("ID")));
+                bean.setName(cursor.getString(cursor.getColumnIndex("NAME")));
+                bean.setFullName(cursor.getString(cursor.getColumnIndex("CODE")));
+                LocationBean location = LocationNullUtils.getNullLocation(cursor);
+                bean.setLocation(location);
+                bean.setHaveChild(false);
+                cursor.close();
+            }
+        }
+
+        return bean;
     }
 
     public SelectDataBean queryEquById(Long equipmentId) {
