@@ -30,7 +30,7 @@ public class WorkorderCreateActivity extends BaseFragmentActivity
         if(getIntent().getStringExtra("EquipmentId")!=null){
             equipId = getIntent().getStringExtra("EquipmentId");
         }
-        equipId = "1819191105010000000010";
+        //equipId = "1819191105010000000010";
     }
 
     @Override
