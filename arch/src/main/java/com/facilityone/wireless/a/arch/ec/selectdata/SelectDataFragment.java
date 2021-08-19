@@ -5,9 +5,11 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.R;
@@ -47,9 +49,11 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
     private static final String DATA_LOCATION = "data_location";
     private static final String DATA_LOCATION_NAME = "data_location_name";
     private static final String PATROL_ITEM_EXCEPTION = "patrol_item_exception";
+    private static final String REASON_TYPE="reason_type";
 
     private SelectDataAdapter mAdapter;
     private int mFromType;
+    private int mReasonType;
     private SelectDataBean mDepSelectData;
     private SelectDataBean mServiceTypeSelectData;
     private Long mWorkorderType;
@@ -70,7 +74,9 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
     private List<Long> mParentIds;
     private boolean inShowAllLocation;
     private boolean mShowSite = false; //此变量控制是否显示位置的site层级 true-显示， false-不显示
-
+    private List<SelectDataBean> firstList; //第一层级列表数据
+    private List<SelectDataBean> secondList; //第二层级列表数据
+    private List<SelectDataBean> secondAllList; //第二级根据Id查询的Id
     @Override
     public SelectDataPresenter createPresenter() {
         return new SelectDataPresenter();
@@ -98,6 +104,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         Bundle arguments = getArguments();
         if (arguments != null) {
             mFromType = arguments.getInt(DATA_TYPE);
+            mReasonType = arguments.getInt(REASON_TYPE);
             mDepSelectData = arguments.getParcelable(DATA_DEP);
             mParentId = arguments.getLong(DATA_PARENT_ID, -1L);
             mTitle = arguments.getString(DATA_TITLE, "");
@@ -105,6 +112,8 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             mWorkorderType = arguments.getLong(DATA_WORKORDER_TYPE_ID);
             mLocation = arguments.getParcelable(DATA_LOCATION);
             mLocationName = arguments.getString(DATA_LOCATION_NAME, "");
+
+
         }
         mLocationBean = new LocationBean();
         mListMap = new HashMap<>();
@@ -122,6 +131,10 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
                     mLocationBean.roomId = null;
                 }
             }
+        }else if (mFromType==ISelectDataService.DATA_TYPE_REASON){
+            getPresenter().queryReason(mReasonType);
+        }else if (mFromType == ISelectDataService.DATA_TYPE_INVALIDD){
+            getPresenter().queryReason(mReasonType);
         }
     }
 
@@ -360,21 +373,56 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        back = false;
-        SelectDataBean bean = mShow.get(position);
-        mBackBean = bean;
-        mDataBeanMap.put(mLevel, bean);
-        setLocationBean(mLevel, mBackBean.getId());
-        if (bean.getHaveChild()) {
-            queryDb();
-            return;
+        if (mFromType==ISelectDataService.DATA_TYPE_REASON||mFromType==ISelectDataService.DATA_TYPE_INVALIDD){
+            secondAllList = new ArrayList<>();
+            SelectDataBean beanOne = mShow.get(position);
+            if (checkSecond(beanOne.getId(),secondList)){
+                for (SelectDataBean second : secondList) {
+                    if (second.getParentId()==beanOne.getId()){
+                        secondAllList.add(second);
+                    }
+                }
+                mLevel = 2;
+                RecyclerViewUtil.setHeightMatchParent(false, mRecyclerView);
+                mAdapter.replaceData(secondAllList);
+                mAdapter.notifyDataSetChanged();
+            }else {
+                back = false;
+                SelectDataBean bean = mShow.get(position);
+                mBackBean = bean;
+                setBackResult();
+            }
+        }else {
+            back = false;
+            SelectDataBean bean = mShow.get(position);
+            mBackBean = bean;
+            mDataBeanMap.put(mLevel, bean);
+            setLocationBean(mLevel, mBackBean.getId());
+            if (bean.getHaveChild()) {
+                queryDb();
+                return;
+            }
+            mListMap.clear();
+            mListMap = null;
+            mDataBeanMap.clear();
+            mDataBeanMap = null;
+            setBackResult();
         }
-        mListMap.clear();
-        mListMap = null;
-        mDataBeanMap.clear();
-        mDataBeanMap = null;
-        setBackResult();
     }
+
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/16
+      * @Infor: 查询是否存在二级选项
+      */
+     public boolean checkSecond(Long Id,List<SelectDataBean> list){
+         for (SelectDataBean listChcek : list) {
+             if (listChcek.getParentId()==Id) {
+                 return true;
+             }
+         }
+         return false;
+     }
 
     /**
      * @param selectDataBeen
@@ -404,10 +452,20 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             mLevel--;
         }
         if (mLevel == 1) {
-            super.leftBackListener();
+            if (mFromType==ISelectDataService.DATA_TYPE_REASON || mFromType==ISelectDataService.DATA_TYPE_INVALIDD){
+                setBackResult();
+            }else {
+                super.leftBackListener();
+            }
+
         } else {
-            back = true;
-            queryDb();
+            if (mFromType==ISelectDataService.DATA_TYPE_REASON || mFromType==ISelectDataService.DATA_TYPE_INVALIDD){
+                mShow.clear();
+                getPresenter().queryReason(mReasonType);
+            }else {
+                back = true;
+                queryDb();
+            }
         }
     }
 
@@ -417,10 +475,21 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             mLevel--;
         }
         if (mLevel == 1) {
-            return super.onBackPressedSupport();
+            if (mFromType==ISelectDataService.DATA_TYPE_REASON || mFromType==ISelectDataService.DATA_TYPE_INVALIDD){
+                setBackResult();
+                return true;
+            }else {
+                return super.onBackPressedSupport();
+            }
+
         } else {
-            back = true;
-            queryDb();
+            if (mFromType==ISelectDataService.DATA_TYPE_REASON || mFromType==ISelectDataService.DATA_TYPE_INVALIDD){
+                mShow.clear();
+                getPresenter().queryReason(mReasonType);
+            }else {
+                back = true;
+                queryDb();
+            }
             return true;
         }
     }
@@ -444,6 +513,28 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
 
     public void setTotal(List<SelectDataBean> total) {
         mTotal = total;
+    }
+
+    public void getReasonAll(List<SelectDataBean> total){
+        firstList = new ArrayList<>();
+        secondList = new ArrayList<>();
+        for (SelectDataBean first : total) {
+            if (first.getParentId() == null){
+                firstList.add(first);
+            }else {
+                secondList.add(first);
+            }
+        }
+
+        if (total != null && total.size() > 0) {
+            RecyclerViewUtil.setHeightMatchParent(false, mRecyclerView);
+            mShow.addAll(firstList);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            RecyclerViewUtil.setHeightMatchParent(true, mRecyclerView);
+            mAdapter.setEmptyView(getNoDataView((ViewGroup) mRecyclerView.getParent()));
+        }
+
     }
 
     public void setTotalLocation(List<SelectDataBean> totalLocation) {
@@ -525,4 +616,14 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         instance.setArguments(bundle);
         return instance;
     }
+
+    public static SelectDataFragment getInstance(int type,int reasonType) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(DATA_TYPE, type);
+        bundle.putInt(REASON_TYPE,reasonType);
+        SelectDataFragment instance = new SelectDataFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+
 }

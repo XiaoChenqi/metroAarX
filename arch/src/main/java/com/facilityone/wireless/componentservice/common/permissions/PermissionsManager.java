@@ -21,6 +21,8 @@ import com.facilityone.wireless.componentservice.maintenance.MaintenanceService;
 import com.facilityone.wireless.componentservice.monitor.MonitorService;
 import com.facilityone.wireless.componentservice.patrol.PatrolService;
 import com.facilityone.wireless.componentservice.payment.PaymentService;
+import com.facilityone.wireless.componentservice.quickreport.QuickReport;
+import com.facilityone.wireless.componentservice.scan.ScanService;
 import com.facilityone.wireless.componentservice.sign.SignService;
 import com.facilityone.wireless.componentservice.visitor.VisitorService;
 import com.facilityone.wireless.componentservice.workorder.WorkorderService;
@@ -44,6 +46,12 @@ public class PermissionsManager {
     public static final String UNARRANGEORDERNUMBER = "unArrangeOrderNumber";                //待派工工单数量
     public static final String UNAPPROVALORDERNUMBER = "unApprovalOrderNumber";              //待审核工单数量
     public static final String UNARCHIVEDORDERNUMBER = "unArchivedOrderNumber";              //待存档工单数量
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/10
+      * @Infor: 新加
+      */
+    public static final String ABNORMALORDERNUMBER = "abNormalOrderNumber";              //异常工单数量
     public static final String PATROLTASKNUMBER = "patrolTaskNumber";                        //巡检任务数量
     public static final String UNAPPROVALREQUIREMENTNUMBER = "unApprovalRequirementNumber";  //待审核需求数量
     public static final String UNDOREQUIREMENTNUMBER = "undoRequirementNumber";              //待处理需求数量
@@ -102,14 +110,29 @@ public class PermissionsManager {
             mFbs.clear();
             mIndex = 0;
 
+            opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
+                    "\"m-requirement-approval\",\"m-requirement-evaluate\",\"m-requirement-query\"," +
+                    "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
+                    "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
+                    "\"m-ppm\",\"m-sign\",\"m-inventory-create\",\"m-inventory-create\"," +
+                    "\"m-inventory-in\",\"m-inventory-out\",\"m-inventory-move\"," +
+                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
+                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-one\",\"m-ppm-two\"," +
+                    "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\",]";
+
+            // 扫一扫
+            scanFunction(opensJson);
+            // 快速报障
+            QuickReportFunction(opensJson);
+
             bulletinFunction(opensJson);
 
-            patrolFunction(opensJson);
-
             requirementFunction(opensJson);
-
+            //维修管理
             workOrderFunction(opensJson);
-
+            //巡检
+            patrolFunction(opensJson);
+            //维护管理
             ppmFunction(opensJson);
 
             assetFunction(opensJson);
@@ -135,6 +158,8 @@ public class PermissionsManager {
             monitoringFunction(opensJson);
 
 
+
+
             int supplement = mFbs.size() % FunctionService.COUNT;
             if (supplement != 0) {
 
@@ -149,6 +174,31 @@ public class PermissionsManager {
             }
 
             return mFbs;
+        }
+
+
+        private void scanFunction(String opensJson) {
+            ScanService impl = (ScanService) mRouter.getService(ScanService.class.getSimpleName());
+            homeMenu(opensJson,
+                    getString(R.string.home_scan_permissions),
+                    impl,
+                    CommonConstant.MESSAGE_SCAN,
+                    R.drawable.home_function_scan,
+                    "扫一扫",
+                    null,
+                    null);
+        }
+
+        private void QuickReportFunction(String opensJson) {
+            QuickReport impl = (QuickReport) mRouter.getService(QuickReport.class.getSimpleName());
+            homeMenu(opensJson,
+                    getString(R.string.home_quickreport_permissions),
+                    impl,
+                    CommonConstant.MESSAGE_QUICK_REPORT,
+                    R.drawable.home_function_quick_report,
+                    "快速报障",
+                    null,
+                    null);
         }
 
         private void inspectionFunction(String opensJson) {
@@ -408,16 +458,53 @@ public class PermissionsManager {
                     null);
         }
 
+        /**
+         * 计划性维护
+         * */
         private void ppmFunction(String opensJson) {
+
+            int icons[] = {
+                    R.drawable.home_function_order_create
+                    , R.drawable.home_function_order_undo
+                    , R.drawable.home_function_order_arrange
+                    , R.drawable.home_function_order_approval
+                    , R.drawable.home_function_order_verify
+                    , R.drawable.home_function_abnormal
+                    , R.drawable.home_function_order_archive
+            };
+
+
+            String[] per = getStringArray(R.array.home_ppm_menu_child_permissions);
+            String[] titles = getStringArray(R.array.home_ppm_menu_child_title);
+            List<ChildMenu> childMenus = new ArrayList<>();
+            for (int i = 0; i < icons.length; i++) {
+                ChildMenu childMenu = new ChildMenu(per[i], CommonConstant.MESSAGE_WORK_ORDER,
+                        icons[i], titles[i], null, i);
+                if ("m-wo-process".equals(per[i])) {
+                    childMenu.jsonObjectKey = UNDOORDERNUMBER;
+                } else if ("m-wo-dispach".equals(per[i])) {
+                    childMenu.jsonObjectKey = UNARRANGEORDERNUMBER;
+                } else if ("m-wo-approval".equals(per[i])) {
+                    childMenu.jsonObjectKey = UNAPPROVALORDERNUMBER;
+                } else if ("m-wo-abnormal".equals(per[i])){
+                    childMenu.jsonObjectKey = ABNORMALORDERNUMBER;
+                }else if ("m-wo-close".equals(per[i])) {
+                    childMenu.jsonObjectKey = UNARCHIVEDORDERNUMBER;
+                }
+                childMenus.add(childMenu);
+            }
+
+            String[] child = { UNDOORDERNUMBER, UNARRANGEORDERNUMBER, UNAPPROVALORDERNUMBER,ABNORMALORDERNUMBER, UNARCHIVEDORDERNUMBER };
+
             MaintenanceService impl = (MaintenanceService) mRouter.getService(MaintenanceService.class.getSimpleName());
             homeMenu(opensJson,
                     getString(R.string.home_ppm_permissions),
                     impl,
                     CommonConstant.MESSAGE_MAINTANCE,
                     R.drawable.home_function_maintance,
-                    getString(R.string.home_ppm_menu_title),
+                    "维护管理",
                     null,
-                    null);
+                    childMenus);
         }
 
         private void workOrderFunction(String opensJson) {
@@ -426,6 +513,7 @@ public class PermissionsManager {
                     , R.drawable.home_function_order_arrange
                     , R.drawable.home_function_order_approval
                     , R.drawable.home_function_order_verify
+                    , R.drawable.home_function_abnormal
                     , R.drawable.home_function_order_archive
                     , R.drawable.home_function_order_query,
             };
@@ -442,13 +530,15 @@ public class PermissionsManager {
                     childMenu.jsonObjectKey = UNARRANGEORDERNUMBER;
                 } else if ("m-wo-approval".equals(per[i])) {
                     childMenu.jsonObjectKey = UNAPPROVALORDERNUMBER;
-                } else if ("m-wo-close".equals(per[i])) {
+                } else if ("m-wo-abnormal".equals(per[i])){
+                    childMenu.jsonObjectKey = ABNORMALORDERNUMBER;
+                }else if ("m-wo-close".equals(per[i])) {
                     childMenu.jsonObjectKey = UNARCHIVEDORDERNUMBER;
                 }
                 childMenus.add(childMenu);
             }
 
-            String[] child = { UNDOORDERNUMBER, UNARRANGEORDERNUMBER, UNAPPROVALORDERNUMBER, UNARCHIVEDORDERNUMBER };
+            String[] child = { UNDOORDERNUMBER, UNARRANGEORDERNUMBER, UNAPPROVALORDERNUMBER,ABNORMALORDERNUMBER, UNARCHIVEDORDERNUMBER };
 
             WorkorderService impl = (WorkorderService) mRouter.getService(WorkorderService.class.getSimpleName());
 
@@ -457,7 +547,8 @@ public class PermissionsManager {
                     impl,
                     CommonConstant.MESSAGE_WORK_ORDER,
                     R.drawable.home_function_work_order,
-                    getString(R.string.home_workOrder_menu_title),
+//                    getString(R.string.home_workOrder_menu_title),
+                    "维修管理",
                     child,
                     childMenus);
         }
@@ -467,9 +558,9 @@ public class PermissionsManager {
 
             int icons[] = {
                     R.drawable.home_function_service_create,
-                    R.drawable.home_function_service_uncheck,
                     R.drawable.home_function_service_unfinish,
                     R.drawable.home_function_service_finish,
+                    R.drawable.home_function_service_uncheck,
                     R.drawable.home_function_service_query,
             };
             String[] per = getStringArray(R.array.home_service_menu_child_permissions);
@@ -479,16 +570,18 @@ public class PermissionsManager {
                 ChildMenu childMenu = new ChildMenu(per[i], CommonConstant.MESSAGE_DEMAND,
                         icons[i], titles[i], null, i);
                 if ("m-requirement-approval".equals(per[i])) {
-                    childMenu.jsonObjectKey = UNAPPROVALREQUIREMENTNUMBER;
-                } else if ("m-requirement-process".equals(per[i])) {
+//                    childMenu.jsonObjectKey = UNAPPROVALREQUIREMENTNUMBER;
                     childMenu.jsonObjectKey = UNDOREQUIREMENTNUMBER;
+                } else if ("m-requirement-process".equals(per[i])) {
+                    childMenu.jsonObjectKey = UNAPPROVALREQUIREMENTNUMBER;
+//                    childMenu.jsonObjectKey = UNDOREQUIREMENTNUMBER;
                 } else if ("m-requirement-evaluate".equals(per[i])) {
                     childMenu.jsonObjectKey = UNEVALUATEREQUIREMENTNUMBER;
                 }
                 childMenus.add(childMenu);
             }
 
-            String[] child = { UNAPPROVALREQUIREMENTNUMBER, UNDOREQUIREMENTNUMBER, UNEVALUATEREQUIREMENTNUMBER };
+            String[] child = {UNDOREQUIREMENTNUMBER, UNAPPROVALREQUIREMENTNUMBER, UNEVALUATEREQUIREMENTNUMBER };
 
             DemandService impl = (DemandService) mRouter.getService(DemandService.class.getSimpleName());
             homeMenu(opensJson,
@@ -496,7 +589,8 @@ public class PermissionsManager {
                     impl,
                     CommonConstant.MESSAGE_DEMAND,
                     R.drawable.home_function_service,
-                    getString(R.string.home_service_menu_title),
+//                    getString(R.string.home_service_menu_title),
+                    "报障台",
                     child,
                     childMenus);
         }
@@ -713,6 +807,13 @@ public class PermissionsManager {
             case CommonConstant.MESSAGE_BULLETIN:
                 has = instance.getFunctionPermission(context.getResources().getString(R.string.home_bulletin_permissions));
                 break;
+            case CommonConstant.MESSAGE_SCAN:
+                has = instance.getFunctionPermission(context.getResources().getString(R.string.home_scan_permissions));
+                break;
+            case CommonConstant.MESSAGE_QUICK_REPORT:
+                has = instance.getFunctionPermission(context.getResources().getString(R.string.home_quickreport_permissions));
+                break;
+
         }
         return has;
     }

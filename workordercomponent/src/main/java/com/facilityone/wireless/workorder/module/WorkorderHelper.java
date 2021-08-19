@@ -31,6 +31,20 @@ public class WorkorderHelper {
         return v;
     }
 
+    public static Map<Integer, String> getWorkNewStatusMap(Context context) {
+        Map<Integer, String> v = new LinkedHashMap<Integer, String>();
+        String[] stat = context.getResources().getStringArray(R.array.workorder_new_status);
+        v.put(WorkorderConstant.WORK_NEW_STATUS_DISPATCHING, stat[0]);
+        v.put(WorkorderConstant.WORK_NEW_STATUS_PROCESS, stat[1]);
+        v.put(WorkorderConstant.WORK_NEW_STATUS_ARCHIVED_WAIT, stat[2]);
+        v.put(WorkorderConstant.WORK_NEW_STATUS_APPROVAL_WAIT, stat[3]);
+        v.put(WorkorderConstant.WORK_NEW_STATUS_ARCHIVED, stat[4]);
+        v.put(WorkorderConstant.WORK_NEW_STATUS_DESTORY, stat[5]);
+        return v;
+    }
+
+
+
     public static Map<Integer, String> getHistoryRecorderMap(Context context) {
         Map<Integer, String> v = new LinkedHashMap<>();
         String[] workerHistory = context.getResources()

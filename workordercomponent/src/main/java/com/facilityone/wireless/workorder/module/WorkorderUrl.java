@@ -15,6 +15,8 @@ public interface WorkorderUrl {
     String WORKORDER_LIST_APPROVAL_URL = "/m/v1/workorder/wos/unapproval";
     //待存档工单
     String WORKORDER_LIST_TO_CLOSED_URL = "/m/v1/workorder/to-be-closed";
+    //异常工单
+    String WORKORDER_LIST_ABNOMAL_URL = "/m/v1/workorder/exception";
     //工单查询
     String WORKORDER_LIST_TO_QUERY_URL = "/m/v1/workorder/hquery";
     //我的报障
@@ -22,7 +24,7 @@ public interface WorkorderUrl {
     //创建工单
     String WORKORDER_CREATE_URL = "/m/v2/servicecenter/submit";
     //工单详情
-    String WORKORDER_INFO_URL = "/m/v2/workorder/wos/detail";
+    String WORKORDER_INFO_URL = "/m/v4/workorder/wos/detail";
     //工单执行人工作时间保存
     String WORKORDER_LABORER_SAVE_TIME_URL = "/m/v1/workorder/save/laborer";
     //工单执行人
@@ -53,4 +55,23 @@ public interface WorkorderUrl {
     String WORKORDER_EDITOR_SPACE_URL = "/m/v1/workorder/update/location";
     //获取工单物资预定记录
     String WORKORDER_RESERVE_RECORD_LIST_URL = "/m/v1/workorder/materialReservation";
+
+
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/13
+      * @Infor: 四运定制开发
+      */
+     //新派工单
+    String NEW_ORDER_CREATE = "/m/v1/workorder/redispatch";
+    //申请作废
+    String INVALID_ORDER_POST = "/m/v1/workorder/operate/request/invalid";
+    //暂停工单
+    String WORKORDER_OPT_PAUSE_URL="/m/v1/workorder/operate/request/pause";
+    //原因列表
+    String WORKORDER_REASON_URL="/m/v1/workorder/reason/list";
+
+    //异常工单审批
+    String WORKORDER_OPT_EXCEPTION_APPROVAL_V_URL = "/m/v1/workorder/exception/approve";
+
 }

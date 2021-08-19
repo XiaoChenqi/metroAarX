@@ -10,7 +10,6 @@ import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.componentservice.common.permissions.PermissionsManager;
 import com.fm.tool.network.model.BaseResponse;
-import com.luojilab.component.componentlib.router.ui.UIRouter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -33,8 +32,6 @@ public class EmptyPresenter extends CommonBasePresenter<EmptyFragment> {
 
     @Override
     public void onLogonSuccess() {
-        //TODO xcq
-        //Long pId = 10L;
         Long pId = 1L;
         FM.getConfigurator().withProjectId(pId);
 
@@ -46,19 +43,11 @@ public class EmptyPresenter extends CommonBasePresenter<EmptyFragment> {
         SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.HAVE_LOGON, true);
 
         getPermissions();
-
     }
 
     @Override
     public void getPermissionsSuccess(String data) {
         List<FunctionService.FunctionBean> list = PermissionsManager.HomeFunction.getInstance().show(data);
-
-        //TODO xcq
-//        Bundle bundle = new Bundle();
-//        bundle.putBoolean(IService.COMPONENT_RUNALONE, true);
-//        getV().goFragment(bundle);
-
-        //TODO
 
         for (FunctionService.FunctionBean bean : list) {
             if (bean.type == type) {

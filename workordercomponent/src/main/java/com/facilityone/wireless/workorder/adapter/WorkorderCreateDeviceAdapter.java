@@ -2,7 +2,7 @@ package com.facilityone.wireless.workorder.adapter;
 
 import androidx.annotation.Nullable;
 
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -24,6 +24,15 @@ import java.util.List;
 public class WorkorderCreateDeviceAdapter extends BaseQuickAdapter<SelectDataBean, BaseViewHolder> {
 
     private OnItemClick mOnItemClick;
+    private Boolean canSwip;
+
+    public Boolean getCanSwip() {
+        return canSwip;
+    }
+
+    public void setCanSwip(Boolean canSwip) {
+        this.canSwip = canSwip;
+    }
 
     public WorkorderCreateDeviceAdapter(@Nullable List<SelectDataBean> data) {
         super(R.layout.adapter_workorder_create_device_item, data);
@@ -31,10 +40,12 @@ public class WorkorderCreateDeviceAdapter extends BaseQuickAdapter<SelectDataBea
 
     @Override
     protected void convert(final BaseViewHolder helper, final SelectDataBean item) {
+        SwipeMenuLayout view = helper.getView(R.id.swipeMenuLayout);
+        view.setSwipeEnable(getCanSwip());
         helper.setText(R.id.tv_name, StringUtils.formatString(item.getName()));
         helper.setText(R.id.tv_code, StringUtils.formatString(item.getFullName()));
         helper.setText(R.id.tv_location, StringUtils.formatString(item.getDesc()));
-        Log.d(TAG, "convert:1824241108010000000002 ");
+
 
         int currentPosition = helper.getLayoutPosition();
         helper.setGone(R.id.view_long_bottom, currentPosition == getData().size() - 1);

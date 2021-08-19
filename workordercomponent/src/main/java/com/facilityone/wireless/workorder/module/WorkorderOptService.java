@@ -38,6 +38,15 @@ public class WorkorderOptService {
         public String operateDescription;
     }
 
+    //暂停工单
+    public static class WorkorderOptPauseReq {
+        public Long woId;
+        public Integer type;
+        public String desc;
+        public Long operateReasonId;
+        public Long endTime;
+    }
+
     //审批申请
     public static class WorkorderOptApprovalReq {
         public Long woId;
@@ -110,5 +119,25 @@ public class WorkorderOptService {
         public Integer operateType;
         public Double amount;
         public String name;
+    }
+
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/16
+      * @Infor: 作废申请
+      */
+     public static class InvalidOrderPostReq{
+         public Long woId; //工单Id
+         public String desc ; //申请作废原因
+         public Long operateReasonId; //申请作废原因Id
+     }
+
+
+
+    //异常工单审批申请
+    public static class WorkorderOptExceptionApprovalReq {
+        public Long woId;
+        public Integer status;
+        public String approveNote;
     }
 }

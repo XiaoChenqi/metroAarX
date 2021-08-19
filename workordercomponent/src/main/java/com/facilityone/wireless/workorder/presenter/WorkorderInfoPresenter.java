@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
+import com.facilityone.wireless.a.arch.ec.module.Page;
 import com.facilityone.wireless.a.arch.widget.BottomTextListSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.FMBottomInputSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
@@ -27,6 +28,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+//import razerdp.basepopup.BasePopupWindow;
 
 /**
  * Author：gary
@@ -36,17 +38,21 @@ import java.util.Map;
  */
 public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfoFragment> {
 
+
+
+
     @Override
     public void getWorkorderInfoSuccess(Long woId, WorkorderService.WorkorderInfoBean data) {
         super.getWorkorderInfoSuccess(woId, data);
         if (data != null) {
-            if (data.workOrderLaborers != null && data.workOrderLaborers.size() > 0) {
-                boolean laborer = processingLaborer(data.workOrderLaborers, getV().getStatus(), data.status);
-                if (!laborer) {
-                    getV().setRefreshStatus(-1);
-                }
-                getV().setLaborer(laborer);
-            }
+//            if (data.workOrderLaborers != null && data.workOrderLaborers.size() > 0) {
+//                boolean laborer = processingLaborer(data.workOrderLaborers, getV().getStatus(), data.status);
+//                if (!laborer) {
+////                    getV().setRefreshStatus(-1);
+//                    getV().setRefreshStatus(data.status);
+//                }
+//                getV().setLaborer(laborer);
+//            }
             getV().refreshBasicInfoUI(data);
             //请求物料
             getWorkorderReserveRecordList(woId);
@@ -55,6 +61,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             getV().refreshEquipmentUI(data);
             getV().refreshToolsAndBplUI(data);
             getV().refreshPayment(data);
+            getV().getData(data);
         } else {
             getV().refreshError();
         }
@@ -190,7 +197,16 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             case WorkorderConstant.WORK_STATUS_SUSPENDED_GO:// 已暂停(继续工作)
                 menu.add(getV().getString(R.string.workorder_continue_order));
                 break;
+                 /**
+                  * @Auther: karelie
+                  * @Date: 2021/8/12
+                  * @Infor: 四运独有 新派工单
+                  */
             case WorkorderConstant.WORK_STATUS_TERMINATED:// 已终止
+                menu.add("新派工单");
+                menu.add(getV().getString(R.string.workorder_verify_tip));
+                menu.add("作废申请");
+                break;
             case WorkorderConstant.WORK_STATUS_COMPLETED:// 已完成
                 menu.add(getV().getString(R.string.workorder_verify_tip));
                 menu.add(getV().getString(R.string.workorder_archive));
@@ -203,6 +219,10 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             case WorkorderConstant.WORK_STATUS_APPROVAL:// 待审批
                 menu.add(getV().getString(R.string.workorder_approval_order));
                 break;
+            case WorkorderConstant.WORK_STATUS_UBNORMAL:// 异常
+                menu.add("审批");
+                break;
+
         }
 
         if (menu.size() == 0) {
@@ -265,7 +285,12 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 } else if (tag.equals(getV().getString(R.string.workorder_approval_order))) {
                     approvalWorkOrder(context, woId, approvalId);
                 } else if (tag.equals(getV().getString(R.string.workorder_verify_tip))) {
-                    verifiedWorkOrder(context, woId);
+                    if (status == WorkorderConstant.WORK_STATUS_TERMINATED){
+                        verifiedWorkOrder(context, woId,true);
+                    }else {
+                        verifiedWorkOrder(context, woId,false);
+                    }
+
                 } else if (tag.equals(getV().getString(R.string.workorder_archive))) {
                     workorderOptCommon(woId, null, WorkorderConstant.WORKORDER_OPT_TYPE_ARCHIVE);
                 } else if (tag.equals(getV().getString(R.string.workorder_accept_order))) {
@@ -301,11 +326,44 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 } else if (tag.equals(getV().getString(R.string.workorder_continue_order))) {
                     workorderOptCommon(woId, null, WorkorderConstant.WORKORDER_OPT_TYPE_CONTINUE,
                             false);
+                }else if (tag.equals("新派工单")){
+                    getV().newOrder();
+                }else if (tag.equals("作废申请")){
+                    getV().invalidOrder(woId);
                 }
             }
         });
         builder.build().show();
 
+    }
+
+
+    //申请作废
+    public void invalidOrderPost(Long woId,String desc,Long operateReasonId){
+        getV().showLoading();
+        WorkorderOptService.InvalidOrderPostReq request = new WorkorderOptService.InvalidOrderPostReq();
+        request.woId = woId;
+        request.desc = desc;
+        request.operateReasonId = operateReasonId;
+        OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.INVALID_ORDER_POST)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<Object>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<Object>> response) {
+                        getV().dismissLoading();
+                        ToastUtils.showShort(R.string.workorder_operate_success);
+                        getV().pop();
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<Object>> response) {
+                        ToastUtils.showShort(R.string.workorder_operate_fail);
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
     }
 
     //终止
@@ -403,7 +461,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
     }
 
     //验证
-    private void verifiedWorkOrder(Context context, final Long woId) {
+    private void verifiedWorkOrder(Context context, final Long woId,boolean hideRight) {
         FMBottomInputSheetBuilder builder = new FMBottomInputSheetBuilder(context);
         builder.setOnSaveInputListener(new FMBottomInputSheetBuilder.OnInputBtnClickListener() {
             @Override
@@ -425,6 +483,11 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
         });
         QMUIBottomSheet build = builder.build();
         builder.getLLTwoBtn().setVisibility(View.VISIBLE);
+        if (hideRight){
+            builder.getRightBtn().setVisibility(View.GONE);
+        }else {
+            builder.getRightBtn().setVisibility(View.VISIBLE);
+        }
         builder.setTitle(R.string.workorder_tip_verify);
         builder.setDescHint(R.string.workorder_desc);
         builder.getRightBtn().setBackgroundResource(R.drawable.btn_common_bg_selector);
@@ -435,41 +498,107 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
         build.show();
     }
 
-    //暂停
+    //显示暂停弹窗
     private void suspendedWorkOrder(Context context, final Long woId) {
-        FMBottomInputSheetBuilder builder = new FMBottomInputSheetBuilder(context);
-        builder.setOnSaveInputListener(new FMBottomInputSheetBuilder.OnInputBtnClickListener() {
-            @Override
-            public void onSaveClick(QMUIBottomSheet dialog, String input) {
-
-            }
-
-            @Override
-            public void onLeftClick(QMUIBottomSheet dialog, String input) {
-                dialog.dismiss();
-                workorderOptCommon(woId, input, WorkorderConstant.WORKORDER_OPT_TYPE_SUSPENSION_NO_FURTHER);
-            }
-
-            @Override
-            public void onRightClick(QMUIBottomSheet dialog, String input) {
-                dialog.dismiss();
-                workorderOptCommon(woId, input, WorkorderConstant.WORKORDER_OPT_TYPE_SUSPENSION_CONTINUED);
-            }
-        });
-        QMUIBottomSheet build = builder.build();
-        builder.getLLTwoBtn().setVisibility(View.VISIBLE);
-        builder.setTitle(R.string.workorder_pause_tip);
-        builder.setShowTip(true);
-        builder.setTip(R.string.workorder_pause_tip_a);
-        builder.setDescHint(R.string.workorder_pause_reason_hint);
-        builder.getRightBtn().setBackgroundResource(R.drawable.btn_common_bg_selector);
-        builder.setTwoBtnLeftInput(false);
-        builder.setTwoBtnRightInput(false);
-        builder.setLeftBtnText(R.string.workorder_over_order);
-        builder.setRightBtnText(R.string.workorder_continue_order);
-        build.show();
+        getV().showPauseDialog(context,woId);
     }
 
+
+    //暂停工单
+    public void pauseWorkOrder(Long woId, String input, Long optId,int type, Long time){
+        getV().showLoading();
+        WorkorderOptService.WorkorderOptPauseReq request = new WorkorderOptService.WorkorderOptPauseReq();
+        request.woId = woId;
+        request.desc = input;
+        request.type = type;
+        request.operateReasonId=optId;
+        request.endTime=time;
+        OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_OPT_PAUSE_URL)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<Object>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<Object>> response) {
+                        getV().dismissLoading();
+                        ToastUtils.showShort(R.string.workorder_operate_success);
+                        getV().setNeedJump(false);
+                        if (false) {
+                            if(type == WorkorderConstant.WORKORDER_OPT_TYPE_SUSPENSION_CONTINUED){
+                                getV().setRefreshStatus(WorkorderConstant.WORK_STATUS_SUSPENDED_GO);
+                                getV().setNeedJump(false);
+                            }else if(type == WorkorderConstant.WORKORDER_OPT_TYPE_VERIFY_PASS){
+                                getV().setRefreshStatus(WorkorderConstant.WORK_STATUS_VERIFIED);
+                                getV().setNeedJump(false);
+                            }
+                            getV().pop();
+                        } else {
+                            getV().getRefreshLayout().autoRefresh();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<Object>> response) {
+                        ToastUtils.showShort(R.string.workorder_operate_fail);
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
+    }
+
+    //异常工单审批请求
+    public void approveExceptionWorkorder(Long woId,int status,String approvalNote){
+        getV().showLoading();
+        WorkorderOptService.WorkorderOptExceptionApprovalReq request = new WorkorderOptService.WorkorderOptExceptionApprovalReq();
+        request.woId = woId;
+        request.status=status;
+        request.approveNote=approvalNote;
+        OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_OPT_EXCEPTION_APPROVAL_V_URL)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<Object>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<Object>> response) {
+                        getV().dismissLoading();
+                        ToastUtils.showShort(R.string.workorder_operate_success);
+                        getV().setNeedJump(true);
+//                        getV().setRefreshStatus(WorkorderConstant.WORK_STATUS_NONE);
+                        getV().pop();
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<Object>> response) {
+                        ToastUtils.showShort(R.string.workorder_operate_fail);
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
+    }
+
+
+    //原因列表
+    private void reasonList(){
+        getV().showLoading();
+        WorkorderService.WorkorderReasonQueryReq request = new WorkorderService.WorkorderReasonQueryReq();
+        request.type=0;
+        request.page=new Page();
+        OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_REASON_URL)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<Object>>() {
+                             @Override
+                             public void onSuccess(Response<BaseResponse<Object>> response) {
+                                 getV().dismissLoading();
+                                 Object temp = response.body().data;
+                             }
+
+
+
+    });
+    }
     //退单
     private void backWorkOrder(Context context, final Long woId) {
         FMBottomInputSheetBuilder builder = new FMBottomInputSheetBuilder(context);
@@ -559,4 +688,6 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
     public void getWorkOrderMaterialSuccess(List<WorkorderService.WorkorderReserveRocordBean> data) {
         getV().refreshMaterialUI(data);
     }
+
+
 }

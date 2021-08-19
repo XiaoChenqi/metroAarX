@@ -55,7 +55,7 @@ public class WorkorderServiceImpl implements WorkorderService {
     public BaseFragment getWorkorderCreateFragment(int fromType, long equipmentId
             , String locationName, LocationBean locationBean
             , List<LocalMedia> localMedias, Long itemId
-            , String desc, Long demandId, String phone, String people,boolean waterMark) {
+            , String desc, Long demandId, String phone, String people, boolean waterMark) {
         return WorkorderCreateFragment.getInstance(fromType,
                 equipmentId, locationName,
                 locationBean, localMedias, itemId,

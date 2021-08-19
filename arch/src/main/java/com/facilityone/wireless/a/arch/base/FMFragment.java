@@ -34,7 +34,7 @@ import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
  */
 public abstract class FMFragment extends SwipeBackFragment {
 
-    private View mRootView;
+    protected View mRootView;
     protected ImmersionBar mImmersionBar;
     protected QMUITopBarLayout mTopBarLayout;
     protected QMUITopBar mTopBar;
@@ -67,17 +67,9 @@ public abstract class FMFragment extends SwipeBackFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        //super.onViewCreated(view, savedInstanceState);
-        super.onViewCreated(view,savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
         if (view != null) {
             View titleBar = view.findViewById(setTitleBar());
-            if(tb!=null){
-                titleBar.setBackgroundColor(tb.getColor());//设置颜色
-            }
-
-
-            //titleBar.setBackgroundColor(PatrolActivity.themeColor);
-
             if (titleBar != null) {
                 ImmersionBar.setTitleBar(_mActivity, titleBar);
             }
@@ -92,31 +84,6 @@ public abstract class FMFragment extends SwipeBackFragment {
     protected int setTitleBar() {
         return 0;
     }
-
-    private TitleBar tb;
-
-    protected void setTitleBarValues(TitleBar titleBar) {
-        this.tb = titleBar;
-    }
-
-
-    protected class TitleBar{
-
-        int color;
-
-        public TitleBar(int color) {
-            this.color = color;
-        }
-
-        public int getColor() {
-            return color;
-        }
-
-        public void setColor(int color) {
-            this.color = color;
-        }
-    }
-
 
     protected int setStatusBarView() {
         return 0;
@@ -153,11 +120,7 @@ public abstract class FMFragment extends SwipeBackFragment {
     }
 
     public void leftBackListener() {
-        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            pop();
-        } else {
-            getActivity().finish();
-        }
+        pop();
     }
 
     public TextView setTitle(int resId) {

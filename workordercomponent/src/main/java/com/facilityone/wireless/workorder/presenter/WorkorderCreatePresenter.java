@@ -57,6 +57,8 @@ public class WorkorderCreatePresenter extends CommonBasePresenter<WorkorderCreat
     public void createWorkorder(final int type) {
         WorkorderCreateService.WorkorderCreateReq request = getV().getRequest();
         OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_CREATE_URL)
+        //测试地址
+//        OkGo.<BaseResponse<Object>>post("http://mock.mikumo.xyz/mock/14" + WorkorderUrl.WORKORDER_CREATE_URL)
                 .tag(getV())
                 .isSpliceUrl(true)
                 .upJson(toJson(request))
@@ -82,6 +84,32 @@ public class WorkorderCreatePresenter extends CommonBasePresenter<WorkorderCreat
 
     }
 
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/13
+      * @Infor: 新派工单
+      */
+     public void newOrderCreare(WorkorderCreateService.newOrderCreate req){
+         OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.NEW_ORDER_CREATE)
+                 .tag(getV())
+                 .isSpliceUrl(true)
+                 .upJson(toJson(req))
+                 .execute(new FMJsonCallback<BaseResponse<Object>>() {
+                     @Override
+                     public void onSuccess(Response<BaseResponse<Object>> response) {
+                         getV().dismissLoading();
+                         ToastUtils.showShort(R.string.workorder_submit_success);
+                         getV().pop();
+                     }
+
+                     @Override
+                     public void onError(Response<BaseResponse<Object>> response) {
+                         super.onError(response);
+                         getV().dismissLoading();
+                         ToastUtils.showShort(R.string.workorder_submit_failed);
+                     }
+                 });
+     }
     /**
      * 根据设备编号查询设备信息，用于隧道院
      * @param equipmentFullName
@@ -144,7 +172,6 @@ public class WorkorderCreatePresenter extends CommonBasePresenter<WorkorderCreat
                     }
                 });
     }
-
     public void getEquipmentFromDB(final long equipmentId) {
         Observable.create(new ObservableOnSubscribe<SelectDataBean>() {
             @Override

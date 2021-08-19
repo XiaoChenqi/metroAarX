@@ -1,23 +1,36 @@
 package com.facilityone.wireless.a.arch.widget;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
+import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.R;
 import com.facilityone.wireless.basiclib.utils.DataUtils;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -49,6 +62,8 @@ public class FMBottomInputSheetBuilder implements TextWatcher, View.OnClickListe
     private boolean twoNeedLeftInput;//两个按钮的时候是否需要输入内容才可以保存
     private boolean twoNeedRightInput;//两个按钮的时候是否需要输入内容才可以保存
 
+
+
     public FMBottomInputSheetBuilder(Context context) {
         this.mContext = context;
         showTip = context.getString(R.string.arch_work_content_hint);
@@ -64,6 +79,8 @@ public class FMBottomInputSheetBuilder implements TextWatcher, View.OnClickListe
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return mDialog;
     }
+
+
 
     private View buildViews() {
         View wrapperView = View.inflate(mContext, getContentViewLayoutId(), null);
@@ -104,6 +121,7 @@ public class FMBottomInputSheetBuilder implements TextWatcher, View.OnClickListe
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         temp = s;
+
     }
 
     @Override
@@ -121,6 +139,7 @@ public class FMBottomInputSheetBuilder implements TextWatcher, View.OnClickListe
             int tempSelection = selectionStart;
             mDescEt.setText(s);
             mDescEt.setSelection(tempSelection);
+
         }
         setInputNumber(mMaxNumber - number < 0 ? 0 : mMaxNumber - number);
     }
@@ -148,6 +167,8 @@ public class FMBottomInputSheetBuilder implements TextWatcher, View.OnClickListe
         }
         return this;
     }
+
+
 
     public FMBottomInputSheetBuilder setTip(@StringRes int tip) {
         setTip(mContext.getResources().getString(tip));
@@ -261,6 +282,8 @@ public class FMBottomInputSheetBuilder implements TextWatcher, View.OnClickListe
         return mLLTwoBtn;
     }
 
+
+
     public void setShowTip(String showTip) {
         this.showTip = showTip;
     }
@@ -272,6 +295,9 @@ public class FMBottomInputSheetBuilder implements TextWatcher, View.OnClickListe
 
     @Override
     public void onClick(View v) {
+
+
+
         if (mOnSaveInputListener != null && mDescEt != null) {
             String input = mDescEt.getText().toString();
             if (v.getId() == R.id.btn_save) {
@@ -300,9 +326,11 @@ public class FMBottomInputSheetBuilder implements TextWatcher, View.OnClickListe
 
     private OnInputBtnClickListener mOnSaveInputListener;
 
+
     public void setOnSaveInputListener(OnInputBtnClickListener onSaveInputListener) {
         mOnSaveInputListener = onSaveInputListener;
     }
+
 
     public interface OnInputBtnClickListener {
         void onSaveClick(QMUIBottomSheet dialog, String input);
@@ -311,4 +339,10 @@ public class FMBottomInputSheetBuilder implements TextWatcher, View.OnClickListe
 
         void onRightClick(QMUIBottomSheet dialog, String input);
     }
+
+
+
+
+
+
 }

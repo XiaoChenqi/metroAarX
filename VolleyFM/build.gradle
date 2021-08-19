@@ -34,4 +34,7 @@ android {
     defaultConfig {
         minSdkVersion 14
     }
+    dataBinding{
+        enabled = true
+    }
 }

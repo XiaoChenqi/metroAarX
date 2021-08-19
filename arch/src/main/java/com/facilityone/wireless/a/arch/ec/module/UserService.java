@@ -22,7 +22,7 @@ public class UserService {
         public String activited;
         public String number;
         public String extension;
-        public String location;
+        public LocationBean location;
         public String skills;
         public String title;
         public String type;

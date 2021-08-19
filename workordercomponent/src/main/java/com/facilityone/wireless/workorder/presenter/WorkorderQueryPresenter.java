@@ -72,10 +72,32 @@ public class WorkorderQueryPresenter extends BaseWorkOrderPresenter<WorkorderQue
      */
     public List<AttachmentBean> getWorkorderStatus(Context context) {
         List<AttachmentBean> ts = new ArrayList<>();
-        String[] stringArray = context.getResources().getStringArray(R.array.workorder_status);
+        String[] stringArray = context.getResources().getStringArray(R.array.workorder_query_stat);
 
         if (stringArray.length > 0) {
-            for (int i = 0, length = stringArray.length - 1; i < length; i++) {
+            for (int i = 0, length = stringArray.length; i < length; i++) {
+                AttachmentBean tb = new AttachmentBean();
+                tb.value = (long) i;
+                tb.name = stringArray[i];
+                ts.add(tb);
+            }
+        }
+
+        return ts;
+    }
+
+    /**
+     * 工单标签
+     *
+     * @param context
+     * @return
+     */
+    public List<AttachmentBean> getWorkorderLabels(Context context) {
+        List<AttachmentBean> ts = new ArrayList<>();
+        String[] stringArray = context.getResources().getStringArray(R.array.workorder_label_stat);
+
+        if (stringArray.length > 0) {
+            for (int i = 0, length = stringArray.length; i < length; i++) {
                 AttachmentBean tb = new AttachmentBean();
                 tb.value = (long) i;
                 tb.name = stringArray[i];

@@ -1,7 +1,5 @@
 package com.facilityone.wireless.workorder.module;
 
-import java.util.List;
-
 /**
  * Created by peter.peng on 2019/6/19.
  * 工单存储大数据传递使用

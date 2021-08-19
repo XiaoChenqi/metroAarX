@@ -138,8 +138,8 @@
     <string name="workorder_no_data">暂无数据</string>
     <!--我的报障-->
     <string name="workorder_my_report_fault">我的报障</string>
-    <!--工单查询-->
-    <string name="workorder_query">工单查询</string>
+    <!--维护工单查询-->
+    <string name="workorder_query">维护工单查询</string>
     <!--不限-->
     <string name="workorder_unlimited">不限</string>
     <!--年-->
@@ -415,6 +415,9 @@
     <string name="workorder_select">请选择服务类型</string>
     <!--工单状态-->
     <string name="workorder_status">状态</string>
+
+    <!--工单标签-->
+    <string name="workorder_label">标签</string>
     <!--重置-->
     <string name="workorder_reset">重置</string>
     <!--确定-->

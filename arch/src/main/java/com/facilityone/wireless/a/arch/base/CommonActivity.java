@@ -2,7 +2,6 @@ package com.facilityone.wireless.a.arch.base;
 
 import me.yokeyword.fragmentation_swipeback.SwipeBackActivity;
 
-
 /**
  * Author：gary
  * Email: xuhaozv@163.com

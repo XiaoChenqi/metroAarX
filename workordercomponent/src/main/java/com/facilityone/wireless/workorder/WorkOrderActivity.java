@@ -8,6 +8,7 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.workorder.fragment.WorkorderMenuFragment;
+import com.kongzue.dialogx.DialogX;
 import com.luojilab.router.facade.annotation.RouteNode;
 
 /**
@@ -35,13 +36,13 @@ public class WorkOrderActivity extends BaseFragmentActivity implements EmptyFrag
         mInstance = EmptyFragment.getInstance(CommonConstant.MESSAGE_WORK_ORDER);
         mInstance.setOnGoFragmentListener(this);
         return mInstance;
-        //return WorkorderMenuFragment.getInstance(new Bundle());
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
+        DialogX.init(this);
     }
 
     @Override
@@ -59,13 +60,12 @@ public class WorkOrderActivity extends BaseFragmentActivity implements EmptyFrag
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             pop();
         } else {
-            this.finish();
-//            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
-//                this.finish();
-//            } else {
-//                TOUCH_TIME = System.currentTimeMillis();
-//                ToastUtils.showShort(R.string.workorder_press_exit_again);
-//            }
+            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+                this.finish();
+            } else {
+                TOUCH_TIME = System.currentTimeMillis();
+                ToastUtils.showShort(R.string.workorder_press_exit_again);
+            }
         }
     }
 

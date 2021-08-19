@@ -18,6 +18,13 @@
         <item>m-patrol-query</item>
     </string-array>
 
+    <!--扫一扫-->
+    <string name="home_scan_menu_title">扫一扫</string>
+    <string name="home_scan_permissions" translatable="false">m-scan</string>
+    <!--快速报障-->
+    <string name="home_quickreport_menu_title">快速报障</string>
+    <string name="home_quickreport_permissions" translatable="false">m-quickreport</string>
+
     <!--**********************服务台**********************-->
     <string name="home_service_menu_title">Requirement</string>
     <string name="home_service_permissions" translatable="false">m-requirement</string>
@@ -48,6 +55,7 @@
         <item>Unassigned</item>
         <item>Unapproved</item>
         <item>Verify</item>
+        <item>Abnormal</item>
         <item>Archive</item>
         <item>History</item>
     </string-array>
@@ -58,6 +66,7 @@
         <item>m-wo-dispach</item>
         <item>m-wo-approval</item>
         <item>m-wo-verify</item>
+        <item>m-wo-abnormal</item>
         <item>m-wo-close</item>
         <item>m-wo-query</item>
     </string-array>

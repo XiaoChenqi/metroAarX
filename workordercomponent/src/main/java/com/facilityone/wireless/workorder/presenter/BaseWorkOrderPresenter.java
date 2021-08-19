@@ -116,28 +116,31 @@ public class BaseWorkOrderPresenter<V extends BaseFragment> extends CommonBasePr
      * @param woId
      */
     public void getWorkorderReserveRecordList(long woId) {
-        String request = "{\"woId\":" + woId + "}";
-        OkGo.<BaseResponse<List<WorkorderService.WorkorderReserveRocordBean>>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_RESERVE_RECORD_LIST_URL)
-                .isSpliceUrl(true)
-                .tag(getV())
-                .upJson(request)
-                .execute(new FMJsonCallback<BaseResponse<List<WorkorderService.WorkorderReserveRocordBean>>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponse<List<WorkorderService.WorkorderReserveRocordBean>>> response) {
-                        List<WorkorderService.WorkorderReserveRocordBean> data = response.body().data;
-                        if (data != null) {
-                            getWorkOrderMaterialSuccess(data);
-                        } else {
+
+            String request = "{\"woId\":" + woId + "}";
+            OkGo.<BaseResponse<List<WorkorderService.WorkorderReserveRocordBean>>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_RESERVE_RECORD_LIST_URL)
+                    .isSpliceUrl(true)
+                    .tag(getV())
+                    .upJson(request)
+                    .execute(new FMJsonCallback<BaseResponse<List<WorkorderService.WorkorderReserveRocordBean>>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponse<List<WorkorderService.WorkorderReserveRocordBean>>> response) {
+                            List<WorkorderService.WorkorderReserveRocordBean> data = response.body().data;
+                            if (data != null) {
+                                getWorkOrderMaterialSuccess(data);
+                            } else {
+                                getWorkOrderMaterialError();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Response<BaseResponse<List<WorkorderService.WorkorderReserveRocordBean>>> response) {
+                            super.onError(response);
                             getWorkOrderMaterialError();
                         }
-                    }
+                    });
 
-                    @Override
-                    public void onError(Response<BaseResponse<List<WorkorderService.WorkorderReserveRocordBean>>> response) {
-                        super.onError(response);
-                        getWorkOrderMaterialError();
-                    }
-                });
+
     }
     
     public void getWorkOrderMaterialSuccess(List<WorkorderService.WorkorderReserveRocordBean> data){

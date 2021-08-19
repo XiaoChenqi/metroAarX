@@ -25,4 +25,7 @@ public interface CommonUrl {
     String UPDATE_DOWNLOAD_URL = "/mobile/download/";
     //获取员工列表（附带部门和位置信息）
     String USER_LIST = "/m/v1/user/detaillist/";
+
+    //原因列表
+    String REASON_LIST="/m/v1/workorder/reason/list";
 }

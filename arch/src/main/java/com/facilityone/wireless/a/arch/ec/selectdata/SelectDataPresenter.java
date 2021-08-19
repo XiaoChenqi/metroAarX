@@ -7,6 +7,9 @@ import com.facilityone.wireless.a.arch.ec.commonpresenter.CommonBasePresenter;
 import com.facilityone.wireless.a.arch.ec.module.CommonUrl;
 import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
+import com.facilityone.wireless.a.arch.ec.module.Page;
+import com.facilityone.wireless.a.arch.ec.module.ReasonQueryRequestBean;
+import com.facilityone.wireless.a.arch.ec.module.ReasonResponseBean;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
 import com.facilityone.wireless.a.arch.ec.module.VisitUserBean;
 import com.facilityone.wireless.a.arch.offline.dao.BuildingDao;
@@ -50,6 +53,7 @@ public class SelectDataPresenter extends CommonBasePresenter<SelectDataFragment>
 
     private List<SelectDataBean> allData;
     public CompositeDisposable mCompositeDisposable = new CompositeDisposable();//rxjava订阅管理器
+
 
     public void filter(int fromType, String curCharacter, List<SelectDataBean> total) {
         if (total == null || curCharacter == null) {
@@ -868,6 +872,54 @@ public class SelectDataPresenter extends CommonBasePresenter<SelectDataFragment>
 
                     @Override
                     public void onError(Response<BaseResponse<List<VisitUserBean>>> response) {
+                        super.onError(response);
+                        getV().refreshHaveData(null, false);
+                        getV().dismissLoading();
+                    }
+                });
+    }
+
+
+    public void queryReason(int type){
+        getV().showLoading();
+        ReasonQueryRequestBean requestBean=new ReasonQueryRequestBean();
+        requestBean.type=type;
+        Page pageAll = new Page();
+        pageAll.setPageSize(100000);
+        requestBean.page= pageAll;
+        OkGo.<BaseResponse<ReasonResponseBean>>post(FM.getApiHost() + CommonUrl.REASON_LIST)
+                .isSpliceUrl(true)
+                .tag(getV())
+                .upJson(toJson(requestBean))
+                .execute(new FMJsonCallback<BaseResponse<ReasonResponseBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<ReasonResponseBean>> response) {
+//                        //转换
+                        ReasonResponseBean data = response.body().data;
+                        if (data == null || data.contents.size() == 0) {
+                            getV().refreshHaveData(null, false);
+                        } else {
+                            List<SelectDataBean> selectDataBeans = new ArrayList<>();
+                            for (ReasonResponseBean.WorkorderReasonBean datum : data.contents) {
+                                SelectDataBean s = new SelectDataBean();
+                                s.setId(datum.id);
+                                s.setParentId(datum.parentId);
+                                s.setName(datum.code);
+                                s.setFullName(datum.fullName);
+                                s.setDesc(datum.description);
+                                s.setNamePinyin(PinyinUtils.ccs2Pinyin(s.getName()));
+                                s.setNameFirstLetters(PinyinUtils.getPinyinFirstLetters(s.getName()));
+                                selectDataBeans.add(s);
+                            }
+                            getV().setTotal(selectDataBeans);
+                            getV().getReasonAll(selectDataBeans);
+//                            getV().refreshHaveData(selectDataBeans, false);
+                        }
+                        getV().dismissLoading();
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<ReasonResponseBean>> response) {
                         super.onError(response);
                         getV().refreshHaveData(null, false);
                         getV().dismissLoading();

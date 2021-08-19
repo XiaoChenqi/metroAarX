@@ -70,10 +70,6 @@ public class PatrolTaskFragment extends BaseFragment<PatrolTaskPresenter> implem
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
-        TitleBar tb = new TitleBar(PatrolActivity.themeColor);
-        //TitleBar tb = new TitleBar(getActivity().getResources().getColor(R.color.green_1ab394));
-        setTitleBarValues(tb);
         super.onViewCreated(view, savedInstanceState);
         initView();
     }

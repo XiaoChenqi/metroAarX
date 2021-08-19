@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
@@ -82,6 +83,7 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
 
     private RecyclerView mPriorityRv;
     private RecyclerView mStatusRv;
+    private RecyclerView mLabelRv;
 
     private static final int MAX_NUMBER = 3;//一行显示几个tag
     private static final int WORKORDER_INFO = 4002;
@@ -91,6 +93,7 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
     private WorkorderListAdapter mAdapter;
     private GridTagAdapter mPTagAdapter;
     private GridTagAdapter mStatusTagAdapter;
+    private GridTagAdapter mLabelTagAdapter;
     private Page mPage;
 
     private Calendar mCalendarBeg = Calendar.getInstance();
@@ -104,6 +107,7 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
     private WorkorderService.WorkorderConditionBean mConditionBean;
     private List<AttachmentBean> mPriorityAs;
     private List<AttachmentBean> mStatusAs;
+    private List<AttachmentBean> mLabelAs;
 
     private int clickPosition;
     private boolean mFromMyRepair;
@@ -159,6 +163,7 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
         mServiceTv = findViewById(R.id.work_type_tv);
         mPriorityRv = findViewById(R.id.work_order_query_menu_filter_priority_rv);
         mStatusRv = findViewById(R.id.work_order_query_menu_filter_status_fl);
+        mLabelRv = findViewById(R.id.work_order_query_menu_filter_label_fl);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new WorkorderListAdapter(WorkorderConstant.WORKORER_QUERY);
@@ -178,22 +183,31 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
 
         mPriorityAs = new ArrayList<>();
         mStatusAs = new ArrayList<>();
+        mLabelAs=new ArrayList<>();
         AttachmentBean bb = new AttachmentBean();
         bb.value = -1L;
         bb.name = getString(R.string.workorder_unlimited);
         bb.check = true;
         mStatusAs.add(bb);
         mPriorityAs.add(bb);
+        mLabelAs.add(bb);
 
+        //优先级、状态、标签列表适配器
         mStatusAs.addAll(getPresenter().getWorkorderStatus(getContext()));
+        mLabelAs.addAll(getPresenter().getWorkorderLabels(getContext()));
 
         mPTagAdapter = new GridTagAdapter(getContext(), mPriorityAs);
         mPriorityRv.setLayoutManager(new GridLayoutManager(getContext(), MAX_NUMBER));
         mPriorityRv.setAdapter(mPTagAdapter);
 
         mStatusTagAdapter = new GridTagAdapter(getContext(), mStatusAs);
+        System.out.println(GsonUtils.toJson(mStatusAs));
         mStatusRv.setLayoutManager(new GridLayoutManager(getContext(), MAX_NUMBER));
         mStatusRv.setAdapter(mStatusTagAdapter);
+
+        mLabelTagAdapter = new GridTagAdapter(getContext(), mLabelAs);
+        mLabelRv.setLayoutManager(new GridLayoutManager(getContext(), MAX_NUMBER));
+        mLabelRv.setAdapter(mLabelTagAdapter);
 
 
         mPreTv.setOnClickListener(this);
@@ -294,6 +308,13 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
             }
         }
         mStatusTagAdapter.notifyDataSetChanged();
+        for (AttachmentBean labelA : mLabelAs) {
+            labelA.check = false;
+            if (labelA.value == -1L) {
+                labelA.check = true;
+            }
+        }
+        mLabelTagAdapter.notifyDataSetChanged();
     }
 
     private void initDrawerLayout() {
@@ -407,6 +428,7 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
             }
             getPriority();
             getStatus();
+            getLabel();
             SystemDateUtils.setCalendarPreciseValue(mConditionBeg, mConditionEnd);
             conditionStartTime = mConditionBeg.getTimeInMillis();
             conditionEndTime = mConditionEnd.getTimeInMillis();
@@ -462,6 +484,24 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
             mConditionBean.status = null;
         }
     }
+
+    public void getLabel() {
+        List<Long> labelId = new ArrayList<>();
+        for (AttachmentBean a : mLabelAs) {
+            if (a.value != -1L && a.check) {
+                labelId.add(a.value);
+                if (a.value == WorkorderConstant.WORK_STATUS_SUSPENDED_GO) {
+                    labelId.add((long) WorkorderConstant.WORK_STATUS_SUSPENDED_NO);
+                }
+            }
+        }
+        if (labelId.size() > 0) {
+            mConditionBean.tag = labelId;
+        } else {
+            mConditionBean.tag = null;
+        }
+    }
+
 
     private boolean detectionTime() {
         if (conditionEndTime < conditionStartTime) {

@@ -3,7 +3,6 @@ package com.facilityone.wireless.a.arch.ec.commonpresenter;
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -107,6 +106,7 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
             @Override
             public void onError(Response<BaseResponse<LogonResponse>> response) {
                 super.onError(response);
+                getV().showLoading();
                 solveLogonError(response);
                 onLogonError();
             }
@@ -292,10 +292,10 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
         String typeJson = "{\"type\":" + type + "}";
 
         String url = FM.getApiHost() + CommonUrl.COMMON_UNDO_URL;
-        //String url2 = url+"?app_type=android&app_version=0.0.0&current_project=10&i18n=zh_CN";
+        String url2 = url+"?app_type=android&app_version=0.0.0&current_project=1&i18n=zh_CN";
 
 
-        OkGo.<BaseResponse<FunctionService.FunctionUndoBean>>post(url)
+        OkGo.<BaseResponse<FunctionService.FunctionUndoBean>>post(url2)
                 .isSpliceUrl(true)
                 .upJson(typeJson)
                 .tag(getV())
@@ -327,7 +327,6 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
     /*********************权限****************************/
 
     public void getPermissions() {
-        String permissionUrl = FM.getApiHost() + CommonUrl.COMMON_PERMISSIONS_URL;
         OkGo.<BaseResponse<List<String>>>post(FM.getApiHost() + CommonUrl.COMMON_PERMISSIONS_URL)
                 .isSpliceUrl(true)
                 .upJson("{}")

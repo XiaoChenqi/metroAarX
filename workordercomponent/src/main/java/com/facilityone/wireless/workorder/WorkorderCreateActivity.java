@@ -7,7 +7,6 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.workorder.fragment.WorkorderCreateFragment;
-import com.facilityone.wireless.workorder.fragment.WorkorderMenuFragment;
 
 import androidx.annotation.Nullable;
 

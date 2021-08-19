@@ -73,7 +73,8 @@ public class WorkorderMenuFragment extends BaseFragment<WorkorderMenuPresenter> 
     }
 
     private void initView() {
-        setTitle(R.string.workorder_name_title);
+//        setTitle(R.string.workorder_name_title);
+        setTitle("维修管理");
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), FunctionService.COUNT));
 //        mRecyclerView.addItemDecoration(new GridItemDecoration(getResources().getColor(R.color.grey_d6)));
@@ -124,6 +125,8 @@ public class WorkorderMenuFragment extends BaseFragment<WorkorderMenuPresenter> 
                 //待验证工单
             case WorkorderConstant.WORKORER_ARCHIVE:
                 //待存档工单
+            case WorkorderConstant.WORKORER_UBNORMAL:
+                //异常工单
                 baseFragment = WorkorderListFragment.getInstance(functionBean.index);
                 break;
             case WorkorderConstant.WORKORER_QUERY:

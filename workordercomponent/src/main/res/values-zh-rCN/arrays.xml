@@ -3,7 +3,7 @@
     <!--工单状态-->
     <string-array name="workorder_status">
         <item>已创建</item>
-        <item>已派工</item>
+        <item>已发布</item>
         <item>处理中</item>
         <item>已暂停</item>
         <item>已终止</item>

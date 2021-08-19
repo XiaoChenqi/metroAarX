@@ -87,9 +87,13 @@ public class WorkorderListFragment extends BaseFragment<WorkorderListPresenter> 
             case WorkorderConstant.WORKORER_AUDIT:
                 title = getString(R.string.workorder_approval_work_order_title);
                 break;
+            case WorkorderConstant.WORKORER_UBNORMAL:
+                title = "异常工单";
+                break;
             case WorkorderConstant.WORKORER_ARCHIVE:
                 title = getString(R.string.workorder_archive_home_title);
                 break;
+
         }
         setTitle(title);
         mRefreshLayout = findViewById(R.id.refreshLayout);
@@ -103,8 +107,9 @@ public class WorkorderListFragment extends BaseFragment<WorkorderListPresenter> 
         mAdapter.setOnItemClickListener(this);
 
         onRefresh();
-    }
 
+    }
+    //刷新页面
     private void onRefresh() {
         mAdapter.setEmptyView(getLoadingView(mRefreshLayout));
         if (mPage == null) {
@@ -121,7 +126,13 @@ public class WorkorderListFragment extends BaseFragment<WorkorderListPresenter> 
         Integer status = workorderItemBean.status;
         Long woId = workorderItemBean.woId;
         String code = workorderItemBean.code;
-        startForResult(WorkorderInfoFragment.getInstance(status, code, woId), WORKORDER_INFO);
+        if (mType==WorkorderConstant.WORKORER_UBNORMAL){
+            startForResult(WorkorderInfoFragment.getInstance(WorkorderConstant.WORK_STATUS_UBNORMAL, code, woId), WORKORDER_INFO);
+        }else {
+            startForResult(WorkorderInfoFragment.getInstance(status, code, woId), WORKORDER_INFO);
+        }
+
+
     }
 
     @Override

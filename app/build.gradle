@@ -65,6 +65,9 @@ android {
             dirs 'libs'
         }
     }
+    dataBinding{
+        enabled = true
+    }
 
 }
 
@@ -100,8 +103,8 @@ dependencies {
     api project(':patrolcomponent')
     api project(':workordercomponent')
     api project(':maintenancecomponent')
-    api project(':demandcomponent')
-    api project(':scanzxing')
+    //api project(':demandcomponent')
+    //api project(':scanzxing')
 
 
 }

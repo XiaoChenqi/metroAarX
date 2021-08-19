@@ -16,7 +16,7 @@ public class SelectDataBean implements Parcelable {
     private Long id;
     private Long parentId;
     private String name;
-    private String fullName;//设备编码
+    private String fullName;
     private String desc;
     private Boolean haveChild;
     private LocationBean location;

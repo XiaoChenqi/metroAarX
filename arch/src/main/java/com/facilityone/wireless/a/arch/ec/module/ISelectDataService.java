@@ -23,10 +23,18 @@ public interface ISelectDataService {
     int DATA_TYPE_KNOWLEDGE = 10;
     int DATA_TYPE_EQU_ALL = 11;
     int DATA_VISIT_PAY = 12;//拜访对象
+    int DATA_TYPE_REASON=13;//原因
+    int DATA_TYPE_INVALIDD = 14;//作废原因
+
 
     int LOCATION_CITY = 0;
     int LOCATION_SITE = 1;
     int LOCATION_BUILDING = 2;
     int LOCATION_FLOOR = 3;
     int LOCATION_ROOM = 4;
+
+
+    int REASON_TYPE_PAUSE=0;
+    int REASON_TYPE_INVALID=1;
+    int REASON_TYPE_EXCEPTION=2;
 }

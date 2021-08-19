@@ -24,6 +24,7 @@ public class DateUtils {
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT_YMD = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT_HM = new SimpleDateFormat("HH:mm", Locale.getDefault());
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT_MD = new SimpleDateFormat("MM-dd", Locale.getDefault());
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT_MDHM = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());
 
     /**
      * "MM/dd"

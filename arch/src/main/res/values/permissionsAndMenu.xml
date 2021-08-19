@@ -18,16 +18,25 @@
         <item>m-patrol-query</item>
     </string-array>
 
+
+    <!--扫一扫-->
+    <string name="home_scan_menu_title">扫一扫</string>
+    <string name="home_scan_permissions" translatable="false">m-scan</string>
+
+    <!--快速报障-->
+    <string name="home_quickreport_menu_title">快速报障</string>
+    <string name="home_quickreport_permissions" translatable="false">m-quickreport</string>
+
     <!--**********************服务台**********************-->
     <string name="home_service_menu_title">服务台</string>
     <string name="home_service_permissions" translatable="false">m-requirement</string>
 
     <string-array name="home_service_menu_child_title">
         <item>创建新需求</item>
-        <item>待审批需求</item>
-        <item>待处理需求</item>
-        <item>待评价需求</item>
-        <item>需求查询</item>
+        <item>待处理报障</item>
+        <item>待评价报障</item>
+        <item>待完善报障</item>
+        <item>报障查询</item>
     </string-array>
 
     <string-array name="home_service_menu_child_permissions">
@@ -43,11 +52,13 @@
     <string name="home_workOrder_permissions" translatable="false">m-wo</string>
 
     <string-array name="home_workOrder_menu_child_title">
-        <item>创建工单</item>
+<!--        <item>创建工单</item>-->
+        <item>维修管理</item>
         <item>待处理工单</item>
         <item>待派工工单</item>
         <item>待审批工单</item>
         <item>待验证工单</item>
+        <item>异常工单</item>
         <item>待存档工单</item>
         <item>工单查询</item>
     </string-array>
@@ -58,6 +69,7 @@
         <item>m-wo-dispach</item>
         <item>m-wo-approval</item>
         <item>m-wo-verify</item>
+        <item>m-wo-abnormal</item>
         <item>m-wo-close</item>
         <item>m-wo-query</item>
     </string-array>
@@ -65,6 +77,30 @@
     <!--**********************计划性维护**********************-->
     <string name="home_ppm_menu_title">计划性维护</string>
     <string name="home_ppm_permissions" translatable="false">m-ppm</string>
+
+    <!--四运新规则-->
+    <string-array name="home_ppm_menu_child_title">
+        <item>维护日历</item>
+        <item>待处理维护工单</item>
+        <item>待派工维护工单</item>
+        <item>待审批维护工单</item>
+        <item>异常维护工单</item>
+        <item>待存档维护工单</item>
+        <item>维护工单查询</item>
+    </string-array>
+
+    <string-array name="home_ppm_menu_child_permissions">
+        <item>m-ppm-one</item>
+        <item>m-ppm-two</item>
+        <item>m-ppm-three</item>
+        <item>m-ppm-four</item>
+        <item>m-ppm-five</item>
+        <item>m-ppm-six</item>
+        <item>m-ppm-seven</item>
+    </string-array>
+
+
+
 
     <!--**********************资产**********************-->
     <string name="home_asset_menu_title">资产</string>

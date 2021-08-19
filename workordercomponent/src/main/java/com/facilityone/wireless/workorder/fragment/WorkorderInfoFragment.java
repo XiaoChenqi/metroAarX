@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,10 +29,15 @@ import com.facilityone.wireless.a.arch.ec.audio.AudioPlayConnection;
 import com.facilityone.wireless.a.arch.ec.audio.AudioPlayManager;
 import com.facilityone.wireless.a.arch.ec.audio.AudioPlayService;
 import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
+import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
+import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
+import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
 import com.facilityone.wireless.a.arch.ec.ui.SignatureActivity;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.utils.UrlUtils;
+import com.facilityone.wireless.a.arch.widget.FMBottomChoiceSheetBuilder;
+import com.facilityone.wireless.a.arch.widget.FMBottomPauseSelectSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.PhoneMenuBuilder;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.basiclib.utils.DateUtils;
@@ -45,6 +51,7 @@ import com.facilityone.wireless.workorder.adapter.WorkOrderLaborerAdapter;
 import com.facilityone.wireless.workorder.adapter.WorkorderApprovalContentAdapter;
 import com.facilityone.wireless.workorder.adapter.WorkorderHistoryAdapter;
 import com.facilityone.wireless.workorder.module.WorkorderConstant;
+import com.facilityone.wireless.workorder.module.WorkorderCreateService;
 import com.facilityone.wireless.workorder.module.WorkorderDataHolder;
 import com.facilityone.wireless.workorder.module.WorkorderHelper;
 import com.facilityone.wireless.workorder.module.WorkorderLaborerService;
@@ -55,6 +62,7 @@ import com.joanzapata.iconify.widget.IconTextView;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.FalsifyFooter;
@@ -142,11 +150,12 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public static final int STEP = 4010;
     public static final int SPACE_LOCATION = 4011;
     public static final int PAYMENT = 4012;
-
+    private final static int REQUEST_REASON = 20007;
+    private final static int REQUEST_INVALID = 20008;
+    public Long mWoId;
     private String mCode;
     private int mStatus;
     private int refreshStatus;
-    private Long mWoId;
     private Long mWoTeamId;
     private String tel;
 
@@ -219,6 +228,15 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
     private List<WorkorderService.ApprovalContentBean> mApprovalContentBeanList;
     private WorkorderApprovalContentAdapter mApprovalContentAdapter;
+    private WorkorderService.WorkorderInfoBean data;
+    private FMBottomChoiceSheetBuilder builderChoice;
+    private QMUIBottomSheet buildInvalid ;
+    private String invalidReason ; //作废原因
+    private Long operateReasonId ; //申请作废原因Id
+    FMBottomPauseSelectSheetBuilder pauseDialogBuilder;
+    QMUIBottomSheet pauseDialog;
+    private final static String RESULT_REASON="pause_reason";
+    private Long InvalidId;
 
     @Override
     public WorkorderInfoPresenter createPresenter() {
@@ -400,6 +418,90 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         getPresenter().onMoreMenuClick(getContext(), refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials);
     }
 
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/12
+      * @Infor: 新派工单
+      */
+    public void newOrder(){
+        WorkorderCreateService.newOrderCreateReq newOrderBunder = new WorkorderCreateService.newOrderCreateReq();
+        WorkorderCreateService.newOrderCreateAllName nameAll = new WorkorderCreateService.newOrderCreateAllName();
+        newOrderBunder.userId = FM.getEmId(); //userId
+        newOrderBunder.name = data.applicantName+""; //操作人名字
+        newOrderBunder.phone = data.applicantPhone+""; //操作人电话
+        newOrderBunder.organizationId = data.orgId; //部门Id
+        newOrderBunder.serviceTypeId  = data.serviceTypeId; //服务类型Id
+        newOrderBunder.scDescription  = data.woDescription; //描述
+        newOrderBunder.priorityId  = data.priorityId; //优先级Id
+        newOrderBunder.processId  = data.flowId; //流程ID
+        newOrderBunder.woType = data.type; //工单类型
+        newOrderBunder.reqId = data.woId; //工单Id
+        //名称
+        nameAll.loactionName = data.location;//位置信息
+        nameAll.serviceType = data.serviceTypeName;//服务类型名称
+        nameAll.priority = data.priorityName; //优先级名称
+        nameAll.departmentName = data.organizationName;//部门名称
+
+        newOrderBunder.equipmentSystemName = data.workOrderEquipments;
+
+        newOrderBunder.nameAll = nameAll; //需要用到的名称
+        start(WorkorderCreateFragment.getInstance(newOrderBunder));
+    }
+
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/16
+      * @Infor: 作废申请
+      */
+    public void invalidOrder(Long woId){
+
+         builderChoice = new FMBottomChoiceSheetBuilder(getContext());
+        builderChoice.setOnSaveInputListener(new FMBottomChoiceSheetBuilder.OnInputBtnClickListener() {
+            @Override
+            public void onSaveClick(QMUIBottomSheet dialog, String input) {
+
+            }
+
+            @Override
+            public void onLeftClick(QMUIBottomSheet dialog, String input) {
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onRightClick(QMUIBottomSheet dialog, String input) {
+                dialog.dismiss();
+                showLoading();
+                getPresenter().invalidOrderPost(woId,input,InvalidId);
+            }
+        });
+        buildInvalid = builderChoice.build();
+        builderChoice.getLLTwoBtn().setVisibility(View.VISIBLE);
+        builderChoice.getLeftBtn().setVisibility(View.GONE);
+        builderChoice.getDescEt().setFocusable(false);
+        builderChoice.getDescEt().setHint("请选择作废原因");
+        EditText et = builderChoice.getDescEt();
+        builderChoice.setTitle("作废申请");
+        builderChoice.getRightBtn().setBackgroundResource(R.drawable.btn_common_bg_selector);
+        builderChoice.setRightBtnText("确定");
+        buildInvalid.show();
+
+        et.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buildInvalid.hide();
+                startForResult(
+                        SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_INVALIDD,ISelectDataService.REASON_TYPE_INVALID),
+                        REQUEST_INVALID);
+            }
+        });
+
+    }
+
+    public void getData(WorkorderService.WorkorderInfoBean data){
+        this.data = data;
+    }
+
     private void onRefresh() {
         getPresenter().getWorkorderInfo(mWoId);
     }
@@ -439,8 +541,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             if (workOrderLaborers != null && workOrderLaborers.size() > 0 && emId != null) {
                 for (WorkorderLaborerService.WorkorderLaborerBean workOrderLaborer : workOrderLaborers) {
                     if (workOrderLaborer.status != null
-                            && workOrderLaborer.laborerId != null
-                            && emId.equals(workOrderLaborer.laborerId)
+//                            && workOrderLaborer.laborerId != null
+//                            && emId.equals(workOrderLaborer.laborerId)
                             && workOrderLaborer.status == WorkorderConstant.WORKORDER_STATUS_PERSONAL_ACCEPT) {
                         mCanOpt = true;
                         mAcceptWorkOrder = true;
@@ -690,11 +792,11 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mAllStart = false;
         if (data.workOrderLaborers != null && data.workOrderLaborers.size() > 0) {
             workOrderLaborers = new ArrayList<>();
-            mLaborer = getPresenter().processingLaborer(data.workOrderLaborers, mStatus, data.status);
-            if (!mLaborer && refreshStatus == WorkorderConstant.WORK_STATUS_PUBLISHED) {
-                pop();
-                return;
-            }
+//            mLaborer = getPresenter().processingLaborer(data.workOrderLaborers, mStatus, data.status);
+//            if (!mLaborer && refreshStatus == WorkorderConstant.WORK_STATUS_PUBLISHED) {
+//                pop();
+//                return;
+//            }
             workOrderLaborers.addAll(data.workOrderLaborers);
             int count = 0;
             for (WorkorderLaborerService.WorkorderLaborerBean workOrderLaborer : workOrderLaborers) {
@@ -1213,6 +1315,18 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             case FAULT_DEVICE:
                 mRefreshLayout.autoRefresh();
                 break;
+            case REQUEST_REASON:
+                pauseDialogBuilder.setReasonData(data);
+                pauseDialog.show();
+                break;
+            case REQUEST_INVALID:
+                SelectDataBean reason=data.getParcelable(ISelectDataService.SELECT_OFFLINE_DATA_BACK);
+                if (reason != null){
+                    builderChoice.getDescEt().setText(reason.getName()+"");
+                    InvalidId = reason.getId();
+                }
+                buildInvalid.show();
+                break;
         }
     }
 
@@ -1343,4 +1457,69 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         infoFragment.setArguments(bundle);
         return infoFragment;
     }
+
+
+    //显示暂停弹窗
+    public void showPauseDialog(Context context,Long woId){
+        Long sWoId=woId;
+        pauseDialogBuilder = new FMBottomPauseSelectSheetBuilder(context);
+        pauseDialogBuilder.setOnPauseInputListener(new FMBottomPauseSelectSheetBuilder.OnPauseInputBtnClickListener() {
+
+            @Override
+            public void onLeftClick(QMUIBottomSheet dialog, SelectDataBean dataBean, Long time) {
+                if (time!=null&dataBean!=null){
+                    if (time<System.currentTimeMillis()){
+                        ToastUtils.showShort("暂停结束时间必须晚于当前时间,请重新选择");
+                    }else {
+                        dialog.dismiss();
+                       getPresenter().pauseWorkOrder(woId, dataBean.getDesc(), dataBean.getId(), WorkorderConstant.WORKORDER_OPT_TYPE_PAUSE_NO_FURTHER,time);
+                    }
+                }else {
+                    ToastUtils.showShort("请重新选择暂停结束时间");
+                }
+
+
+            }
+
+            @Override
+            public void onRightClick(QMUIBottomSheet dialog, SelectDataBean dataBean,Long time) {
+                if (time!=null&dataBean!=null){
+                    if (time<System.currentTimeMillis()){
+                        ToastUtils.showShort("暂停结束时间必须晚于当前时间,请重新选择");
+                    }else {
+                        dialog.dismiss();
+                        getPresenter().pauseWorkOrder(woId,dataBean.getDesc(), dataBean.getId(), WorkorderConstant.WORKORDER_OPT_TYPE_PAUSE_CONTINUED,time);
+                    }
+                }else {
+                    ToastUtils.showShort("请重新选择暂停结束时间");
+                }
+
+            }
+        });
+        pauseDialog = pauseDialogBuilder.build();
+        pauseDialogBuilder.getLLTwoBtn().setVisibility(View.VISIBLE);
+        pauseDialogBuilder.getDescSelect().setVisibility(View.VISIBLE);
+        pauseDialogBuilder.getDescSelect().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pauseDialog.hide();
+                startForResult(
+                        SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_REASON,ISelectDataService.REASON_TYPE_PAUSE),
+                        REQUEST_REASON
+                );
+            }
+        });
+        pauseDialogBuilder.setTitle(R.string.workorder_pause_tip);
+        pauseDialogBuilder.setShowTip(true);
+        pauseDialogBuilder.setTip(R.string.workorder_pause_tip_a);
+        pauseDialogBuilder.setDescHint(R.string.workorder_pause_reason_hint);
+        pauseDialogBuilder.getRightBtn().setBackgroundResource(R.drawable.btn_common_bg_selector);
+        pauseDialogBuilder.setTwoBtnLeftInput(false);
+        pauseDialogBuilder.setTwoBtnRightInput(false);
+        pauseDialogBuilder.setLeftBtnText(R.string.workorder_over_order);
+        pauseDialogBuilder.setRightBtnText(R.string.workorder_continue_order);
+        pauseDialog.setCanceledOnTouchOutside(true);
+        pauseDialog.show();
+    }
+
 }

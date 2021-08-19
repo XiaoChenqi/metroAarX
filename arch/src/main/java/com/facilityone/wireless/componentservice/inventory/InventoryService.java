@@ -51,4 +51,12 @@ public interface InventoryService extends IService {
      * @return
      */
     BaseFragment getMaterialInfoFragment(Long inventoryId);
+
+
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/5
+      * @Infor: 扫一扫查看物资详情
+      */
+     BaseFragment ScanForInventoryInfor(String code, long warehouseId, boolean scan);
 }

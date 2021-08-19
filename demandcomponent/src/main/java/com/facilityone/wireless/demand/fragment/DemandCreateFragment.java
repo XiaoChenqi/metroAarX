@@ -115,9 +115,9 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        TitleBar tb = new TitleBar(DemandCreateActivity.themeColor);
+        //TitleBar tb = new TitleBar(DemandCreateActivity.themeColor);
         //TitleBar tb = new TitleBar(getActivity().getResources().getColor(R.color.green_1ab394));
-        setTitleBarValues(tb);
+        //setTitleBarValues(tb);
         super.onViewCreated(view, savedInstanceState);
         initView();
         getPresenter().getUserInfo();

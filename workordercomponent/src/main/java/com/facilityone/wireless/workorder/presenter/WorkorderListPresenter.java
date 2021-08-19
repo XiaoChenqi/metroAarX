@@ -40,6 +40,14 @@ public class WorkorderListPresenter extends BaseWorkOrderPresenter<WorkorderList
             case WorkorderConstant.WORKORER_ARCHIVE:
                 url = WorkorderUrl.WORKORDER_LIST_TO_CLOSED_URL;
                 break;
+                 /**
+                  * @Auther: karelie
+                  * @Date: 2021/8/10
+                  * @Infor: 异常工单
+                  */
+            case WorkorderConstant.WORKORER_UBNORMAL:
+                url = WorkorderUrl.WORKORDER_LIST_ABNOMAL_URL;
+                break;
         }
         OkGo.<BaseResponse<WorkorderService.WorkorderListResp>>post(FM.getApiHost() + url)
                 .tag(getV())

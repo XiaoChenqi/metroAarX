@@ -20,6 +20,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding{
+        enabled = true
+    }
 }
 
 dependencies {
@@ -135,6 +138,34 @@ dependencies {
     api ('com.shuyu:gsyVideoPlayer-arm64:6.0.3'){
         exclude group: 'com.android.support'
     }
+
+    //kotlin标准库
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2"
+
+
+    //rxandroid
+    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    //rxjava
+    api "io.reactivex.rxjava2:rxjava:2.2.2"
+    //okhttp
+    api 'com.squareup.retrofit2:retrofit:2.2.0'
+    api "com.squareup.retrofit2:converter-gson:2.2.0"
+    api "com.squareup.retrofit2:converter-scalars:2.2.0"
+    api 'com.squareup.okhttp3:logging-interceptor:4.1.1'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    api 'com.orhanobut:logger:1.3'//会打印一个框框一样的日志，可以打印线程信息，放类方法
+
+
+    /**
+     * 下面两行是rxjava1.0的引入
+     * */
+    api 'io.reactivex:rxjava:1.0.16'
+    api 'io.reactivex:rxandroid:1.0.1'
+
+    //弹窗
+    api 'com.github.kongzue.DialogX:DialogX:0.0.43.beta1'
 }
 
 //uploadArchives {

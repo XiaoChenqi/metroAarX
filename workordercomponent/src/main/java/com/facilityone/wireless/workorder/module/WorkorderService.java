@@ -51,6 +51,7 @@ public class WorkorderService {
         public String woDescription;
         public List<Long> priority;
         public List<Long> status;
+        public List<Long> tag;
         public Long typeId;
         public Long startDateTime;
         public Long endDateTime;
@@ -77,6 +78,16 @@ public class WorkorderService {
         public String location; // 地理位置
         public String applicantName; // 工单请求者名称
         public String applicantPhone; // 工单请求者的电话
+         /**
+          * @Auther: karelie
+          * @Date: 2021/8/12
+          * @Infor: 补充部分字段
+          */
+         public Long orgId ; //部门Id
+         public Long serviceTypeId ; //服务类型Id
+         public Long flowId ; //流程Id
+
+
         /* 旧版字段 */
         public String laborer; // 执行人
         public String workContent; // 工作内容
@@ -86,7 +97,7 @@ public class WorkorderService {
         public Integer grabType;//抢单类型 0-普通工单  1-抢单工单
         public Integer grabStatus;//当前请求人对该工单的抢单状态
         public Integer category;//工单类型  0 — CM工单    1 — ZM工单   2 — PM工单
-        public String type; // 工单类型
+        public Integer type; // 工单类型
         public LocationBean locationId;//位置ID类
         public String organizationName; // 部门
         public Long workTeamId; // 工单组ID
@@ -116,6 +127,8 @@ public class WorkorderService {
         public Boolean needScan; //故障设备是否需要扫描
         public List<PaymentsBean> payments;
         public List<String> pictures; // 图片
+        //四运需求
+        public List<WorkOrderEquipmentsBean> equipmentSystemName; //故障设备名称
     }
 
     public static class PmInfoBean {
@@ -287,7 +300,7 @@ public class WorkorderService {
             this.finished = (Boolean) in.readValue(Boolean.class.getClassLoader());
         }
 
-        public static final Parcelable.Creator<WorkOrderLocationsBean> CREATOR = new Parcelable.Creator<WorkOrderLocationsBean>() {
+        public static final Creator<WorkOrderLocationsBean> CREATOR = new Creator<WorkOrderLocationsBean>() {
             @Override
             public WorkOrderLocationsBean createFromParcel(Parcel source) {
                 return new WorkOrderLocationsBean(source);
@@ -342,7 +355,7 @@ public class WorkorderService {
             this.comment = in.readString();
         }
 
-        public static final Parcelable.Creator<WorkOrderToolsBean> CREATOR = new Parcelable.Creator<WorkOrderToolsBean>() {
+        public static final Creator<WorkOrderToolsBean> CREATOR = new Creator<WorkOrderToolsBean>() {
             @Override
             public WorkOrderToolsBean createFromParcel(Parcel source) {
                 return new WorkOrderToolsBean(source);
@@ -354,7 +367,7 @@ public class WorkorderService {
             }
         };
     }
-    
+
     public static class StepsBean implements Comparator<StepsBean>,Parcelable {
         public Long stepId;//步骤ID
         public String step;//步骤
@@ -456,7 +469,7 @@ public class WorkorderService {
             this.tax = (Double) in.readValue(Double.class.getClassLoader());
         }
 
-        public static final Parcelable.Creator<ChargesBean> CREATOR = new Parcelable.Creator<ChargesBean>() {
+        public static final Creator<ChargesBean> CREATOR = new Creator<ChargesBean>() {
             @Override
             public ChargesBean createFromParcel(Parcel source) {
                 return new ChargesBean(source);
@@ -562,6 +575,7 @@ public class WorkorderService {
         public Long createDateTime;
         public String location;
         public Integer status;
+        public Integer newStatus;
         public Integer currentLaborerStatus;
         public String applicantName;
         public String applicantPhone;
@@ -569,6 +583,7 @@ public class WorkorderService {
         public String workContent;
         public Long actualCompletionDateTime;
         public List<WorkorderApprovalBean> approvalContent;
+        public Integer tag;
     }
 
     public static class WorkorderApprovalBean {
@@ -602,4 +617,82 @@ public class WorkorderService {
         public String operateDesc;//操作描述
 
     }
+
+    /**
+    *原因查询实例
+    */
+    public static class WorkorderReasonBean implements Parcelable{
+        public Long id;
+        public String code;
+        public Long parentId;
+        public String name;
+        public String fullName;
+        public Integer sort;
+        public Boolean deleted;
+
+        protected WorkorderReasonBean(Parcel in) {
+            if (in.readByte() == 0) {
+                id = null;
+            } else {
+                id = in.readLong();
+            }
+            code = in.readString();
+            if (in.readByte() == 0) {
+                parentId = null;
+            } else {
+                parentId = in.readLong();
+            }
+            name = in.readString();
+            fullName = in.readString();
+            if (in.readByte() == 0) {
+                sort = null;
+            } else {
+                sort = in.readInt();
+            }
+            byte tmpDeleted = in.readByte();
+            deleted = tmpDeleted == 0 ? null : tmpDeleted == 1;
+        }
+
+        public static final Creator<WorkorderReasonBean> CREATOR = new Creator<WorkorderReasonBean>() {
+            @Override
+            public WorkorderReasonBean createFromParcel(Parcel in) {
+                return new WorkorderReasonBean(in);
+            }
+
+            @Override
+            public WorkorderReasonBean[] newArray(int size) {
+                return new WorkorderReasonBean[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeLong(this.id);
+            dest.writeString(this.code);
+            dest.writeLong(this.parentId);
+            dest.writeString(this.name);
+            dest.writeString(this.fullName);
+            dest.writeInt(this.sort);
+            dest.writeBoolean(this.deleted);
+        }
+    }
+
+    public static class WorkorderReasonListResp{
+        public Page page;
+        public List<WorkorderReasonBean> contents;
+        public Long newestDate;
+    }
+
+
+    //原因查询
+    public static class WorkorderReasonQueryReq {
+        public Integer type;
+        public Page page;
+    }
+
 }

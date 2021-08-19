@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/list_item_bg"
-              android:descendantFocusability="blocksDescendants"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/list_item_bg"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
 
     <View
         android:id="@+id/view_top_line"
@@ -55,16 +56,37 @@
 
             <TextView
                 android:id="@+id/status_tv"
-                style="@style/tag_text_style"/>
+                style="@style/tag_text_style"
+                tools:text="处理中"
+                tools:background="@drawable/fm_workorder_tag_fill_process_bg"/>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/date_tv"
-            style="@style/content_text_style"
-            android:layout_width="wrap_content"
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_18"/>
+            android:layout_marginBottom="@dimen/dp_18"
+            android:orientation="horizontal">
+
+
+
+            <TextView
+                android:id="@+id/date_tv"
+                style="@style/content_text_style"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/demand_new_status_tv"
+                style="@style/tag_text_style"
+
+                android:text="暂停/继续"
+                android:layout_gravity="center_vertical"
+                tools:background="@drawable/fm_workorder_tag_fill_created_bg" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_desc"

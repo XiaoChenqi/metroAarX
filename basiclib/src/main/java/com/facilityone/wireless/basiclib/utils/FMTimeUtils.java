@@ -637,7 +637,7 @@ public class FMTimeUtils {
         if((nowCalendar.get(Calendar.YEAR) == calendar.get(Calendar.YEAR))
                 && (nowCalendar.get(Calendar.MONTH) == calendar.get(Calendar.MONTH))
                 && nowCalendar.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH)) {//当天
-            return TimeUtils.date2String(calendar.getTime(), DateUtils.SIMPLE_DATE_FORMAT_HM);
+            return TimeUtils.date2String(calendar.getTime(),DateUtils.SIMPLE_DATE_FORMAT_HM);
         }else {
             nowCalendar.add(Calendar.DAY_OF_MONTH,-1);
             if((nowCalendar.get(Calendar.YEAR) == calendar.get(Calendar.YEAR))
@@ -645,9 +645,9 @@ public class FMTimeUtils {
                     && nowCalendar.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH)) {//昨天
                 return context.getString(R.string.time_yesterday);
             }else if((nowCalendar.get(Calendar.YEAR) == calendar.get(Calendar.YEAR))) {//今年
-                return TimeUtils.date2String(calendar.getTime(), DateUtils.SIMPLE_DATE_FORMAT_MD);
+                return TimeUtils.date2String(calendar.getTime(),DateUtils.SIMPLE_DATE_FORMAT_MD);
             }else {
-                return TimeUtils.date2String(calendar.getTime(), DateUtils.SIMPLE_DATE_FORMAT_YMD);
+                return TimeUtils.date2String(calendar.getTime(),DateUtils.SIMPLE_DATE_FORMAT_YMD);
             }
         }
 

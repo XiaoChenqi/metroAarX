@@ -10,7 +10,7 @@ import com.facilityone.wireless.workorder.module.WorkorderService;
  * email:
  */
 
-public class WorkorderPaymentPresenter extends BaseWorkOrderPresenter<WorkorderPaymentFragment>{
+public class WorkorderPaymentPresenter extends BaseWorkOrderPresenter<WorkorderPaymentFragment> {
 
     @Override
     public void getWorkorderInfoSuccess(Long woId, WorkorderService.WorkorderInfoBean data) {

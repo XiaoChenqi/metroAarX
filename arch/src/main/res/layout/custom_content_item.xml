@@ -36,6 +36,8 @@
             android:gravity="right|center_vertical"
             android:paddingLeft="@dimen/dp_3"
             android:paddingRight="@dimen/dp_3"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textColorHint="@color/grey_c"
             android:visibility="gone"/>
 

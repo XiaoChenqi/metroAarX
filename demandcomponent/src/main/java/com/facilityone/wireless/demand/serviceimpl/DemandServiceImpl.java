@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.componentservice.demand.DemandService;
+import com.facilityone.wireless.demand.fragment.DemandCreateFragment;
 import com.facilityone.wireless.demand.fragment.DemandFragment;
 import com.facilityone.wireless.demand.fragment.DemandInfoFragment;
 import com.facilityone.wireless.demand.module.DemandConstant;
@@ -29,5 +30,14 @@ public class DemandServiceImpl implements DemandService {
     @Override
     public BaseFragment getDemandInfoByMsg(Long demandId) {
         return DemandInfoFragment.getInstance(DemandConstant.DEMAND_REQUES_QUERY, demandId, true);
+    }
+
+    /**
+     * Author:karelie
+     * 快速报障
+     * */
+    @Override
+    public BaseFragment goToQuickReport() {
+        return DemandCreateFragment.getInstance("快速报障");
     }
 }

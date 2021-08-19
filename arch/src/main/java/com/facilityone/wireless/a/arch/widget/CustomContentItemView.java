@@ -65,6 +65,8 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
         boolean showLine = array.getBoolean(R.styleable.CommonContentItemView_fm_content_item_show_line, false);
         boolean showRed = array.getBoolean(R.styleable.CommonContentItemView_fm_content_item_show_red, false);
         boolean showIcon = array.getBoolean(R.styleable.CommonContentItemView_fm_content_item_show_tip_icon, false);
+        boolean hideLines=array.getBoolean(R.styleable.CommonContentItemView_fm_content_item_hide_lines, false);
+
         String title = array.getString(R.styleable.CommonContentItemView_fm_content_item_title);
         String tip = array.getString(R.styleable.CommonContentItemView_fm_content_item_tip);
         String hint = array.getString(R.styleable.CommonContentItemView_fm_content_item_et_hint);
@@ -74,6 +76,15 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
         mRedTv.setVisibility(showRed ? VISIBLE : GONE);
         mDashLine.setVisibility(!showLine ? VISIBLE : GONE);
         mLine.setVisibility(showLine ? VISIBLE : GONE);
+        if (hideLines){
+            mDashLine.setVisibility(INVISIBLE);
+            mLine.setVisibility(INVISIBLE);
+        }else {
+            mDashLine.setVisibility(!showLine ? VISIBLE : GONE);
+            mLine.setVisibility(showLine ? VISIBLE : GONE);
+        }
+
+
         mInputEt.setVisibility(!showTip ? VISIBLE : GONE);
         mTipTv.setVisibility(showTip ? VISIBLE : GONE);
         mIconIv.setVisibility(showIcon ? VISIBLE : INVISIBLE);
@@ -91,6 +102,15 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
         }
         mClearIconIv.setOnClickListener(this);
     }
+
+    public void canInput(boolean can){
+        if (!can){
+            mInputEt.setFocusable(false);
+        }else {
+            mInputEt.setFocusable(true);
+        }
+    }
+
 
     public EditText getInputEt() {
         return mInputEt;

@@ -118,4 +118,20 @@ public class EditNumberView extends LinearLayout implements TextWatcher {
     private void setInputNumber(int value) {
         mCountTv.setText(String.format(Locale.getDefault(), mContext.getString(R.string.arch_char_no_more), DataUtils.getNumberValue(value)));
     }
+
+    public void canInput(boolean b){
+        if (!b){
+            mDescEt.setFocusable(false);
+        }else {
+            mDescEt.setFocusable(true);
+        }
+    }
+
+    public void setInputDisp(boolean a){
+        if (!a){
+            mCountTv.setVisibility(GONE);
+        }else {
+            mCountTv.setVisibility(VISIBLE);
+        }
+    }
 }

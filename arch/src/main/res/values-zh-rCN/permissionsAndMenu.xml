@@ -18,16 +18,23 @@
         <item>m-patrol-query</item>
     </string-array>
 
+    <!--扫一扫-->
+    <string name="home_scan_menu_title">扫一扫</string>
+    <string name="home_scan_permissions" translatable="false">m-scan</string>
+    <!--快速报障-->
+    <string name="home_quickreport_menu_title">快速报障</string>
+    <string name="home_quickreport_permissions" translatable="false">m-quickreport</string>
+
     <!--**********************服务台**********************-->
     <string name="home_service_menu_title">服务台</string>
     <string name="home_service_permissions" translatable="false">m-requirement</string>
 
     <string-array name="home_service_menu_child_title">
         <item>创建新需求</item>
-        <item>待审批需求</item>
-        <item>待处理需求</item>
-        <item>待评价需求</item>
-        <item>需求查询</item>
+        <item>待处理保障</item>
+        <item>待评价保障</item>
+        <item>待完善保障</item>
+        <item>保障查询</item>
     </string-array>
 
     <string-array name="home_service_menu_child_permissions">
@@ -43,11 +50,13 @@
     <string name="home_workOrder_permissions" translatable="false">m-wo</string>
 
     <string-array name="home_workOrder_menu_child_title">
-        <item>创建工单</item>
+<!--        <item>创建工单</item>-->
+        <item>维修管理</item>
         <item>待处理工单</item>
         <item>待派工工单</item>
         <item>待审批工单</item>
         <item>待验证工单</item>
+        <item>异常工单</item>
         <item>待存档工单</item>
         <item>工单查询</item>
     </string-array>
@@ -58,6 +67,7 @@
         <item>m-wo-dispach</item>
         <item>m-wo-approval</item>
         <item>m-wo-verify</item>
+        <item>m-wo-abnormal</item>
         <item>m-wo-close</item>
         <item>m-wo-query</item>
     </string-array>

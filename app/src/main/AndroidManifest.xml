@@ -21,12 +21,12 @@
         <!-- <activity -->
         <!-- android:exported="true" -->
         <!-- android:name=".CcccActivity"></activity> -->
-        <activity
-            android:name="com.facilityone.wireless.demand.DemandActivity"
-            android:exported="true" />
-        <activity
-            android:name="com.facilityone.wireless.demand.DemandCreateActivity"
-            android:exported="true" />
+<!--        <activity-->
+<!--            android:name="com.facilityone.wireless.demand.DemandActivity"-->
+<!--            android:exported="true" />-->
+<!--        <activity-->
+<!--            android:name="com.facilityone.wireless.demand.DemandCreateActivity"-->
+<!--            android:exported="true" />-->
         <activity
             android:name="com.facilityone.wireless.workorder.WorkOrderActivity"
             android:exported="true" />
@@ -39,9 +39,9 @@
         <activity
             android:name="com.facilityone.wireless.maintenance.MaintenanceActivity"
             android:exported="true" />
-        <activity
-            android:name="com.example.scanzxing.ScanZingMainActivity"
-            android:exported="true" />
+<!--        <activity-->
+<!--            android:name="com.example.scanzxing.ScanZingMainActivity"-->
+<!--            android:exported="true" />-->
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

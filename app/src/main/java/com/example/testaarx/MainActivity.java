@@ -6,10 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.scanzxing.ScanZingMainActivity;
 import com.example.testaarx.download.OutLineDataActivity;
-import com.facilityone.wireless.demand.DemandActivity;
-import com.facilityone.wireless.demand.DemandCreateActivity;
+
 import com.facilityone.wireless.maintenance.MaintenanceActivity;
 import com.facilityone.wireless.patrol.PatrolActivity;
 import com.facilityone.wireless.workorder.WorkOrderActivity;
@@ -68,24 +66,24 @@ public class MainActivity extends AppCompatActivity {
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DemandActivity.class);
-                MainActivity.this.startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this, DemandActivity.class);
+//                MainActivity.this.startActivity(intent);
             }
         });
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DemandCreateActivity.class);
-                MainActivity.this.startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this, DemandCreateActivity.class);
+//                MainActivity.this.startActivity(intent);
             }
         });
-        btn6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ScanZingMainActivity.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
+//        btn6.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this, ScanZingMainActivity.class);
+//                MainActivity.this.startActivity(intent);
+//            }
+//        });
         mDownBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

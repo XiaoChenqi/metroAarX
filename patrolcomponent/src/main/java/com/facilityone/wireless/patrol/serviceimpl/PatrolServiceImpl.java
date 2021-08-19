@@ -23,4 +23,9 @@ public class PatrolServiceImpl implements PatrolService {
     public BaseFragment getPatrolQuerySpotFragment(Long patrolTaskId, String title) {
         return PatrolQuerySpotFragment.getInstance(patrolTaskId,title);
     }
+
+    @Override
+    public BaseFragment goToScanForInfor(String scanResult) {
+        return null;
+    }
 }

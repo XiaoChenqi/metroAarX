@@ -13,8 +13,9 @@ public interface WorkorderConstant {
     int WORKORER_DISPATCHING = 2;     //待派工工单
     int WORKORER_AUDIT = 3;           //待审批工单
     int WORKORER_VALIDATION = 4;      //待验证工单
-    int WORKORER_ARCHIVE = 5;         //待存档工单
-    int WORKORER_QUERY = 6;           //工单查询
+    int WORKORER_UBNORMAL = 5;      //异常工单
+    int WORKORER_ARCHIVE = 6;         //待存档工单
+    int WORKORER_QUERY = 7;           //工单查询
 
     //工单状态
     int WORK_STATUS_NONE = -1;                      // 无
@@ -28,6 +29,7 @@ public interface WorkorderConstant {
     int WORK_STATUS_ARCHIVED = 7;                   // 已存档
     int WORK_STATUS_APPROVAL = 8;                   // 已待审批
     int WORK_STATUS_SUSPENDED_NO = 9;               // 已暂停(不继续工作)
+    int WORK_STATUS_UBNORMAL = 10;                  // 异常工单
 
     //工单类型
     int WORK_TYPE_CM = 0;               // cm
@@ -135,4 +137,19 @@ public interface WorkorderConstant {
     //关联设备完成状态
     int WO_EQU_STAT_UNFINISH = 0; // 0 --- 未完成
     int WO_EQU_STAT_FINISHED = 1; // 1 --- 已完成
+
+
+    //暂停工单
+    int WORKORDER_OPT_TYPE_PAUSE_CONTINUED = 1;   // 2 — 暂停（继续工作）
+    int WORKORDER_OPT_TYPE_PAUSE_NO_FURTHER = 2;  // 3 — 暂停（不继续工作）
+
+    //新工单状态
+    int WORK_NEW_STATUS_DISPATCHING = 0;                // 待派工
+    int WORK_NEW_STATUS_PROCESS = 1;                    // 处理中
+    int WORK_NEW_STATUS_ARCHIVED_WAIT = 2;               // 待存档
+    int WORK_NEW_STATUS_APPROVAL_WAIT = 3;              // 待审核
+    int WORK_NEW_STATUS_ARCHIVED = 4;                   // 已存档
+    int WORK_NEW_STATUS_DESTORY = 5;                    // 已作废
+
+
 }

@@ -20,4 +20,5 @@ public interface DemandService extends IService {
      */
     BaseFragment getDemandInfoByQuery(Long demandId);
     BaseFragment getDemandInfoByMsg(Long demandId);
+    BaseFragment goToQuickReport();
 }

@@ -9,6 +9,6 @@ import androidx.annotation.Nullable;
  * Date: 2018/3/19 下午12:22
  */
 public interface IGlobalCallback<T> {
-    void executeCallback(@Nullable T args);
+    void executeCallback(@Nullable  T args);
 }
 

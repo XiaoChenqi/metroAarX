@@ -39,6 +39,7 @@
         <attr name="fm_content_item_show_tip" format="boolean"/>
         <attr name="fm_content_item_show_red" format="boolean"/>
         <attr name="fm_content_item_show_line" format="boolean"/>
+        <attr name="fm_content_item_hide_lines" format="boolean"/>
         <attr name="fm_content_item_show_tip_icon" format="boolean"/>
         <attr name="fm_content_item_tip_icon" format="reference"/>
     </declare-styleable>
