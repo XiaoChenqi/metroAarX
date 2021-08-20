@@ -55,8 +55,8 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements Login
 
 
         //TODO xcq
-//        showLoading();
-//        getPresenter().logon("wangan", "111111");
+        showLoading();
+        getPresenter().logon("zhangsan", "111111");
         showLogonButton();
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,9 +1,8 @@
 package com.facilityone.wireless.workorder;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
@@ -11,8 +10,12 @@ import com.facilityone.wireless.componentservice.common.permissions.CommonConsta
 import com.facilityone.wireless.workorder.fragment.WorkorderCreateFragment;
 import com.facilityone.wireless.workorder.fragment.WorkorderInfoFragment;
 
-public class WorkOrderInfoActivity extends BaseFragmentActivity
-        implements EmptyFragment.OnGoFragmentListener {
+import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.THEME_COLOR;
+
+public class WorkOrderInfoActivity extends
+        //AppCompatActivity
+        BaseFragmentActivity implements EmptyFragment.OnGoFragmentListener
+{
 
 
     //再点一次退出程序时间设置
@@ -23,7 +26,7 @@ public class WorkOrderInfoActivity extends BaseFragmentActivity
     public static long woId = -1L;
     @Override
     protected int getContextViewId() {
-        return R.id.workorder_info_id;
+        return R.id.workorder_main_id;
     }
 
     @Override
@@ -37,12 +40,15 @@ public class WorkOrderInfoActivity extends BaseFragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
+        //setContentView(R.layout.activity_oder_info);
         if(0 != getIntent().getIntExtra("COLOR",0)){
             themeColor = getIntent().getIntExtra("COLOR",0);
+            THEME_COLOR = themeColor;
         }
         if(getIntent().getStringExtra("woId")!=null){
             woId = getIntent().getLongExtra("woId",-1L);
         }
+        //woId=30;
     }
 
     @Override
@@ -52,6 +58,25 @@ public class WorkOrderInfoActivity extends BaseFragmentActivity
 
     @Override
     public void goFragment(Bundle bundle) {
-        //mInstance.startWithPop(WorkorderInfoFragment.getInstance(status, code, woId));
+        mInstance.startWithPop(WorkorderInfoFragment.getInstance(woId));
+
+    }
+    @Override
+    protected boolean isImmersionBarEnabled() {//fmfactivity中
+        return true;
+    }
+
+    @Override
+    public void onBackPressedSupport() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            pop();
+        } else {
+            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+                this.finish();
+            } else {
+                TOUCH_TIME = System.currentTimeMillis();
+                ToastUtils.showShort(R.string.workorder_press_exit_again);
+            }
+        }
     }
 }

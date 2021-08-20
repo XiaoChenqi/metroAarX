@@ -4,7 +4,6 @@
     package="com.facilityone.wireless.workorder">
 
     <application>
-        <activity android:name=".WorkOrderInfoActivity"></activity>
         <activity
             android:name=".WorkOrderActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -12,6 +11,12 @@
             android:theme="@style/AppTheme.NoActionBar.NoTranslucent" />
         <activity
             android:name=".WorkorderCreateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent" />
+        <activity
+            android:name=".WorkOrderInfoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"

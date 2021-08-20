@@ -1,5 +1,6 @@
 package com.facilityone.wireless.workorder;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.facilityone.wireless.a.arch.base.FMFragment;
@@ -7,8 +8,11 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.workorder.fragment.WorkorderCreateFragment;
+import com.facilityone.wireless.workorder.fragment.WorkorderInfoFragment;
 
 import androidx.annotation.Nullable;
+
+import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.THEME_COLOR;
 
 public class WorkorderCreateActivity extends BaseFragmentActivity
         implements EmptyFragment.OnGoFragmentListener{
@@ -25,11 +29,14 @@ public class WorkorderCreateActivity extends BaseFragmentActivity
         setSwipeBackEnable(false);
         if(0 != getIntent().getIntExtra("COLOR",0)){
             themeColor = getIntent().getIntExtra("COLOR",0);
+            //themeColor = (Color.parseColor("#ff6666"));;
+            THEME_COLOR = themeColor;
         }
         if(getIntent().getStringExtra("EquipmentId")!=null){
             equipId = getIntent().getStringExtra("EquipmentId");
         }
         //equipId = "1819191105010000000010";
+        //THEME_COLOR = Color.parseColor("#ff6666");
     }
 
     @Override
@@ -54,8 +61,8 @@ public class WorkorderCreateActivity extends BaseFragmentActivity
     int CREATE_ORDER_BY_PATROL_QUERY_REPAIR = 2002;//巡检查询报修
     @Override
     public void goFragment(Bundle bundle) {
-        mInstance.startWithPop(WorkorderCreateFragment.getInstance(CREATE_ORDER_BY_OTHER,equipId));
-        //mInstance.startWithPop(WorkorderMenuFragment.getInstance(bundle));
+       mInstance.startWithPop(WorkorderCreateFragment.getInstance(CREATE_ORDER_BY_OTHER,equipId));
+        //mInstance.startWithPop(WorkorderInfoFragment.getInstance(1L));
     }
 
     @Override

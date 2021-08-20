@@ -34,6 +34,9 @@
             android:name="com.facilityone.wireless.workorder.WorkorderCreateActivity"
             android:exported="true" />
         <activity
+            android:name="com.facilityone.wireless.workorder.WorkOrderInfoActivity"
+            android:exported="true" />
+        <activity
             android:name="com.facilityone.wireless.patrol.PatrolActivity"
             android:exported="true" />
         <activity

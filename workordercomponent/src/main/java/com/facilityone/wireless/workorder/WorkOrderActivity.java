@@ -11,6 +11,8 @@ import com.facilityone.wireless.workorder.fragment.WorkorderMenuFragment;
 import com.kongzue.dialogx.DialogX;
 import com.luojilab.router.facade.annotation.RouteNode;
 
+import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.THEME_COLOR;
+
 /**
  * Author：gary
  * Email: xuhaozv@163.com
@@ -25,7 +27,7 @@ public class WorkOrderActivity extends BaseFragmentActivity implements EmptyFrag
     private static final long WAIT_TIME = 2000L;
     private long TOUCH_TIME = 0L;
     private EmptyFragment mInstance;
-
+    public static int themeColor =0;
     @Override
     protected int getContextViewId() {
         return R.id.workorder_main_id;
@@ -42,6 +44,10 @@ public class WorkOrderActivity extends BaseFragmentActivity implements EmptyFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
+        if(0 != getIntent().getIntExtra("COLOR",0)){
+            themeColor = getIntent().getIntExtra("COLOR",0);
+            THEME_COLOR = themeColor;
+        }
         DialogX.init(this);
     }
 

@@ -53,6 +53,9 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 //                }
 //                getV().setLaborer(laborer);
 //            }
+            //XCQ todo
+            WorkorderInfoFragment.refreshStatus = data.status;//因为上海隧道院的原因，只能这么改
+
             getV().refreshBasicInfoUI(data);
             //请求物料
             getWorkorderReserveRecordList(woId);

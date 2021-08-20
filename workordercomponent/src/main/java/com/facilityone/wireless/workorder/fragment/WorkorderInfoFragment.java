@@ -155,7 +155,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public Long mWoId;
     private String mCode;
     private int mStatus;
-    private int refreshStatus;
+    public static int refreshStatus;
     private Long mWoTeamId;
     private String tel;
 
@@ -1452,6 +1452,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         Bundle bundle = new Bundle();
         bundle.putInt(WORKORDER_STATUS, workorderStatus);
         bundle.putString(WORKORDER_CODE, code);
+        bundle.putLong(WORKORDER_ID, woId);
+        WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
+        infoFragment.setArguments(bundle);
+        return infoFragment;
+    }
+
+    public static WorkorderInfoFragment getInstance(Long woId) {
+        Bundle bundle = new Bundle();
         bundle.putLong(WORKORDER_ID, woId);
         WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
         infoFragment.setArguments(bundle);

@@ -1,5 +1,6 @@
 package com.facilityone.wireless.a.arch.base;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.SizeUtils;
 import com.facilityone.wireless.a.arch.R;
 import com.facilityone.wireless.a.arch.utils.NoDoubleClickListener;
+import com.facilityone.wireless.a.arch.xcq.Constants.Constant;
 import com.gyf.barlibrary.ImmersionBar;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.qmuiteam.qmui.widget.QMUITopBar;
@@ -128,6 +130,7 @@ public abstract class FMFragment extends SwipeBackFragment {
     }
 
     public TextView setTitle(String title) {
+        mTopBarLayout.setBackgroundColor(Constant.THEME_COLOR);
         TextView textView = null;
         if (mTopBarLayout != null) {
             textView = mTopBarLayout.setTitle(title);
