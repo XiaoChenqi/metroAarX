@@ -5,8 +5,17 @@ buildscript {
     ext.kotlin_version = "1.3.50"
 
     repositories {
+        mavenCentral()
         maven {url 'https://dl.google.com/dl/android/maven2/'}
+        maven { url "https://maven.aliyun.com/repository/google"}
+        maven { url "https://maven.aliyun.com/repository/central"}
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/jcenter" }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+        //华为仓库
+        maven {url 'https://developer.huawei.com/repo/'}
         jcenter()
+        google()
         
     }
     dependencies {
@@ -24,13 +33,25 @@ buildscript {
 
 allprojects {
     repositories {
+        // 阿里云防墙
         maven {url 'https://dl.google.com/dl/android/maven2/'}
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
+        maven { url "https://maven.aliyun.com/repository/central"}
+        maven { url "https://maven.aliyun.com/repository/google"}
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/jcenter" }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+        //华为仓库
+        maven {url 'https://developer.huawei.com/repo/'}
         jcenter()
         mavenCentral()
         maven { url "https://jitpack.io" }
-        //TODO xcq 此处为上传到maven需要
+        //此处为上传到maven需要
+//        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
         maven { url "http://maven.oschina.net/content/groups/public" }
+        maven {
+            url "http://192.168.1.146:8080/nexus/content/repositories/com.facility.wireless/"
+        }
+        google()
 
         flatDir {
             dirs project(':arch').file('libs')
