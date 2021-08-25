@@ -20,6 +20,7 @@ import com.facilityone.wireless.a.arch.utils.PictureSelectorManager;
 import com.facilityone.wireless.a.arch.widget.BottomTextListSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.EditNumberView;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
+import com.facilityone.wireless.basiclib.utils.onDebounceClickListener;
 import com.facilityone.wireless.basiclib.widget.FullyGridLayoutManager;
 import com.facilityone.wireless.workorder.R;
 import com.facilityone.wireless.workorder.module.WorkorderOptService;
@@ -29,6 +30,8 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +104,9 @@ public class WorkorderInputFragment extends BaseFragment<WorkorderInputPresenter
         mPhotoRv.setAdapter(mGridImageAdapter);
         mGridImageAdapter.setOnItemChildClickListener(this);
         mGridImageAdapter.setOnItemClickListener(this);
+
+
+
     }
 
     @Override

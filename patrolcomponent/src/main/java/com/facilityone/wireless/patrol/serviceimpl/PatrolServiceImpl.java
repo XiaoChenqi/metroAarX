@@ -6,6 +6,9 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.componentservice.patrol.PatrolService;
 import com.facilityone.wireless.patrol.fragment.PatrolMenuFragment;
 import com.facilityone.wireless.patrol.fragment.PatrolQuerySpotFragment;
+import com.facilityone.wireless.patrol.fragment.PatrolScanFragment;
+
+import java.util.function.BooleanSupplier;
 
 /**
  * Author：gary
@@ -20,12 +23,17 @@ public class PatrolServiceImpl implements PatrolService {
     }
 
     @Override
+    public BaseFragment goToMenu(boolean needDownload) {
+        return PatrolMenuFragment.getInstance(needDownload);
+    }
+
+    @Override
     public BaseFragment getPatrolQuerySpotFragment(Long patrolTaskId, String title) {
         return PatrolQuerySpotFragment.getInstance(patrolTaskId,title);
     }
 
     @Override
     public BaseFragment goToScanForInfor(String scanResult) {
-        return null;
+        return PatrolScanFragment.getInstance(scanResult);
     }
 }

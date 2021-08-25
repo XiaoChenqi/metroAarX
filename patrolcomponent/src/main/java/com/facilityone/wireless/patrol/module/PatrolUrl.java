@@ -21,4 +21,9 @@ public interface PatrolUrl {
     String PATROL_TASK_QUERY_EQU_ITEM_MARK_DEL = "/m/v1/patrol/tasks/mark";
     //need nfc
     String PATROL_NEED_NFC_DEL = "/m/v1/project/nfc/setting";
+
+    //判断点位任务是否可执行
+    String PATROL_JUDGE_TASK = "/m/v1/patrol/tasks/judge";
+    //执行任务
+    String PATROL_EXECUTE_TASK = "/m/v1/patrol/tasks/execute";
 }

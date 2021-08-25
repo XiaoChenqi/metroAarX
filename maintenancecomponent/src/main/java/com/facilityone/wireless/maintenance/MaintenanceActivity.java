@@ -8,6 +8,7 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.maintenance.fragment.MaintenanceFragment;
+import com.facilityone.wireless.maintenance.fragment.MaintenanceMenuFragment;
 import com.luojilab.component.componentlib.router.ui.UIRouter;
 import com.luojilab.router.facade.annotation.RouteNode;
 
@@ -26,16 +27,10 @@ public class MaintenanceActivity extends BaseFragmentActivity implements EmptyFr
 
     @Override
     protected FMFragment setRootFragment() {
-        //todo xcq
-        //这边应该加个登录的判断
+        //TODO 加个登录判断，以后的联调位置
         mInstance = EmptyFragment.getInstance(CommonConstant.MESSAGE_MAINTANCE);
         mInstance.setOnGoFragmentListener(this);
-
-//        Bundle bundle = new Bundle();
-//        UIRouter.getInstance().openUri(this, "DDComp://maintenance/maintenanceHome", bundle);
-
         return mInstance;
-        //return MaintenanceFragment.getInstance();
     }
 
     @Override
@@ -46,7 +41,7 @@ public class MaintenanceActivity extends BaseFragmentActivity implements EmptyFr
 
     @Override
     public void goFragment(Bundle bundle) {
-        mInstance.startWithPop(MaintenanceFragment.getInstance(bundle));
+        mInstance.startWithPop(MaintenanceMenuFragment.getInstance(bundle));
     }
 
     @Override
@@ -59,13 +54,12 @@ public class MaintenanceActivity extends BaseFragmentActivity implements EmptyFr
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             pop();
         } else {
-//            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
-//                this.finish();
-//            } else {
-//                TOUCH_TIME = System.currentTimeMillis();
-//                ToastUtils.showShort(R.string.maintenance_press_exit_again);
-//            }
-            this.finish();
+            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+                this.finish();
+            } else {
+                TOUCH_TIME = System.currentTimeMillis();
+                ToastUtils.showShort(R.string.maintenance_press_exit_again);
+            }
         }
     }
 

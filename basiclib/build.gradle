@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin:'maven'
-
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -20,8 +21,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding{
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    dataBinding {
         enabled = true
+    }
+    packagingOptions {
+//        pickFirst 'META-INF/kotlinx-io.kotlin_module'
+//        pickFirst 'META-INF/atomicfu.kotlin_module'
+//        pickFirst 'META-INF/kotlinx-coroutines-io.kotlin_module'
+        exclude 'META-INF/proguard/coroutines.pro'
+//        exclude "DebugProbesKt.bin"
     }
 }
 
@@ -166,6 +181,13 @@ dependencies {
 
     //弹窗
     api 'com.github.kongzue.DialogX:DialogX:0.0.43.beta1'
+
+    //华为统一扫码服务增强版
+    api 'com.huawei.hms:scanplus:2.1.0.300'
+
+    //替代官方Result
+    //api 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.0'
+    api 'com.github.bbssyyuui:ActivityLauncher:1.0.2'
 }
 
 //uploadArchives {

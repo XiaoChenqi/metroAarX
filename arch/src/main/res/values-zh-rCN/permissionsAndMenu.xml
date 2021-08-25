@@ -31,10 +31,10 @@
 
     <string-array name="home_service_menu_child_title">
         <item>创建新需求</item>
-        <item>待处理保障</item>
-        <item>待评价保障</item>
-        <item>待完善保障</item>
-        <item>保障查询</item>
+        <item>待处理报障</item>
+        <item>待评价报障</item>
+        <item>待完善报障</item>
+        <item>报障查询</item>
     </string-array>
 
     <string-array name="home_service_menu_child_permissions">
@@ -51,7 +51,7 @@
 
     <string-array name="home_workOrder_menu_child_title">
 <!--        <item>创建工单</item>-->
-        <item>维修管理</item>
+        <item>创建工单</item>
         <item>待处理工单</item>
         <item>待派工工单</item>
         <item>待审批工单</item>

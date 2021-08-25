@@ -28,4 +28,13 @@ public interface CommonUrl {
 
     //原因列表
     String REASON_LIST="/m/v1/workorder/reason/list";
+
+
+
+    //最后一次签到记录
+    String ATTENDANCE_LAST = "/m/v1/user/attendance/last";
+    //我的签到记录
+    String ATTENDANCE_LIST = "/m/v1/user/attendance/list";
+    //扫一扫签到
+    String ATTENDANCE_OPT = "/m/v1/user/attendance/operate";
 }

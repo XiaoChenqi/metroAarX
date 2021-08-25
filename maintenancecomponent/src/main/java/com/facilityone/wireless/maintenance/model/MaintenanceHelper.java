@@ -63,4 +63,14 @@ public class MaintenanceHelper {
         return v;
     }
 
+    public static Map<Integer, String> getLaborerStatusMap(Context context) {
+        Map<Integer, String> v = new LinkedHashMap<>();
+        String[] workerStat = context.getResources().getStringArray(R.array.maintenance_net_get_worker_stat);
+        v.put(MaintenanceConstant.STATUS_PERSONAL_UN_ACCEPT, workerStat[0]);
+        v.put(MaintenanceConstant.STATUS_PERSONAL_ACCEPT, workerStat[1]);
+        v.put(MaintenanceConstant.STATUS_PERSONAL_BACK, workerStat[2]);
+        v.put(MaintenanceConstant.STATUS_PERSONAL_SUBMIT, workerStat[3]);
+        return v;
+    }
+
 }

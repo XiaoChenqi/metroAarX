@@ -5,6 +5,7 @@ import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.luck.picture.lib.entity.LocalMedia;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,16 @@ public interface WorkorderService extends IService {
     int CREATE_ORDER_BY_PATROL_QUERY_REPAIR = 2002;//巡检查询报修
 
     BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId);
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/19
+      * @Infor: 四运 维护工单跳转
+      */
+    BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId, boolean isMaintenance);
+
+    BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId, boolean isMaintenance, boolean isFinish);
+
+    BaseFragment getOrderDispatchFragment(ArrayList<String> woId, String code, String sendWorkContent, Long estimateStartTime, Long estimateEndTime, Long workTeamId);
 
     BaseFragment getWorkorderQueryFragment(boolean my);
 

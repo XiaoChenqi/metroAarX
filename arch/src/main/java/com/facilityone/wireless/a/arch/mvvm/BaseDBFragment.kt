@@ -134,7 +134,7 @@ abstract class BaseDBFragment<T:ViewDataBinding,VM:BaseViewModel> : SwipeBackFra
         OkGo.getInstance().cancelTag(this)
 
 
-        dismissLoading()
+//        dismissLoading()
         super.onDestroyView()
     }
 
@@ -246,8 +246,9 @@ abstract class BaseDBFragment<T:ViewDataBinding,VM:BaseViewModel> : SwipeBackFra
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         super.onViewCreated(view, savedInstanceState)
-        initView(savedInstanceState,view)
         initData(savedInstanceState)
+        initView(savedInstanceState,view)
+
     }
 
 

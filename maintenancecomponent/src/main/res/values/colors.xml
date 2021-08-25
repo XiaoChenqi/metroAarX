@@ -31,4 +31,12 @@
     <color name="maintenance_workorder_tag_suspended_no">#f2548e</color>
 
     <color name="maintenance_circle_green">#5eba15</color>
+
+    <color name="maintenance_red">#ff3a30</color>
+
+
+    <color name="maintenance_green">@color/colorPrimary</color>
+    <color name="maintenance_orange">#ff9900</color>
+    <color name="maintenance_blue">#10aeff</color>
+
 </resources>

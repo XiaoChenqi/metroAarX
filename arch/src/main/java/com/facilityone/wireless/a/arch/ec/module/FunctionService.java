@@ -28,6 +28,12 @@ public class FunctionService {
     public static final int UNDO_TYPE_BULLETIN = 5;       //公告
     public static final int UNDO_TYPE_PAY = 6;            //获取缴费管理类型(待缴费单，已缴费单，退款管理单)
     public static final int UNDO_TYPE_INSPECTION = 7;     //承接查验类型(待处理，待验证)
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/24
+     * @Infor: 四运
+     */
+    public static final int UNDO_TYPE_MAINTENANCE = 6; //获取维护工单
 
     public static class FunctionBean implements Serializable, Comparable<FunctionBean> {
         public String name;
@@ -45,7 +51,6 @@ public class FunctionService {
             this.childMenu = new HashMap<>();
             this.undoKey = new HashSet<>();
         }
-
 
 
         @Override
@@ -88,6 +93,17 @@ public class FunctionService {
         public int refundPaymentNumber;
         public int undoInspectionNumber;
         public int unArchivedInspectionNumber;
+        /**
+         * @Auther: karelie
+         * @Date: 2021/8/24
+         * @Infor: 维护工单四运
+         */
+        public int undoPPMOrderNumber;
+        public int unArrangePPMOrderNumber;
+        public int unApprovalPPMOrderNumber;
+        public int abnormalPPMOrderNumber;
+        public int unArchivedPPMOrderNumber;
+
 
     }
 }

@@ -18,7 +18,7 @@ public interface InventoryService extends IService {
      * @param status
      * @return
      */
-    BaseFragment getReserveRecordInfoFragment(int type, long activityId, int status,int workorderStatus);
+    BaseFragment getReserveRecordInfoFragment(int type, long activityId, int status, int workorderStatus);
 
     /**
      * 消息界面进入预定详情

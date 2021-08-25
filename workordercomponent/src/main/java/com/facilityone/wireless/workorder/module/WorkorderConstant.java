@@ -30,6 +30,7 @@ public interface WorkorderConstant {
     int WORK_STATUS_APPROVAL = 8;                   // 已待审批
     int WORK_STATUS_SUSPENDED_NO = 9;               // 已暂停(不继续工作)
     int WORK_STATUS_UBNORMAL = 10;                  // 异常工单
+    int WORK_STATUS_MAINTENCE = 11;                  // 计划性维护
 
     //工单类型
     int WORK_TYPE_CM = 0;               // cm

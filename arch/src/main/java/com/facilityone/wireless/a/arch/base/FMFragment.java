@@ -1,6 +1,5 @@
 package com.facilityone.wireless.a.arch.base;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.SizeUtils;
 import com.facilityone.wireless.a.arch.R;
 import com.facilityone.wireless.a.arch.utils.NoDoubleClickListener;
-import com.facilityone.wireless.a.arch.xcq.Constants.Constant;
 import com.gyf.barlibrary.ImmersionBar;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.qmuiteam.qmui.widget.QMUITopBar;
@@ -41,6 +39,7 @@ public abstract class FMFragment extends SwipeBackFragment {
     protected QMUITopBarLayout mTopBarLayout;
     protected QMUITopBar mTopBar;
     private IconTextView mMoreView;
+    private View mTitleBar;
 
     public FMFragment() {
         super();
@@ -80,6 +79,7 @@ public abstract class FMFragment extends SwipeBackFragment {
                 ImmersionBar.setStatusBarView(_mActivity, statusBarView);
             }
         }
+        mTitleBar = view.findViewById(setTitleBar());
         initToolbar(view);
     }
 
@@ -110,6 +110,25 @@ public abstract class FMFragment extends SwipeBackFragment {
         }
     }
 
+    public void initLeftBack(){
+        if (mTitleBar != null) {
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            if (mTitleBar instanceof QMUITopBarLayout) {
+                mTopBarLayout = (QMUITopBarLayout) mTitleBar;
+                if (leftBackEnabled()) {
+                    mTopBarLayout.addLeftView(getLeftBackView(), R.id.topbar_left_back_id, lp);
+                }
+            } else if (mTitleBar instanceof QMUITopBar) {
+                mTopBar = (QMUITopBar) mTitleBar;
+                if (leftBackEnabled()) {
+                    mTopBar.addLeftView(getLeftBackView(), R.id.topbar_left_back_id, lp);
+                }
+            }
+        }
+    }
+
+
     private View getLeftBackView() {
         IconTextView view = (IconTextView) LayoutInflater.from(getContext()).inflate(R.layout.fm_topbar_back, null);
         view.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +140,13 @@ public abstract class FMFragment extends SwipeBackFragment {
         return view;
     }
 
+
+    public void addLeftBackView(){
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        mTopBar.addLeftView(getLeftBackView(), R.id.topbar_left_back_id, lp);
+    }
+
     public void leftBackListener() {
         pop();
     }
@@ -130,7 +156,6 @@ public abstract class FMFragment extends SwipeBackFragment {
     }
 
     public TextView setTitle(String title) {
-        mTopBarLayout.setBackgroundColor(Constant.THEME_COLOR);
         TextView textView = null;
         if (mTopBarLayout != null) {
             textView = mTopBarLayout.setTitle(title);
@@ -182,6 +207,11 @@ public abstract class FMFragment extends SwipeBackFragment {
             mTopBar.removeAllRightViews();
         }
     }
+
+    public void removeLeftView(View view){
+        mTopBar.removeView(view);
+    }
+
 
     public void setRightIcon(@StringRes int textId, @IdRes int id, NoDoubleClickListener listener) {
         setRightIcon(textId, id, R.dimen.topbar_back_size, listener);
@@ -253,6 +283,26 @@ public abstract class FMFragment extends SwipeBackFragment {
         });
     }
 
+
+
+    public void addLeftMenuButton(String text,@IdRes int id){
+        Button button = null;
+        if (mTopBarLayout != null) {
+            button = mTopBarLayout.addLeftTextButton(text, id);
+        } else if (mTopBar != null) {
+            button = mTopBar.addLeftTextButton(text, id);
+        }
+        if (button == null) {
+            return;
+        }
+        button.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            protected void onNoDoubleClick(View view) {
+                onLeftTextMenuClick(view);
+            }
+        });
+    }
+
     public void setRightTextButton(@StringRes int textId, @IdRes int id) {
         String text = getContext().getResources().getString(textId);
         setRightTextButton(text, id);
@@ -263,6 +313,9 @@ public abstract class FMFragment extends SwipeBackFragment {
     }
 
     public void onRightTextMenuClick(View view) {
+    }
+    public void onLeftTextMenuClick(View view){
+
     }
 
     public void onRightImageMenuClick(View view) {

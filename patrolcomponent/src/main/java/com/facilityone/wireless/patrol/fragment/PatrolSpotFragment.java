@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -20,6 +21,7 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.offline.model.entity.DBPatrolConstant;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
 import com.facilityone.wireless.basiclib.app.FM;
+import com.facilityone.wireless.patrol.NfcRedTagActivity;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.adapter.PatrolSpotAdapter;
 import com.facilityone.wireless.patrol.module.PatrolConstant;
@@ -89,6 +91,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initData();
+        this.setSwipeBackEnable(false);
     }
 
     private void initData() {
@@ -298,6 +301,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     @Override
     public boolean onBackPressedSupport() {
         popResult();
+        ActivityUtils.finishActivity(NfcRedTagActivity.class);
         return true;
 
     }
@@ -315,6 +319,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     @Override
     public void onDragStateChange(int state) {
         if (state == SwipeBackLayout.STATE_FINISHED) {
+            ActivityUtils.finishActivity(NfcRedTagActivity.class);
             setFragmentResult(RESULT_OK, null);
         }
     }
@@ -354,4 +359,6 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
         instance.setArguments(bundle);
         return instance;
     }
+
+
 }

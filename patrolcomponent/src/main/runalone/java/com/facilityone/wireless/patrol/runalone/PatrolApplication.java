@@ -15,16 +15,12 @@ import com.luojilab.component.componentlib.router.ui.UIRouter;
  * description:
  * Date: 2018/10/30 2:43 PM
  */
-public class PatrolApplication extends BaseApplication {
+public class PatrolApplication extends InitApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG);
-        UIRouter.getInstance().registerUI("patrol");
-        Router.registerComponent("com.facilityone.wireless.workorder.applike.WorkorderApplike");
-        Facility.init(this);
         //LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG);
+        UIRouter.getInstance().registerUI("patrol");
         //Router.registerComponent("com.facilityone.wireless.workorder.applike.WorkorderApplike");
         //Facility.init(this);
         //DBManager.getInstance();

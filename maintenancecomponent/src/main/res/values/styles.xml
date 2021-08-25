@@ -17,4 +17,5 @@
         <item name="android:paddingRight">@dimen/dp_16</item>
         <item name="android:paddingBottom">@dimen/dp_18</item>
     </style>
+
 </resources>

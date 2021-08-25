@@ -37,5 +37,38 @@
         <item>待审批</item>
         <item>已暂停</item>
     </string-array>
+
+    <!--工作状态-->
+    <string-array name="maintenance_net_get_worker_stat">
+        <item>未接单</item>
+        <item>已接单</item>
+        <item>已退单</item>
+        <item>已提交</item>
+    </string-array>
+
+    <string-array name="maintenance_query_stat">
+        <item>待派工</item>
+        <item>处理中</item>
+        <item>待存档</item>
+        <item>待审核</item>
+        <item>已存档</item>
+        <item>已作废</item>
+    </string-array>
+
+    <string-array name="maintenance_label_stat">
+        <item>暂停申请中</item>
+        <item>暂停继续</item>
+        <item>暂停不继续</item>
+        <item>作废申请中</item>
+        <item>已终止</item>
+    </string-array>
+
+    <string-array name="maintenance_cycle_stat">
+        <item>天</item>
+        <item>周</item>
+        <item>月</item>
+        <item>季</item>
+        <item>年</item>
+    </string-array>
     
 </resources>

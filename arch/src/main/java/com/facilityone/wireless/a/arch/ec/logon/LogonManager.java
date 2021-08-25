@@ -58,7 +58,7 @@ public class LogonManager {
 //        String str = "http://192.168.1.66:8080";
 //        String str = "http://192.168.1.95:23456/fz_iframe";
 //        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.APP_SERVER, str);
-//        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.USER_EDIT_SERVER, true);
+        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.USER_EDIT_SERVER, true);
 //        FM.getConfigurator().withApiHost(str);
         //deleteData(dialog);//TODO 这个方法可能需要使用
 

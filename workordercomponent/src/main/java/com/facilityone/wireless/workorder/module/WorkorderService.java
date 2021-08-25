@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.Page;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Comparator;
 import java.util.List;
@@ -16,7 +17,10 @@ import java.util.List;
  * description:工单服务
  * Date: 2018/7/4 下午4:20
  */
+
 public class WorkorderService {
+
+
 
     //工单列表请求响应
     public static class WorkorderListReq {
@@ -367,7 +371,7 @@ public class WorkorderService {
             }
         };
     }
-
+    
     public static class StepsBean implements Comparator<StepsBean>,Parcelable {
         public Long stepId;//步骤ID
         public String step;//步骤
@@ -695,4 +699,59 @@ public class WorkorderService {
         public Page page;
     }
 
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:55
+     * @Description: 扫一扫签到 请求体
+     */
+    public static class WorkorderAttendanceReq {
+        //被签的委外人员ID
+        public Long personId;
+        //值班人员ID
+        public Long contactId;
+        //值班人员名字
+        public String contactName;
+        //签到时间
+        public Long createTime;
+        //签到位置
+        public LocationBean location;
+
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:55
+     * @Description: 签到记录响应体
+     */
+    public static class WorkorderAttendanceResp {
+        public Long contactId;
+        public String contactName;
+        public String locationName;
+        public Boolean signStatus;
+        public LocationBean location;
+        public Long createTime;
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:55
+     * @Description: 我的签到记录请求体
+     */
+    public static class WorkorderMyAttendanceReq {
+        public Long timeStart;
+        public Long timeEnd;
+        public Page page;
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:55
+     * @Description: 签到记录列表响应体
+     */
+    public static class WorkorderMyAttendanceResp {
+        public Page page;
+        public List<WorkorderAttendanceResp> contents;
+
+    }
 }

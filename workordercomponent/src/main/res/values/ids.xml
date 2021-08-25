@@ -17,5 +17,4 @@
     <item name="workorder_space_add_menu_id" type="id"/>
     <item name="workorder_space_save_menu_id" type="id"/>
     <item name="workorder_reserve_id" type="id"/>
-    <item name="workorder_info_id" type="id"/>
 </resources>

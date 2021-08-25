@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facilityone.wireless.a.arch.R;
@@ -32,6 +33,7 @@ public class FMWarnDialogBuilder extends QMUIDialogBuilder<FMWarnDialogBuilder> 
     private View mBtnCenterV;
     private int mCancelTextColor;
     private int mSureTextColor;
+    private LinearLayout mCancelLl;
 
     private Context mContext;
     private OnBtnClickListener mOnBtnCancelClickListener;
@@ -57,6 +59,7 @@ public class FMWarnDialogBuilder extends QMUIDialogBuilder<FMWarnDialogBuilder> 
         mBtnCancel = (Button) view.findViewById(R.id.btn_cancel);
         mBtnSure = (Button) view.findViewById(R.id.btn_sure);
         mBtnCenterV = view.findViewById(R.id.btn_center_v);
+        mCancelLl = view.findViewById(R.id.ll_cancel);
         mBtnCancel.setTextColor(mCancelTextColor == 0 ? mContext.getResources().getColor(R.color.grey_9) : mContext.getResources().getColor(mCancelTextColor));
         mBtnSure.setTextColor(mSureTextColor == 0 ? mContext.getResources().getColor(R.color.colorPrimary) : mContext.getResources().getColor(mSureTextColor));
 
@@ -71,7 +74,7 @@ public class FMWarnDialogBuilder extends QMUIDialogBuilder<FMWarnDialogBuilder> 
         }
 
         mBtnCancel.setText(StringUtils.formatString(btnCancel, mContext.getString(R.string.arch_cancel)));
-        mBtnCancel.setVisibility(ancelVisiable?View.VISIBLE:View.GONE);
+        mCancelLl.setVisibility(ancelVisiable?View.VISIBLE:View.GONE);
         mBtnCenterV.setVisibility(ancelVisiable?View.VISIBLE:View.GONE);
         mBtnSure.setText(StringUtils.formatString(btnSure, mContext.getString(R.string.arch_confirm)));
 
@@ -205,6 +208,11 @@ public class FMWarnDialogBuilder extends QMUIDialogBuilder<FMWarnDialogBuilder> 
     }
 
     public FMWarnDialogBuilder setCancelVisiable(boolean visiable) {
+        this.ancelVisiable = visiable;
+        return this;
+    }
+
+    public FMWarnDialogBuilder setCancelGone(boolean visiable) {
         this.ancelVisiable = visiable;
         return this;
     }

@@ -2,6 +2,9 @@ package com.facilityone.wireless.patrol.presenter;
 
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
+import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.mvp.BasePresenter;
 import com.facilityone.wireless.a.arch.offline.dao.PatrolDeviceDao;
 import com.facilityone.wireless.a.arch.offline.dao.PatrolItemDao;
@@ -13,10 +16,18 @@ import com.facilityone.wireless.a.arch.offline.model.entity.PatrolItemEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolPicEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
+import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.patrol.fragment.PatrolItemFragment;
+import com.facilityone.wireless.patrol.module.PatrolQueryService;
+import com.facilityone.wireless.patrol.module.PatrolUrl;
+import com.fm.tool.network.model.BaseResponse;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -261,5 +272,27 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
             }
         }
         return -1;
+    }
+
+    //判断点位任务是否可执行
+    public void judgeTask(Long spotJobId,@Nullable Integer position){
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("patrolTaskSpotId", spotJobId);
+        OkGo.<BaseResponse<PatrolQueryService.PatrolJudgeBean>>post(FM.getApiHost() + PatrolUrl.PATROL_JUDGE_TASK)
+                .tag(getV())
+                .upJson(toJson(jsonObject))
+                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.PatrolJudgeBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<PatrolQueryService.PatrolJudgeBean>> response) {
+                        getV().dismissLoading();
+                        PatrolQueryService.PatrolJudgeBean data = response.body().data;
+                        if (data != null) {
+                            if (!data.executable){
+                                String time=String.valueOf(data.time/60L);
+                                getV().showOrderTimeDialog(time);
+                            }
+                        }
+                    }
+                });
     }
 }

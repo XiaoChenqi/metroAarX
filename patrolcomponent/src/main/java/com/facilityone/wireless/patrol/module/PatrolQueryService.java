@@ -155,4 +155,19 @@ public class PatrolQueryService {
         public Integer operationType;
         public List<String> imageIds;
     }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/24 11:08
+     * @Description: 点位任务实体类
+     */
+
+    public static class PatrolJudgeBean{
+        //是否可以执行
+        public boolean executable;
+        //点位名称
+        public String  spotJobName;
+        //时间(executable为true时为所需时间,executable为false时为当前正在执行点位任务剩余时间,单位为秒)
+        public Long time;
+    }
 }

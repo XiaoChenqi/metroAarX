@@ -66,6 +66,7 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     private static final String PATROL_SPOT_ID = "patrol_spot_id";
     private static final String PATROL_SPOT_NAME = "patrol_spot_name";
     private static final String CLICK_POSITION = "click_position";
+    private static final String PATROL_TIME = "patrol_spot_time";
     private static final int REQUEST_EXCEPTION = 50001;
     private static final int MAX_PHOTO = 2000;
 
@@ -81,6 +82,7 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     private int mTempPosition;
     private boolean mBack;
     private String mWaterMark;
+    private String mNeedTime;
 
     @Override
     public PatrolItemPresenter createPresenter() {
@@ -110,6 +112,7 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
             mDevicePosition = arguments.getInt(CLICK_POSITION, 0);
             mEntities = arguments.getParcelableArrayList(PATROL_EQU_LIST);
             mSpotName = arguments.getString(PATROL_SPOT_NAME,"");
+            mNeedTime=arguments.getString(PATROL_TIME,"");
         }
         if (mEntities == null || mEntities.size() <= mDevicePosition) {
             pop();
@@ -212,10 +215,29 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
                 mClickLastOne = true;
             }
         }
-        //保存此页面数据到数据库
-        saveDataBefore();
+        showLoading();
+            getPresenter().judgeTask(mSpotId,mDevicePosition);
+
 
     }
+
+    public void showOrderTimeDialog(String leftTime){
+        //保存此页面数据到数据库
+        FMWarnDialogBuilder builder = new FMWarnDialogBuilder(getContext());
+        builder.setTitle("提示");
+        String messageFormat="完成任务最少需要%s分钟，为满足期限。（还剩%s分钟）";
+        builder.setTip(String.format(messageFormat,mNeedTime,leftTime));
+        builder.setCancelVisiable(false);
+        builder.addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+            @Override
+            public void onClick(QMUIDialog dialog, View view) {
+//                saveDataBefore();
+                dialog.dismiss();
+            }
+        });
+        builder.create(R.style.fmDefaultWarnDialog).show();
+    }
+
 
     private void saveDataBefore() {
         final int position = getPresenter().haveMiss(mItemEntities);
@@ -316,7 +338,8 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     public boolean onBackPressedSupport() {
         if (mChange) {
             mBack = true;
-            saveDataBefore();
+            popResult();
+//            saveDataBefore();
             return true;
         } else {
             return super.onBackPressedSupport();
@@ -327,7 +350,8 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     public void leftBackListener() {
         if (mChange) {
             mBack = true;
-            saveDataBefore();
+            popResult();
+//            saveDataBefore();
         } else {
             super.leftBackListener();
         }
@@ -407,12 +431,13 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
         }
     }
 
-    public static PatrolItemFragment getInstance(Long spotId, ArrayList<PatrolEquEntity> entities, int position,String spotName) {
+    public static PatrolItemFragment getInstance(Long spotId, ArrayList<PatrolEquEntity> entities, int position,String spotName,String time) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(PATROL_EQU_LIST, entities);
         bundle.putLong(PATROL_SPOT_ID, spotId);
         bundle.putInt(CLICK_POSITION, position);
         bundle.putString(PATROL_SPOT_NAME, spotName);
+        bundle.putString(PATROL_TIME,time);
         PatrolItemFragment instance = new PatrolItemFragment();
         instance.setArguments(bundle);
         return instance;

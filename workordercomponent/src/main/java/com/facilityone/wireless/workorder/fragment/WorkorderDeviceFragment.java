@@ -36,6 +36,7 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
 
     private static final String WORKORDER_ID = "workorder_id";
     private static final String WORKORDER_DEVICES = "workorder_devices";
+    private static final String WORKORDER_TITLE = "workorder_title";
     private static final String OPT_DEVICE = "opt_device";
     private static final String NEED_SCAN = "need_scan";
     private static final int EDITOR_ADD_DEVICE_CODE = 5000;
@@ -48,6 +49,7 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
     private WorkorderDeviceAdapter mDeviceAdapter;
     private int mPosition;
     private boolean opt;//本页面是否操作过
+    private String mTitle;//页面标题
 
     @Override
     public WorkorderDevicePresenter createPresenter() {
@@ -77,6 +79,7 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
             mWoId = arguments.getLong(WORKORDER_ID);
             mOptDevice = arguments.getBoolean(OPT_DEVICE, false);
             mNeedScan = arguments.getBoolean(NEED_SCAN, false);
+            mTitle=arguments.getString(WORKORDER_TITLE,getString(R.string.workorder_associated_equipment));
             if(WorkorderDataHolder.hasDeviceData()) {
                 mEquipmentsBeanList = (List<WorkorderService.WorkOrderEquipmentsBean>) WorkorderDataHolder.getDeviceData();
             }
@@ -88,7 +91,8 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
     }
 
     private void initView() {
-        setTitle(R.string.workorder_associated_equipment);
+
+        setTitle(mTitle);
         if (mOptDevice) {
             setRightTextButton(R.string.workorder_add_menu, R.id.workorder_device_add_menu_id);
         }
@@ -184,14 +188,20 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        if (mOptDevice) {
+//        if (mOptDevice) {
             WorkorderService.WorkOrderEquipmentsBean workOrderEquipmentsBean = mEquipmentsBeanList.get(position);
-            if (mNeedScan && workOrderEquipmentsBean.finished != null && workOrderEquipmentsBean.finished == WorkorderConstant.WO_EQU_STAT_UNFINISH) {
+             /**
+              * @Auther: karelie
+              * @Date: 2021/8/24
+              * @Infor: 未加判断，需要根据needScan参数判断是否可以扫码
+              */
+//            if (mNeedScan && workOrderEquipmentsBean.finished != null && workOrderEquipmentsBean.finished == WorkorderConstant.WO_EQU_STAT_UNFINISH) {
+//            if (mNeedScan ) {
                 getPresenter().scan(workOrderEquipmentsBean);
-            } else {
-                result(workOrderEquipmentsBean);
-            }
-        }
+//            } else {
+//                result(workOrderEquipmentsBean);
+//            }
+//        }
     }
 
     public void result(WorkorderService.WorkOrderEquipmentsBean workOrderEquipmentsBean) {
@@ -199,12 +209,13 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
         startForResult(WorkorderDeviceEditorFragment.getInstance(workOrderEquipmentsBean, mWoId, addDevice), EDITOR_ADD_DEVICE_CODE);
     }
 
-    public static WorkorderDeviceFragment getInstance(Long woId, boolean optDevice, boolean needScan) {
+    public static WorkorderDeviceFragment getInstance(Long woId, boolean optDevice, boolean needScan,String title) {
         Bundle bundle = new Bundle();
 //        bundle.putParcelableArrayList(WORKORDER_DEVICES, devices);
         bundle.putLong(WORKORDER_ID, woId);
         bundle.putBoolean(OPT_DEVICE, optDevice);
         bundle.putBoolean(NEED_SCAN, needScan);
+        bundle.putString(WORKORDER_TITLE,title);
         WorkorderDeviceFragment fragment = new WorkorderDeviceFragment();
         fragment.setArguments(bundle);
         return fragment;

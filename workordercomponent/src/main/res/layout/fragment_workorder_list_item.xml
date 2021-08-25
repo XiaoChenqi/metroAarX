@@ -82,8 +82,7 @@
             <TextView
                 android:id="@+id/demand_new_status_tv"
                 style="@style/tag_text_style"
-
-                android:text="暂停/继续"
+                tools:text="暂停/继续"
                 android:layout_gravity="center_vertical"
                 tools:background="@drawable/fm_workorder_tag_fill_created_bg" />
         </LinearLayout>

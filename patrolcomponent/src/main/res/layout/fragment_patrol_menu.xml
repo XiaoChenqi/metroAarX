@@ -12,7 +12,6 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/topLl"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_222"
             android:background="@color/patrol_menu_top_bg"
@@ -24,25 +23,80 @@
                 app:qmui_topbar_bg_color="@color/transparent"/>
 
 
-            <com.joanzapata.iconify.widget.IconTextView
-                android:id="@+id/scan_patrol_itv"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dp_33"
-                android:text="@string/icon_scan"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_68"/>
+                >
 
-            <TextView
-                android:id="@+id/scan_tip_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/dp_12"
-                android:text="@string/patrol_scan"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_15"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    >
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/scan_patrol_itv"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/icon_scan"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:textSize="@dimen/sp_68"
+                        />
+
+                    <TextView
+                        android:id="@+id/scan_tip_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/dp_12"
+                        android:text="@string/patrol_scan"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_15"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    >
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/nfc_patrol_itv"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text="@string/icon_scan"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_68"
+                        />
+
+                    <TextView
+                        android:id="@+id/nfc_tip_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/dp_12"
+                        android:text="NFC"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_15"/>
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+
+
 
 
         </LinearLayout>

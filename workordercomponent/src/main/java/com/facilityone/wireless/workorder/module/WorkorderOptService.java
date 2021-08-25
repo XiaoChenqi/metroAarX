@@ -140,4 +140,25 @@ public class WorkorderOptService {
         public Integer status;
         public String approveNote;
     }
+
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/23
+     * @Infor: 批量派单 请求体
+     */
+    public static class BatchOrderReq{
+        public List<Long> ids; //工单数组
+        public Long estimatedArrivalDate; //预估到达时间
+        public Long estimatedCompletionDate; //预估完成时间
+        public Long estimatedWorkingTime ; //预估工作耗时（mm）
+        public List<Laborers> laborers; //执行人数组
+    }
+
+    public static class Laborers{
+        public Long laborerId; //执行人Id
+        public Boolean responsible ; //是否为负责人
+    }
+
+
+
 }

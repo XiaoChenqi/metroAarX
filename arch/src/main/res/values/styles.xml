@@ -39,7 +39,7 @@
     <style name="commonTopbarStyle" parent="@style/QMUI.TopBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/qmui_topbar_height</item>
-        <!--<item name="qmui_topbar_bg_color">@color/colorPrimary</item>-->
+        <item name="qmui_topbar_bg_color">@color/colorPrimary</item>
         <item name="qmui_topbar_title_color">@color/topbar_title_color</item>
         <item name="qmui_topbar_title_text_size">@dimen/topbar_title_size</item>
         <item name="qmui_topbar_need_separator">false</item>

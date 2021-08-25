@@ -111,10 +111,10 @@ public class PermissionsManager {
             mIndex = 0;
 
             opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
-                    "\"m-requirement-approval\",\"m-requirement-evaluate\",\"m-requirement-query\"," +
+                    "\"m-requirement-approval\",\"m-requirement-query\"," +
                     "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
                     "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
-                    "\"m-ppm\",\"m-sign\",\"m-inventory-create\",\"m-inventory-create\"," +
+                    "\"m-ppm\",\"m-inventory-create\",\"m-inventory-create\"," +
                     "\"m-inventory-in\",\"m-inventory-out\",\"m-inventory-move\"," +
                     "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
                     "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-one\",\"m-ppm-two\"," +
@@ -771,7 +771,7 @@ public class PermissionsManager {
     }
 
     public static boolean hasPermission(Context context, Integer type) {
-        PermissionsManager.HomeFunction instance = PermissionsManager.HomeFunction.getInstance();
+        HomeFunction instance = HomeFunction.getInstance();
         boolean has = false;
         if (type == null) {
             return false;

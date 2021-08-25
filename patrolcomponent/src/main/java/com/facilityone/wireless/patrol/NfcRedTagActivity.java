@@ -18,10 +18,15 @@ import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
+import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.a.arch.offline.util.PatrolQrcodeUtils;
+import com.facilityone.wireless.componentservice.patrol.PatrolService;
+import com.facilityone.wireless.componentservice.workorder.WorkorderService;
 import com.facilityone.wireless.patrol.fragment.NfcFragment;
 import com.facilityone.wireless.patrol.fragment.PatrolScanFragment;
+import com.facilityone.wireless.patrol.fragment.PatrolSpotFragment;
+import com.luojilab.component.componentlib.router.Router;
 
 import java.util.List;
 
@@ -36,6 +41,7 @@ import static com.blankj.utilcode.util.ToastUtils.showShort;
 public class NfcRedTagActivity extends BaseFragmentActivity {
 
     private NfcFragment mNfcFragment;
+    private static final int REQUEST_SPOT = 20002;
 
     @Override
     public Object createPresenter() {
@@ -64,6 +70,7 @@ public class NfcRedTagActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setSwipeBackEnable(false);
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mNfcAdapter == null) {
             showShort(R.string.patrol_not_support_nfc);
@@ -72,7 +79,8 @@ public class NfcRedTagActivity extends BaseFragmentActivity {
         mNfcAdapter.setNdefPushMessage(null, this);
         // Handle all of our received NFC intents in this activity.
         mNfcPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
-                getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+                getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_CANCEL_CURRENT);
+
 
         // Intent filters for reading a note from a tag or exchanging over p2p.
         IntentFilter ndefDetected = new IntentFilter(
@@ -108,6 +116,7 @@ public class NfcRedTagActivity extends BaseFragmentActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         // NDEF exchange mode
+
     }
 
     private void setNoteBody(String body) {
@@ -129,11 +138,12 @@ public class NfcRedTagActivity extends BaseFragmentActivity {
         
         String code = PatrolQrcodeUtils.parseSpotCode(body);
         if (TextUtils.isEmpty(code)) {
-            ToastUtils.showShort(R.string.patrol_qrcode_no_match);
+//            ToastUtils.showShort("设备异常，请匹配正确的设备");
+            startForResult(PatrolSpotFragment.getInstance(445L, "测试"), REQUEST_SPOT);
         } else {
-            mNfcFragment.startWithPop(PatrolScanFragment.getInstance(code));
+            startForResult(PatrolSpotFragment.getInstance(445L, "测试"), REQUEST_SPOT);
         }
-//        this.finish();
+//        finish();
     }
 
     NdefMessage[] getNdefMessages(Intent intent) {
@@ -167,11 +177,14 @@ public class NfcRedTagActivity extends BaseFragmentActivity {
     }
 
     private void enableNdefExchangeMode() {
-        mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent, mNdefExchangeFilters, null);
+//        mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent, mNdefExchangeFilters, null);
+        mNfcAdapter.enableForegroundDispatch(this,mNfcPendingIntent,null,null);
     }
 
     @Override
     protected boolean isImmersionBarEnabled() {
         return true;
     }
+
+
 }

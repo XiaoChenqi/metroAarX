@@ -35,17 +35,18 @@ public class WorkorderDevicePresenter extends WorkorderBasePresenter<WorkorderDe
         ScanActivity.setOnScanResultListener(new ScanActivity.OnScanResultListener() {
             @Override
             public void success(String QRCode) {
-                LogUtils.d("TAG", "扫描结果==" + QRCode);
-                if (equipmentCode == null || TextUtils.isEmpty(QRCode) || TextUtils.isEmpty(equipmentCode.equipmentCode)) {
-                    ToastUtils.showShort(R.string.workorder_qrcode_no_match);
-                    return;
-                }
-                String[] split = QRCode.split("\\|");
-                if (split.length >= 2 && split[1] != null && split[1].equals(equipmentCode.equipmentCode)) {
-                    getV().result(equipmentCode);
-                } else {
-                    ToastUtils.showShort(R.string.workorder_qrcode_no_match);
-                }
+//                LogUtils.d("TAG", "扫描结果==" + QRCode);
+//                if (equipmentCode == null || TextUtils.isEmpty(QRCode) || TextUtils.isEmpty(equipmentCode.equipmentCode)) {
+//                    ToastUtils.showShort(R.string.workorder_qrcode_no_match);
+//                    return;
+//                }
+//                String[] split = QRCode.split("\\|");
+//                if (split.length >= 2 && split[1] != null && split[1].equals(equipmentCode.equipmentCode)) {
+//                    getV().result(equipmentCode);
+//                } else {
+//                    ToastUtils.showShort(R.string.workorder_qrcode_no_match);
+//                }
+                getV().result(equipmentCode);
             }
         });
     }

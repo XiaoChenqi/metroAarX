@@ -56,6 +56,13 @@ import java.util.List;
  * description:巡检查询
  * Date: 2018/11/19 9:39 AM
  */
+
+
+ /**
+  * @Auther: karelie
+  * @Date: 2021/8/20
+  * @Infor: 四运筛选修改筛选逻辑，去除部分筛选条件
+  */
 public class PatrolQueryFragment extends BaseFragment<PatrolQueryPresenter>
         implements View.OnClickListener,
         OnRefreshLoadMoreListener, DrawerLayout.DrawerListener, TextWatcher, BaseQuickAdapter.OnItemChildClickListener {

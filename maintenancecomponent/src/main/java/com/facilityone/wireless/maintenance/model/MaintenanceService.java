@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
+import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 
 import java.util.List;
 
@@ -472,6 +473,22 @@ public class MaintenanceService {
                 return new MaintenanceWorkOrder[size];
             }
         };
+    }
+
+    public static class ConditionBean {
+        public String woCode;
+        public String woDescription;
+        public List<Long> priority;
+        public List<Long> status;
+        public List<Long> tag;
+        public Long typeId;
+        public Long startDateTime;
+        public Long endDateTime;
+        public LocationBean location;
+        public Long emId;
+        public String planName;
+        public List<Long>period;
+
     }
 
 }

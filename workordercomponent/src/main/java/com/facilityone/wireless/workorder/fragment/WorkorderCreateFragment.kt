@@ -147,11 +147,12 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         newrequest = WorkorderCreateService.newOrderCreate()
         mDeviceOnlineData = SelectDataBean()
         binding.civContact.inputText =SPUtils.getInstance(SPKey.SP_MODEL).getString(SPKey.USERNAME)
+        binding.civContact.canInput(false)
         if (bundle != null) {
             mFromType = bundle.getInt(FROM_TYPE, -1)
             mWaterMark = bundle.getBoolean(WATER_MARK, false)
             mEquipmentId = bundle.getLong(EQUIPMENT_ID, -1L)
-            mEquipmentId = bundle.getLong(EQUIPMENT_STR_ID)
+            mEquipmentFullName = bundle.getString(EQUIPMENT_STR_ID)
             mItemId = bundle.getLong(ITEM_ID, -1L)
             mDemandId = bundle.getLong(DEMAND_ID, -1L)
             mOtherLocationBean = bundle.getParcelable(LOCATION_INFO)
@@ -223,7 +224,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
                  * */
                 binding.envDesc.setInputDisp(false)
                 binding.envDesc.canInput(false)
-                binding.civContact.canInput(false)
+
                 binding.civTel.canInput(false)
                 binding.ivAddMenu.visibility = View.GONE
                 binding.rvPhoto.visibility = View.GONE
@@ -632,6 +633,8 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
                     request!!.location = null
                 } else {
                     binding.civLocation.tipText = StringUtils.formatString(bean.fullName)
+                    bean.location.floorId = null
+                    bean.location.roomId = null
                     request!!.location = bean.location
                     LogUtils.d(
                         ("location :" + request!!.location.roomId

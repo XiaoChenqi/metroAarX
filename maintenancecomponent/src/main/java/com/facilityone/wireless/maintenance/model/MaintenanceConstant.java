@@ -54,4 +54,38 @@ public interface MaintenanceConstant {
     int TYPE_CONTENT = 1;
     int TYPE_EQUIPEMNT = 2;
     int TYPE_SPACE = 3;
+
+
+    //二级菜单
+    int MAINTENANCE_ONE = 0;          //维护日历
+    int MAINTENANCE_TWO = 1;         //待处理维护工单
+    int MAINTENANCE_THREE = 2;     //待派工维护工单
+    int MAINTENANCE_FOUR = 3;           //待审批维护工单
+    int MAINTENANCE_FIVE = 4;      //异常维护工单
+    int MAINTENANCE_SIX = 5;      //待存档维护工单
+    int MAINTENANCE_SEVEN = 6;         //维护工单查询
+
+
+    int ZERO = 0;
+    int ONE = 1;
+    int TWO = 2;
+    int THREE = 3;
+    int FOUR = 4;
+    int FIVE = 5;
+    int SIX = 6;
+
+    int CHOICE_NO = 0; //默认状态
+    int CHOICE_All = 1; //打开状态
+    int CHOICE_UP = 2; //选中状态
+    int CHOICE_DOWN = 3; //未选中状态
+    int CHOICE_OFF = 4; //不可选中状态
+    /**
+     * 执行人状态
+     */
+    int STATUS_PERSONAL_UN_ACCEPT = 0;//未接单
+    int STATUS_PERSONAL_ACCEPT = 1;   //已接单
+    int STATUS_PERSONAL_BACK = 2;     //已退单
+    int STATUS_PERSONAL_SUBMIT = 3;   //已提交
+
+
 }

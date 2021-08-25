@@ -15,5 +15,5 @@ import java.util.List;
  */
 
 public interface ChartService extends IService {
-    BaseFragment getProjectChartFragment(List<Long> projectIds,boolean single);
+    BaseFragment getProjectChartFragment(List<Long> projectIds, boolean single);
 }

@@ -399,7 +399,7 @@ public class FMBottomPauseSelectSheetBuilder implements View.OnClickListener {
     public interface OnPauseInputBtnClickListener{
         void onLeftClick(QMUIBottomSheet dialog, SelectDataBean reasonBean, Long time);
 
-        void onRightClick(QMUIBottomSheet dialog, SelectDataBean reasonBean,Long time);
+        void onRightClick(QMUIBottomSheet dialog, SelectDataBean reasonBean, Long time);
     }
 
 

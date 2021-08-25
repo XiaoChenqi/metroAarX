@@ -49,14 +49,7 @@ public class MaintenancePresenter extends BasePresenter<MaintenanceFragment> {
     public void getMaintenanceCalendarList(final long startTime, final long endTime, final int calendarSwitchStatus, final boolean day) {
         getV().showLoading();
         final String request = "{\"startTime\":" + startTime + ",\"endTime\":" + endTime + "}";
-        String url = FM.getApiHost() + MaintenanceUrl.MAINTENANCE_CALENDAR_URL;
-
-
-
-        //String url2 = url+"?app_type=android&app_version=0.0.0&current_project=10";
-
-
-        OkGo.<BaseResponse<List<MaintenanceService.MaintenanceCalendarBean>>>post(url)
+        OkGo.<BaseResponse<List<MaintenanceService.MaintenanceCalendarBean>>>post(FM.getApiHost() + MaintenanceUrl.MAINTENANCE_CALENDAR_URL)
                 .isSpliceUrl(true)
                 .tag(getV())
                 .upJson(request)

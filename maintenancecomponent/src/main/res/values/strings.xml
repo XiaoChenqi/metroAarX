@@ -15,6 +15,10 @@
     <string name="maintenance_no">否</string>
     <!--天-->
     <string name="maintenance_day">天</string>
+
+    <!--年-->
+    <string name="maintenance_year">年</string>
+
     <!--维护内容-->
     <string name="maintenance_content">维护内容</string>
     <!--维护内容-->
@@ -105,4 +109,20 @@
     <string name="maintenance_tool">工具</string>
     <!--附件-->
     <string name="maintenance_attachment">附件</string>
+
+    <!--工作时间-->
+    <string name="maintenance_work_time">工作时间：</string>
+    <!--负责人-->
+    <string name="maintenance_responsible">负责人</string>
+
+    <!--不限-->
+    <string name="maintenance_unlimited">不限</string>
+
+
+    <!--无更多数据-->
+    <string name="workorer_no_more_data">无更多数据</string>
+    <!--暂无功能-->
+    <string name="workorder_no_function">暂无功能</string>
+    <!--关联缴费单-->
+    <string name="workorder_related_payment">关联缴费单</string>
 </resources>

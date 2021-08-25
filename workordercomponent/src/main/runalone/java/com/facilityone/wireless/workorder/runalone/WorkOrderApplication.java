@@ -13,16 +13,13 @@ import com.luojilab.component.componentlib.router.ui.UIRouter;
  * description:
  * Date: 2018/7/3 下午4:00
  */
-public class WorkOrderApplication extends BaseApplication {
+public class WorkOrderApplication extends InitApplication {
 
     @Override
     public void onCreate() {
         super.onCreate();
         //LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG);
         UIRouter.getInstance().registerUI("workorder");
-        LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG);
-        //UIRouter.getInstance().registerUI("demand");
-        Router.registerComponent("com.facilityone.wireless.workorder.applike.WorkorderApplike");
-        Facility.init(this);
+        //Facility.init(this);
     }
 }

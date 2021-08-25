@@ -96,6 +96,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     private TextView mTvSignatureCustomer;
     private TextView mTvToolTotal;
     private TextView mTvChargeTotal;
+    private TextView mTvDevice;//关联设备
     //    private TextView mTvApprovalContent;
     private LinearLayout mPriorityLl;
     private RecyclerView mRvApprovalContent;
@@ -137,6 +138,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public static final String WORKORDER_NEED_JUMP = "workorder_need_jump";
     public static final String WORKORDER_CODE = "workorder_code";
     public static final String WORKORDER_ID = "workorder_id";
+    public static final String IS_MAINTENANCE = "maintenance_order";
+    public static final String IS_FINISH = "maintenance_finish_order";
     public static final String ARRIVAL_DATE_TIME = "arrival_date_time";
     public static final String ARRIVAL_DATE_END_TIME = "arrival_date_end_time";
     private static final int LABORER_REQUEST_CODE = 4002;
@@ -155,7 +158,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public Long mWoId;
     private String mCode;
     private int mStatus;
-    public static int refreshStatus;
+    private int refreshStatus;
     private Long mWoTeamId;
     private String tel;
 
@@ -237,7 +240,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     QMUIBottomSheet pauseDialog;
     private final static String RESULT_REASON="pause_reason";
     private Long InvalidId;
-
+    private Boolean isMaintenanceOrder; //是否是维护工单
+    private Boolean isFinish; //是否待存档工单
     @Override
     public WorkorderInfoPresenter createPresenter() {
         return new WorkorderInfoPresenter();
@@ -277,6 +281,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             mStatus = bundle.getInt(WORKORDER_STATUS, WorkorderConstant.WORK_STATUS_NONE);
             mCode = bundle.getString(WORKORDER_CODE, "");
             mWoId = bundle.getLong(WORKORDER_ID);
+            isMaintenanceOrder = bundle.getBoolean(IS_MAINTENANCE,false);
+            isFinish = bundle.getBoolean(IS_FINISH,false);
         }
         refreshStatus = mStatus;
         mToolCost = new WorkorderService.ChargesBean();
@@ -303,6 +309,10 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mTvDesc = findViewById(R.id.tv_desc);
         mTvToolTotal = findViewById(R.id.tv_tool_total);
         mTvChargeTotal = findViewById(R.id.tv_bp_total);
+        mTvDevice=findViewById(R.id.tv_device);
+        if (!isMaintenanceOrder){
+            mTvDevice.setText(getString(R.string.workorder_fault_device));
+        }
 //        mTvApprovalContent = findViewById(R.id.approvalContent_tv);
         mPriorityLl = findViewById(R.id.priority_ll);
         mRvApprovalContent = findViewById(R.id.approvalContent_rv);
@@ -415,7 +425,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
     @Override
     public void onMoreMenuClick(View view) {
-        getPresenter().onMoreMenuClick(getContext(), refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials);
+        if (isFinish){
+            getPresenter().onMoreMenuClick(getContext(), WorkorderConstant.WORK_STATUS_MAINTENCE, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials);
+
+        }else {
+            getPresenter().onMoreMenuClick(getContext(), refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials);
+
+        }
+
     }
 
      /**
@@ -504,6 +521,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
     private void onRefresh() {
         getPresenter().getWorkorderInfo(mWoId);
+        getPresenter().getLastAttendance();
     }
 
     //刷新基础信息
@@ -896,9 +914,11 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                 || refreshStatus == WorkorderConstant.WORK_STATUS_COMPLETED
                 || refreshStatus == WorkorderConstant.WORK_STATUS_TERMINATED
                 || refreshStatus == WorkorderConstant.WORK_STATUS_VERIFIED) {
-            mLlPay.setVisibility(View.VISIBLE);
+//            mLlPay.setVisibility(View.VISIBLE); 原先代码逻辑
+            mLlPay.setVisibility(View.GONE);
         } else if (mPayments != null && mPayments.size() > 0) {
-            mLlPay.setVisibility(View.VISIBLE);
+//            mLlPay.setVisibility(View.VISIBLE);原先代码逻辑
+            mLlPay.setVisibility(View.GONE);
         } else {
             mLlPay.setVisibility(View.GONE);
         }
@@ -1183,7 +1203,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                 mNeedScan = false;
             }
             WorkorderDataHolder.setDeviceData(mWorkOrderEquipments);
-            startForResult(WorkorderDeviceFragment.getInstance(mWoId, mCanOpt, mNeedScan)
+            startForResult(WorkorderDeviceFragment.getInstance(mWoId, mCanOpt, mNeedScan,mTvDevice.getText().toString())
                     , FAULT_DEVICE);
         } else if (id == R.id.ll_material) {//物料
             String inventory = getResources().getString(R.string.home_inventory_permissions);
@@ -1458,6 +1478,30 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         return infoFragment;
     }
 
+    public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Long woId,boolean isMaintenance) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(WORKORDER_STATUS, workorderStatus);
+        bundle.putString(WORKORDER_CODE, code);
+        bundle.putLong(WORKORDER_ID, woId);
+        bundle.putBoolean(IS_MAINTENANCE,isMaintenance);
+        WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
+        infoFragment.setArguments(bundle);
+        return infoFragment;
+    }
+
+
+    //待存档
+    public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Long woId,boolean isMaintenance,boolean isFinish) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(WORKORDER_STATUS, workorderStatus);
+        bundle.putString(WORKORDER_CODE, code);
+        bundle.putLong(WORKORDER_ID, woId);
+        bundle.putBoolean(IS_MAINTENANCE,isMaintenance);
+        bundle.putBoolean(IS_FINISH,isFinish);
+        WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
+        infoFragment.setArguments(bundle);
+        return infoFragment;
+    }
     public static WorkorderInfoFragment getInstance(Long woId) {
         Bundle bundle = new Bundle();
         bundle.putLong(WORKORDER_ID, woId);
@@ -1465,7 +1509,6 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         infoFragment.setArguments(bundle);
         return infoFragment;
     }
-
 
     //显示暂停弹窗
     public void showPauseDialog(Context context,Long woId){

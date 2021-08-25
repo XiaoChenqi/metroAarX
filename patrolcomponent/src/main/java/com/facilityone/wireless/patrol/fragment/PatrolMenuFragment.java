@@ -1,13 +1,11 @@
 package com.facilityone.wireless.patrol.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -23,7 +21,7 @@ import com.facilityone.wireless.a.arch.offline.model.service.OnDownloadListener;
 import com.facilityone.wireless.a.arch.offline.model.service.OnPatrolListener;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
 import com.facilityone.wireless.basiclib.app.FM;
-import com.facilityone.wireless.patrol.PatrolActivity;
+import com.facilityone.wireless.patrol.NfcRedTagActivity;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.module.PatrolConstant;
 import com.facilityone.wireless.patrol.presenter.PatrolMenuPresenter;
@@ -43,8 +41,9 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
 
     private RecyclerView mRecyclerView;
     private IconTextView mItvScan;
+    private IconTextView mItvNfc; //NFC文字
     private TextView mTvScanTip;
-    private LinearLayout topLl;
+    private TextView mTvNfcTip; // NFC文字提示
 
     private static final int TASK_COUNT = 4;
 
@@ -59,15 +58,12 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
     private float mTempBaseItem;
     private float mTempBaseSpot;
     private float mTempPatrol;
-
-    private String TAG = "周杨";
+    private boolean needDownLoad = true;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initData();
         initView();
-        Log.d(TAG, "onViewCreated: "+PatrolActivity.themeColor);
-        topLl.setBackgroundColor(PatrolActivity.themeColor);
     }
 
     @Override
@@ -88,6 +84,7 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
     private void initData() {
         mFunctionBeanList = new ArrayList<>();
         Bundle arguments = getArguments();
+        Bundle bundle = new Bundle();
         if (arguments != null) {
             ArrayList<FunctionService.FunctionBean> bean = (ArrayList<FunctionService.FunctionBean>) arguments.getSerializable(IService.FRAGMENT_CHILD_KEY);
             if (bean != null) {
@@ -101,6 +98,9 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
                 setSwipeBackEnable(false);
             }
         }
+
+        needDownLoad = bundle.getBoolean("needDownload",true);
+
 //        if (mFunctionBeanList != null && mFunctionBeanList.size() > 0) {
 //            mFunctionBeanList.remove(mFunctionBeanList.size() - 1);//去掉因为一行默认三个多生成的占位
 //        }
@@ -110,8 +110,9 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         setTitle(R.string.patrol_name);
         mRecyclerView = findViewById(R.id.recyclerView);
         mItvScan = findViewById(R.id.scan_patrol_itv);
+        mItvNfc = findViewById(R.id.nfc_patrol_itv);
         mTvScanTip = findViewById(R.id.scan_tip_tv);
-        topLl = findViewById(R.id.topLl);
+        mTvNfcTip = findViewById(R.id.nfc_tip_tv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), FunctionService.COUNT));
 //        mRecyclerView.addItemDecoration(new GridItemDecoration(getResources().getColor(R.color.grey_d6)));
 
@@ -119,13 +120,19 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         mRecyclerView.setAdapter(mFunctionAdapter);
         mFunctionAdapter.setOnItemClickListener(this);
         mItvScan.setOnClickListener(this);
+        mItvNfc.setOnClickListener(this);
 
         mDialog = initProgressBarLoading();
         mDialog.setCancelable(false);
+
+        mItvScan.setVisibility(View.VISIBLE);
+        mTvScanTip.setVisibility(View.VISIBLE);
+        mItvNfc.setVisibility(View.VISIBLE);
+        mTvScanTip.setVisibility(View.VISIBLE);
     }
 
     private void requestProjectNeedNfc() {
-        getPresenter().requestProjectNeedNfc();
+//        getPresenter().requestProjectNeedNfc();
     }
 
     public void refreshScan(boolean needNfc) {
@@ -295,7 +302,9 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         super.onSupportVisible();
         //获取角标
         getUndoNumber();
-        requestData();
+        if (needDownLoad){
+            requestData();
+        }
         requestProjectNeedNfc();
     }
 
@@ -333,7 +342,11 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
 
     @Override
     public void onClick(View v) {
-        getPresenter().scan();
+        int viewId = v.getId();
+        if (viewId == R.id.scan_patrol_itv){
+            getPresenter().scan();
+        }
+
     }
 
     public void scanResult(String spotCode) {
@@ -344,5 +357,13 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         PatrolMenuFragment menuFragment = new PatrolMenuFragment();
         menuFragment.setArguments(bundle);
         return menuFragment;
+    }
+
+    public static PatrolMenuFragment getInstance(boolean needDownload) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("needDownload", needDownload);
+        PatrolMenuFragment instance = new PatrolMenuFragment();
+        instance.setArguments(bundle);
+        return instance;
     }
 }

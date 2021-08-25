@@ -17,7 +17,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.offline.model.entity.DBPatrolConstant;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolTaskEntity;
-import com.facilityone.wireless.patrol.PatrolActivity;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.adapter.PatrolTaskAdapter;
 import com.facilityone.wireless.patrol.presenter.PatrolTaskPresenter;

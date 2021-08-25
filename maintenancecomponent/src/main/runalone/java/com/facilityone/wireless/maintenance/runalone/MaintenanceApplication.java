@@ -1,7 +1,6 @@
 package com.facilityone.wireless.maintenance.runalone;
 
 import com.blankj.utilcode.util.LogUtils;
-import com.facilityone.wireless.InitApplication;
 import com.facilityone.wireless.a.arch.BaseApplication;
 import com.facilityone.wireless.a.arch.Facility;
 import com.facilityone.wireless.maintenance.BuildConfig;
@@ -18,9 +17,6 @@ public class MaintenanceApplication extends BaseApplication {
         super.onCreate();
         LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG);
         UIRouter.getInstance().registerUI("maintenance");
-        Router.registerComponent("com.facilityone.wireless.workorder.applike.WorkorderApplike");
         Facility.init(this);
     }
-
-
 }

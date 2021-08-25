@@ -7,7 +7,6 @@ import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
-import com.facilityone.wireless.patrol.fragment.NfcFragment;
 import com.facilityone.wireless.patrol.fragment.PatrolMenuFragment;
 import com.luojilab.router.facade.annotation.RouteNode;
 
@@ -26,7 +25,6 @@ public class PatrolActivity extends BaseFragmentActivity implements EmptyFragmen
     private static final long WAIT_TIME = 2000L;
     private long TOUCH_TIME = 0L;
     private EmptyFragment mInstance;
-    public static int themeColor =0;
 
     @Override
     protected int getContextViewId() {
@@ -38,26 +36,17 @@ public class PatrolActivity extends BaseFragmentActivity implements EmptyFragmen
         mInstance = EmptyFragment.getInstance(CommonConstant.MESSAGE_PATROL);
         mInstance.setOnGoFragmentListener(this);
         return mInstance;
-        //return PatrolMenuFragment.getInstance(new Bundle());
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
-
-        //TODO xcq 获取色值
-        if(0 != getIntent().getIntExtra("COLOR",0)){
-            themeColor = getIntent().getIntExtra("COLOR",0);
-        }
     }
 
     @Override
     public void goFragment(Bundle bundle) {
-        PatrolMenuFragment temp = PatrolMenuFragment.getInstance(bundle);
-        mInstance.startWithPop(temp);
-//        NfcFragment temp = new NfcFragment();
-//        mInstance.startWithPop(temp);
+        mInstance.startWithPop(PatrolMenuFragment.getInstance(bundle));
     }
 
     @Override
@@ -70,13 +59,12 @@ public class PatrolActivity extends BaseFragmentActivity implements EmptyFragmen
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             pop();
         } else {
-//            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
-//                this.finish();
-//            } else {
-//                TOUCH_TIME = System.currentTimeMillis();
-//                ToastUtils.showShort(R.string.patrol_press_exit_again);
-//            }
-            this.finish();
+            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+                this.finish();
+            } else {
+                TOUCH_TIME = System.currentTimeMillis();
+                ToastUtils.showShort(R.string.patrol_press_exit_again);
+            }
         }
     }
 

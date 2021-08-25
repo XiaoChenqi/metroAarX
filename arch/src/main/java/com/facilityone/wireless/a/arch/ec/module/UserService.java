@@ -28,5 +28,6 @@ public class UserService {
         public String type;
         public String adImageId;
         public Long adTimeInterval;
+        public String qrcodeId;
     }
 }

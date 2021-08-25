@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="maintenance_batch_dispatch" type="id" />
+    <item name="maintenance_bulk_orders" type="id" />
+    <item name="maintenance_choose_all" type="id" />
+    <item name="maintenance_choose_off_all" type="id" />
+    <item name="maintenance_add_order" type="id" />
+    <item name="maintenance_choose_cancel" type="id" />
+    <item name="maintenance_choose_complete" type="id" />
 
     <item name="maintenance_main_id" type="id"/>
+    <item name="maintenance_uoload_menu_id" type="id"/>
+
+    <item name="maintenance_ele_uoload_menu_id" type="id"/>
 
 </resources>

@@ -2,7 +2,11 @@ package com.facilityone.wireless.componentservice.demand;
 
 
 import com.facilityone.wireless.a.arch.ec.module.IService;
+import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
+import com.luck.picture.lib.entity.LocalMedia;
+
+import java.util.List;
 
 /**
  * Author：gary
@@ -21,4 +25,6 @@ public interface DemandService extends IService {
     BaseFragment getDemandInfoByQuery(Long demandId);
     BaseFragment getDemandInfoByMsg(Long demandId);
     BaseFragment goToQuickReport();
+    BaseFragment goToQuickReport(long equipmentId
+            , String locationName, LocationBean locationBean, String desc, List<LocalMedia> imageIds);
 }

@@ -3,6 +3,7 @@ package com.facilityone.wireless.workorder.presenter;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.ec.commonpresenter.CommonBasePresenter;
 import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
+import com.facilityone.wireless.a.arch.ec.module.Page;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.offline.dao.PriorityDao;
@@ -192,4 +193,113 @@ public class BaseWorkOrderPresenter<V extends BaseFragment> extends CommonBasePr
     public void getWorkorderInfoError() {
 
     }
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:40
+     * @Description: 获取最后一次签到记录
+     */
+    public void getLastAttendance(){
+        getV().showLoading();
+        String json = "{}";
+        OkGo.<BaseResponse<WorkorderService.WorkorderAttendanceResp>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_ATTENDANCE_LAST)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(json)
+                .execute(new FMJsonCallback<BaseResponse<WorkorderService.WorkorderAttendanceResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<WorkorderService.WorkorderAttendanceResp>> response) {
+                        getV().dismissLoading();
+                        WorkorderService.WorkorderAttendanceResp data = response.body().data;
+                        if(data != null) {
+                        }else {
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<WorkorderService.WorkorderAttendanceResp>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                        getWorkorderInfoError();
+                    }
+                });
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:40
+     * @Description: 获取我的所有签到记录
+     */
+    public void getAttendanceList(Long startTime,Long endTime){
+        getV().showLoading();
+        WorkorderService.WorkorderMyAttendanceReq request=new WorkorderService.WorkorderMyAttendanceReq();
+        request.page=new Page();
+        request.timeStart=startTime;
+        request.timeEnd=endTime;
+        String json = toJson(request);
+        OkGo.<BaseResponse<WorkorderService.WorkorderMyAttendanceResp>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_ATTENDANCE_LIST)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(json)
+                .execute(new FMJsonCallback<BaseResponse<WorkorderService.WorkorderMyAttendanceResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<WorkorderService.WorkorderMyAttendanceResp>> response) {
+                        getV().dismissLoading();
+                        WorkorderService.WorkorderMyAttendanceResp data = response.body().data;
+                        if(data != null) {
+//                            getWorkorderInfoSuccess(woId,data);
+                        }else {
+//                            getWorkorderInfoError();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<WorkorderService.WorkorderMyAttendanceResp>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                        getWorkorderInfoError();
+                    }
+                });
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:40
+     * @Description: 扫一扫签到
+     */
+    public void operateAttendance(Long persionId,Long contactId,String contactName,Long createTime){
+        getV().showLoading();
+        WorkorderService.WorkorderAttendanceReq request= new WorkorderService.WorkorderAttendanceReq();
+        request.personId=persionId;
+        request.contactId=contactId;
+        request.contactName=contactName;
+        request.createTime=createTime;
+        String json = toJson(request);
+        OkGo.<BaseResponse<WorkorderService.WorkorderAttendanceResp>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_ATTENDANCE_OPT)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(json)
+                .execute(new FMJsonCallback<BaseResponse<WorkorderService.WorkorderAttendanceResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<WorkorderService.WorkorderAttendanceResp>> response) {
+                        getV().dismissLoading();
+                        WorkorderService.WorkorderAttendanceResp data = response.body().data;
+                        if(data != null) {
+//                            getWorkorderInfoSuccess(woId,data);
+                        }else {
+//                            getWorkorderInfoError();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<WorkorderService.WorkorderAttendanceResp>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                        getWorkorderInfoError();
+                    }
+                });
+    }
+
+
 }

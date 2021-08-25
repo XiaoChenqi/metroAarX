@@ -85,4 +85,39 @@ public class WorkorderDispatchPresenter extends WorkorderBasePresenter<Workorder
                     }
                 });
     }
+
+
+
+
+
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/23
+     * @Infor: 批量派工/派工
+     */
+    public void disbatchPostOrder(WorkorderOptService.BatchOrderReq  req) {
+        getV().showLoading();
+        String url = "";
+        url = WorkorderUrl.MAINTENANCE_ORDER_DEISPATCH; //批量派单
+        OkGo.<BaseResponse<Object>>post(FM.getApiHost() + url)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(req))
+                .execute(new FMJsonCallback<BaseResponse<Object>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<Object>> response) {
+                        getV().dismissLoading();
+                        getV().setFragmentResult(ISupportFragment.RESULT_OK, new Bundle());
+                        ToastUtils.showShort("工单分配成功");
+                        getV().pop();
+                    }
+                    @Override
+                    public void onError(Response<BaseResponse<Object>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
+    }
+
+
 }

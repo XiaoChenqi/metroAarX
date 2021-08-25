@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.ec.commonpresenter.CommonBasePresenter;
 import com.facilityone.wireless.a.arch.ec.module.FunctionService;
+import com.facilityone.wireless.a.arch.ec.ui.FzScanActivity;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.offline.util.PatrolQrcodeUtils;
 import com.facilityone.wireless.basiclib.app.FM;
@@ -21,6 +22,7 @@ import com.fm.tool.network.model.BaseResponse;
 import com.fm.tool.scan.ScanActivity;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.zdf.activitylauncher.ActivityLauncher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,6 +75,17 @@ public class PatrolMenuPresenter extends CommonBasePresenter<PatrolMenuFragment>
                 getV().scanResult(spotCode);
             }
         });
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 12:07
+     * @Description:华为统一扫码服务
+     */
+    public void hmsScan(){
+        Intent intent = new Intent(getV().getContext(), FzScanActivity.class);
+//        ActivityLauncher.
+//        getV().startActivity(intent);
     }
 
     /**

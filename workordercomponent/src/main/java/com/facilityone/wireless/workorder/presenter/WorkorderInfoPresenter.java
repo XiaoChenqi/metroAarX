@@ -5,12 +5,17 @@ import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
+import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
 import com.facilityone.wireless.a.arch.ec.module.Page;
+import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
+import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.widget.BottomTextListSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.FMBottomInputSheetBuilder;
+import com.facilityone.wireless.a.arch.widget.FMBottomPauseSelectSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.workorder.R;
+
 import com.facilityone.wireless.workorder.fragment.WorkorderApprovalFragment;
 import com.facilityone.wireless.workorder.fragment.WorkorderDispatchFragment;
 import com.facilityone.wireless.workorder.fragment.WorkorderInfoFragment;
@@ -20,6 +25,7 @@ import com.facilityone.wireless.workorder.module.WorkorderOptService;
 import com.facilityone.wireless.workorder.module.WorkorderService;
 import com.facilityone.wireless.workorder.module.WorkorderUrl;
 import com.fm.tool.network.model.BaseResponse;
+import com.luojilab.component.componentlib.router.Router;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
@@ -53,9 +59,6 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 //                }
 //                getV().setLaborer(laborer);
 //            }
-            //XCQ todo
-            WorkorderInfoFragment.refreshStatus = data.status;//因为上海隧道院的原因，只能这么改
-
             getV().refreshBasicInfoUI(data);
             //请求物料
             getWorkorderReserveRecordList(woId);
@@ -225,6 +228,11 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             case WorkorderConstant.WORK_STATUS_UBNORMAL:// 异常
                 menu.add("审批");
                 break;
+            case WorkorderConstant.WORK_STATUS_MAINTENCE:// 计划性维护
+                menu.add("抽检");
+                menu.add("验证");
+                menu.add("存档");
+                break;
 
         }
 
@@ -333,6 +341,13 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                     getV().newOrder();
                 }else if (tag.equals("作废申请")){
                     getV().invalidOrder(woId);
+                }else if (tag.equals("抽检")){
+                    Router router = Router.getInstance();
+                    com.facilityone.wireless.componentservice.maintenance.MaintenanceService workorderService = (com.facilityone.wireless.componentservice.maintenance.MaintenanceService) router.getService(com.facilityone.wireless.componentservice.maintenance.MaintenanceService.class.getSimpleName());
+                    if (workorderService != null) {
+                        BaseFragment fragment=workorderService.getElectronicLedger();
+                        getV().start(fragment);
+                    }
                 }
             }
         });

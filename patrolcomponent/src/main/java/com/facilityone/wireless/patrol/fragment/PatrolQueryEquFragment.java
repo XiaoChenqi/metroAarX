@@ -1,5 +1,6 @@
 package com.facilityone.wireless.patrol.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.ec.adapter.RelationOrdersAdapter;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
@@ -18,7 +20,9 @@ import com.facilityone.wireless.a.arch.offline.dao.SiteDao;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
 import com.facilityone.wireless.a.arch.utils.UrlUtils;
 import com.facilityone.wireless.a.arch.widget.BottomTextListSheetBuilder;
+import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
+import com.facilityone.wireless.componentservice.demand.DemandService;
 import com.facilityone.wireless.componentservice.workorder.WorkorderService;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.adapter.PatrolQueryEquAdapter;
@@ -29,6 +33,7 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luojilab.component.componentlib.router.Router;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,12 +165,16 @@ public class PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        OrdersBean ordersBean = mOrdersBeen.get(position);
-        WorkorderService workorderService = (WorkorderService) Router.getInstance().getService(WorkorderService.class.getSimpleName());
-        if (workorderService != null) {
-            BaseFragment workorderCreateFragment = workorderService.getWorkorderInfoFragment(-1, ordersBean.code, ordersBean.woId);
-            start(workorderCreateFragment);
-        }
+
+
+            OrdersBean ordersBean = mOrdersBeen.get(position);
+            WorkorderService workorderService = (WorkorderService) Router.getInstance().getService(WorkorderService.class.getSimpleName());
+            if (workorderService != null) {
+                BaseFragment workorderCreateFragment = workorderService.getWorkorderInfoFragment(-1, ordersBean.code, ordersBean.woId);
+                start(workorderCreateFragment);
+            }
+
+
     }
 
     public void refreshUI(PatrolQueryService.PatrolQueryEquResp data) {
@@ -201,10 +210,13 @@ public class PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter
         }
         final String comment = StringUtils.formatString(patrolQueryItemBean.comment);
         List<String> imageIds = patrolQueryItemBean.imageIds;
+
+
         final List<LocalMedia> localMedias = new ArrayList<>();
         if (imageIds != null && imageIds.size() > 0) {
             for (String imageId : imageIds) {
                 LocalMedia media = new LocalMedia();
+
                 media.setSrc(imageId);
                 media.setPath(UrlUtils.getImagePath(imageId));
                 localMedias.add(media);
@@ -218,7 +230,8 @@ public class PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter
             }
         } else if (view.getId() == R.id.del_tv) {
             List<String> menu = new ArrayList<>();
-            menu.add(getString(R.string.patrol_task_query_repair));
+            menu.add("快速报障");
+//            menu.add(getString(R.string.patrol_task_query_repair));
             if (patrolQueryItemBean.processed == null || !patrolQueryItemBean.processed) {
                 menu.add(getString(R.string.patrol_task_query_handle_mark));
             }
@@ -233,10 +246,11 @@ public class PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter
                     dialog.dismiss();
                     if (tag.equals(getString(R.string.patrol_task_query_handle_mark))) {
                         getPresenter().optTagDel(patrolQueryItemBean.patrolTaskSpotResultId);
-                    } else if (tag.equals(getString(R.string.patrol_task_query_repair))) {
-                        WorkorderService workorderService = (WorkorderService) Router.getInstance().getService(WorkorderService.class.getSimpleName());
-                        if (workorderService != null) {
-                            startForResult(workorderService.getWorkorderCreateFragment(WorkorderService.CREATE_ORDER_BY_PATROL_QUERY_REPAIR, mEquId, mLocationName, mLocationBean, localMedias, patrolQueryItemBean.patrolTaskSpotResultId, comment, null, null, null, true), REQUEST_CREATE_ORDER);
+                    } else if (tag.equals("快速报障")) {
+                        DemandService demandService = (DemandService) Router.getInstance().getService(DemandService.class.getSimpleName());
+                        if (demandService != null) {
+                            startForResult(demandService.goToQuickReport(mEquId,mLocationName,mLocationBean,comment,localMedias),REQUEST_CREATE_ORDER);
+//                            startForResult(demandService.goToQuickReport(WorkorderService.CREATE_ORDER_BY_PATROL_QUERY_REPAIR, mEquId, mLocationName, mLocationBean, localMedias, patrolQueryItemBean.patrolTaskSpotResultId, comment, null, null, null, true), REQUEST_CREATE_ORDER);
                         }
                     }
                 }
@@ -266,4 +280,5 @@ public class PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter
         instance.setArguments(bundle);
         return instance;
     }
+
 }

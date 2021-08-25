@@ -9,4 +9,6 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 
 public interface MaintenanceService extends IService {
     BaseFragment getPmInfo(Long pmId, Long todoId);
+
+    BaseFragment getElectronicLedger();
 }

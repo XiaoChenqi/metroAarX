@@ -22,6 +22,7 @@ import com.facilityone.wireless.basiclib.utils.DateUtils;
 import com.facilityone.wireless.workorder.R;
 import com.facilityone.wireless.workorder.adapter.WorkorderDispatchLaborerAdapter;
 import com.facilityone.wireless.workorder.module.WorkorderLaborerService;
+import com.facilityone.wireless.workorder.module.WorkorderOptService;
 import com.facilityone.wireless.workorder.presenter.WorkorderDispatchPresenter;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
@@ -51,6 +52,9 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
     private static final String WORKORDER_START = "workorder_start";
     private static final String WORKORDER_END = "workorder_end";
     private static final String WORKORDER_CONTENT = "workorder_content";
+    private static final String WORKORDER_DISPATCH = "workorder_dispatch";
+    private static final String WORKORDER_IDS = "workorder_ids";
+    private static final String WORKORDER_TEAMID = "workorder_team_id";
 
     private String mCode;
     private Long mWoId;
@@ -63,6 +67,13 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
     private String mSendContent;
     //派工负责人id
     private Long leaderId;
+    //是否是批量派工操作
+    private Boolean isDispatch;
+    //派工单Id数组
+    private ArrayList<String> dispatchIds;
+    private ArrayList<Long> mOrderIds;
+    private List<WorkorderOptService.Laborers> mLaborerIds;
+    private Long workTeamId; //工作组Id
 
     @Override
     public WorkorderDispatchPresenter createPresenter() {
@@ -95,6 +106,13 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
             mWoId = bundle.getLong(WorkorderInfoFragment.WORKORDER_ID);
             startTime = bundle.getLong(WORKORDER_START, -1L);
             endTime = bundle.getLong(WORKORDER_END, -1L);
+            isDispatch = bundle.getBoolean(WORKORDER_DISPATCH,false);
+            dispatchIds = new ArrayList<>();
+            dispatchIds = bundle.getStringArrayList(WORKORDER_IDS);
+            if (dispatchIds != null){
+                mWoId = Long.parseLong(dispatchIds.get(0));
+            }
+            workTeamId = bundle.getLong(WORKORDER_TEAMID);
         }
     }
 
@@ -145,8 +163,30 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
             ToastUtils.showShort(R.string.workorder_select_laborer_tip);
             return;
         }
+        mOrderIds = new ArrayList<>();
+        mLaborerIds = new ArrayList<>();
         showLoading();
-        getPresenter().uploadDispatchData(mWoId, startTime, endTime, desc.getDesc(), mUploadLaborers);
+        if (isDispatch){
+            for (String ids : dispatchIds) {
+                mOrderIds.add(Long.parseLong(ids));
+            }
+            WorkorderOptService.BatchOrderReq req = new WorkorderOptService.BatchOrderReq();
+            req.ids = mOrderIds;
+            for (WorkorderLaborerService.WorkorderLaborerBean data : mUploadLaborers) {
+                WorkorderOptService.Laborers laborers = new WorkorderOptService.Laborers();
+                laborers.laborerId = data.emId;
+                laborers.responsible = data.leader;
+                mLaborerIds.add(laborers);
+            }
+            req.laborers = mLaborerIds;
+            req.estimatedArrivalDate = startTime;
+            req.estimatedCompletionDate = endTime;
+            req.estimatedWorkingTime = TimeUtils.getTimeSpan(endTime, startTime, TimeConstants.MIN);
+            getPresenter().disbatchPostOrder(req);
+        }else {
+            getPresenter().uploadDispatchData(mWoId, startTime, endTime, desc.getDesc(), mUploadLaborers);
+        }
+
     }
 
 
@@ -311,10 +351,32 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
     public static WorkorderDispatchFragment getInstance(Long woId, String code, String sendWorkContent, Long estimateStartTime, Long estimateEndTime) {
         Bundle bundle = new Bundle();
         bundle.putLong(WorkorderInfoFragment.WORKORDER_ID, woId);
-        bundle.putLong(WORKORDER_START, estimateStartTime);
-        bundle.putLong(WORKORDER_END, estimateEndTime);
+        if (estimateStartTime != null){
+            bundle.putLong(WORKORDER_START, estimateStartTime);
+        }
+        if (estimateEndTime != null){
+            bundle.putLong(WORKORDER_END, estimateEndTime);
+        }
         bundle.putString(WorkorderInfoFragment.WORKORDER_CODE, code);
         bundle.putString(WORKORDER_CONTENT, sendWorkContent);
+        WorkorderDispatchFragment instance = new WorkorderDispatchFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+
+    public static WorkorderDispatchFragment getInstance(ArrayList<String> woId, String code, String sendWorkContent, Long estimateStartTime, Long estimateEndTime,Long workTeamId) {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(WORKORDER_IDS, woId);
+        if (estimateStartTime != null){
+            bundle.putLong(WORKORDER_START, estimateStartTime);
+        }
+        if (estimateEndTime != null){
+            bundle.putLong(WORKORDER_END, estimateEndTime);
+        }
+        bundle.putString(WorkorderInfoFragment.WORKORDER_CODE, code);
+        bundle.putString(WORKORDER_CONTENT, sendWorkContent);
+        bundle.putBoolean(WORKORDER_DISPATCH,true);
+        bundle.putLong(WORKORDER_TEAMID,workTeamId);
         WorkorderDispatchFragment instance = new WorkorderDispatchFragment();
         instance.setArguments(bundle);
         return instance;

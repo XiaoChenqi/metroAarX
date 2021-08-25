@@ -88,6 +88,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_20"
@@ -256,6 +257,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_4"
@@ -286,6 +288,7 @@
             <!--任务列表-->
 
             <androidx.recyclerview.widget.RecyclerView
+                android:visibility="gone"
                 android:id="@+id/task_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -329,6 +332,7 @@
                 android:scrollbars="none"/>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_4"
@@ -356,6 +360,7 @@
 
             <!--排序方式-->
             <androidx.recyclerview.widget.RecyclerView
+                android:visibility="gone"
                 android:id="@+id/sort_order_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

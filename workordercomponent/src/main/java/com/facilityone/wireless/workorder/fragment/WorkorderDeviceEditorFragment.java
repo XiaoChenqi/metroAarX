@@ -74,6 +74,7 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
             mWoId = arguments.getLong(WORKORDER_ID);
             mAddDevice = arguments.getBoolean(ADD_DEVICE, true);
             mEquipmentsBean = arguments.getParcelable(WORKORDER_DEVICE);
+            setTitle(mEquipmentsBean.equipmentName+""); // 四运
         }
     }
 
@@ -87,15 +88,15 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
         mEtDeviceName.setOnClickListener(this);
         mEtDeviceCode.setOnClickListener(this);
 
-        if (!mAddDevice && mEquipmentsBean != null) {
-            mLlDeviceBaseInfo.setVisibility(View.GONE);
-            setTitle(StringUtils.formatString(mEquipmentsBean.equipmentName));
-            mEtDesc.setDesc(StringUtils.formatString(mEquipmentsBean.failureDesc));
-            mEtDealWay.setDesc(StringUtils.formatString(mEquipmentsBean.repairDesc));
-        } else {
-            mLlDeviceBaseInfo.setVisibility(View.VISIBLE);
-            setTitle(R.string.workorder_add_device);
-        }
+//        if (!mAddDevice && mEquipmentsBean != null) {
+//            mLlDeviceBaseInfo.setVisibility(View.GONE);
+//            setTitle(StringUtils.formatString(mEquipmentsBean.equipmentName));
+//            mEtDesc.setDesc(StringUtils.formatString(mEquipmentsBean.failureDesc));
+//            mEtDealWay.setDesc(StringUtils.formatString(mEquipmentsBean.repairDesc));
+//        } else {
+//            mLlDeviceBaseInfo.setVisibility(View.VISIBLE);
+//            setTitle(R.string.workorder_add_device);
+//        }
         setRightTextButton(R.string.workorder_save, R.id.workorder_device_save_menu_id);
 
     }
@@ -125,27 +126,27 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
         request.woId = mWoId;
         request.failureDesc = mEtDesc.getDesc();
         request.repairDesc = mEtDealWay.getDesc();
-        if (mAddDevice) {
-            request.operateType = WorkorderConstant.WORKORDER_DEVICE_ADD_OPT_TYPE;
-            if (TextUtils.isEmpty(mEtDeviceName.getTipText().toString()) || mBean == null) {
-                ToastUtils.showShort(R.string.workorder_select_device_hint);
-                return;
-            }
-            request.equipmentId = mBean.getId();
-            mAddUpdateEquipmentsBean.equipmentName = mBean.getName();
-            mAddUpdateEquipmentsBean.equipmentCode = mBean.getFullName();
-            mAddUpdateEquipmentsBean.equipmentId = mBean.getId();
-            mAddUpdateEquipmentsBean.failureDesc = request.failureDesc;
-            mAddUpdateEquipmentsBean.repairDesc = request.repairDesc;
-        } else {
-            request.operateType = WorkorderConstant.WORKORDER_DEVICE_UPDATE_OPT_TYPE;
-            if (mEquipmentsBean != null) {
-                request.equipmentId = mEquipmentsBean.equipmentId;
-                mEquipmentsBean.failureDesc = request.failureDesc;
-                mEquipmentsBean.repairDesc = request.repairDesc;
-            }
-            mAddUpdateEquipmentsBean = mEquipmentsBean;
-        }
+//        if (mAddDevice) {
+//            request.operateType = WorkorderConstant.WORKORDER_DEVICE_ADD_OPT_TYPE;
+//            if (TextUtils.isEmpty(mEtDeviceName.getTipText().toString()) || mBean == null) {
+//                ToastUtils.showShort(R.string.workorder_select_device_hint);
+//                return;
+//            }
+//            request.equipmentId = mBean.getId();
+//            mAddUpdateEquipmentsBean.equipmentName = mBean.getName();
+//            mAddUpdateEquipmentsBean.equipmentCode = mBean.getFullName();
+//            mAddUpdateEquipmentsBean.equipmentId = mBean.getId();
+//            mAddUpdateEquipmentsBean.failureDesc = request.failureDesc;
+//            mAddUpdateEquipmentsBean.repairDesc = request.repairDesc;
+//        } else {
+//            request.operateType = WorkorderConstant.WORKORDER_DEVICE_UPDATE_OPT_TYPE;
+//            if (mEquipmentsBean != null) {
+//                request.equipmentId = mEquipmentsBean.equipmentId;
+//                mEquipmentsBean.failureDesc = request.failureDesc;
+//                mEquipmentsBean.repairDesc = request.repairDesc;
+//            }
+//            mAddUpdateEquipmentsBean = mEquipmentsBean;
+//        }
         getPresenter().editorWorkorderDevice(request);
     }
 

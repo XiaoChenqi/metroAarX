@@ -106,7 +106,6 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
             @Override
             public void onError(Response<BaseResponse<LogonResponse>> response) {
                 super.onError(response);
-                getV().showLoading();
                 solveLogonError(response);
                 onLogonError();
             }

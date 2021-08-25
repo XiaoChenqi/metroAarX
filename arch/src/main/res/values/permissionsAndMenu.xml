@@ -53,7 +53,7 @@
 
     <string-array name="home_workOrder_menu_child_title">
 <!--        <item>创建工单</item>-->
-        <item>维修管理</item>
+        <item>创建工单</item>
         <item>待处理工单</item>
         <item>待派工工单</item>
         <item>待审批工单</item>

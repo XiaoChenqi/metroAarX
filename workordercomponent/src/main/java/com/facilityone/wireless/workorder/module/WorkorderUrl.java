@@ -74,4 +74,17 @@ public interface WorkorderUrl {
     //异常工单审批
     String WORKORDER_OPT_EXCEPTION_APPROVAL_V_URL = "/m/v1/workorder/exception/approve";
 
+
+    //批量派单
+    String MAINTENANCE_ORDER_DEISPATCH = "/m/v1/workorder/operate/dispatch/batch";
+
+    //最后一次签到记录
+    String WORKORDER_ATTENDANCE_LAST = "/m/v1/user/attendance/last";
+    //我的签到记录
+    String WORKORDER_ATTENDANCE_LIST = "/m/v1/user/attendance/list";
+    //扫一扫签到
+    String WORKORDER_ATTENDANCE_OPT = "/m/v1/user/attendance/operate";
+
+
+
 }

@@ -2,16 +2,11 @@ package com.facilityone.wireless.componentservice.common.empty;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.facilityone.wireless.a.arch.R;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
-import com.facilityone.wireless.a.arch.net.FmNetApi;
-import com.facilityone.wireless.a.arch.presenter.UserBehaviorPresenter;
-import com.facilityone.wireless.a.arch.presenter.ivew.LoginMvpView;
 
 /**
  * Author：gary
@@ -19,14 +14,12 @@ import com.facilityone.wireless.a.arch.presenter.ivew.LoginMvpView;
  * description:其他组件单独使用的时候的初始化(登录等)
  * Date: 2018/10/15 5:23 PM
  */
-public class EmptyFragment extends BaseFragment<EmptyPresenter> implements LoginMvpView {
+public class EmptyFragment extends BaseFragment<EmptyPresenter> {
 
     private Button mBtn;
 
     private static final String MENU_TYPE = "menu_type";
     private int mType = -1;
-
-    UserBehaviorPresenter ubPresenter;
 
     @Override
     public EmptyPresenter createPresenter() {
@@ -47,16 +40,9 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements Login
         }
         mBtn = findViewById(R.id.btn);
 
-        /**
-         * 初始化presenter
-         */
-        ubPresenter = new UserBehaviorPresenter();
-        ubPresenter.attachView(this);
-
-
         //TODO xcq
-        showLoading();
-        getPresenter().logon("zhangsan", "111111");
+//        showLoading();
+//        getPresenter().logon("wangan", "111111");
         showLogonButton();
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,9 +50,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements Login
                 //TODO xcq
 
                 showLoading();
-                //todo ???
-                getPresenter().logon("zhangsan", "111111");
-                //ubPresenter.login(new FmNetApi.LoginBean(),6666);
+                getPresenter().logon("admin", "111111");
 
             }
         });
@@ -87,53 +71,6 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements Login
     }
 
     private OnGoFragmentListener mOnGoFragmentListener;
-
-    @Override
-    public void loginNameNull() {
-
-    }
-
-    @Override
-    public void loginPwdNull() {
-
-    }
-
-    String TAG = "林晓旭";
-    @Override
-    public void onStartRequest(int requestCode) {
-        Log.d(TAG, "onStartRequest: ");
-    }
-
-    @Override
-    public void onSuccess(int requestCode, Object o) {
-        Log.d(TAG, "onSuccess: ");
-        /**
-         * todo
-         * 成功以后需要去获取权限接口
-         * 然后再回到首页
-         * 要干的事情太多了，不需要写测试
-         * 回头使用原来的token，cookie和权限
-         */
-
-    }
-
-    @Override
-    public void onErrorCode(int resultCode, String msg, int requestCode) {
-
-        //Log.d(TAG, "onErrorCode: "+requestCode+"~~~"+msg);
-        Log.d(TAG, "onErrorCode: ");
-    }
-
-    @Override
-    public void onEndRequest(int requestCode) {
-
-        Log.d(TAG, "onEndRequest: ");
-    }
-
-    @Override
-    public void onFailure(Throwable e) {
-        Log.d(TAG, "onFailure: ");
-    }
 
     public interface OnGoFragmentListener {
         void goFragment(Bundle bundle);
