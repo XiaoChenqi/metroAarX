@@ -21,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tv1;
+    private Button tv1;
     private Button btn2;
     private Button btn3;
     private Button btn4;
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        tv1 = (TextView) findViewById(R.id.tv1);
+        tv1 = (Button) findViewById(R.id.tv1);
         btn2 = (Button) findViewById(R.id.btn2);
         btn3 = (Button) findViewById(R.id.btn3);
         btn4 = (Button) findViewById(R.id.btn4);
