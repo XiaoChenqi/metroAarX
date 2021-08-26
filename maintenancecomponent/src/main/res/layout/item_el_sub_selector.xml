@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data/>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <!--当月任务-->
+    <LinearLayout
+        style="@style/contentTitleLayoutStyle">
+
+
+
+        <TextView
+            android:id="@+id/task_title_tv"
+            style="@style/h3_text_style"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_14"
+            android:layout_weight="1"
+            android:text="1.万用表"/>
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/rgSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginHorizontal="@dimen/dp_28"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/rbNormal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="0"
+            android:text="携带"/>
+        <RadioButton
+            android:id="@+id/rbException"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="1"
+            android:text="未携带"/>
+
+    </RadioGroup>
+    <View
+        style="@style/secant_line_style"
+        android:layout_marginLeft="@dimen/dp_28"/>
+    <TextView
+        android:id="@+id/task_sub_title_tv"
+        style="@style/h3_text_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_28"
+        android:layout_weight="1"
+        android:text="是否合格有效："/>
+    <RadioGroup
+        android:id="@+id/rgSelect2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginHorizontal="@dimen/dp_28"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/rbNormal2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="0"
+            android:text="是"/>
+        <RadioButton
+            android:id="@+id/rbException2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="1"
+            android:text="否"/>
+
+    </RadioGroup>
+
+
+    <View
+        style="@style/secant_line_style"/>
+
+
+
+
+
+</LinearLayout>
+</layout>

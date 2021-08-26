@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.qmuiteam.qmui.widget.QMUITopBarLayout
+        android:id="@+id/ui_topbar"
+        style="@style/commonTopbarStyle"/>
+
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/query_head"
+                    layout="@layout/query_month_menu_head"
+                    android:visibility="gone"/>
+
+                <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                    android:id="@+id/refreshLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srlDisableContentWhenLoading="true"
+                    app:srlDisableContentWhenRefresh="true"
+                    app:srlEnableAutoLoadMore="false"
+                    app:srlEnablePreviewInEditMode="true">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:overScrollMode="never"
+                        tools:listitem="@layout/adpater_maintenance_list_item"/>
+
+                </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/ll_maintenacne_menu_all"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true"
+                >
+
+                <ImageView
+                    android:id="@+id/iv_query_menu"
+                    android:layout_width="@dimen/dp_55"
+                    android:layout_height="@dimen/dp_55"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_16"
+                    android:background="@drawable/query_menu_selector"
+                    android:visibility="gone"
+                    />
+
+                <include
+                    layout="@layout/frgament_maintenance_bottom_menu"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_alignParentBottom="true"
+                    />
+
+            </LinearLayout>
+
+
+
+
+
+        </RelativeLayout>
+
+        <include layout="@layout/fragment_maintenancelist_query_menu"/>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+<!--    《？  -->
+</LinearLayout>
+</layout>

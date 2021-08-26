@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data/>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <!--当月任务-->
+    <LinearLayout
+        style="@style/contentTitleLayoutStyle">
+
+
+
+        <TextView
+            android:id="@+id/task_title_tv"
+            style="@style/h3_text_style"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_14"
+            android:layout_weight="1"
+            android:text="1.两路进线验收情况"/>
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/rgSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginHorizontal="@dimen/dp_14"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/rbNormal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="0"
+            android:text="正常"/>
+        <RadioButton
+            android:id="@+id/rbException"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="1"
+            android:text="异常"/>
+
+    </RadioGroup>
+
+    <View
+        style="@style/secant_line_style"/>
+
+
+
+
+
+</LinearLayout>
+</layout>
