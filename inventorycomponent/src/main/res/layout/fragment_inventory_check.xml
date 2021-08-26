@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/app_bg"
+              android:orientation="vertical">
+
+    <com.qmuiteam.qmui.widget.QMUITopBarLayout
+        android:id="@+id/ui_topbar"
+        style="@style/commonTopbarStyle"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--仓库名称-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_6"
+                android:gravity="center_vertical"
+                android:text="@string/inventory_materials_add_hint"
+                android:padding="@dimen/dp_10"
+                android:textColor="@color/grey_9"
+                android:textSize="@dimen/sp_12"/>
+
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/inventory_check_select_storage_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_et_hint="@string/inventory_select_storage_hint"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="true"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="true"
+                app:fm_content_item_title="@string/inventory_storage_name_a"/>
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/dp_18"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:paddingLeft="@dimen/dp_16"-->
+                    <!--android:paddingRight="@dimen/dp_16">-->
+
+                    <!--<TextView-->
+                        <!--style="@style/h3_15_9_text_style"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="@string/inventory_storage_name_a"/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/dp_6"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="*"-->
+                        <!--android:textColor="@color/red"/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/dp_6"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="@string/inventory_materials_add_hint"-->
+                        <!--android:textColor="@color/grey_9"-->
+                        <!--android:textSize="@dimen/sp_10"/>-->
+                <!--</LinearLayout>-->
+
+
+                <!--<TextView-->
+                    <!--android:id="@+id/inventory_check_select_storage_tv"-->
+                    <!--style="@style/h5_text_style"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/dp_11"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="@string/inventory_select_storage_hint"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:padding="@dimen/dp_16"-->
+                    <!--android:textColorHint="@color/grey_c"/>-->
+
+                <!--<View-->
+                    <!--style="@style/secant_line_style"/>-->
+            <!--</LinearLayout>-->
+
+
+            <!--物料-->
+            <LinearLayout
+                android:id="@+id/inventory_check_material_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dp_16"
+                    android:paddingRight="@dimen/dp_16">
+
+                    <TextView
+                        style="@style/h3_15_9_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/inventory_material"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_6"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@color/red"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/inventory_check_material_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_11"
+                    android:overScrollMode="never"
+                    android:scrollbars="none"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dp_6"
+        android:paddingLeft="@dimen/dp_6"
+        android:paddingRight="@dimen/dp_6"
+        android:paddingTop="@dimen/dp_6">
+
+        <Button
+            android:id="@+id/inventory_check_material_check_btn"
+            style="@style/btn_main_color_style"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/inventory_check_title"/>
+
+    </LinearLayout>
+
+</LinearLayout>

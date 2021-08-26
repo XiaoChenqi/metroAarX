@@ -41,8 +41,8 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> {
         mBtn = findViewById(R.id.btn);
 
         //TODO xcq
-//        showLoading();
-//        getPresenter().logon("wangan", "111111");
+        showLoading();
+        getPresenter().logon("4", "111111");
         showLogonButton();
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +50,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> {
                 //TODO xcq
 
                 showLoading();
-                getPresenter().logon("admin", "111111");
+                getPresenter().logon("4", "111111");
 
             }
         });

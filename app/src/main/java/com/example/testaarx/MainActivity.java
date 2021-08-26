@@ -5,15 +5,14 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.testaarx.download.OutLineDataActivity;
 import com.example.testaarx.scan.FmScanBaseActivity;
 import com.facilityone.wireless.demand.DemandActivity;
 import com.facilityone.wireless.demand.DemandCreateActivity;
+import com.facilityone.wireless.inventory.InventoryActivity;
 import com.facilityone.wireless.maintenance.MaintenanceActivity;
 import com.facilityone.wireless.patrol.PatrolActivity;
 import com.facilityone.wireless.workorder.WorkOrderActivity;
@@ -33,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mDownBtn;
     private Button mButton2;
     private Button mBtn1;
+    private Button mButtonStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !useStatusBarColor) {//android6.0以后可以对状态栏文字颜色和图标进行修改
-            getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
 
@@ -132,6 +132,13 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+        mButtonStorage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
     }
 
     private void initView() {
@@ -144,5 +151,6 @@ public class MainActivity extends AppCompatActivity {
         mDownBtn = (Button) findViewById(R.id.downBtn);
         mButton2 = (Button) findViewById(R.id.button2);
         mBtn1 = (Button) findViewById(R.id.btn1);
+        mButtonStorage = (Button) findViewById(R.id.buttonStorage);
     }
 }

@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical">
+
+    <com.qmuiteam.qmui.widget.QMUITopBarLayout
+        android:id="@+id/ui_topbar"
+        style="@style/commonTopbarStyle"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--编码-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/material_add_code_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_et_hint="@string/inventory_select_material_hint"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="true"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="true"
+                app:fm_content_item_title="@string/inventory_material_code_tip" />
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/dp_18"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:paddingLeft="@dimen/dp_16"-->
+                    <!--android:paddingRight="@dimen/dp_16">-->
+
+                    <!--<TextView-->
+                        <!--style="@style/h3_15_9_text_style"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="@string/inventory_material_code_tip"/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/dp_6"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="*"-->
+                        <!--android:textColor="@color/red"/>-->
+
+                <!--</LinearLayout>-->
+
+
+                <!--<TextView-->
+                    <!--android:id="@+id/material_add_code_tv"-->
+                    <!--style="@style/h5_text_style"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/dp_11"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="@string/inventory_select_material_hint"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:padding="@dimen/dp_16"-->
+                    <!--android:textColorHint="@color/grey_c"/>-->
+
+                <!--<View-->
+                    <!--style="@style/secant_line_style"/>-->
+
+            <!--</LinearLayout>-->
+
+            <!--物料名称-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/material_add_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_et_hint="@string/inventory_select_material_hint"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="true"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="true"
+                app:fm_content_item_title="@string/inventory_material_name_tip" />
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/dp_18"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:paddingLeft="@dimen/dp_16"-->
+                    <!--android:paddingRight="@dimen/dp_16">-->
+
+                    <!--<TextView-->
+                        <!--style="@style/h3_15_9_text_style"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="@string/inventory_material_name_tip"/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/dp_6"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="*"-->
+                        <!--android:textColor="@color/red"/>-->
+
+                <!--</LinearLayout>-->
+
+
+                <!--<TextView-->
+                    <!--android:id="@+id/material_add_name_tv"-->
+                    <!--style="@style/h5_text_style"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/dp_11"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="@string/inventory_select_material_hint"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:padding="@dimen/dp_16"-->
+                    <!--android:textColorHint="@color/grey_c"/>-->
+
+                <!--<View-->
+                    <!--style="@style/secant_line_style"/>-->
+
+            <!--</LinearLayout>-->
+
+            <!--品牌-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/material_add_brand_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="false"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="false"
+                app:fm_content_item_title="@string/inventory_material_brand_a" />
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/dp_18"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:paddingLeft="@dimen/dp_16"-->
+                    <!--android:paddingRight="@dimen/dp_16">-->
+
+                    <!--<TextView-->
+                        <!--style="@style/h3_15_9_text_style"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="@string/inventory_material_brand_a"/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/dp_6"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="*"-->
+                        <!--android:textColor="@color/red"-->
+                        <!--android:visibility="gone"/>-->
+
+                <!--</LinearLayout>-->
+
+
+                <!--<TextView-->
+                    <!--android:id="@+id/material_add_brand_tv"-->
+                    <!--style="@style/h5_text_style"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/dp_11"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="@string/inventory_material_brand_a"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:padding="@dimen/dp_16"-->
+                    <!--android:textColorHint="@color/grey_c"/>-->
+
+                <!--<View-->
+                    <!--style="@style/secant_line_style"/>-->
+
+            <!--</LinearLayout>-->
+
+            <!--型号-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/material_add_model_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="false"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="false"
+                app:fm_content_item_title="@string/inventory_material_model_a" />
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/dp_18"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:paddingLeft="@dimen/dp_16"-->
+                    <!--android:paddingRight="@dimen/dp_16">-->
+
+                    <!--<TextView-->
+                        <!--style="@style/h3_15_9_text_style"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="@string/inventory_material_model_a"/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/dp_6"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="*"-->
+                        <!--android:textColor="@color/red"-->
+                        <!--android:visibility="gone"/>-->
+
+                <!--</LinearLayout>-->
+
+
+                <!--<TextView-->
+                    <!--android:id="@+id/material_add_model_tv"-->
+                    <!--style="@style/h5_text_style"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/dp_11"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="@string/inventory_material_model_a"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:padding="@dimen/dp_16"-->
+                    <!--android:textColorHint="@color/grey_c"/>-->
+
+                <!--<View-->
+                    <!--style="@style/secant_line_style"/>-->
+
+            <!--</LinearLayout>-->
+
+            <!--有效数量-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/material_add_real_number_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="false"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="false"
+                app:fm_content_item_title="@string/inventory_effective_number_a" />
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/dp_18"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:paddingLeft="@dimen/dp_16"-->
+                    <!--android:paddingRight="@dimen/dp_16">-->
+
+                    <!--<TextView-->
+                        <!--style="@style/h3_15_9_text_style"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="@string/inventory_effective_number_a"/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/dp_6"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="*"-->
+                        <!--android:textColor="@color/red"-->
+                        <!--android:visibility="gone"/>-->
+
+                <!--</LinearLayout>-->
+
+
+                <!--<TextView-->
+                    <!--android:id="@+id/material_add_real_number_tv"-->
+                    <!--style="@style/h5_text_style"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/dp_11"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="@string/inventory_effective_number_a"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:padding="@dimen/dp_16"-->
+                    <!--android:textColorHint="@color/grey_c"/>-->
+
+                <!--<View-->
+                    <!--style="@style/secant_line_style"/>-->
+
+            <!--</LinearLayout>-->
+
+            <!--费用（单价）-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/material_add_price_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="false"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="false"
+                app:fm_content_item_title="@string/inventory_material_cost_unit" />
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/dp_18"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:paddingLeft="@dimen/dp_16"-->
+                    <!--android:paddingRight="@dimen/dp_16">-->
+
+                    <!--<TextView-->
+                        <!--style="@style/h3_15_9_text_style"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="@string/inventory_material_cost_unit"/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/dp_6"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="*"-->
+                        <!--android:textColor="@color/red"-->
+                        <!--android:visibility="gone"/>-->
+
+                <!--</LinearLayout>-->
+
+
+                <!--<TextView-->
+                    <!--android:id="@+id/material_add_price_tv"-->
+                    <!--style="@style/h5_text_style"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/dp_11"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="@string/inventory_material_cost_unit"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:padding="@dimen/dp_16"-->
+                    <!--android:textColorHint="@color/grey_c"/>-->
+
+                <!--<View-->
+                    <!--style="@style/secant_line_style"/>-->
+
+            <!--</LinearLayout>-->
+
+            <!--预定数量-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/material_add_reserve_number_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_et_hint="@string/inventory_material_reserve_quantity_hint"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="true"
+                app:fm_content_item_show_tip="false"
+                app:fm_content_item_show_tip_icon="false"
+                app:fm_content_item_title="@string/inventory_material_reserve_quantity_a" />
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/dp_18"-->
+                <!--android:layout_marginBottom="@dimen/dp_10"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:paddingLeft="@dimen/dp_16"-->
+                    <!--android:paddingRight="@dimen/dp_16">-->
+
+                    <!--<TextView-->
+                        <!--style="@style/h3_15_9_text_style"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="@string/inventory_material_reserve_quantity_a"/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/dp_6"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="*"-->
+                        <!--android:textColor="@color/red"/>-->
+
+                <!--</LinearLayout>-->
+
+
+                <!--<EditText-->
+                    <!--android:id="@+id/material_add_reserve_number_et"-->
+                    <!--style="@style/h5_text_style"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/dp_11"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="@string/inventory_material_reserve_quantity_a"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:padding="@dimen/dp_16"-->
+                    <!--android:textColorHint="@color/grey_c"-->
+                    <!--android:inputType="numberDecimal"/>-->
+
+                <!--<View-->
+                    <!--style="@style/secant_line_style"/>-->
+
+            <!--</LinearLayout>-->
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

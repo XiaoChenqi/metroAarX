@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="inventory_main_id" type="id"/>
+
+    <!--二维码扫描添加物资-->
+    <item name="inventory_material_scan_id" type="id"/>
+    <!--物资选择添加物资-->
+    <item name="inventory_material_select_id" type="id"/>
+
+    <!--批次保存-->
+    <item name="inventory_batch_save_id" type="id"/>
+    <!--物资保存-->
+    <item name="inventory_material_save_id" type="id"/>
+
+    <!--库存审核预订记录审批-->
+    <item name="inventory_reserve_approval_id" type="id"/>
+
+    <!--我的预定预定详情取消预订-->
+    <item name="inventory_reserve_cancel_id" type="id"/>
+
+    <!--预定详情保存-->
+    <item name="inventory_reserve_save_id" type="id"/>
+
+</resources>

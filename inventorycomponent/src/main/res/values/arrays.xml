@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 库存状态 -->
+    <string-array name="inventory_status">
+        <item>待审核</item>
+        <item>待出库</item>
+        <item>已驳回</item>
+        <item>已出库</item>
+        <item>取消出库</item>
+        <item>取消预定</item>
+    </string-array>
+
+    <!-- 物资查询数量类型 -->
+    <string-array name="material_type">
+        <item>不限</item>
+        <item>充足</item>
+        <item>紧缺</item>
+    </string-array>
+
+    <!--预订单操作记录步骤-->
+    <string-array name="record_history_step">
+        <item>预定</item>
+        <item>驳回</item>
+        <item>通过</item>
+        <item>出库</item>
+        <item>取消预定</item>
+        <item>取消出库</item>
+    </string-array>
+
+</resources>

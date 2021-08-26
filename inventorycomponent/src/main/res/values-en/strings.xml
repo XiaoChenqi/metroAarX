@@ -1,0 +1,491 @@
+<resources>
+    <string name="app_name">inventorycomponent</string>
+    <!--物资编码异常-->
+    <string name="inventory_material_code_exception">Abnormal material coding</string>
+    <!--修改批次-->
+    <string name="inventory_edit_batches_title">Batch Modify</string>
+    <!--添加批次-->
+    <string name="inventory_add_batches_title">Batch Add</string>
+    <!--编辑备注-->
+    <string name="inventory_edit_desc_title">Edit Description</string>
+    <!--库存审核-->
+    <string name="inventory_approval_title">Unapproved</string>
+    <!--盘点-->
+    <string name="inventory_check_title">Storage Check</string>
+    <!--新建物资-->
+    <string name="inventory_create_title">Create</string>
+    <!--库存管理-->
+    <string name="inventory_title">Inventory</string>
+    <!--入库-->
+    <string name="inventory_in_title">Storage In</string>
+    <!--移库-->
+    <string name="inventory_move_title">Storage Move</string>
+    <!--我的预定-->
+    <string name="inventory_my_title">My Reserved</string>
+    <!--出库-->
+    <string name="inventory_out_title">Storage Out</string>
+    <!--库存查询-->
+    <string name="inventory_query_title">History</string>
+    <!--物资预定-->
+    <string name="inventory_reserve_title">Reserve</string>
+    <!--物资详情-->
+    <string name="inventory_material_detail_title">Materials Info</string>
+    <!--预定详情-->
+    <string name="inventory_reserve_details_title">Reservation Detail</string>
+    <!--添加物料-->
+    <string name="inventory_add_material_title">Add Material</string>
+    <!--编辑物料-->
+    <string name="inventory_edit_material_title">Edit Material</string>
+    <!--仓库选择-->
+    <string name="inventory_select_storage_title">Select warehouse</string>
+    <!--物料选择-->
+    <string name="inventory_select_material_title">Select material</string>
+    <!--供应商选择-->
+    <string name="inventory_material_provider_select_title">Select Provider</string>
+    <!--主管选择-->
+    <string name="inventory_select_supervisor_title">Select Supervisor</string>
+    <!--选择领料人-->
+    <string name="inventory_person_select_title">Select Receiver</string>
+    <!--选择预定人-->
+    <string name="inventory_reservation_select_title">Select Applicant</string>
+    <!--仓库管理员-->
+    <string name="inventory_administrator_select_title">Select Administrator</string>
+    <!--点击选择仓库管理员-->
+    <string name="inventory_add_administrator_hint">Please select an administrator</string>
+    <!--请先输入供应商名称-->
+    <string name="inventory_material_create_provider_name_empty_hint">Please select provider</string>
+    <!--请先输入单价-->
+    <string name="inventory_material_create_price_empty_hint">Please enter price</string>
+    <!--请输入数量-->
+    <string name="inventory_material_input_number_empty_hint">Please enter Amount</string>
+    <!--待审核-->
+    <string name="inventory_wait_approval">Unapprovaled</string>
+    <!--已审核-->
+    <string name="inventory_approvaled">Approvaled</string>
+    <!--请先选择仓库-->
+    <string name="inventory_storage_empty_hint">Please select a warehouse</string>
+    <!--仓库正在使用中，请确认-->
+    <string name="inventory_storage_useing">The current warehouse is in use and cannot be modified</string>
+    <!--请先选择物料-->
+    <string name="inventory_material_describe_material_hint">Please select a material first</string>
+    <!--请先选择物料-->
+    <string name="inventory_material_describe_material_tip">Please select materials</string>
+    <!--请选择物料并填写盘点数量-->
+    <string name="inventory_select_material_and_check_amount">Please edit the material batch</string>
+    <!--不可重复添加，请确认-->
+    <string name="inventory_material_exist">The material already existed</string>
+    <!--是否确定删除该物料-->
+    <string name="inventory_delete_material">Whether to delete the material?</string>
+    <!--是否删除该批次-->
+    <string name="inventory_delete_batch">Whether to delete the batch?</string>
+    <!--请先输入物资名称-->
+    <string name="inventory_create_material_name_empty_hint">Please enter name</string>
+    <!--物资名称长度必须在 2 至 200 之间-->
+    <string name="inventory_material_name_length_hint">Length of the name can just be between 2 and 200</string>
+    <!--请先输入物资编码-->
+    <string name="inventory_create_code_empty_hint">Please enter code</string>
+    <!--物资编码长度必须在 2 至 200 之间。-->
+    <string name="inventory_material_code_length_hint">Length of the code can just be between 2 and 200</string>
+    <!--请先输入物资单位-->
+    <string name="inventory_create_unit_empty_hint">Please enter unit</string>
+    <!--请先输入供应商名称-->
+    <string name="inventory_create_provider_name_empty_hint">Please enter name of provider</string>
+    <!--请先输入单价-->
+    <string name="inventory_create_price_empty_hint">Please enter price</string>
+    <!--无效的管理员-->
+    <string name="inventory_useless_administrator">Invalid administrator</string>
+    <!--请选择领用人-->
+    <string name="inventory_select_need_person_tip">Please select receiver</string>
+    <!--请选择领用人-->
+    <string name="inventory_select_reservation_person_tip">Please select an applicant</string>
+    <!--请选择物料并填写出库数量-->
+    <string name="inventory_select_material_out_and_amount">Please enter the amount for receiving</string>
+    <string name="inventory_select_material_out_and_amount_not_null">Please enter the amount for receiving</string>
+    <string name="inventory_select_material_out_and_amount_gt_zero">Delivery number needs to be greater than 0</string>
+    <string name="inventory_select_material_move_and_amount_not_null">Please enter the amount for receiving</string>
+    <string name="inventory_select_material_move_and_amount_gt_zero">Move number needs to be greater than 0</string>
+    <!--未选择仓库，或该仓库暂无管理员-->
+    <string name="inventory_no_storage_or_no_administrator">Please select one warehouse</string>
+    <!--该仓库暂无管理员-->
+    <string name="inventory_no_administrator">The warehouse have none administrator</string>
+    <!--请确认已选择领用人-->
+    <string name="inventory_confrim_select_need_people">Please select receiver！</string>
+    <!--请确认已选择预订人-->
+    <string name="inventory_confrim_select_reservation_people">Please select reservation！</string>
+    <!--物资二维码不存在或匹配出错-->
+    <string name="inventory_qr_code_error">QR code wrong</string>
+    <!--请添加物料-->
+    <string name="inventory_add_material">Please select a material first</string>
+    <!--请添加批次-->
+    <string name="inventory_add_batch">Please add batch</string>
+    <!--请选择目标仓库-->
+    <string name="inventory_target_storage_empty_hint">Please select target warehouse</string>
+    <!--原仓库管理员无效-->
+    <string name="inventory_original_administrator_useless">The original warehouse administrator is invalid</string>
+    <!--目标仓库管理员无效-->
+    <string name="inventory_target_administrator_useless">The target warehouse administrator is invalid</string>
+    <!--请选择物料并填写移库数量-->
+    <string name="inventory_select_material_and_amount">Please enter the amount for move</string>
+    <!--请选择物料并填写预定数量-->
+    <string name="inventory_select_material_and_reserve_amount">Please select one more materials and enter the amount for reserve</string>
+    <!--仓库相同-->
+    <string name="inventory_storage_equal">The source warehouse is the same as the target warehouse</string>
+    <!--预定出库-->
+    <string name="inventory_reserve_out">Reserved</string>
+    <!--直接出库-->
+    <string name="inventory_direct_out">Direct</string>
+    <!--请先选择仓库管理员-->
+    <string name="inventory_select_administrator_tip">Please select an administrator</string>
+    <!--请先选择审批主管-->
+    <string name="inventory_select_supervisor_tip">Please select a supervisor</string>
+    <!--无效的审批主管-->
+    <string name="inventory_useless_supervisor">Invalid Supervisor</string>
+    <!--当前库存不足，请确认-->
+    <string name="inventory_material_no_amount">Under stock,pls confirm</string>
+    <!--添加-->
+    <string name="inventory_add">Add</string>
+    <!--请填写预定数量-->
+    <string name="inventory_input_reserve_amount">Please enter the reservation number</string>
+    <!--预定数量不能为空或负数，请确认-->
+    <string name="inventory_reserve_empty_hint">Book number is not empty or negative number,pls confirm</string>
+    <!--出库物资调整-->
+    <string name="inventory_out_adjusst_title">Out Adjust</string>
+    <!--出库批次-->
+    <string name="inventory_material_out_batches">Batch</string>
+    <!--出库数量：-->
+    <string name="inventory_material_out_quantity">Out Amount：</string>
+    <!--移库批次-->
+    <string name="inventory_material_move_batches">Batch</string>
+    <!--移库数量-->
+    <string name="inventory_material_move_quantity">Move amount：</string>
+    <!--盘点批次-->
+    <string name="inventory_material_check_batches">Verify batch</string>
+    <!--盘点数量-->
+    <string name="inventory_material_check_quantity">Check Amount：</string>
+    <!--出库数量不能大于账面数量-->
+    <string name="inventory_out_exception_plss">Out count can not more than storage count</string>
+    <!--出库数量不能大于预定数量-->
+    <string name="inventory_out_exception_pls">Out count can not more than reserve count</string>
+    <!--出库数量不能大于有效数量-->
+    <string name="inventory_material_out_exception_pls">Out count can not more than valid count</string>
+    <!--移库数量不能大于账面数量-->
+    <string name="inventory_material_move_exception_pls">Move count can not more than storage count</string>
+    <!--该物资暂无批次，不能进行盘点-->
+    <string name="inventory_stock_no_batch_tip">The material without batches should not do stocktaking</string>
+    <!--请添加批次-->
+    <string name="inventory_add_batch_pls">Please add one more batch</string>
+    <!--物资仓库不存在无法移库-->
+    <string name="inventory_material_storage_none_">Material warehouse does not exist can not move</string>
+    <!--该批次已添加-->
+    <string name="inventory_material_add_batch_existed">This batch has been added</string>
+    <!--修改数量-->
+    <string name="inventory_material_editor_number">Edit Amount</string>
+    <!--请输入出库数量-->
+    <string name="inventory_material_input_out_number">Please enter Amount</string>
+    <!--请输入移库数量-->
+    <string name="inventory_material_input_move_number">Please enter Amount</string>
+    <!--请输入盘点数量-->
+    <string name="inventory_material_input_check_number">Please enter Amount</string>
+    <!--请输入盘点说明-->
+    <string name="inventory_material_check_hint">Please enter description...</string>
+    <!--取消预定-->
+    <string name="inventory_reserve_cancel">Cancellation</string>
+    <!--审批-->
+    <string name="inventory_menu_approval">Approve</string>
+    <!--已驳回，不可操作-->
+    <string name="inventory_not_operate">Rejected, not operational</string>
+    <!--有库存-->
+    <string name="inventory_material_in_stock">In Stock</string>
+    <!--无库存-->
+    <string name="inventory_material_not_in_stock">No Stocks</string>
+    <!--有效数量-->
+    <string name="inventory_effective_number">Inventory Number：</string>
+    <!--有效数量-->
+    <string name="inventory_effective_number_a">Inventory Number</string>
+    <!--账面数量-->
+    <string name="inventory_total_count">Storage Count：</string>
+    <!--数量-->
+    <string name="inventory_number">Amount：</string>
+    <!--数量-->
+    <string name="inventory_number_a">Amount</string>
+    <!--入库数量-->
+    <string name="inventory_material_in_quantity">Deposit Count：</string>
+    <!--预定数量-->
+    <string name="inventory_material_reserve_quantity">Reserved Number：</string>
+    <!--预定数量-->
+    <string name="inventory_material_reserve_quantity_tip">Reserved Number：</string>
+    <!--预定数量-->
+    <string name="inventory_material_reserve_quantity_a">Reserved Number</string>
+    <!--请输入预定数量-->
+    <string name="inventory_material_reserve_quantity_hint">Please enter reserved number</string>
+    <!--已预定数量-->
+    <string name="inventory_material_reservation_number">Reserved Number：</string>
+    <!--充足-->
+    <string name="inventory_enough">Enough</string>
+    <!--紧缺-->
+    <string name="inventory_lack">Lack</string>
+    <!--预定x-->
+    <string name="inventory_reserve_count">Reserved*</string>
+    <!--实领x-->
+    <string name="inventory_receiver_count">Received*</string>
+    <!--此物资不在%1$s仓库中-->
+    <string name="inventory_material_no_exist_inventory_tip">This material is not in %1$s warehouse</string>
+    <!--该编码的物资已存在，请重新输入-->
+    <string name="inventory_exist_same_warehouse_tip">As the inventory is exist in the warehouse. Please change the code to continue</string>
+    <!--其他仓库已存在此编码的物资，保存会覆盖物资名称、品牌、型号和单位，是否继续-->
+    <string name="inventory_exist_other_warehouse_tip">As the code is used by some other warehouse, the name, brand, model and unit will be covered for continue submitting？</string>
+    <!--你没有相应权限，请确认-->
+    <string name="inventory_invalid_token_limited">You do not have appropriate permissions,please confirm</string>
+    <!--取消出库-->
+    <string name="inventory_cancel_out">Refuse</string>
+    <!--请输入取消预定原因-->
+    <string name="inventory_cancel_reserve_tip">Please enter reason for your operation</string>
+    <!--请输入取消出库原因-->
+    <string name="inventory_cancel_out_tip">Please enter reason for your operation</string>
+    <!--审批预定-->
+    <string name="inventory_audit_book">Reservation Approval</string>
+    <!--过期时间-->
+    <string name="inventory_expiration_time">Due Date：</string>
+    <!--过期时间-->
+    <string name="inventory_expiration_time_a">Due Date</string>
+    <!--请选择过期时间-->
+    <string name="inventory_select_expiration_time_hint">Select Due Date</string>
+    <!--单价(元)：-->
+    <string name="inventory_material_unit_rmb">Unit-price(¥)：</string>
+    <!--单价(元)：-->
+    <string name="inventory_material_unit_rmb_a">Unit-price(¥)</string>
+    <!--单价-->
+    <string name="inventory_material_price">Price</string>
+    <!--请输入单价-->
+    <string name="inventory_material_input_cost_hint">Please enter price</string>
+    <!--入库时间：-->
+    <string name="inventory_material_in_time">Date In：</string>
+    <!--预定单号：-->
+    <string name="inventory_reserve_order_code">Code：</string>
+    <!--预定人：-->
+    <string name="inventory_reserve_person">Applicant：</string>
+    <!--预定人：-->
+    <string name="inventory_reserve_person_a">Applicant</string>
+    <!--请选择预定人-->
+    <string name="inventory_reserve_person_tip">Please select an applicant</string>
+    <!--预定时间：-->
+    <string name="inventory_reserve_time">Date：</string>
+    <!--仓库名称：-->
+    <string name="inventory_storage_name">Warehouse：</string>
+    <!--仓库名称：-->
+    <string name="inventory_storage_name_a">Warehouse</string>
+    <!--物资编码：-->
+    <string name="inventory_material_code">Code：</string>
+    <!--物资编码：-->
+    <string name="inventory_material_code_a">Code</string>
+    <!--物资名称：-->
+    <string name="inventory_material_name">Name：</string>
+    <!--物资名称：-->
+    <string name="inventory_material_name_a">Name</string>
+    <!--品牌：-->
+    <string name="inventory_material_brand">Brand：</string>
+    <!--品牌-->
+    <string name="inventory_material_brand_a">Brand</string>
+    <!--请输入品牌-->
+    <string name="inventory_brand_hint">Please enter brand</string>
+    <!--型号：-->
+    <string name="inventory_material_model">Model：</string>
+    <!--型号：-->
+    <string name="inventory_material_model_a">Model</string>
+    <!--请输入型号-->
+    <string name="inventory_model_hint">Please enter Model</string>
+    <!--货架：-->
+    <string name="inventory_material_shelve">Shelves：</string>
+    <!--货架：-->
+    <string name="inventory_material_shelve_a">Shelves</string>
+    <!--货架信息-->
+    <string name="inventory_material_shelve_hint">Please enter shelve Name</string>
+    <!--最低库存量：-->
+    <string name="inventory_material_minimum_stock">Min Number：</string>
+    <!--最低库存量：-->
+    <string name="inventory_material_minimum_stock_a">Min Number</string>
+    <!--请输入最低库存量-->
+    <string name="inventory_material_min_number_enter_hint">Please enter min number</string>
+    <!--入库单号：-->
+    <string name="inventory_material_in_code">Warehouse Number：</string>
+    <!--预定-->
+    <string name="inventory_reserve_tip">Reserved</string>
+    <!--实领-->
+    <string name="inventory_receive_tip">Received</string>
+    <!--管理员-->
+    <string name="inventory_material_admin">Administrator：</string>
+    <!--仓库位置-->
+    <string name="inventory_storage_location">Warehouse Position：</string>
+    <!--物资种类-->
+    <string name="inventory_material_kind">Material Species：</string>
+    <!--物资总量-->
+    <string name="inventory_material_total">Amounts：</string>
+    <!--低于最小量物资数-->
+    <string name="inventory_material_shortage_amount">Minimum Material Cnt：</string>
+    <!--(提示：物料只能从一个仓库中添加)-->
+    <string name="inventory_materials_add_hint">Notice:Add Materials from the same warehouse</string>
+    <!--基本信息(提示：物料只能从一个仓库中添加)-->
+    <string name="inventory_materials_add_hint_tip">Basic Info (Notice: Add Materials from the same warehouse)</string>
+    <!--点击选择仓库-->
+    <string name="inventory_select_storage_hint">Please select a warehouse</string>
+    <!--人员-->
+    <string name="inventory_person">Person</string>
+    <!--物料-->
+    <string name="inventory_material">Material</string>
+    <!--操作记录-->
+    <string name="inventory_history">History</string>
+    <!--查看全部-->
+    <string name="inventory_check_all">Show More Details</string>
+    <!--单位-->
+    <string name="inventory_unit_tip">Unit</string>
+    <!--单位-->
+    <string name="inventory_unit">Unit：</string>
+    <!--请输入单位-->
+    <string name="inventory_unit_hint">Please enter Unit</string>
+    <!--核定价格-->
+    <string name="inventory_material_ratified_price_tip">Check Price</string>
+    <!--核定价格(元)-->
+    <string name="inventory_material_ratified_price">Unit-Price(¥)：</string>
+    <!--请输入核定价格-->
+    <string name="inventory_material_check_price_enter_hint">Please enter check price</string>
+    <!--初始数量-->
+    <string name="inventory_material_initial_number">Initial Number</string>
+    <!--请输入初始数量-->
+    <string name="inventory_material_initial_number_hint">Please enter initial number</string>
+    <!--备注-->
+    <string name="inventory_material_desc">Description</string>
+    <!--备注-->
+    <string name="inventory_material_desc_tip">Description：</string>
+    <!--备注-->
+    <string name="inventory_material_desc_a">Description：</string>
+    <!--领用人-->
+    <string name="inventory_receive_person_tip">Receiver</string>
+    <!--点击选择领用人-->
+    <string name="inventory_select_receive_person_hint">Please select an receiver</string>
+    <!--主管-->
+    <string name="inventory_supervisor">Supervisor</string>
+    <!--请选择主管-->
+    <string name="inventory_select_superisor_tip">Please select a supervisor</string>
+    <!--点击选择主管-->
+    <string name="inventory_select_supervisor_hint">Please select a supervisor</string>
+    <!--原仓库-->
+    <string name="inventory_original_storage">Src Warehouse</string>
+    <!--目标仓库-->
+    <string name="inventory_target_storage">Target Warehouse</string>
+    <!--原仓库管理员-->
+    <string name="inventory_storage_administrator_original">Src warehouse administrator</string>
+    <!--目标仓库管理员-->
+    <string name="inventory_storage_administrator_target">Target warehouse administrator</string>
+    <!--审批主管-->
+    <string name="inventory_audit_supervisor">Supervisor</string>
+    <!--点击选择审批主管-->
+    <string name="inventory_add_supervisor_hint">Please select a supervisor</string>
+    <!--总计：-->
+    <string name="inventory_total_cost">Total：</string>
+    <!--编码-->
+    <string name="inventory_material_code_tip">Code</string>
+    <!--编码-->
+    <string name="inventory_material_code_tip_a">Code：</string>
+    <!--请选择物料-->
+    <string name="inventory_select_material_hint">Please select a material</string>
+    <!--物料名称-->
+    <string name="inventory_material_name_tip">Name</string>
+    <!--费用(单价)：-->
+    <string name="inventory_material_cost_unit">Cost(U/P)</string>
+    <!--已添加-->
+    <string name="inventory_desc_edit_tip">Edited</string>
+    <!--入库批次-->
+    <string name="inventory_material_in_batches">Inventory Batch</string>
+    <!--当前物资记录-->
+    <string name="inventory_currently_material_record">Material Record</string>
+    <!--请输入物资名称-->
+    <string name="inventory_input_material_name_hint">Please enter search keywords</string>
+    <!--库存量-->
+    <string name="inventory_material_total_number">Inventory Number</string>
+    <!--关联工单-->
+    <string name="inventory_relate_order">Related Order</string>
+    <!--物资信息-->
+    <string name="inventory_material_info_title">Materials Info</string>
+    <!--名称-->
+    <string name="inventory_material_info_name">Name：</string>
+
+
+    <!--无更多数据-->
+    <string name="inventory_no_more_data">No data</string>
+    <!--操作失败-->
+    <string name="inventory_operate_fail">Operate failed</string>
+    <!--操作成功-->
+    <string name="inventory_operate_success">Operate successfully</string>
+    <!--再按一次退出-->
+    <string name="inventory_press_exit_again">Press exit again</string>
+    <!--取消-->
+    <string name="inventory_cancel">Cancel</string>
+    <!--提示-->
+    <string name="inventory_remind">Tips</string>
+    <!--确定-->
+    <string name="inventory_sure">Confirm</string>
+    <!--是否确定删除该图片-->
+    <string name="inventory_sure_delete_photo">Whether delete this photo or not?</string>
+    <!--你最多可以选择%d张图片-->
+    <string name="inventory_select_photo_at_most">You can select at most %d images</string>
+    <!--暂无功能-->
+    <string name="inventory_no_function">No function</string>
+    <!--通过-->
+    <string name="inventory_pass">Pass</string>
+    <!--不通过-->
+    <string name="inventory_not_pass">Reject</string>
+    <!--请输入原因...-->
+    <string name="inventory_input_reason">Please enter reason...</string>
+    <!--保存-->
+    <string name="inventory_save">Save</string>
+    <!--请输入备注...-->
+    <string name="inventory_input_desc">Please enter description...</string>
+    <!--供应商-->
+    <string name="inventory_provider">Provider：</string>
+    <!--供应商-->
+    <string name="inventory_provider_a">Provider</string>
+    <!--请输入或选择供应商-->
+    <string name="inventory_provider_select_hint">Please select provider</string>
+    <!--删除-->
+    <string name="inventory_delete">Delete</string>
+    <!--关联工单：-->
+    <string name="inventory_relate_order_title">Related Order：</string>
+    <!--理由-->
+    <string name="inventory_reason">Reason：</string>
+    <!--扫一扫-->
+    <string name="inventory_scan_tip">Scan QR Code</string>
+    <!--请输入过滤条件-->
+    <string name="inventory_enter_filter_conditions_hint">Please enter the filtering criteria</string>
+    <!--查看全部-->
+    <string name="inventory_see_all">Show More Details</string>
+    <!--重置-->
+    <string name="inventory_filter_reset">Reset</string>
+    <!--确定-->
+    <string name="inventory_filter_sure">Confirm</string>
+    <!--基本信息-->
+    <string name="inventory_basic_info">Basic Info</string>
+    <!--照片-->
+    <string name="inventory_photo">Photos：</string>
+    <!--附件-->
+    <string name="inventory_attachment">Attachment：</string>
+    <!--选择照片-->
+    <string name="inventory_select_photo_title">Select Photo</string>
+    <!--从相册中选择-->
+    <string name="inventory_select_photo">Choose From Photos</string>
+    <!--拍照-->
+    <string name="inventory_take_photo">Camera</string>
+    <!--请选择仓库-->
+    <string name="inventory_material_describe_storage_hint">Please select a warehouse</string>
+    <!--仓库-->
+    <string name="inventory_storage">Warehouse</string>
+    <!--请输入物资编码-->
+    <string name="inventory_material_create_code_empty_hint">Please enter code</string>
+    <!--请输入单价-->
+    <string name="inventory_material_input_price_hint">Please enter price</string>
+    <!--请选择过期时间-->
+    <string name="inventory_material_create_due_date_select_hint">Please select due date</string>
+    <!--操作步骤-->
+    <string name="inventory_record_history_step">Step:</string>
+    <!--操作内容-->
+    <string name="inventory_record_history_content">Comments:</string>
+</resources>

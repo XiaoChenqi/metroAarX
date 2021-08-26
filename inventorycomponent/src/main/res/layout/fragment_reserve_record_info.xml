@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/app_bg"
+              android:orientation="vertical">
+
+    <com.qmuiteam.qmui.widget.QMUITopBarLayout
+        android:id="@+id/ui_topbar"
+        style="@style/commonTopbarStyle"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/reserve_record_info_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/reserve_record_info_basic_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <!--基本信息-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dp_16"
+                    android:paddingRight="@dimen/dp_16">
+
+                    <TextView
+                        style="@style/h3_15_9_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/inventory_basic_info"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_6"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@color/red"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_11"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        style="@style/inventoryInfoStyle"
+                        android:layout_marginTop="@dimen/dp_16">
+
+                        <TextView
+                            style="@style/content_text_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/inventory_reserve_order_code"/>
+
+                        <TextView
+                            android:id="@+id/reserve_record_info_reservation_code_tv"
+                            style="@style/h5_text_style"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+
+                        <TextView
+                            android:id="@+id/reserve_record_info_status_tv"
+                            style="@style/tag_text_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_20"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        style="@style/inventoryInfoStyle">
+
+                        <TextView
+                            style="@style/content_text_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/inventory_reserve_time"/>
+
+                        <TextView
+                            android:id="@+id/reserve_record_info_reservation_date_tv"
+                            style="@style/h5_text_style"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/inventoryInfoStyle">
+
+                        <TextView
+                            style="@style/content_text_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/inventory_storage_name"/>
+
+                        <TextView
+                            android:id="@+id/reserve_record_info_storage_name_tv"
+                            style="@style/h5_text_style"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/reserve_record_info_related_workorder_ll"
+                        style="@style/inventoryInfoStyle">
+
+                        <TextView
+                            style="@style/content_text_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/inventory_relate_order_title"/>
+
+                        <TextView
+                            android:id="@+id/reserve_record_info_related_workorder_code_tv"
+                            style="@style/h5_text_style"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/blue_normal"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/reserve_record_info_basic_desc_ll"
+                        style="@style/inventoryInfoStyle">
+
+                        <TextView
+                            style="@style/content_text_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/inventory_material_desc_tip"/>
+
+                        <TextView
+                            android:id="@+id/reserve_record_info_desc_tv"
+                            style="@style/h5_text_style"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"/>
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/reserve_record_info_reason_ll"
+                        style="@style/inventoryInfoStyle"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/content_text_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/inventory_reason"/>
+
+                        <TextView
+                            android:id="@+id/reserve_record_info_reason_tv"
+                            style="@style/h5_text_style"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <View
+                    style="@style/secant_line_style"/>
+
+            </LinearLayout>
+
+
+            <TextView
+                style="@style/h3_15_9_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_6"
+                android:gravity="center_vertical"
+                android:text="@string/inventory_person"
+                android:padding="@dimen/dp_10"/>
+
+            <!--仓库管理员-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/reserve_record_info_administrator_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_et_hint="@string/inventory_administrator_select_title"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="false"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="false"
+                app:fm_content_item_title="@string/inventory_administrator_select_title" />
+
+
+            <!--预订人-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/reserve_record_info_reservation_person_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_et_hint="@string/inventory_reserve_person_tip"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="false"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="false"
+                app:fm_content_item_title="@string/inventory_reserve_person_a" />
+
+
+            <!--主管-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/reserve_record_info_supervisor_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_et_hint="@string/inventory_select_superisor_tip"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="false"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="false"
+                app:fm_content_item_title="@string/inventory_supervisor" />
+
+
+            <!--领用人-->
+            <LinearLayout
+                android:id="@+id/reserve_record_info_receiving_person_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                    android:id="@+id/reserve_record_info_receiving_person_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/list_item_bg"
+                    app:fm_content_item_et_hint="@string/inventory_select_receive_person_hint"
+                    app:fm_content_item_show_line="true"
+                    app:fm_content_item_show_red="true"
+                    app:fm_content_item_show_tip="true"
+                    app:fm_content_item_show_tip_icon="true"
+                    app:fm_content_item_title="@string/inventory_receive_person_tip" />
+
+            </LinearLayout>
+
+            <!--备注-->
+            <LinearLayout
+                android:id="@+id/reserve_record_info_desc_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dp_16"
+                    android:paddingRight="@dimen/dp_16">
+
+                    <TextView
+                        style="@style/h3_15_9_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/inventory_material_desc"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_6"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@color/red"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+                <com.facilityone.wireless.a.arch.widget.EditNumberView
+                    android:id="@+id/reserve_record_info_desc_env"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_11"
+                    android:background="@color/white"
+                    app:fm_edit_number_desc="@string/inventory_input_desc"/>
+
+                <View style="@style/secant_line_style"/>
+
+            </LinearLayout>
+
+            <!--物料-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dp_16"
+                    android:paddingRight="@dimen/dp_16">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        style="@style/h3_15_9_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/inventory_material"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_6"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@color/red"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/reserve_record_info_material_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_11"
+                    android:background="@color/white"
+                    android:overScrollMode="never"
+                    android:scrollbars="none"/>
+
+                <View
+                    style="@style/secant_line_style"
+                    android:visibility="gone"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_50"
+                    android:background="@color/white"
+                    android:paddingRight="@dimen/dp_16">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/reserve_record_info_total_money_tv"
+                        android:text="@string/inventory_total_cost"
+                        android:textColor="@color/grey_6"
+                        android:textSize="@dimen/sp_14"/>
+
+                    <TextView
+                        android:id="@+id/reserve_record_info_total_money_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="800"
+                        android:textColor="@color/red_ff6666"
+                        android:textSize="@dimen/sp_24"/>
+                </RelativeLayout>
+
+                <View
+                    style="@style/secant_line_style"/>
+
+            </LinearLayout>
+
+
+            <!--操作记录-->
+            <LinearLayout
+                android:id="@+id/reserve_record_info_history_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dp_16"
+                    android:paddingRight="@dimen/dp_16">
+
+                    <TextView
+                        style="@style/h3_15_9_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/inventory_history"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_6"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@color/red"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/reserve_record_info_history_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_11"
+                    android:background="@color/white"
+                    android:overScrollMode="never"
+                    android:scrollbars="none"/>
+
+                <LinearLayout
+                    android:id="@+id/reserve_record_info_check_all_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_43"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/list_item_bg"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dp_16"
+                    android:paddingRight="@dimen/dp_16"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/h3_text_style"
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/inventory_check_all" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/icon_right"
+                        android:textColor="@color/grey_9"
+                        android:textSize="@dimen/sp_14"/>
+
+                </LinearLayout>
+
+                <View
+                    style="@style/secant_line_style"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
+
+

@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <!--物资信息标题-->
+    <LinearLayout
+        android:id="@+id/material_info_title_ll"
+        style="@style/contentTitleLayoutStyle">
+
+        <View
+            style="@style/demandWorkTitleIconStyle"/>
+
+        <TextView
+            style="@style/h3_text_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/dp_15"
+            android:text="@string/inventory_material_info_title"/>
+
+        <LinearLayout
+            android:id="@+id/material_info_reserve_count_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_6">
+
+            <TextView
+                style="@style/h3_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_material_reserve_quantity_tip"/>
+
+            <TextView
+                android:id="@+id/material_info_reserve_count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.00"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/sp_15"/>
+        </LinearLayout>
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/material_info_expand_itv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/icon_arrow_down"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/sp_18"/>
+
+    </LinearLayout>
+
+    <View
+        style="@style/secant_line_style"/>
+
+    <!--物资信息第一部分-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_18">
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_material_code_tip_a"/>
+
+            <TextView
+                android:id="@+id/material_info_code_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_material_info_name"/>
+
+            <TextView
+                android:id="@+id/material_info_name_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_storage_name"/>
+
+            <TextView
+                android:id="@+id/material_info_storage_name_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_material_brand"/>
+
+            <TextView
+                android:id="@+id/material_info_brand_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_material_shelve"/>
+
+            <TextView
+                android:id="@+id/material_info_shelves_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_unit"/>
+
+            <TextView
+                android:id="@+id/material_info_unit_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_material_model"/>
+
+            <TextView
+                android:id="@+id/material_info_model_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--物资信息第二部分-->
+    <LinearLayout
+        android:id="@+id/material_info_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_material_ratified_price"/>
+
+            <TextView
+                android:id="@+id/material_info_price_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_material_minimum_stock"/>
+
+            <TextView
+                android:id="@+id/material_info_min_number_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_total_count"/>
+
+            <TextView
+                android:id="@+id/material_info_total_number_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_material_reservation_number"/>
+
+            <TextView
+                android:id="@+id/material_info_reserved_number_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_material_desc_a"/>
+
+            <TextView
+                android:id="@+id/material_info_desc_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/material_info_photo_ll"
+            style="@style/inventoryInfoStyle"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_photo"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/material_info_photo_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:scrollbars="none"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/material_info_attachment_ll"
+            style="@style/inventoryInfoStyle"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_attachment"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/material_info_attachment_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:scrollbars="none"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        style="@style/secant_line_style"
+        android:layout_marginBottom="@dimen/dp_10"/>
+
+</LinearLayout>

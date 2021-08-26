@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="inventory_top_color">#a089da</color>
+    <color name="grey_cd">#cdcdcd</color>
+    <color name="red_f55858">#f55858</color>
+    <color name="inventory_status_green">@color/green_1ab394</color>
+    <color name="inventory_status_red">@color/red_ff6666</color>
+
+    <color name="tab_panel_divider">#cccccc</color>
+    <!--tag相关颜色-->
+    <color name="inventory_tag_status_orange">#ff9900</color>
+    <color name="inventory_tag_status_blue">#10aeff</color>
+    <color name="inventory_tag_status_red">#ff6666</color>
+    <color name="inventory_tag_status_grey">#a6a6a6</color>
+
+</resources>

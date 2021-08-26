@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 库存状态 -->
+    <string-array name="inventory_status">
+        <item>In Approving</item>
+        <item>Passed</item>
+        <item>Cancelled</item>
+        <item>Finished</item>
+        <item>Cancel Delivery</item>
+        <item>Cancel Reservation</item>
+    </string-array>
+
+    <!-- 物资查询数量类型 -->
+    <string-array name="material_type">
+        <item>Unlimited</item>
+        <item>Enough</item>
+        <item>Lack</item>
+    </string-array>
+
+    <!--预订单操作记录步骤-->
+    <string-array name="record_history_step">
+        <item>Reserve</item>
+        <item>Reject</item>
+        <item>Approve</item>
+        <item>Material Out</item>
+        <item>Cancel Reservation</item>
+        <item>Cancel Out</item>
+    </string-array>
+
+
+</resources>

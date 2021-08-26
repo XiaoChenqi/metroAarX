@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/list_item_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle"
+            android:paddingTop="@dimen/dp_16">
+
+            <TextView
+                android:id="@+id/record_history_item_handler_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/record_history_item_operation_date_tv"
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_record_history_step"/>
+
+            <TextView
+                android:id="@+id/record_history_item_step_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/inventoryInfoStyle">
+
+            <TextView
+                style="@style/content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inventory_record_history_content"/>
+
+            <TextView
+                android:id="@+id/record_history_item_content_tv"
+                style="@style/h5_text_style"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/record_history_item_secant_line"
+        style="@style/secant_line_style"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/record_history_item_dash_line"
+        style="@style/dash_line_style"/>
+
+</LinearLayout>

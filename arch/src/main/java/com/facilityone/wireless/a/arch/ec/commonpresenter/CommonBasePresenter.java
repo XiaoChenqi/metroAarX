@@ -294,7 +294,7 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
         String url2 = url+"?app_type=android&app_version=0.0.0&current_project=1&i18n=zh_CN";
 
 
-        OkGo.<BaseResponse<FunctionService.FunctionUndoBean>>post(url2)
+        OkGo.<BaseResponse<FunctionService.FunctionUndoBean>>post(url)
                 .isSpliceUrl(true)
                 .upJson(typeJson)
                 .tag(getV())
