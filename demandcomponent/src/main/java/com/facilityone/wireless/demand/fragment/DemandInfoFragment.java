@@ -32,7 +32,6 @@ import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.OrdersBean;
 import com.facilityone.wireless.a.arch.ec.module.RequesterBean;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
-import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.offline.dao.BuildingDao;
 import com.facilityone.wireless.a.arch.offline.dao.CityDao;
@@ -75,6 +74,13 @@ import java.util.List;
  * Email: xuhaozv@163.com
  * description:
  * Date: 2018/6/28 下午6:07
+ */
+
+/**
+ * Author：Karelie
+ * Email:
+ * description:报障详情
+ * Date: 2021/8/4 10:55
  */
 public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener, AudioAdapter.onRemoveAudioListener, BottomTextListSheetBuilder.OnSheetItemClickListener, FMBottomInputSheetBuilder.OnInputBtnClickListener {
 
@@ -151,6 +157,12 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
     private Long mReqTypeId;//新的需求类型 ID
     private boolean notQuery;
     private boolean fromMsg;
+
+
+    /**
+     * 四运
+     */
+    private TextView mAssureNumber;
 
     @Override
     public DemandInfoPresenter createPresenter() {
@@ -242,6 +254,8 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
 
         mEditServiceTypeTv = findViewById(R.id.service_type_edit_tv);
 
+        mAssureNumber = findViewById(R.id.tv_assure_number);
+
         mRvAttachments.setNestedScrollingEnabled(false);
         mRvPhoto.setNestedScrollingEnabled(false);
         mRvVideo.setNestedScrollingEnabled(false);
@@ -256,9 +270,9 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
 
         if (mType == DemandConstant.DEMAND_REQUES_UNFINISH) {
             mInputLL.setVisibility(View.VISIBLE);
-            mEditServiceTypeTv.setVisibility(View.VISIBLE);
+//            mEditServiceTypeTv.setVisibility(View.VISIBLE);
         } else if (mType == DemandConstant.DEMAND_REQUEST_UNCHECK) {
-            mEditServiceTypeTv.setVisibility(View.VISIBLE);
+//            mEditServiceTypeTv.setVisibility(View.VISIBLE);
         }
     }
 
@@ -313,30 +327,35 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
         getPresenter().getDemandInfo(mDemandId);
     }
 
+
+    /**
+     * int DEMAND_ASSURE_UNFINISH = 1;  //待处理报障
+     * int DEMAND_ASSURE_EVALUATED = 2; //待评价报障
+     * int DEMAND_ASSURE_COMPLETE = 5;   //待完善报障
+     * int DEMAND_ASSURE_QUERY = 4;    //报障查询
+     */
     @Override
     public void onMoreMenuClick(View view) {
         if (fromMsg) {
             if (mData != null && mData.status != null) {
                 switch (mData.status) {
-                    case DemandConstant.DEMAND_STATUS_CREATED://待审批需求
-                        BottomTextListSheetBuilder builder2 = new BottomTextListSheetBuilder(getContext());
-                        builder2.addItem(R.string.demand_approval_title)
-                                .addItem(R.string.demand_cancel)
-                                .setOnSheetItemClickListener(DemandInfoFragment.this)
-                                .build().show();
-                        break;
-                    case DemandConstant.DEMAND_STATUS_PROGRESS://待处理需求
+//                    case DemandConstant.DEMAND_STATUS_CREATED://待审批需求
+//                        BottomTextListSheetBuilder builder2 = new BottomTextListSheetBuilder(getContext());
+//                        builder2.addItem(R.string.demand_approval_title)
+//                                .addItem(R.string.demand_cancel)
+//                                .setOnSheetItemClickListener(DemandInfoFragment.this)
+//                                .build().show();
+//                        break;
+                    case DemandConstant.DEMAND_ASSURE_UNFINISH://待处理报障
                         BottomTextListSheetBuilder builder = new BottomTextListSheetBuilder(getContext());
-                        if (!orderIn) {
-                            builder.addItem(R.string.demand_generate_work_order);
-                        }
-                        builder.addItem(R.string.demand_finish)
+                        builder.addItem("保存")
+                                .addItem(R.string.demand_finish)
                                 .addItem(R.string.demand_cancel)
                                 .setOnSheetItemClickListener(DemandInfoFragment.this)
                                 .build().show();
 
                         break;
-                    case DemandConstant.DEMAND_STATUS_COMPLETED://待评价需求
+                    case DemandConstant.DEMAND_ASSURE_EVALUATED://待评价报障
                         BottomTextListSheetBuilder builder3 = new BottomTextListSheetBuilder(getContext());
                         builder3.addItem(R.string.demand_atisfaction)
                                 .addItem(R.string.demand_cancel)
@@ -347,24 +366,23 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
             }
         } else {
             switch (mType) {
-                case DemandConstant.DEMAND_REQUEST_UNCHECK://待审批需求
-                    BottomTextListSheetBuilder builder2 = new BottomTextListSheetBuilder(getContext());
-                    builder2.addItem(R.string.demand_approval_title)
-                            .addItem(R.string.demand_cancel)
-                            .setOnSheetItemClickListener(DemandInfoFragment.this)
-                            .build().show();
-                    break;
-                case DemandConstant.DEMAND_REQUES_UNFINISH://待处理需求
+//                case DemandConstant.DEMAND_REQUEST_UNCHECK://待审批需求
+//                    BottomTextListSheetBuilder builder2 = new BottomTextListSheetBuilder(getContext());
+//                    builder2.addItem(R.string.demand_approval_title)
+//                            .addItem(R.string.demand_cancel)
+//                            .setOnSheetItemClickListener(DemandInfoFragment.this)
+//                            .build().show();
+//                    break;
+                case DemandConstant.DEMAND_ASSURE_UNFINISH://待处理报障
                     BottomTextListSheetBuilder builder = new BottomTextListSheetBuilder(getContext());
-                    if (!orderIn) {
-                        builder.addItem(R.string.demand_generate_work_order);
-                    }
-                    builder.addItem(R.string.demand_finish)
+                    builder.addItem("保存")
+                            .addItem(R.string.demand_finish)
                             .addItem(R.string.demand_cancel)
                             .setOnSheetItemClickListener(DemandInfoFragment.this)
                             .build().show();
+
                     break;
-                case DemandConstant.DEMAND_REQUES_FINISH://待评价需求
+                case DemandConstant.DEMAND_ASSURE_EVALUATED://待评价报障
                     BottomTextListSheetBuilder builder3 = new BottomTextListSheetBuilder(getContext());
                     builder3.addItem(R.string.demand_atisfaction)
                             .addItem(R.string.demand_cancel)
@@ -382,7 +400,11 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
             Date date = new Date(data.createDate);
             mTvRequester.setText(String.format(getString(R.string.demand_create_by),
                     data.requester.name,
-                    TimeUtils.date2String(date, DateUtils.SIMPLE_DATE_FORMAT_ALL)));
+                    TimeUtils.date2String(date, DateUtils.SIMPLE_DATE_FORMAT_MDHM)));
+        }
+
+        if (data.code != null) {
+            mAssureNumber.setText(data.code + "");
         }
 
         updateTag(data);
@@ -410,18 +432,18 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
             }
             mTvLocation.setText(StringUtils.formatString(tempName, ""));
         }
-        if(data.reserveStartTime != null || data.reserveEndTime != null) {
+        if (data.reserveStartTime != null || data.reserveEndTime != null) {
             mLlReserveTime.setVisibility(View.VISIBLE);
             StringBuffer stringBuffer = new StringBuffer("");
-            if(data.reserveStartTime != null) {
+            if (data.reserveStartTime != null) {
                 stringBuffer.append(TimeUtils.date2String(new Date(data.reserveStartTime), DateUtils.SIMPLE_DATE_FORMAT_ALL));
             }
             stringBuffer.append("~");
-            if(data.reserveEndTime != null) {
+            if (data.reserveEndTime != null) {
                 stringBuffer.append(TimeUtils.date2String(new Date(data.reserveEndTime), DateUtils.SIMPLE_DATE_FORMAT_ALL));
             }
             mTvReserveTime.setText(stringBuffer.toString());
-        }else {
+        } else {
             mLlReserveTime.setVisibility(View.GONE);
         }
 
@@ -487,16 +509,17 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
             }
             mTvStatus.setBackgroundResource(resId);
 
-            hideShowMoreMenu(showMoreMenu & notQuery && hasPermission);
+//            hideShowMoreMenu(showMoreMenu & notQuery && hasPermission);
+            hideShowMoreMenu(true);
 
             if (fromMsg) {
                 mInputLL.setVisibility(View.GONE);
                 mEditServiceTypeTv.setVisibility(View.GONE);
                 if (data.status == DemandConstant.DEMAND_STATUS_PROGRESS && hasPermission) {
                     mInputLL.setVisibility(View.VISIBLE);
-                    mEditServiceTypeTv.setVisibility(View.VISIBLE);
+//                    mEditServiceTypeTv.setVisibility(View.VISIBLE);
                 } else if (data.status == DemandConstant.DEMAND_STATUS_CREATED && hasPermission) {
-                    mEditServiceTypeTv.setVisibility(View.VISIBLE);
+//                    mEditServiceTypeTv.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -706,7 +729,7 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
             builder.create(R.style.fmDefaultDialog).show();
         } else if (viewId == R.id.service_type_edit_tv) {
             //修改服务类型
-            startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_DEMAND_TYPE), REQUEST_DEMAND_TYPE);
+//            startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_DEMAND_TYPE), REQUEST_DEMAND_TYPE);
         }
     }
 
@@ -787,6 +810,11 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
         getActivity().bindService(intent, audioPlayConnection, Context.BIND_AUTO_CREATE);
     }
 
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/11
+      * @Infor: 右上角处理事件弹窗
+      */
     @Override
     public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
         if (tag.equals(getString(R.string.demand_generate_work_order))) {
@@ -868,6 +896,12 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
             builder.setTwoBtnRightInput(false);
             builder.setShowTip(getString(R.string.demand_input_approval_reason));
             build.show();
+        }else if (tag.equals("保存")){
+            showLoading();
+            DemandService.DemandOptReq request = new DemandService.DemandOptReq();
+            request.reqId = mDemandId;
+            request.operateType = DemandConstant.DEMAND_OPT_TYPE_SAVE;
+            getPresenter().optDemand(request);
         }
         dialog.dismiss();
     }
@@ -922,7 +956,7 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
                 pop();
                 break;
             case DemandConstant.DEMAND_OPT_TYPE_SAVE://保存
-                if (request.reqTypeId != null) {
+                if (request.reqId != null) {
                     dismissLoading();
                     Bundle bundle2 = new Bundle();
                     bundle2.putInt(DemandConstant.DEMANDOPTTYPE, DemandConstant.DEMAND_OPT_TYPE_FINISH);

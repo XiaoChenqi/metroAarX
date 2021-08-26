@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/dp_15"
-                    android:text="@string/demand_info_title"/>
+                    android:text="报障信息"/>
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/itv_expand"
@@ -78,6 +78,7 @@
 
                 </LinearLayout>
 
+                <!--报障编号-->
                 <LinearLayout
                     style="@style/demandInfoStyle">
 
@@ -85,7 +86,25 @@
                         style="@style/content_text_style"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/demand_type_tip"/>
+                        android:text="报障编号："/>
+
+                    <TextView
+                        android:id="@+id/tv_assure_number"
+                        style="@style/h5_text_style"
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/demandInfoStyle">
+
+                    <TextView
+                        style="@style/content_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="报障类型："/>
 
                     <TextView
                         android:id="@+id/tv_type"
@@ -98,29 +117,8 @@
                         android:id="@+id/service_type_edit_tv"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
-                        android:background="@drawable/edit_normal_shang"
                         android:layout_marginLeft="@dimen/dp_16"
                         android:visibility="gone"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/demandInfoStyle">
-
-                    <TextView
-                        style="@style/content_text_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/demand_origin_tip"/>
-
-                    <TextView
-                        android:id="@+id/tv_origin"
-                        style="@style/h5_text_style"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
 
                     <LinearLayout
                         android:id="@+id/demand_info_call_ll"
@@ -140,6 +138,28 @@
 
                     </LinearLayout>
 
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/demandInfoStyle">
+
+                    <TextView
+                        style="@style/content_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="报障来源："/>
+
+                    <TextView
+                        android:id="@+id/tv_origin"
+                        style="@style/h5_text_style"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+
+
+
 
                 </LinearLayout>
 
@@ -150,7 +170,7 @@
                         style="@style/content_text_style"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/demand_location_tip"/>
+                        android:text="报障站点："/>
 
                     <TextView
                         android:id="@+id/tv_location"
@@ -162,6 +182,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/ll_reserve_time"
                     style="@style/demandInfoStyle">
 
@@ -187,7 +208,7 @@
                         style="@style/content_text_style"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/demand_describe_tip"/>
+                        android:text="报障描述："/>
 
                     <TextView
                         android:id="@+id/tv_desc"

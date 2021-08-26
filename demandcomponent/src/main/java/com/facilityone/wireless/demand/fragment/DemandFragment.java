@@ -73,7 +73,7 @@ public class DemandFragment extends BaseFragment<DemandPresenter> implements Bas
     }
 
     private void initView() {
-        setTitle(R.string.demand_demand_title);
+        setTitle("报障台");
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), FunctionService.COUNT));
 //        mRecyclerView.addItemDecoration(new GridItemDecoration(getResources().getColor(R.color.grey_d6)));
@@ -111,24 +111,24 @@ public class DemandFragment extends BaseFragment<DemandPresenter> implements Bas
         BaseFragment baseFragment = null;
         switch (functionBean.index) {
             case DemandConstant.DEMAND_CREATE:
-                //创建需求
+                //
                 baseFragment = DemandCreateFragment.getInstance();
                 break;
             case DemandConstant.DEMAND_UNCHECK:
-                //待审批
-                baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_REQUEST_UNCHECK);
+                //待处理
+                baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_ASSURE_UNFINISH);
                 break;
             case DemandConstant.DEMAND_UNFINISH:
-                //待处理
-                baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_REQUES_UNFINISH);
+                //待评价报障
+                baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_ASSURE_EVALUATED);
                 break;
             case DemandConstant.DEMAND_FINISH:
-                //待评价
-                baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_REQUES_FINISH);
+                //待完善报障
+                baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_ASSURE_COMPLETE);
                 break;
             case DemandConstant.DEMAND_QUERY:
-                //查询
-                baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_REQUES_QUERY);
+                //报障查询
+                baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_ASSURE_QUERY);
                 break;
         }
         if (baseFragment != null) {

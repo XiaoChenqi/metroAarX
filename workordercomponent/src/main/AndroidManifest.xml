@@ -1,20 +1,26 @@
-<manifest package="com.facilityone.wireless.workorder"
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.facilityone.wireless.workorder">
 
-          xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-
-    <application
-        android:allowBackup="true"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
-
+    <application>
         <activity
             android:name=".WorkOrderActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.NoTranslucent"/>
-
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent" />
+        <activity
+            android:name=".WorkorderCreateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent" />
+        <activity
+            android:name=".WorkOrderInfoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent" />
     </application>
 
 </manifest>

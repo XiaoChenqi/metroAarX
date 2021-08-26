@@ -14,6 +14,13 @@ public interface DemandConstant {
     int DEMAND_FINISH = 3;   //待评价
     int DEMAND_QUERY = 4;    //查询
 
+    //四运基础下标
+    int DEMAND_NEW_CREATE = 0;   //创建
+    int DEMAND_ASSURE_UNFINISH = 1;  //待处理报障
+    int DEMAND_ASSURE_EVALUATED = 2; //待评价报障
+    int DEMAND_ASSURE_COMPLETE = 5;   //待完善报障
+    int DEMAND_ASSURE_QUERY = 4;    //报障查询
+
     //网络请求
     int DEMAND_REQUEST_UNCHECK = 0;  //待审批
     int DEMAND_REQUES_UNFINISH = 1; //待处理
@@ -68,5 +75,9 @@ public interface DemandConstant {
     int DEMAND_RULES_DEL = 1;               // 1—处理权限
     int DEMAND_RULES_SP = 2;                // 2—审批权限
     int DEMAND_RULES_PJ = 3;                // 3—评价权限
+
+    String PATROL_CODE = "PATROL"; //巡检二维码标识
+    String SIGIN_CODE = "USERINFO"; //人员签到二维码标识
+    String STOCK_CODE = "STOCK" ;//物资二维码标识
 
 }

@@ -65,7 +65,7 @@ android {
             dirs 'libs'
         }
     }
-    dataBinding{
+    dataBinding {
         enabled = true
     }
     compileOptions {
@@ -107,7 +107,7 @@ dependencies {
     api project(':patrolcomponent')
     api project(':workordercomponent')
     api project(':maintenancecomponent')
-    //api project(':demandcomponent')
+    api project(':demandcomponent')
     //api project(':scanzxing')
 
 

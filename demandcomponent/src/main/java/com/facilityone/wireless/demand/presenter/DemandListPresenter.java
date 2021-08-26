@@ -36,10 +36,10 @@ public class DemandListPresenter extends BasePresenter<DemandListFragment> {
                         getV().dismissLoading();
                         DemandService.DemandListResp data = response.body().data;
                         if (data == null || data.contents == null || data.contents.size() == 0) {
-                            getV().refreshSuccessUI(null,data.page,refresh);
+                            getV().refreshSuccessUI(null, data.page, refresh);
                             return;
                         }
-                        getV().refreshSuccessUI(data.contents,data.page,refresh);
+                        getV().refreshSuccessUI(data.contents, data.page, refresh);
                     }
 
                     @Override

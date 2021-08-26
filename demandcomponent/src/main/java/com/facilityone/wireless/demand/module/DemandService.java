@@ -22,6 +22,20 @@ public class DemandService {
         public List<DemandBean> contents;
     }
 
+    /**
+     * 四运新需求修改
+     * Coder:Karelie
+     * */
+
+    public static class DeviceInforListEnity{
+        public String deviceName; //设备名称
+        public String deviceNumber;  //设备编号
+        public String deviceLocation; //设备位置
+    }
+
+
+    /***********************************************************************************/
+
     //需求列表bean
     public static class DemandBean {
         public Long reqId;//需求ID
@@ -107,4 +121,21 @@ public class DemandService {
         public Integer attitude;
         public String desc;
     }
+
+    public static class DemandOperationReq{
+        public Long reqId; //需求Id
+        public Integer gradeId; //满意度
+        public String desc; //描述
+        /**
+         * @param operateType
+         *         0 — 审核通过
+         *         1 — 审核拒绝
+         *         2 — 保存
+         *         3 — 处理完成
+         *         4 — 满意度操作
+         * */
+        public Integer operateType; //操作类型
+
+    }
+
 }

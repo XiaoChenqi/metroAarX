@@ -34,6 +34,13 @@ import java.util.List;
  * description:需求列表通用页面
  * Date: 2018/6/21 下午4:07
  */
+
+/**
+ * Author：Karelie
+ * Email:
+ * description:报障列表通用界面
+ * Date: 2021/8/4 10:55
+ */
 public class DemandListFragment extends BaseFragment<DemandListPresenter> implements OnRefreshLoadMoreListener, View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
     private View mQueryHead;
     private TextView mPreTv;
@@ -93,20 +100,20 @@ public class DemandListFragment extends BaseFragment<DemandListPresenter> implem
         initDate();
         String title = "";
         switch (mType) {
-            case DemandConstant.DEMAND_REQUEST_UNCHECK:
-                title = getString(R.string.demand_uncheck);
+            case DemandConstant.DEMAND_ASSURE_UNFINISH:
+                title = "待处理报障";
                 noDateTime();
                 break;
-            case DemandConstant.DEMAND_REQUES_UNFINISH:
-                title = getString(R.string.demand_unfinish);
+            case DemandConstant.DEMAND_ASSURE_EVALUATED:
+                title = "待评价报障";
                 noDateTime();
                 break;
-            case DemandConstant.DEMAND_REQUES_FINISH:
-                title = getString(R.string.demand_unevaluate);
+            case DemandConstant.DEMAND_ASSURE_COMPLETE:
+                title = "待完善报障";
                 noDateTime();
                 break;
-            case DemandConstant.DEMAND_REQUES_QUERY:
-                title = getString(R.string.demand_query);
+            case DemandConstant.DEMAND_ASSURE_QUERY:
+                title = "报障查询";
                 mQueryHead.setVisibility(View.VISIBLE);
                 break;
         }
@@ -233,16 +240,17 @@ public class DemandListFragment extends BaseFragment<DemandListPresenter> implem
         DemandService.DemandBean demandBean = (DemandService.DemandBean) adapter.getData().get(position);
         mOptPosition = position;
         if (demandBean != null && demandBean.reqId != null) {
-            startForResult(DemandInfoFragment.getInstance(mType, demandBean.reqId), REQUEST_CODE_INFO_OPT);
+            if (mType ==DemandConstant.DEMAND_ASSURE_COMPLETE){ //待完善报障
+                startForResult(DemandCreateFragment.getInstance(mType, demandBean.reqId,"完善报障",true), REQUEST_CODE_INFO_OPT); //跳转至快速报障界面带参1
+            }else {
+                startForResult(DemandInfoFragment.getInstance(mType, demandBean.reqId), REQUEST_CODE_INFO_OPT);
+            }
         }
     }
 
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
-//        if (resultCode != RESULT_OK && data == null) {
-//            return;
-//        }
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_INFO_OPT) {
 //            int opt = data.getInt(DemandConstant.DEMANDOPTTYPE, -1);
 //            if (opt == DemandConstant.DEMAND_OPT_TYPE_FINISH || opt == DemandConstant.DEMAND_OPT_TYPE_PLEASED) {

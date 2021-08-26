@@ -18,4 +18,10 @@ public interface DemandUrl {
     String DEMAND_OPT_URL = "/m/v1/servicecenter/operation";
     //满意度评价
     String DEMAND_EVALUATE_URL = "/m/v1/servicecenter/evaluate";
+
+    //完善需求
+    String DEMAND_COMPLETE_DEVICE  = "/m/v1/servicecenter/improve";
+    //需求操作
+    String DEMAND_REPORT_OBSTACLE_OPERATION  = "/m/v1/servicecenter/operation";
+
 }

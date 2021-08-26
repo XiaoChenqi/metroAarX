@@ -12,7 +12,9 @@ import android.text.InputType;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.FileUtils;
@@ -30,12 +32,14 @@ import com.facilityone.wireless.a.arch.ec.audio.AudioPlayService;
 import com.facilityone.wireless.a.arch.ec.module.CommonUrl;
 import com.facilityone.wireless.a.arch.ec.module.ConstantMeida;
 import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
+import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
 import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.utils.FMFileUtils;
+import com.facilityone.wireless.a.arch.utils.NoDoubleClickListener;
 import com.facilityone.wireless.a.arch.utils.PictureSelectorManager;
 import com.facilityone.wireless.a.arch.widget.CustomContentItemView;
 import com.facilityone.wireless.a.arch.widget.EditNumberView;
@@ -47,9 +51,10 @@ import com.facilityone.wireless.basiclib.utils.PermissionHelper;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.facilityone.wireless.basiclib.video.SimplePlayer;
 import com.facilityone.wireless.basiclib.widget.FullyGridLayoutManager;
-import com.facilityone.wireless.demand.DemandCreateActivity;
 import com.facilityone.wireless.demand.R;
+import com.facilityone.wireless.demand.adapter.DeviceInforAdapter;
 import com.facilityone.wireless.demand.module.DemandCreateService;
+import com.facilityone.wireless.demand.module.DemandService;
 import com.facilityone.wireless.demand.presenter.DemandCreatePresenter;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -69,6 +74,13 @@ import java.util.regex.Pattern;
  * description:创建需求
  * Date: 2018/6/21 下午4:07
  */
+
+/**
+ * Author：Karelie
+ * Email:
+ * description:快速报障界面
+ * Date: 2021/8/4 10:55
+ */
 public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> implements View.OnClickListener,
         BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, PermissionHelper.OnPermissionGrantedListener, PermissionHelper.OnPermissionDeniedListener, FMBottomAudioSheetBuilder.OnAudioFinishListener, AudioAdapter.onRemoveAudioListener {
     private CustomContentItemView mTypeCiv;
@@ -85,6 +97,8 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
 
     private static final int MAX_PHOTO = 1000;
     private static final int REQUEST_DEMAND_TYPE = 5009;
+    private static final int REQUEST_DEMAND_LOCATION = 5010;
+    private static final int REQUEST_DEMAND_DEVICE = 5011;
     //图片
     private List<LocalMedia> mSelectList;
     private GridImageAdapter mGridImageAdapter;
@@ -96,7 +110,26 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
     private AudioAdapter mAudioAdapter;
 
     private DemandCreateService.DemandCreateReq request;
+    private DemandCreateService.CompleteDeviceReq requestComplete;
     private QMUIBottomSheet mAudioDialog;
+
+    /**
+     * 上海四运
+     * */
+    private CustomContentItemView mCivLocation;
+    private LinearLayout mChooseDevice; //选择设备布局
+    private RecyclerView mDeviceList; //设备列表
+    private DeviceInforAdapter mAdapter;
+    private List<DemandService.DeviceInforListEnity> deviceList;
+    private DemandService.DeviceInforListEnity deviceData;
+    private Boolean isCompeteDemand = false;
+    private List<String> deviceIdList;
+    private Long locationId; //位置Id
+    private Long deviceId; //设备Id
+    private LocationBean mLocationData; // 位置对象
+    private String mLocationName; //位置名称
+    private String mDesc;//故障描述
+
 
     @Override
     public DemandCreatePresenter createPresenter() {
@@ -115,15 +148,40 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        //TitleBar tb = new TitleBar(DemandCreateActivity.themeColor);
-        //TitleBar tb = new TitleBar(getActivity().getResources().getColor(R.color.green_1ab394));
-        //setTitleBarValues(tb);
         super.onViewCreated(view, savedInstanceState);
         initView();
         getPresenter().getUserInfo();
         initRecyclerView();
         initData();
         initAudioPlayService();
+        initOnClick();
+    }
+
+    private void initOnClick() {
+        mCivLocation.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            protected void onNoDoubleClick(View view) {
+                if (deviceIdList.size() > 0 ){
+                    showDeleteDeviceDialog("是否确定删除不是当前位置的设备？");
+                }else {
+                    startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_LOCATION), REQUEST_DEMAND_LOCATION);
+                }
+
+            }
+        });
+
+        mChooseDevice.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            protected void onNoDoubleClick(View view) {
+                if (!mCivLocation.getTipText().equals("")){
+                    startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_EQU,mLocationData,mLocationName), REQUEST_DEMAND_DEVICE);
+                }else {
+                    startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_EQU_ALL), REQUEST_DEMAND_DEVICE);
+                }
+
+            }
+        });
+
     }
 
     private void initAudioPlayService() {
@@ -156,6 +214,8 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
 
         mTelCiv.getInputEt().setInputType(InputType.TYPE_CLASS_PHONE);
 
+        mContactCiv.setInputText(SPUtils.getInstance(SPKey.SP_MODEL).getString(SPKey.USERNAME));
+
         InputFilter inputFilter = new InputFilter() {
 
             @Override
@@ -170,10 +230,22 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
             }
         };
         mTelCiv.getInputEt().setFilters(new InputFilter[]{ inputFilter });
+
+
+        /**
+         * 四运
+         * Coder:Karelie
+         * */
+        mCivLocation = findViewById(R.id.civ_location);
+        mChooseDevice = findViewById(R.id.demand_create_choose_device_all);
+        mDeviceList = findViewById(R.id.demand_create__device_list);
+
+
     }
 
     private void initRecyclerView() {
-        mSelectList = new ArrayList<>();
+
+
         mGridImageAdapter = new GridImageAdapter(mSelectList, false);
         FullyGridLayoutManager manager = new FullyGridLayoutManager(getContext(),
                 FullyGridLayoutManager.SPAN_COUNT,
@@ -200,10 +272,35 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         mAudioAdapter.setOnRemoveAudioListener(this);
         mAudioRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mAudioRv.setAdapter(mAudioAdapter);
+
+        deviceList = new ArrayList<>();
+        mDeviceList.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new DeviceInforAdapter(deviceList);
+        mDeviceList.setAdapter(mAdapter);
+        mAdapter.setOnItemChildClickListener(this);
     }
 
     private void initData() {
+        Bundle bundle = getArguments();
+        setTitle(bundle.getString("title")+"");
         request = new DemandCreateService.DemandCreateReq();
+        requestComplete = new DemandCreateService.CompleteDeviceReq();
+        isCompeteDemand = bundle.getBoolean("IsComplete",false);
+        mLocationName=bundle.getString("locationName","");
+        mLocationData=bundle.getParcelable("location");
+        mDesc=bundle.getString("desc","");
+        ArrayList<LocalMedia> imgs=bundle.getParcelableArrayList("images");
+        if (imgs!=null){
+            mSelectList=new ArrayList<>();
+            mSelectList.addAll(imgs);
+            mGridImageAdapter.replaceData(mSelectList);
+            showOrHidePhoto();
+        }
+
+        mNumberView.setDesc(mDesc);
+        mCivLocation.setTipText(mLocationName);
+        deviceIdList = new ArrayList<>();
+
     }
 
     public void refreshUserInfo(String userInfo) {
@@ -219,10 +316,29 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.civ_type) {
-            startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_DEMAND_TYPE), REQUEST_DEMAND_TYPE);
+            startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_SERVICE_TYPE), REQUEST_DEMAND_TYPE);
         } else if (v.getId() == R.id.iv_add_menu) {
             showBottomMenu();
         }
+    }
+
+    public void showDeleteDeviceDialog(String tip){
+        new FMWarnDialogBuilder(getContext()).setIconVisible(false)
+                .setSureBluBg(true)
+                .setTitle(R.string.demand_remind)
+                .setSure(R.string.demand_sure)
+                .setTip(tip)
+                .addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, View view) {
+                        dialog.dismiss();
+                        mAdapter.remove(0);
+                        mAdapter.notifyDataSetChanged();
+                        mNumberView.setDesc("");
+                        deviceIdList.clear();
+                        startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_LOCATION), REQUEST_DEMAND_LOCATION);
+                    }
+                }).create(R.style.fmDefaultWarnDialog).show();
     }
 
     @Override
@@ -240,7 +356,18 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
                 getPresenter().uploadFile(mAudioSelectList, CommonUrl.UPLOAD_VOICE_URL, ConstantMeida.AUDIO);
             } else {
                 showLoading();
-                getPresenter().createDemand();
+                if (!isCompeteDemand){
+                    getPresenter().createDemand();
+                }else {
+                    requestComplete.reqId = 0l;
+                    requestComplete.desc = mNumberView.getDesc();
+                    requestComplete.equipment = deviceIdList;
+                    requestComplete.photoIds = request.photoIds;
+                    requestComplete.audioIds = request.audioIds;
+                    requestComplete.videoIds = request.videoIds;
+                    getPresenter().completeDevice();
+                }
+
             }
         }
     }
@@ -269,11 +396,20 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
             return false;
         }
 
+        if (TextUtils.isEmpty(mCivLocation.getTipText())){
+            ToastUtils.showShort("请选择位置");
+            return false;
+        }
+
         return true;
     }
 
     public DemandCreateService.DemandCreateReq getRequest() {
         return request;
+    }
+
+    public DemandCreateService.CompleteDeviceReq getCompleteRequest() {
+        return requestComplete;
     }
 
     private void showBottomMenu() {
@@ -284,8 +420,8 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         FMBottomGridSheetBuilder builder = new FMBottomGridSheetBuilder(getActivity());
         builder.addItem(R.drawable.icon_more_choose_pic_selector, getString(R.string.demand_picture), TAG_MENU_CHOOSE_PIC, FMBottomGridSheetBuilder.FIRST_LINE)
                 .addItem(R.drawable.icon_more_camera_pic_selector, getString(R.string.demand_take_a_picture), TAG_MENU_CAMERA_PIC, FMBottomGridSheetBuilder.FIRST_LINE)
-                .addItem(R.drawable.icon_more_audio_selector, getString(R.string.demand_audio), TAG_MENU_AUDIO, FMBottomGridSheetBuilder.FIRST_LINE)
-                .addItem(R.drawable.icon_more_video_selector, getString(R.string.demand_video), TAG_MENU_VIDEO, FMBottomGridSheetBuilder.FIRST_LINE)
+//                .addItem(R.drawable.icon_more_audio_selector, getString(R.string.demand_audio), TAG_MENU_AUDIO, FMBottomGridSheetBuilder.FIRST_LINE)
+//                .addItem(R.drawable.icon_more_video_selector, getString(R.string.demand_video), TAG_MENU_VIDEO, FMBottomGridSheetBuilder.FIRST_LINE)
                 .setIsShowButton(false)
                 .setOnSheetItemClickListener(new FMBottomGridSheetBuilder.OnSheetItemClickListener() {
                     @Override
@@ -398,46 +534,68 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
 
     @Override
     public void onItemChildClick(final BaseQuickAdapter adapter, View view, final int position) {
-        String tip = getString(R.string.demand_sure_delete_video);
-        if (adapter == mGridImageAdapter) {
-            tip = getString(R.string.demand_sure_delete_photo);
-        }
-        new FMWarnDialogBuilder(getContext()).setIconVisible(false)
-                .setSureBluBg(true)
-                .setTitle(R.string.demand_remind)
-                .setSure(R.string.demand_sure)
-                .setTip(tip)
-                .addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, View view) {
-                        dialog.dismiss();
-                        GridImageAdapter tempAdapter = (GridImageAdapter) adapter;
-                        String path = "";
-                        LocalMedia item = tempAdapter.getItem(position);
-                        if (item != null) {
-                            if (item.isCut() && !item.isCompressed()) {
-                                path = item.getCutPath();
-                            } else if (item.isCompressed() || (item.isCut() && item.isCompressed())) {
-                                path = item.getCompressPath();
-                            } else {
-                                if (tempAdapter == mVideoGridImageAdapter) {
-                                    path = item.getPath();
+        if (adapter == mAdapter){
+            final String tip = "是否确定删除该设备？";
+            Button btn = view.findViewById(R.id.btn_delete_device_item);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new FMWarnDialogBuilder(getContext()).setIconVisible(false)
+                            .setSureBluBg(true)
+                            .setTitle(R.string.demand_remind)
+                            .setSure(R.string.demand_sure)
+                            .setTip(tip)
+                            .addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+                                @Override
+                                public void onClick(QMUIDialog dialog, View view) {
+                                    dialog.dismiss();
+                                    mAdapter.remove(0);
+                                    mAdapter.notifyDataSetChanged();
+                                    mNumberView.setDesc("");
+                                    deviceIdList.clear();
+                                }
+                            }).create(R.style.fmDefaultWarnDialog).show();
+                }
+            });
+
+        }else {
+            String tip = getString(R.string.demand_sure_delete_video);
+            if (adapter == mGridImageAdapter) {
+                tip = getString(R.string.demand_sure_delete_photo);
+            }
+            new FMWarnDialogBuilder(getContext()).setIconVisible(false)
+                    .setSureBluBg(true)
+                    .setTitle(R.string.demand_remind)
+                    .setSure(R.string.demand_sure)
+                    .setTip(tip)
+                    .addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, View view) {
+                            dialog.dismiss();
+                            GridImageAdapter tempAdapter = (GridImageAdapter) adapter;
+                            String path = "";
+                            LocalMedia item = tempAdapter.getItem(position);
+                            if (item != null) {
+                                if (item.isCut() && !item.isCompressed()) {
+                                    path = item.getCutPath();
+                                } else if (item.isCompressed() || (item.isCut() && item.isCompressed())) {
+                                    path = item.getCompressPath();
+                                } else {
+                                    if (tempAdapter == mVideoGridImageAdapter) {
+                                        path = item.getPath();
+                                    }
                                 }
                             }
+                            tempAdapter.remove(position);
+                            if (tempAdapter == mGridImageAdapter) {
+                                showOrHidePhoto();
+                            } else {
+                                showOrHideVideo();
+                            }
                         }
+                    }).create(R.style.fmDefaultWarnDialog).show();
+        }
 
-                        tempAdapter.remove(position);
-                        if (tempAdapter == mGridImageAdapter) {
-                            showOrHidePhoto();
-                        } else {
-                            showOrHideVideo();
-                        }
-
-//                        if (!"".equals(path)) {
-//                            FileUtils.deleteFile(path);
-//                        }
-                    }
-                }).create(R.style.fmDefaultWarnDialog).show();
     }
 
     @Override
@@ -491,7 +649,7 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         }
         SelectDataBean bean = data.getParcelable(ISelectDataService.SELECT_OFFLINE_DATA_BACK);
         switch (requestCode) {
-            case REQUEST_DEMAND_TYPE:
+            case REQUEST_DEMAND_TYPE: //选择服务类型
                 if (bean == null) {
                     mTypeCiv.setTipText("");
                     request.typeId = null;
@@ -501,7 +659,45 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
                     LogUtils.d("demand type :" + request.typeId);
                 }
                 break;
+            case REQUEST_DEMAND_LOCATION: //选择位置
+                if (bean != null) {
+                    mCivLocation.setTipText(bean.getFullName()+"");
+                    locationId = bean.getId();
+                    mLocationData = bean.getLocation();
+                    mLocationName = bean.getFullName()+"";
+                } else {
+                    mCivLocation.setTipText("");
+                    locationId = null;
+                    mLocationName = "";
+                    mLocationData = null;
+                }
+                break;
+            case REQUEST_DEMAND_DEVICE: //选择设备
+                if (bean == null){
 
+                }else {
+                    if (deviceIdList.size()>0){
+                        mNumberView.setDesc("");
+                    }
+                    mLocationData = null;
+                    deviceList = new ArrayList<>();
+                    deviceIdList = new ArrayList<>();
+                    deviceData = new DemandService.DeviceInforListEnity();
+                    deviceData.deviceLocation  = bean.getLocationName()+"";
+                    deviceData.deviceName = bean.getName()+"";
+                    deviceData.deviceNumber = bean.getFullName()+"";
+                    deviceList.add(deviceData);
+                    mAdapter.replaceData(deviceList);
+                    String desc = mNumberView.getDesc();
+                    mNumberView.setDesc(bean.getName()+bean.getFullName()+desc);
+                    deviceIdList.add(bean.getId()+"");
+                    if (bean.getLocation() != null){
+                        mLocationData = bean.getLocation();
+                    }
+                    mLocationName = bean.getLocationName()+"";
+                    mCivLocation.setTipText(bean.getLocationName()+"");
+                }
+                break;
         }
     }
 
@@ -525,5 +721,43 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
 
     public static DemandCreateFragment getInstance() {
         return new DemandCreateFragment();
+    }
+
+    public static DemandCreateFragment getInstance(String title) {
+        Bundle bundle = new Bundle();
+        bundle.putString("title", title);
+        DemandCreateFragment instance = new DemandCreateFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+
+    public static DemandCreateFragment getInstance(Integer type, Long reqId,String title,boolean isComplete) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("Asd", type);
+        bundle.putLong("Asd", reqId);
+        bundle.putString("title", title);
+        bundle.putBoolean("IsComplete",isComplete);
+        DemandCreateFragment instance = new DemandCreateFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+
+    public static DemandCreateFragment getInstance(Long reqId,String title,String locationName,LocationBean locationBean,String desc,boolean isComplete,List<LocalMedia> imageIds) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("location",locationBean);
+        bundle.putString("locationName",locationName);
+        bundle.putString("desc",desc);
+        bundle.putString("title", title);
+
+
+        if (imageIds!=null){
+            ArrayList<LocalMedia> medias = new ArrayList<>(imageIds);
+            bundle.putParcelableArrayList("images",medias);
+        }
+
+        bundle.putBoolean("IsComplete",isComplete);
+        DemandCreateFragment instance = new DemandCreateFragment();
+        instance.setArguments(bundle);
+        return instance;
     }
 }

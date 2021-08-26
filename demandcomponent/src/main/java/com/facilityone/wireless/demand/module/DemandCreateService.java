@@ -20,4 +20,14 @@ public class DemandCreateService {
         public List<String> videoIds;
     }
 
+
+    public static class CompleteDeviceReq{
+        public Long reqId;
+        public String desc;
+        public List<String> equipment;
+        public List<String> photoIds;
+        public List<String> audioIds;
+        public List<String> videoIds;
+    }
+
 }

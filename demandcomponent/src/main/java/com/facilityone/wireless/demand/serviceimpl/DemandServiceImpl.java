@@ -2,12 +2,16 @@ package com.facilityone.wireless.demand.serviceimpl;
 
 import android.os.Bundle;
 
+import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.componentservice.demand.DemandService;
 import com.facilityone.wireless.demand.fragment.DemandCreateFragment;
 import com.facilityone.wireless.demand.fragment.DemandFragment;
 import com.facilityone.wireless.demand.fragment.DemandInfoFragment;
 import com.facilityone.wireless.demand.module.DemandConstant;
+import com.luck.picture.lib.entity.LocalMedia;
+
+import java.util.List;
 
 /**
  * Author：gary
@@ -40,4 +44,11 @@ public class DemandServiceImpl implements DemandService {
     public BaseFragment goToQuickReport() {
         return DemandCreateFragment.getInstance("快速报障");
     }
+
+    @Override
+    public BaseFragment goToQuickReport(long equipmentId, String locationName, LocationBean locationBean, String desc, List<LocalMedia>imageIds) {
+        return DemandCreateFragment.getInstance(equipmentId,"快速报障",locationName,locationBean,desc,true,imageIds);
+    }
+
+
 }

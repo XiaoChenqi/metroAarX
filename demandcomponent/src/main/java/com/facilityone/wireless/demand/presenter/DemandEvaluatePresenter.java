@@ -41,4 +41,27 @@ public class DemandEvaluatePresenter extends BasePresenter<DemandEvaluateFragmen
                     }
                 });
     }
+
+    //需求审核，保存，完成，满意度评价
+    public void uploadOperation(DemandService.DemandOperationReq request) {
+        OkGo.<BaseResponse<Object>>post(FM.getApiHost() + DemandUrl.DEMAND_REPORT_OBSTACLE_OPERATION)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<Object>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<Object>> response) {
+                        getV().dismissLoading();
+                        ToastUtils.showShort(R.string.demand_evaluate_success);
+                        getV().uploadSuccess();
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<Object>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                        ToastUtils.showShort(R.string.demand_operate_fail);
+                    }
+                });
+    }
 }

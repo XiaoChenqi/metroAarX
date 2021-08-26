@@ -39,6 +39,12 @@ public interface APPUrl {
     String COLLECT_UPLOAD = "/collection/mobile/v2/base"; // 用户信息收集上传api
     //上传收集数据
     String COLLECT_SETTING = "/collection/mobile/v1/user/settings"; // 数据采集配置api
+    //查询是否使用从相册选择功能
+    String SELECT_PHOTO_SETTING_URL = "/m/v1/photo/select";
 
+    //扫一扫签到
+    String SCAN_FOR_SIGNON = "/m/v1/user/attendance/operate";
+    //我的签到记录
+    String SIGN_LIST_INFRO = "/m/v1/user/attendance/list";
 
 }

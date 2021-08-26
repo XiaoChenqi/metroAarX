@@ -43,11 +43,19 @@ public class DemandListAdapter extends BaseQuickAdapter<DemandService.DemandBean
             } else {
                 helper.setGone(R.id.center_line_view, true);
             }
+
+            if (type == DemandConstant.DEMAND_ASSURE_COMPLETE){
+                helper.setVisible(R.id.demand_complete_status_tv,true);
+                helper.setBackgroundRes(R.id.demand_complete_status_tv, R.drawable.demand_fill_progress_bg);
+                helper.setText(R.id.demand_complete_status_tv,"待完善");
+            }else {
+                helper.setVisible(R.id.demand_complete_status_tv,false);
+            }
             helper.setGone(R.id.view_placeholder, type != DemandConstant.DEMAND_REQUES_QUERY);
             helper.setText(R.id.demand_code_tv, TextUtils.isEmpty(item.code) ? "" : item.code);
             helper.setText(R.id.demand_describe_tv, TextUtils.isEmpty(item.desc) ? "" : item.desc);
             if (item.createDate != null) {
-                String date2String = TimeUtils.date2String(new Date(item.createDate), DateUtils.SIMPLE_DATE_FORMAT_ALL);
+                String date2String = TimeUtils.date2String(new Date(item.createDate), DateUtils.SIMPLE_DATE_FORMAT_MDHM);
                 helper.setText(R.id.demand_date_tv, date2String);
             }
 
@@ -67,9 +75,7 @@ public class DemandListAdapter extends BaseQuickAdapter<DemandService.DemandBean
                         helper.setBackgroundRes(R.id.demand_origin_tv, R.drawable.service_control_orgin_email);
                         break;
                         case DemandConstant.DEMAND_ORIGIN_DINGDING:
-                        //TODO    xcq
-                        helper.setBackgroundRes(R.id.demand_origin_tv, R.drawable.service_control_orgin_email);
-                        //helper.setBackgroundRes(R.id.demand_origin_tv, R.drawable.service_control_origin_dingding);
+                        helper.setBackgroundRes(R.id.demand_origin_tv, R.drawable.service_control_origin_dingding);
                         break;
                 }
             } else {
@@ -100,31 +106,32 @@ public class DemandListAdapter extends BaseQuickAdapter<DemandService.DemandBean
             } else {
                 helper.setVisible(R.id.demand_status_tv, false);
             }
+            helper.setBackgroundRes(R.id.demand_new_status_tv, R.drawable.demand_fill_created_bg);
 
-            helper.setText(R.id.demand_type_tv, StringUtils.formatString(item.type));
-            if(item.orders != null && item.orders.size() > 0) {
-                helper.setGone(R.id.demand_related_order_ll,true);
-                StringBuffer buffer = new StringBuffer();
-                for (int i = 0; i < item.orders.size(); i++) {
-                    DemandService.RelatedOrder order = item.orders.get(i);
-                    String status = "";
-                    if(order.status != null) {
-                        status = DemandHelper.getWorkOrderStatusMap(mContext).get(order.status);
-                    }
-                    if(i != 0) {
-                        buffer.append("、");
-                    }
-                    buffer.append(StringUtils.formatString(order.code));
-                    if(!TextUtils.isEmpty(status)) {
-                        buffer.append("(");
-                        buffer.append(status);
-                        buffer.append(")");
-                    }
-                }
-                helper.setText(R.id.demand_related_order_tv, buffer.toString());
-            }else {
-                helper.setGone(R.id.demand_related_order_ll,false);
-            }
+//            helper.setText(R.id.demand_type_tv, StringUtils.formatString(item.type));
+//            if(item.orders != null && item.orders.size() > 0) {
+//                helper.setGone(R.id.demand_related_order_ll,true);
+//                StringBuffer buffer = new StringBuffer();
+//                for (int i = 0; i < item.orders.size(); i++) {
+//                    DemandService.RelatedOrder order = item.orders.get(i);
+//                    String status = "";
+//                    if(order.status != null) {
+//                        status = DemandHelper.getWorkOrderStatusMap(mContext).get(order.status);
+//                    }
+//                    if(i != 0) {
+//                        buffer.append("、");
+//                    }
+//                    buffer.append(StringUtils.formatString(order.code));
+//                    if(!TextUtils.isEmpty(status)) {
+//                        buffer.append("(");
+//                        buffer.append(status);
+//                        buffer.append(")");
+//                    }
+//                }
+//                helper.setText(R.id.demand_related_order_tv, buffer.toString());
+//            }else {
+//                helper.setGone(R.id.demand_related_order_ll,false);
+//            }
         }
     }
 }

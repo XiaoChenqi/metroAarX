@@ -93,6 +93,29 @@ public class DemandCreatePresenter extends CommonBasePresenter<DemandCreateFragm
                 });
 
     }
+    
+    public void completeDevice(){
+        DemandCreateService.CompleteDeviceReq request = getV().getCompleteRequest();
+        OkGo.<BaseResponse<Object>>post(FM.getApiHost() + DemandUrl.DEMAND_COMPLETE_DEVICE)
+                .isSpliceUrl(true)
+                .tag(getV())
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<Object>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<Object>> response) {
+                        getV().dismissLoading();
+                        ToastUtils.showShort(R.string.demand_create_success);
+                        getV().pop();
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<Object>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                        ToastUtils.showShort(R.string.demand_create_failed);
+                    }
+                });
+    }
 
     @Override
     public void getUserInfo() {
