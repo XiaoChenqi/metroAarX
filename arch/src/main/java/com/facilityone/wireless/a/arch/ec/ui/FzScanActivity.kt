@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.facilityone.wireless.a.arch.R
+import com.facilityone.wireless.basiclib.utils.GsonUtils
 import com.fm.tool.scan.utils.AppUtils
 import com.fm.tool.scan.utils.StatusBarUtils
 import com.huawei.hms.hmsscankit.OnLightVisibleCallBack
@@ -137,7 +138,6 @@ class FzScanActivity: FragmentActivity() {
                         hmsScans[0]!!.getOriginalValue()
                     )
                 ) {
-//                    ToastUtils.showShort(hmsScans[0].getOriginalValue())
                     val intent = Intent()
                     intent.putExtra(SCAN_RESULT, hmsScans[0])
                     setResult(RESULT_OK, intent)

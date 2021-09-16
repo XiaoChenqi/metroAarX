@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.example.testaarx.download.OutLineDataActivity;
+import com.example.testaarx.mine.MineSignQrCodeActivity;
 import com.example.testaarx.scan.FmScanBaseActivity;
 import com.facilityone.wireless.demand.DemandActivity;
 import com.facilityone.wireless.demand.DemandCreateActivity;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mButton2;
     private Button mBtn1;
     private Button mButtonStorage;
+    private Button mOutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +141,13 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+        mOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MineSignQrCodeActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
     }
 
     private void initView() {
@@ -152,5 +161,6 @@ public class MainActivity extends AppCompatActivity {
         mButton2 = (Button) findViewById(R.id.button2);
         mBtn1 = (Button) findViewById(R.id.btn1);
         mButtonStorage = (Button) findViewById(R.id.buttonStorage);
+        mOutBtn = (Button) findViewById(R.id.outBtn);
     }
 }

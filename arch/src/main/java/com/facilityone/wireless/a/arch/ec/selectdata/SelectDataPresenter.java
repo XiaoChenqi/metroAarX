@@ -152,7 +152,6 @@ public class SelectDataPresenter extends CommonBasePresenter<SelectDataFragment>
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<SelectDataBean>> emitter) throws Exception {
                 List<SelectDataBean> locationList = null;
-
                 switch (level) {
                     case ISelectDataService.LOCATION_SITE:
                         SiteDao siteDao = new SiteDao();

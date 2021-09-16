@@ -9,5 +9,5 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 
 public interface AssetService extends IService {
 
-    BaseFragment getEquipmentInfoFragment(long equipmentId, boolean showMenu);
+    BaseFragment getEquipmentInfoFragment(long equipmentId,boolean showMenu);
 }

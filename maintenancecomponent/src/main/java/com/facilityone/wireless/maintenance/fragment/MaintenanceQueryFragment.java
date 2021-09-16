@@ -21,11 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
-import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
-import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.ec.adapter.GridTagAdapter;
@@ -36,7 +33,6 @@ import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
 import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.utils.DatePickUtils;
-import com.facilityone.wireless.basiclib.utils.DateUtils;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.facilityone.wireless.basiclib.utils.SystemDateUtils;
 import com.facilityone.wireless.componentservice.workorder.WorkorderService;
@@ -45,7 +41,6 @@ import com.facilityone.wireless.maintenance.adapter.MaintenanceListAdapter;
 import com.facilityone.wireless.maintenance.model.MaintenanceConstant;
 import com.facilityone.wireless.maintenance.model.MaintenanceEnity;
 import com.facilityone.wireless.maintenance.model.MaintenanceService;
-import com.facilityone.wireless.maintenance.presenter.MaintenancePresenter;
 import com.facilityone.wireless.maintenance.presenter.MaintenanceQueryPresenter;
 
 import com.luojilab.component.componentlib.router.Router;

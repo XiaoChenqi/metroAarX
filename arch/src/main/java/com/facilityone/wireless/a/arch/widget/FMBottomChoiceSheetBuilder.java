@@ -259,10 +259,10 @@ public class FMBottomChoiceSheetBuilder implements View.OnClickListener{
     }
 
 
-    private OnInputBtnClickListener mOnSaveInputListener;
+    private FMBottomChoiceSheetBuilder.OnInputBtnClickListener mOnSaveInputListener;
 
 
-    public void setOnSaveInputListener(OnInputBtnClickListener onSaveInputListener) {
+    public void setOnSaveInputListener(FMBottomChoiceSheetBuilder.OnInputBtnClickListener onSaveInputListener) {
         mOnSaveInputListener = onSaveInputListener;
     }
 

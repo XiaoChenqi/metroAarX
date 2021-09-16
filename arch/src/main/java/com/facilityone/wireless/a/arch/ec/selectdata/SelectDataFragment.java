@@ -451,6 +451,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         if (mFromType == ISelectDataService.DATA_TYPE_LOCATION && !mShowSite && mLevel == 2) {
             mLevel--;
         }
+
         if (mLevel == 1) {
             if (mFromType==ISelectDataService.DATA_TYPE_REASON || mFromType==ISelectDataService.DATA_TYPE_INVALIDD){
                 setBackResult();
@@ -461,6 +462,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         } else {
             if (mFromType==ISelectDataService.DATA_TYPE_REASON || mFromType==ISelectDataService.DATA_TYPE_INVALIDD){
                 mShow.clear();
+                mLevel--;
                 getPresenter().queryReason(mReasonType);
             }else {
                 back = true;
@@ -474,9 +476,11 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         if (mFromType == ISelectDataService.DATA_TYPE_LOCATION && !mShowSite && mLevel == 2) {
             mLevel--;
         }
+
         if (mLevel == 1) {
             if (mFromType==ISelectDataService.DATA_TYPE_REASON || mFromType==ISelectDataService.DATA_TYPE_INVALIDD){
                 setBackResult();
+
                 return true;
             }else {
                 return super.onBackPressedSupport();
@@ -485,7 +489,9 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         } else {
             if (mFromType==ISelectDataService.DATA_TYPE_REASON || mFromType==ISelectDataService.DATA_TYPE_INVALIDD){
                 mShow.clear();
+                mLevel--;
                 getPresenter().queryReason(mReasonType);
+
             }else {
                 back = true;
                 queryDb();

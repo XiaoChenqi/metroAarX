@@ -43,6 +43,7 @@ public class MaintenanceEnity {
          public Integer choice; //是否选中
          public Long pmId; // 计划性维护PM工单Id
          public Long workTeamId ; //工作组Id
+         public Integer newStatus ; //新状态
      }
 
       /**

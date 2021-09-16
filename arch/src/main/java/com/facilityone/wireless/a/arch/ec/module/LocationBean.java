@@ -42,7 +42,7 @@ public class LocationBean implements Parcelable {
         this.roomId = (Long) in.readValue(Long.class.getClassLoader());
     }
 
-    public static final Creator<LocationBean> CREATOR = new Creator<LocationBean>() {
+    public static final Parcelable.Creator<LocationBean> CREATOR = new Parcelable.Creator<LocationBean>() {
         @Override
         public LocationBean createFromParcel(Parcel source) {
             return new LocationBean(source);

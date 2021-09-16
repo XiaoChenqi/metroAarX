@@ -25,8 +25,8 @@ public class MainApp extends Application {
 
         saveChannelParam();
         Router.registerComponent("com.facilityone.wireless.workorder.applike.WorkorderApplike");
-        //Facility.init(this, "http://47.99.236.153:8071/fz_iframe", BuildConfig.DEBUG);
-        Facility.init(this, "http://192.168.1.89:23456/fz_iframe", BuildConfig.DEBUG);
+        Facility.init(this, "http://47.99.236.153:8071/fz_iframe", BuildConfig.DEBUG);
+        //Facility.init(this, "http://192.168.1.89:23456/fz_iframe", BuildConfig.DEBUG);
 
         DBManager.getInstance();
 

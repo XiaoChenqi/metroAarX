@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.qmuiteam.qmui.widget.QMUITopBarLayout
+        android:id="@+id/ui_topbar"
+        style="@style/commonTopbarStyle.message"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/dp_20"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_20"
+            >
+
+            <ImageView
+                android:id="@+id/civ_user_photo"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/user_default_head"
+                 />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/dp_20"
+                >
+
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="@dimen/sp_16"
+                    android:textColor="@color/grey_47"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_user_position"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/grey_9"
+                    android:textSize="@dimen/sp_13"
+                    android:layout_marginTop="@dimen/dp_3"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_qrcode_pic"
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="@dimen/dp_300"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitXY"
+            android:padding="@dimen/dp_20"
+            />
+
+        <TextView
+            android:id="@+id/tv_qrcode_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:gravity="center_horizontal"
+            android:text="扫描我可进行签到"
+            android:textColor="@color/grey_9"
+            android:textSize="@dimen/sp_13"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

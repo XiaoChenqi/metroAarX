@@ -26,5 +26,5 @@ public interface DemandService extends IService {
     BaseFragment getDemandInfoByMsg(Long demandId);
     BaseFragment goToQuickReport();
     BaseFragment goToQuickReport(long equipmentId
-            , String locationName, LocationBean locationBean, String desc, List<LocalMedia> imageIds);
+            , String locationName, LocationBean locationBean,String desc,List<LocalMedia> imageIds);
 }

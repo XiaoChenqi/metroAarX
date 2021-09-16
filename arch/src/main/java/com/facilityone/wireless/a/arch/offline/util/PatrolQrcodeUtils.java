@@ -27,4 +27,16 @@ public class PatrolQrcodeUtils {
         }
         return result;
     }
+    public static String parseSpotName(String qrcode) {
+        String result = "";
+        if (TextUtils.isEmpty(qrcode)) {
+            return result;
+        }
+        String tmp = qrcode.replace(" ", "");
+        String[] data = tmp.split("\\|");
+        if (data.length > 3) {
+            result = data[2];
+        }
+        return result;
+    }
 }

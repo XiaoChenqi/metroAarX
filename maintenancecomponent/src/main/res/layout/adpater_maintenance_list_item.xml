@@ -28,6 +28,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             >
+
             <ImageView
                 android:id="@+id/im_checkbox"
                 android:layout_width="@dimen/dp_15"
@@ -100,6 +101,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/ll_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

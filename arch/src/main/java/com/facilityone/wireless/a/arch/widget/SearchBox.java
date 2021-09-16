@@ -144,7 +144,7 @@ public class SearchBox extends LinearLayout {
                 }
             }
         });
-        mDeleteIv.setOnClickListener(new OnClickListener() {
+        mDeleteIv.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {

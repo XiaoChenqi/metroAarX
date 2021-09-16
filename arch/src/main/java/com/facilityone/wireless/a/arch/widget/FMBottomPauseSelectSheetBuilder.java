@@ -327,7 +327,7 @@ public class FMBottomPauseSelectSheetBuilder implements View.OnClickListener {
         SelectDataBean reason=bundle.getParcelable(ISelectDataService.SELECT_OFFLINE_DATA_BACK);
         this.reasonBean=reason;
         if (reasonBean!=null){
-            mDescSelect.setText(reasonBean.getName());
+            mDescSelect.setText(reasonBean.getFullName());
         }
 
     }
@@ -399,7 +399,7 @@ public class FMBottomPauseSelectSheetBuilder implements View.OnClickListener {
     public interface OnPauseInputBtnClickListener{
         void onLeftClick(QMUIBottomSheet dialog, SelectDataBean reasonBean, Long time);
 
-        void onRightClick(QMUIBottomSheet dialog, SelectDataBean reasonBean, Long time);
+        void onRightClick(QMUIBottomSheet dialog, SelectDataBean reasonBean,Long time);
     }
 
 

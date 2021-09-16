@@ -18,21 +18,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.ec.adapter.GridTagAdapter;
 import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
 import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
-import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.Page;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
 import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
-import com.facilityone.wireless.basiclib.utils.SystemDateUtils;
-import com.facilityone.wireless.componentservice.demand.DemandService;
 import com.facilityone.wireless.componentservice.workorder.WorkorderService;
 import com.facilityone.wireless.maintenance.R;
 import com.facilityone.wireless.maintenance.adapter.MaintenanceListAdapter;
@@ -46,6 +42,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -137,6 +134,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
                 for (MaintenanceEnity.MaintenanceListEnity data : mList) {
                     data.choice = 0; //全部打开状态
                 }
+                removeRightView();
                 changeRightMenu(mType);
                 mAdapter.replaceData(mList);
                 mAdapter.notifyDataSetChanged();
@@ -148,6 +146,12 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
         mTvChooseAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (mList.size() ==0 || mList == null){
+                    ToastUtils.showShort("无数据");
+                    return;
+                }
+
                 if (workTeamId == null && localWoId == null) {
                     localWoId = mList.get(0).pmId; //默认设置匹配Id为列表第一个元素的Id
                     workTeamId = mList.get(0).workTeamId; // 默认设置工作组Id为列表第一个元素的Id
@@ -408,20 +412,32 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
         }
         int viewId = view.getId();
         if (viewId == R.id.maintenance_bulk_orders) {
-            for (MaintenanceEnity.MaintenanceListEnity data : mList) {
-                if (data.status != MaintenanceConstant.WORKORDER_STATUS_PUBLISHED) { //判断非派工单不可接单
-                    mList.remove(data);
-                } else {
-                    data.choice = 1; //全部打开状态
-                }
 
+            Iterator<MaintenanceEnity.MaintenanceListEnity> it_b = mList.iterator();
+            while(it_b.hasNext()){
+                MaintenanceEnity.MaintenanceListEnity a=it_b.next();
+                if (a.newStatus != MaintenanceConstant.WORKORDER_STATUS_PUBLISHED) {
+//                if (a.applicantName.equals("车站管理人员")) {
+                    it_b.remove();
+                }else {
+                    a.choice = 1; //全部打开状态
+                }
             }
-            mBottomMenuLl.setVisibility(View.VISIBLE);
-            isChooseOn = true; //当前是批量选择状态
-            removeRightView();
-            setRightTextButton("接单", R.id.maintenance_add_order);
-            mAdapter.replaceData(mList);
-            mAdapter.notifyDataSetChanged();
+
+            if (mList.size() == 0 ){
+                noDataRefresh();
+                dismissLoading();
+                mAdapter.replaceData(mList);
+                mAdapter.notifyDataSetChanged();
+            }else {
+                mBottomMenuLl.setVisibility(View.VISIBLE);
+                isChooseOn = true; //当前是批量选择状态
+                removeRightView();
+                setRightTextButton("接单", R.id.maintenance_add_order);
+                mAdapter.replaceData(mList);
+                mAdapter.notifyDataSetChanged();
+            }
+
         } else if (viewId == R.id.maintenance_batch_dispatch) {
             for (MaintenanceEnity.MaintenanceListEnity data : mList) {
                 data.choice = 1; //全部打开状态
@@ -567,9 +583,9 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
         } else if (viewId == R.id.sure_btn) {//确定
             String code = mCodeEt.getText().toString();
             if (TextUtils.isEmpty(code)) {
-                mConditionBean.woCode = null;
+                mConditionBean.planName = null;
             } else {
-                mConditionBean.woCode = code;
+                mConditionBean.planName = code;
             }
 //            String site = mSiteEt.getText().toString();
 
@@ -589,7 +605,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
         mCodeEt.setText("");
         mSiteEt.setText("");
 
-        mConditionBean.woCode = null;
+        mConditionBean.planName = null;
 //        showConditionTime();
         mConditionBean.priority = null;
         mConditionBean.period = null;

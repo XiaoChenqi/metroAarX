@@ -37,8 +37,11 @@ public class SelectDataAdapter extends BaseQuickAdapter<SelectDataBean, BaseView
         if (item == null) {
             return;
         }
+        SpannableStringBuilder ssb = null;
+        ssb = item.getParentId() == null ?
+                new SpannableStringBuilder(StringUtils.formatString(item.getName()))
+                :new SpannableStringBuilder(StringUtils.formatString(item.getFullName()));
 
-        SpannableStringBuilder ssb = new SpannableStringBuilder(StringUtils.formatString(item.getName()));
         ForegroundColorSpan span = new ForegroundColorSpan(Color.RED);
         ssb.setSpan(span, item.getStart(), item.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         helper.setText(R.id.title_tv, ssb);

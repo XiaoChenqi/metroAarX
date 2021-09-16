@@ -65,6 +65,17 @@ public class PermissionsManager {
     public static final String UNDOINSPECTIONNUMBER = "undoInspectionNumber";                 //查验任务数量
     public static final String UNARCHIVEDINSPECTIONNUMBER = "unArchivedInspectionNumber";      //待验证查验任务数量
 
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/24
+      * @Infor: 维护工单模块
+      */
+     public static final String UNDOPPMORDERNUMBER = "undoPPMOrderNumber"; //待处理维护工单数量
+     public static final String UNARRANGEPPMORDERNUMBER = "unArrangePPMOrderNumber"; //待派工维护工单数量
+     public static final String UNAPPROVALPMORDERNUMBER = "unApprovalPPMOrderNumber"; //待审核维护工单数量
+     public static final String ABNORMALPPMORDERNUMBER = "abnormalPPMOrderNumber"; //异常维护工单数量
+     public static final String UNARCHIVEDPPMORDERNUMBER = "unArchivedPPMOrderNumber"; //待存档维护工单数量
+
     public static class HomeFunction {
 
         private Map<String, FunctionService.FunctionBean> mFunctionBeanMap;
@@ -464,13 +475,13 @@ public class PermissionsManager {
         private void ppmFunction(String opensJson) {
 
             int icons[] = {
-                    R.drawable.home_function_order_create
+                    R.drawable.home_function_maintance
                     , R.drawable.home_function_order_undo
                     , R.drawable.home_function_order_arrange
                     , R.drawable.home_function_order_approval
-                    , R.drawable.home_function_order_verify
                     , R.drawable.home_function_abnormal
                     , R.drawable.home_function_order_archive
+                    , R.drawable.home_function_order_query
             };
 
 
@@ -481,20 +492,20 @@ public class PermissionsManager {
                 ChildMenu childMenu = new ChildMenu(per[i], CommonConstant.MESSAGE_WORK_ORDER,
                         icons[i], titles[i], null, i);
                 if ("m-wo-process".equals(per[i])) {
-                    childMenu.jsonObjectKey = UNDOORDERNUMBER;
+                    childMenu.jsonObjectKey = UNDOPPMORDERNUMBER;
                 } else if ("m-wo-dispach".equals(per[i])) {
-                    childMenu.jsonObjectKey = UNARRANGEORDERNUMBER;
+                    childMenu.jsonObjectKey = UNARRANGEPPMORDERNUMBER;
                 } else if ("m-wo-approval".equals(per[i])) {
-                    childMenu.jsonObjectKey = UNAPPROVALORDERNUMBER;
+                    childMenu.jsonObjectKey = UNAPPROVALPMORDERNUMBER;
                 } else if ("m-wo-abnormal".equals(per[i])){
-                    childMenu.jsonObjectKey = ABNORMALORDERNUMBER;
+                    childMenu.jsonObjectKey = ABNORMALPPMORDERNUMBER;
                 }else if ("m-wo-close".equals(per[i])) {
-                    childMenu.jsonObjectKey = UNARCHIVEDORDERNUMBER;
+                    childMenu.jsonObjectKey = UNARCHIVEDPPMORDERNUMBER;
                 }
                 childMenus.add(childMenu);
             }
 
-            String[] child = { UNDOORDERNUMBER, UNARRANGEORDERNUMBER, UNAPPROVALORDERNUMBER,ABNORMALORDERNUMBER, UNARCHIVEDORDERNUMBER };
+            String[] child = { UNDOPPMORDERNUMBER, UNARRANGEPPMORDERNUMBER, UNAPPROVALPMORDERNUMBER,ABNORMALPPMORDERNUMBER, UNARCHIVEDPPMORDERNUMBER };
 
             MaintenanceService impl = (MaintenanceService) mRouter.getService(MaintenanceService.class.getSimpleName());
             homeMenu(opensJson,
@@ -503,7 +514,7 @@ public class PermissionsManager {
                     CommonConstant.MESSAGE_MAINTANCE,
                     R.drawable.home_function_maintance,
                     "维护管理",
-                    null,
+                    child,
                     childMenus);
         }
 
@@ -771,7 +782,7 @@ public class PermissionsManager {
     }
 
     public static boolean hasPermission(Context context, Integer type) {
-        HomeFunction instance = HomeFunction.getInstance();
+        PermissionsManager.HomeFunction instance = PermissionsManager.HomeFunction.getInstance();
         boolean has = false;
         if (type == null) {
             return false;

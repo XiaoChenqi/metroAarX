@@ -41,7 +41,7 @@ public class FMFileUtils {
             //设置intent的data和Type属性。
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             Uri uriForFile;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 String packageName = context.getPackageName();
                 uriForFile = FileProvider.getUriForFile(context, packageName + ".fileprovider", file);
             } else {

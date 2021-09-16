@@ -2,41 +2,26 @@ package com.facilityone.wireless.maintenance.fragment;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
-import com.facilityone.wireless.a.arch.ec.adapter.GridTagAdapter;
-import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
 import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
 import com.facilityone.wireless.a.arch.ec.module.Page;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
-import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
-import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.facilityone.wireless.componentservice.workorder.WorkorderService;
 import com.facilityone.wireless.maintenance.R;
 import com.facilityone.wireless.maintenance.adapter.ElectronicLedgerAdapter;
 import com.facilityone.wireless.maintenance.adapter.MaintenanceListAdapter;
 import com.facilityone.wireless.maintenance.model.MaintenanceConstant;
 import com.facilityone.wireless.maintenance.model.MaintenanceEnity;
-import com.facilityone.wireless.maintenance.model.MaintenanceService;
 import com.facilityone.wireless.maintenance.model.SelectorModel;
 import com.facilityone.wireless.maintenance.presenter.MaintenanceListPresenter;
 import com.luojilab.component.componentlib.router.Router;

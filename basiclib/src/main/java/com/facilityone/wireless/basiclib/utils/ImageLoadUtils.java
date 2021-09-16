@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.facilityone.wireless.basiclib.R;
 
 import java.io.File;
 
@@ -56,6 +57,23 @@ public class ImageLoadUtils {
                 .apply(options)
                 .into(mImageView);
     }
+
+    //处理图片显示不全的问题
+    public static void loadImageOverRideView(Context mContext, String path, ImageView mImageView, int loadingImage, int errorImageView) {
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .override(337,363)
+                .placeholder(loadingImage)
+                .error(errorImageView)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+        Glide.with(mContext)
+                .load(path)
+                .apply(options)
+                .into(mImageView);
+    }
+
+
+
     //设置加载中以及加载失败图片
     public static void loadImageView(Context mContext, int drawable, ImageView mImageView, int loadingImage, int errorImageView) {
         RequestOptions options = new RequestOptions()

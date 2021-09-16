@@ -12,12 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:label, android:theme">
-        <activity android:name=".scan.FmScanBaseActivity"
+        <activity android:name=".mine.MineSignQrCodeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent"
+            ></activity>
+        <activity
+            android:name=".scan.FmScanBaseActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.NoTranslucent">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent"></activity>
         <activity
             android:name=".download.OutLineDataActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -61,10 +67,10 @@
             </intent-filter>
         </activity>
     </application>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

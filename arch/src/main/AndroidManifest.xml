@@ -23,6 +23,11 @@
             android:name=".ec.ui.SignatureActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Fullscreen"/>
+        <!--扫一扫-->
+        <activity
+            android:name=".ec.ui.FzScanActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Fullscreen"/>
         <!--微信分享-->
         <activity
             android:name=".wxapi.WXEntryActivity"

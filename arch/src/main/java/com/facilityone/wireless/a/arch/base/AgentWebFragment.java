@@ -140,7 +140,7 @@ public class AgentWebFragment extends BaseFragment<BasePresenter> {
         };
     }
 
-    protected WebChromeClient mWebChromeClient = new WebChromeClient() {
+    protected com.just.agentweb.WebChromeClient mWebChromeClient = new WebChromeClient() {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
         }

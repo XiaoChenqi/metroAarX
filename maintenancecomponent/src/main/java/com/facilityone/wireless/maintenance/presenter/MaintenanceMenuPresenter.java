@@ -26,31 +26,31 @@ public class MaintenanceMenuPresenter extends CommonBasePresenter<MaintenanceMen
                 switch (functionBean.index) {
                     case MaintenanceConstant.MAINTENANCE_ONE:
                         //维护日历
-                        functionBean.undoNum = data.getInt(PermissionsManager.UNDOORDERNUMBER);
+//                        functionBean.undoNum = data.getInt(PermissionsManager.UNDOORDERNUMBER);
                         break;
                     case MaintenanceConstant.MAINTENANCE_TWO:
                         //待处理维护工单
-                        functionBean.undoNum = data.getInt(PermissionsManager.UNARRANGEORDERNUMBER);
+                        functionBean.undoNum = data.getInt(PermissionsManager.UNDOPPMORDERNUMBER);
                         break;
                     case MaintenanceConstant.MAINTENANCE_THREE:
                         //待派工维护工单
-                        functionBean.undoNum = data.getInt(PermissionsManager.UNAPPROVALORDERNUMBER);
+                        functionBean.undoNum = data.getInt(PermissionsManager.UNARRANGEPPMORDERNUMBER);
                         break;
                     case MaintenanceConstant.MAINTENANCE_FOUR:
                         //待审批维护工单
-                        functionBean.undoNum = data.getInt(PermissionsManager.UNARCHIVEDORDERNUMBER);
+                        functionBean.undoNum = data.getInt(PermissionsManager.UNAPPROVALPMORDERNUMBER);
                         break;
                     case MaintenanceConstant.MAINTENANCE_FIVE:
                         //异常维护工单
-                        functionBean.undoNum = data.getInt(PermissionsManager.UNARCHIVEDORDERNUMBER);
+                        functionBean.undoNum = data.getInt(PermissionsManager.ABNORMALPPMORDERNUMBER);
                         break;
                     case MaintenanceConstant.MAINTENANCE_SIX:
                         //带存档维护工单
-                        functionBean.undoNum = data.getInt(PermissionsManager.UNARCHIVEDORDERNUMBER);
+                        functionBean.undoNum = data.getInt(PermissionsManager.UNARCHIVEDPPMORDERNUMBER);
                         break;
                     case MaintenanceConstant.MAINTENANCE_SEVEN:
                         //维护工单查询
-                        functionBean.undoNum = data.getInt(PermissionsManager.UNARCHIVEDORDERNUMBER);
+//                        functionBean.undoNum = data.getInt(PermissionsManager.UNARCHIVEDORDERNUMBER);
                         break;
                 }
             } catch (JSONException e) {
