@@ -8,7 +8,7 @@ import retrofit2.http.POST;
 public interface FmNetApi {
 
     //登录地址
-    String LOGON_URL = "m/security/login";
+    String LOGON_URL = "/fz_iframe/m/security/login";
 
     //@FormUrlEncoded
 //    @POST("/out/f1-shang/m/v2/inspection/type")

@@ -20,7 +20,7 @@ public class UserModel implements IUserModel {
 //        temp.local = bean.local;
 //        temp.loginPwd=bean.loginPwd;
 //        temp.source = bean.source;
-        temp.loginCode = "zhangsan";
+        temp.loginCode = "weiwai";
         temp.loginPwd="111111";
         temp.source = "app";
         temp.appType = "android";

@@ -2,11 +2,16 @@ package com.facilityone.wireless.componentservice.common.empty;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.facilityone.wireless.a.arch.R;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
+import com.facilityone.wireless.a.arch.net.FmNetApi;
+import com.facilityone.wireless.a.arch.presenter.UserBehaviorPresenter;
+import com.facilityone.wireless.a.arch.xcq.core.mvp.MvpView;
 
 /**
  * Author：gary
@@ -14,12 +19,14 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragment;
  * description:其他组件单独使用的时候的初始化(登录等)
  * Date: 2018/10/15 5:23 PM
  */
-public class EmptyFragment extends BaseFragment<EmptyPresenter> {
+public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpView {
 
     private Button mBtn;
 
     private static final String MENU_TYPE = "menu_type";
     private int mType = -1;
+
+    private UserBehaviorPresenter xcqPresenter;
 
     @Override
     public EmptyPresenter createPresenter() {
@@ -41,6 +48,9 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> {
         mBtn = findViewById(R.id.btn);
 
         //TODO xcq
+        //xcqPresenter = new UserBehaviorPresenter();
+        //xcqPresenter.attachView(this);
+
         showLoading();
         getPresenter().logon("weiwai", "111111");
         showLogonButton();
@@ -52,6 +62,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> {
                 showLoading();
                 getPresenter().logon("weiwai", "111111");
 
+                //xcqPresenter.login(new FmNetApi.LoginBean(),4444);
             }
         });
     }
@@ -71,6 +82,34 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> {
     }
 
     private OnGoFragmentListener mOnGoFragmentListener;
+
+    @Override
+    public void onStartRequest(int requestCode) {
+
+    }
+
+    private String TAG="周杨";
+
+    @Override
+    public void onSuccess(int requestCode, Object o) {
+        Log.d(TAG, "onSuccess: "+o);
+
+    }
+
+    @Override
+    public void onErrorCode(int resultCode, String msg, int requestCode) {
+        Log.d(TAG, "onErrorCode: ");
+    }
+
+    @Override
+    public void onEndRequest(int requestCode) {
+        Log.d(TAG, "onEndRequest: ");
+    }
+
+    @Override
+    public void onFailure(Throwable e) {
+        Log.d(TAG, "onFailure: ");
+    }
 
     public interface OnGoFragmentListener {
         void goFragment(Bundle bundle);

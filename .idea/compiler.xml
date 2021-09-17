@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="TestAarX.app" target="1.8" />
+      <module name="TestAarX.arch" target="1.8" />
+      <module name="TestAarX.basiclib" target="1.8" />
+      <module name="TestAarX.basicres" target="1.8" />
+      <module name="TestAarX.demandcomponent" target="1.8" />
+      <module name="TestAarX.inventorycomponent" target="1.8" />
+      <module name="TestAarX.maintenancecomponent" target="1.8" />
+      <module name="TestAarX.patrolcomponent" target="1.8" />
+      <module name="TestAarX.scanzxing" target="1.8" />
+      <module name="TestAarX.workordercomponent" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
