@@ -474,4 +474,7 @@
     <string name="workoder_select_approver_tip">Please select at least one approver</string>
     <!--该设备已经存在-->
     <string name="workorder_equipment_exist">The equipment already existed</string>
+
+    <!--签到失败-->
+    <string name="workorder_sign_error">Sign-in abnormal, Please check the sign-in information</string>
 </resources>

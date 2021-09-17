@@ -109,7 +109,7 @@
                 android:background="@drawable/list_item_bg"
                 app:fm_content_item_et_hint="@string/inventory_select_expiration_time_hint"
                 app:fm_content_item_show_line="true"
-                app:fm_content_item_show_red="false"
+                app:fm_content_item_show_red="true"
                 app:fm_content_item_show_tip="true"
                 app:fm_content_item_show_tip_icon="true"
                 app:fm_content_item_title="@string/inventory_expiration_time_a" />

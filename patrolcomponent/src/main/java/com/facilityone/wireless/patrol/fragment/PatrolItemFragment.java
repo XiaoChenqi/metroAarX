@@ -83,6 +83,7 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     private boolean mBack;
     private String mWaterMark;
     private String mNeedTime;
+    private boolean canComplete=false;
 
     @Override
     public PatrolItemPresenter createPresenter() {
@@ -215,8 +216,12 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
                 mClickLastOne = true;
             }
         }
-        showLoading();
-            getPresenter().judgeTask(mSpotId,mDevicePosition);
+        saveDataBefore();
+//        showLoading();
+//        //判断是否可以提交
+//        if (canComplete){
+//            saveDataBefore();
+//        }
 
 
     }
@@ -281,8 +286,10 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
             mTvPre.setVisibility(View.GONE);
             if (mEntities.size() == 1) {
                 mTvNext.setText(R.string.patrol_finish_x2);
+                canComplete=true;
             }
         } else if (mDevicePosition == mEntities.size() - 1) {
+            canComplete=true;
             mTvNext.setText(R.string.patrol_finish_x2);
             mTvPre.setVisibility(View.VISIBLE);
         } else {
@@ -338,8 +345,7 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     public boolean onBackPressedSupport() {
         if (mChange) {
             mBack = true;
-            popResult();
-//            saveDataBefore();
+            saveDataBefore();
             return true;
         } else {
             return super.onBackPressedSupport();
@@ -350,8 +356,7 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     public void leftBackListener() {
         if (mChange) {
             mBack = true;
-            popResult();
-//            saveDataBefore();
+            saveDataBefore();
         } else {
             super.leftBackListener();
         }
@@ -431,13 +436,12 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
         }
     }
 
-    public static PatrolItemFragment getInstance(Long spotId, ArrayList<PatrolEquEntity> entities, int position,String spotName,String time) {
+    public static PatrolItemFragment getInstance(Long spotId, ArrayList<PatrolEquEntity> entities, int position,String spotName) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(PATROL_EQU_LIST, entities);
         bundle.putLong(PATROL_SPOT_ID, spotId);
         bundle.putInt(CLICK_POSITION, position);
         bundle.putString(PATROL_SPOT_NAME, spotName);
-        bundle.putString(PATROL_TIME,time);
         PatrolItemFragment instance = new PatrolItemFragment();
         instance.setArguments(bundle);
         return instance;

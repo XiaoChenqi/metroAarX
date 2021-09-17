@@ -1,5 +1,7 @@
 package com.facilityone.wireless.a.arch.offline.dao;
 
+import android.util.ArrayMap;
+
 import com.blankj.utilcode.util.LogUtils;
 import com.facilityone.wireless.a.arch.offline.model.entity.DBPatrolConstant;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolTaskEntity;
@@ -9,6 +11,7 @@ import com.tencent.wcdb.Cursor;
 import com.tencent.wcdb.database.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -44,6 +47,7 @@ public class PatrolTaskDao {
                 "DELETED INTEGER," + // 14: deleted
                 "USER_ID INTEGER," + // 15: userId
                 "PROJECT_ID INTEGER," + // 16: projectId
+                "PTYPE INTEGER," + // 17: ptype
                 "PRIMARY KEY (ID,USER_ID,PROJECT_ID));");
     }
 
@@ -81,7 +85,7 @@ public class PatrolTaskDao {
         boolean result = false;
         try {
             mDbManager.beginTransaction();
-            String sql = "INSERT OR REPLACE INTO DBPATROLTASK VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT OR REPLACE INTO DBPATROLTASK VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             for (PatrolTaskEntity entity : taskEntities) {
                 Object[] args = {
@@ -101,7 +105,8 @@ public class PatrolTaskDao {
                         , null
                         , entity.getDeleted()
                         , userId
-                        , projectId };
+                        , projectId
+                        };
                 mDbManager.insert(args, sql);
             }
 
@@ -150,7 +155,46 @@ public class PatrolTaskDao {
                 bean.setException(cursor.getInt(cursor.getColumnIndex("EXCEPTION")));
                 bean.setCompleted(cursor.getInt(cursor.getColumnIndex("COMPLETED")));
                 bean.setNeedSync(cursor.getInt(cursor.getColumnIndex("NEED_SYNC")));
+                bean.setpType(cursor.getInt(cursor.getColumnIndex("PTYPE")));
                 temp.add(bean);
+            }
+            cursor.close();
+        }
+        return temp;
+    }
+
+    public ArrayMap<Long,PatrolTaskEntity> getTaskMap(Long time) {
+        Long projectId = FM.getProjectId();
+        Long userId = FM.getEmId();
+        ArrayMap<Long,PatrolTaskEntity> temp = new ArrayMap<>();
+        Cursor cursor = null;
+        if (time == null) {
+            String sql = "SELECT * FROM DBPATROLTASK WHERE PROJECT_ID = ? AND USER_ID = ? ORDER BY UPDATE_TIME DESC , STATUS DESC , DUE_START_DATE_TIME , DUE_END_DATE_TIME ";
+            String[] queryArgs = { projectId + "", userId + "" };
+            cursor = mDbManager.query(queryArgs, sql);
+        } else {
+            String sql = "SELECT * FROM DBPATROLTASK WHERE PROJECT_ID = ? AND USER_ID = ? AND DUE_END_DATE_TIME >= ? ORDER BY UPDATE_TIME DESC , STATUS DESC , DUE_START_DATE_TIME , DUE_END_DATE_TIME ";
+            String[] queryArgs = { projectId + "", userId + "", time + "" };
+            cursor = mDbManager.query(queryArgs, sql);
+        }
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                PatrolTaskEntity bean = new PatrolTaskEntity();
+                bean.setTaskId(cursor.getLong(cursor.getColumnIndex("ID")));
+                bean.setPlanId(cursor.getLong(cursor.getColumnIndex("PLAN_ID")));
+                bean.setTaskName(cursor.getString(cursor.getColumnIndex("TASK_NAME")));
+                bean.setSpotNumber(cursor.getInt(cursor.getColumnIndex("SPOT_NUMBER")));
+                bean.setEqNumber(cursor.getInt(cursor.getColumnIndex("EQ_NUMBER")));
+                bean.setDueStartDateTime(cursor.getLong(cursor.getColumnIndex("DUE_START_DATE_TIME")));
+                bean.setDueEndDateTime(cursor.getLong(cursor.getColumnIndex("DUE_END_DATE_TIME")));
+                bean.setStartTime(cursor.getLong(cursor.getColumnIndex("START_DATE")));
+                bean.setEndTime(cursor.getLong(cursor.getColumnIndex("END_DATE")));
+                bean.setStatus(cursor.getInt(cursor.getColumnIndex("STATUS")));
+                bean.setException(cursor.getInt(cursor.getColumnIndex("EXCEPTION")));
+                bean.setCompleted(cursor.getInt(cursor.getColumnIndex("COMPLETED")));
+                bean.setNeedSync(cursor.getInt(cursor.getColumnIndex("NEED_SYNC")));
+                bean.setpType(cursor.getInt(cursor.getColumnIndex("PTYPE")));
+                temp.put(bean.getTaskId(),bean);
             }
             cursor.close();
         }
@@ -231,6 +275,26 @@ public class PatrolTaskDao {
         mDbManager.update(queryArgs, sql);
     }
 
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/30 10:58
+     * @Description: 新增PTYPE字段
+     */
+    public void update(Long patrolTaskId,Integer ptype) {
+        Long projectId = FM.getProjectId();
+        Long userId = FM.getEmId();
+        String sql;
+        Object[] queryArgs;
+        sql = "UPDATE DBPATROLTASK SET PTYPE = ? WHERE PROJECT_ID = ? AND USER_ID = ? AND ID = ?;";
+        queryArgs = new Object[]{ptype, projectId, userId, patrolTaskId };
+        mDbManager.update(queryArgs, sql);
+    }
+
+
+
+
+
     public void updateSync(int sync, Long patrolTaskId) {
         Long projectId = FM.getProjectId();
         Long userId = FM.getEmId();
@@ -279,6 +343,7 @@ public class PatrolTaskDao {
                 bean.setException(cursor.getInt(cursor.getColumnIndex("EXCEPTION")));
                 bean.setCompleted(cursor.getInt(cursor.getColumnIndex("COMPLETED")));
                 bean.setNeedSync(cursor.getInt(cursor.getColumnIndex("NEED_SYNC")));
+                bean.setpType(cursor.getInt(cursor.getColumnIndex("PTYPE")));
             }
             cursor.close();
         }

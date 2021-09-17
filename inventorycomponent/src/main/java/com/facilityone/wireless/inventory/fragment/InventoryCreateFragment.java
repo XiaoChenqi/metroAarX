@@ -74,6 +74,7 @@ public class InventoryCreateFragment extends BaseFragment<InventoryCreatePresent
     private CustomContentItemView mRatifiedPriceEt;//核定价格
     private CustomContentItemView mMinimumStockEt;//最低库存量
     private CustomContentItemView mInitialNumberEt;//初始数量
+    private CustomContentItemView mExpirationNumberEt;//提醒提前天数
     private LinearLayout mHideLl;//需要隐藏的布局
     private CustomContentItemView mMaterialProviderEt;//供应商
     private ImageView mSelectProviderIv;//选择供应商
@@ -89,7 +90,8 @@ public class InventoryCreateFragment extends BaseFragment<InventoryCreatePresent
     private MaterialService.MaterialCreateRequst mMaterialCreateRequst;
 
     private Calendar mDueCalendar = Calendar.getInstance();//过期时间
-    private float mIinitNum;//初始数量
+    private float mIinitNum = -1;//初始数量
+    private Integer mExpirationNumber = null; //提醒提前天数
 
     @Override
     public InventoryCreatePresenter createPresenter() {
@@ -136,6 +138,7 @@ public class InventoryCreateFragment extends BaseFragment<InventoryCreatePresent
         mSelectProviderIv = findViewById(R.id.inventory_create_select_provider_iv);
         mMaterialCostEt = findViewById(R.id.civ_inventory_create_material_cost);
         mSelectDueDateTv = findViewById(R.id.civ_inventory_create_select_due_date);
+        mExpirationNumberEt = findViewById(R.id.civ_inventory_create_select_expiration);
         mDescEnv = findViewById(R.id.inventory_create_material_desc_env);
         mPhotoRv = findViewById(R.id.inventory_create_material_photos_rv);
         mSaveBtn = findViewById(R.id.inventory_create_material_save_btn);
@@ -145,6 +148,8 @@ public class InventoryCreateFragment extends BaseFragment<InventoryCreatePresent
         mRatifiedPriceEt.getInputEt().setInputType(EditorInfo.TYPE_CLASS_NUMBER|EditorInfo.TYPE_NUMBER_FLAG_DECIMAL);
         mMinimumStockEt.getInputEt().setInputType(EditorInfo.TYPE_CLASS_NUMBER|EditorInfo.TYPE_NUMBER_FLAG_DECIMAL);
         mInitialNumberEt.getInputEt().setInputType(EditorInfo.TYPE_CLASS_NUMBER|EditorInfo.TYPE_NUMBER_FLAG_DECIMAL);
+        //提醒提前天数 正整数
+        mExpirationNumberEt.getInputEt().setInputType(EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_VARIATION_NORMAL);
         ViewUtil.setNumberPoint(mRatifiedPriceEt.getInputEt(), 2);
         ViewUtil.setNumberPoint(mMinimumStockEt.getInputEt(), 2);
         ViewUtil.setNumberPoint(mInitialNumberEt.getInputEt(), 2);
@@ -186,15 +191,22 @@ public class InventoryCreateFragment extends BaseFragment<InventoryCreatePresent
                     mInitialNumberEt.showDashLine(false);
                 }
 
-                if (!TextUtils.isEmpty(strNum) && !strNum.startsWith(".")) {
+                if (!TextUtils.isEmpty(strNum) ) {
+                    if (strNum.startsWith(".")){
+                        ToastUtils.showShort("数量填写异常");
+                        return;
+                    }
                     mIinitNum = Float.parseFloat(strNum);
                     if (mIinitNum > 0) {
                         mHideLl.setVisibility(View.VISIBLE);
                         mInitialNumberEt.showDashLine(true);
                     } else {
+                        mIinitNum = -1; //默认值
                         mHideLl.setVisibility(View.GONE);
                         mInitialNumberEt.showDashLine(false);
                     }
+                }else {
+                    mIinitNum = -1; //默认值
                 }
             }
         });
@@ -299,6 +311,11 @@ public class InventoryCreateFragment extends BaseFragment<InventoryCreatePresent
                 ToastUtils.showShort(R.string.inventory_create_price_empty_hint);
                 return false;
             }
+            //过期时间必填
+            if (TextUtils.isEmpty(mSelectDueDateTv.getTipText())){
+                ToastUtils.showShort(R.string.inventory_material_create_due_date_select_hint);
+                return false;
+            }
         }
 
         return true;
@@ -320,6 +337,10 @@ public class InventoryCreateFragment extends BaseFragment<InventoryCreatePresent
         mMaterialCreateRequst.providerName = mMaterialProviderEt.getInputText().trim();
         mMaterialCreateRequst.price = TextUtils.isEmpty(mMaterialCostEt.getInputText()) ? null : Float.parseFloat(mMaterialCostEt.getInputText().trim());
         mMaterialCreateRequst.desc = mDescEnv.getDesc().trim();
+        if (!TextUtils.isEmpty(mExpirationNumberEt.getInputText())){
+            mMaterialCreateRequst.remindAhead = Integer.parseInt(mExpirationNumberEt.getInputText());
+        }
+
 
         //联网保存物资信息(上传图片)
         if (mPhotoList != null && mPhotoList.size() > 0) {

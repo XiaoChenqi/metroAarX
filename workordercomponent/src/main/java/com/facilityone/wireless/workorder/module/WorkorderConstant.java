@@ -17,6 +17,18 @@ public interface WorkorderConstant {
     int WORKORER_ARCHIVE = 6;         //待存档工单
     int WORKORER_QUERY = 7;           //工单查询
 
+
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/27
+     * @Infor: 工单标签
+     */
+    int APPLICATION_FOR_SUSPENSION = 0 ; //暂停申请中
+    int PAUSE_STILL_WORKING = 1 ; //暂停（继续工作）
+    int PAUSE_NOT_WORKING = 2 ; //暂停(不继续工作)
+    int APPLICATION_VOID = 3 ; //作废申请中
+    int STOP = 4 ; //终止
+
     //工单状态
     int WORK_STATUS_NONE = -1;                      // 无
     int WORK_STATUS_CREATED = 0;                    // 已创建
@@ -31,6 +43,7 @@ public interface WorkorderConstant {
     int WORK_STATUS_SUSPENDED_NO = 9;               // 已暂停(不继续工作)
     int WORK_STATUS_UBNORMAL = 10;                  // 异常工单
     int WORK_STATUS_MAINTENCE = 11;                  // 计划性维护
+    int WORK_STATUS_MAINTENCE_NOT = 12;                  // 计划性维护已验证
 
     //工单类型
     int WORK_TYPE_CM = 0;               // cm
@@ -151,6 +164,8 @@ public interface WorkorderConstant {
     int WORK_NEW_STATUS_APPROVAL_WAIT = 3;              // 待审核
     int WORK_NEW_STATUS_ARCHIVED = 4;                   // 已存档
     int WORK_NEW_STATUS_DESTORY = 5;                    // 已作废
+
+
 
 
 }

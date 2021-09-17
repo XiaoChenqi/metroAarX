@@ -163,6 +163,11 @@ public class BatchModifyFragment extends BaseFragment<BatchModifyPresenter> impl
             return false;
         }
 
+        if (TextUtils.isEmpty(mSelectDueDateTv.getTipText())){
+            ToastUtils.showShort(R.string.inventory_select_expiration_time_hint);
+            return false;
+        }
+
         if (TextUtils.isEmpty(mPriceEt.getInputText())) {
             ToastUtils.showShort(R.string.inventory_material_create_price_empty_hint);
             return false;
@@ -172,7 +177,6 @@ public class BatchModifyFragment extends BaseFragment<BatchModifyPresenter> impl
             ToastUtils.showShort(R.string.inventory_material_input_number_empty_hint);
             return false;
         }
-
         return true;
     }
 

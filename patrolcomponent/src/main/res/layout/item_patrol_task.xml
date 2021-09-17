@@ -30,6 +30,14 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"/>
+            <TextView
+                android:id="@+id/type_tv"
+                style="@style/patrolTagStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_12"
+                android:background="@drawable/fm_patrol_ing_tag_bg"
+                android:text=""/>
 
             <TextView
                 android:id="@+id/no_sync_tv"

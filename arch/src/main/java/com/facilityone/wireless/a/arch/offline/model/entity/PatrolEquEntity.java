@@ -232,7 +232,7 @@ public class PatrolEquEntity implements Parcelable {
         in.readList(this.contents, PatrolItemEntity.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<PatrolEquEntity> CREATOR = new Parcelable.Creator<PatrolEquEntity>() {
+    public static final Creator<PatrolEquEntity> CREATOR = new Creator<PatrolEquEntity>() {
         @Override
         public PatrolEquEntity createFromParcel(Parcel source) {
             return new PatrolEquEntity(source);

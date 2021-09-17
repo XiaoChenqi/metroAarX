@@ -15,6 +15,14 @@
         <!--<item>已暂停(不继续工作)</item>-->
     </string-array>
 
+    <string-array name="workorder_tag_Status">
+        <item>暂停申请中</item>
+        <item>暂停(继续工作)</item>
+        <item>暂停(不继续工作)</item>
+        <item>作废申请中</item>
+        <item>已终止</item>
+    </string-array>
+
     <!--工作状态-->
     <string-array name="workorder_net_get_worker_stat">
         <item>未接单</item>

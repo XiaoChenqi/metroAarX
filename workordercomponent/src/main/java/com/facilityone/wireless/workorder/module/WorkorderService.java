@@ -21,7 +21,6 @@ import java.util.List;
 public class WorkorderService {
 
 
-
     //工单列表请求响应
     public static class WorkorderListReq {
         public Page page;
@@ -32,7 +31,7 @@ public class WorkorderService {
         public Page page;
         public WorkorderConditionBean searchCondition;
     }
-    
+
     //计划性维护步骤编辑
     public static class WorkorderStepUpdateReq {
         public Long woId;
@@ -55,6 +54,7 @@ public class WorkorderService {
         public String woDescription;
         public List<Long> priority;
         public List<Long> status;
+        public List<Long> newStatus;
         public List<Long> tag;
         public Long typeId;
         public Long startDateTime;
@@ -71,6 +71,7 @@ public class WorkorderService {
         public String code; // 工单号
         public String serviceTypeName; // 服务类型
         public Integer status; // 工单状态
+        public Integer newStatus; // 工单状态
         public String pfmCode;//dtz 专用
         public Long priorityId; // 工单优先级id
         public String priorityName; // 工单优先级
@@ -82,15 +83,15 @@ public class WorkorderService {
         public String location; // 地理位置
         public String applicantName; // 工单请求者名称
         public String applicantPhone; // 工单请求者的电话
-         /**
-          * @Auther: karelie
-          * @Date: 2021/8/12
-          * @Infor: 补充部分字段
-          */
-         public Long orgId ; //部门Id
-         public Long serviceTypeId ; //服务类型Id
-         public Long flowId ; //流程Id
-
+        /**
+         * @Auther: karelie
+         * @Date: 2021/8/12
+         * @Infor: 补充部分字段
+         */
+        public Long orgId; //部门Id
+        public Long serviceTypeId; //服务类型Id
+        public Long flowId; //流程Id
+        public Integer tag; // 工单标签
 
         /* 旧版字段 */
         public String laborer; // 执行人
@@ -133,6 +134,14 @@ public class WorkorderService {
         public List<String> pictures; // 图片
         //四运需求
         public List<WorkOrderEquipmentsBean> equipmentSystemName; //故障设备名称
+        public List<RelatedOrder> relatedOrder; //关联工单
+        public String failueDescription;//故障描述
+
+    }
+
+    public static class RelatedOrder {
+        public Long woId; // 工单Id
+        public String code; //工单编码
     }
 
     public static class PmInfoBean {
@@ -214,7 +223,7 @@ public class WorkorderService {
         public String value;
     }
 
-    public static class WorkOrderEquipmentsBean  implements Parcelable{
+    public static class WorkOrderEquipmentsBean implements Parcelable {
         public Long equipmentId; // 设备ID
         public String equipmentCode; // 设备编码
         public String equipmentName; // 设备名称
@@ -371,8 +380,8 @@ public class WorkorderService {
             }
         };
     }
-    
-    public static class StepsBean implements Comparator<StepsBean>,Parcelable {
+
+    public static class StepsBean implements Comparator<StepsBean>, Parcelable {
         public Long stepId;//步骤ID
         public String step;//步骤
         public Integer sort;//序号
@@ -486,7 +495,7 @@ public class WorkorderService {
         };
     }
 
-    public static class PaymentsBean implements Parcelable{
+    public static class PaymentsBean implements Parcelable {
         public Long paymentId; //缴费单 ID
         public String code;
         public Long createDateTime;
@@ -599,7 +608,7 @@ public class WorkorderService {
     /**
      * 关联工单预定物料实例
      */
-    public static class WorkorderReserveRocordBean{
+    public static class WorkorderReserveRocordBean {
         public Long activityId; // 预定单ID
         public Long warehouseId; // 仓库ID
         public String warehouseName; // 仓库名称
@@ -623,9 +632,9 @@ public class WorkorderService {
     }
 
     /**
-    *原因查询实例
-    */
-    public static class WorkorderReasonBean implements Parcelable{
+     * 原因查询实例
+     */
+    public static class WorkorderReasonBean implements Parcelable {
         public Long id;
         public String code;
         public Long parentId;
@@ -686,7 +695,7 @@ public class WorkorderService {
         }
     }
 
-    public static class WorkorderReasonListResp{
+    public static class WorkorderReasonListResp {
         public Page page;
         public List<WorkorderReasonBean> contents;
         public Long newestDate;
@@ -731,6 +740,8 @@ public class WorkorderService {
         public Boolean signStatus;
         public LocationBean location;
         public Long createTime;
+        //站点和管理的所有区间
+        public List<Long> buildingIds;
     }
 
     /**

@@ -178,7 +178,7 @@ public class MaterialListFragment extends BaseFragment<MaterialListPresenter> im
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MaterialService.Material material = ((MaterialListAdapter) adapter).getData().get(position);
         if(material != null) {
-            start(MaterialInfoFragment.getInstance(material.inventoryId));
+            start(MaterialInfoFragment.getInstance(material.inventoryId,false));
         }
     }
 

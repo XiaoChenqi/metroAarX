@@ -9,11 +9,13 @@ import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.demand.R;
 import com.facilityone.wireless.demand.fragment.DemandCreateFragment;
 import com.facilityone.wireless.demand.module.DemandCreateService;
+import com.facilityone.wireless.demand.module.DemandService;
 import com.facilityone.wireless.demand.module.DemandUrl;
 import com.fm.tool.network.model.BaseResponse;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +30,15 @@ public class DemandCreatePresenter extends CommonBasePresenter<DemandCreateFragm
         switch (type) {
             case ConstantMeida.IMAGE:
                 if (ids != null) {
-                    getV().getRequest().photoIds = ids;
+//                    List<String> idsList = new ArrayList<>();
+//                    idsList = getV().getRequest().photoIds;
+//                    idsList.addAll(ids);
+                    if (getV().getRequest().photoIds != null){
+                        getV().getRequest().photoIds.addAll(ids);
+                    }else {
+                        getV().getRequest().photoIds = ids;
+                    }
+
                 }
                 break;
             case ConstantMeida.VIDEO:
@@ -52,22 +62,20 @@ public class DemandCreatePresenter extends CommonBasePresenter<DemandCreateFragm
                     uploadFile(getV().getVideoSelectList(), CommonUrl.UPLOAD_VIDEO_URL, ConstantMeida.VIDEO);
                 } else if (getV().getAudioSelectList().size() > 0) {
                     uploadFile(getV().getAudioSelectList(), CommonUrl.UPLOAD_VOICE_URL, ConstantMeida.AUDIO);
-                } else {
-                    createDemand();
                 }
                 break;
-
             case ConstantMeida.VIDEO:
                 if (getV().getAudioSelectList().size() > 0) {
                     uploadFile(getV().getAudioSelectList(), CommonUrl.UPLOAD_VOICE_URL, ConstantMeida.AUDIO);
-                } else {
-                    createDemand();
                 }
                 break;
             case ConstantMeida.AUDIO:
-                createDemand();
+                if (getV().getVideoSelectList().size() >0){
+                    uploadFile(getV().getVideoSelectList(), CommonUrl.UPLOAD_VIDEO_URL, ConstantMeida.VIDEO);
+                }
                 break;
         }
+        createDemand();
     }
 
     public void createDemand() {
@@ -127,5 +135,36 @@ public class DemandCreatePresenter extends CommonBasePresenter<DemandCreateFragm
     public void getUserInfoSuccess(String toJson) {
         getV().refreshUserInfo(toJson);
         getV().dismissLoading();
+    }
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:40
+     * @Description: 获取最后一次签到记录
+     */
+    public void getLastAttendance(){
+        getV().showLoading();
+        String json = "{}";
+        OkGo.<BaseResponse<DemandCreateService.AttendanceResp>>post(FM.getApiHost() + DemandUrl.ATTENDANCE_LAST)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(json)
+                .execute(new FMJsonCallback<BaseResponse<DemandCreateService.AttendanceResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<DemandCreateService.AttendanceResp>> response) {
+                        getV().dismissLoading();
+                        DemandCreateService.AttendanceResp data = response.body().data;
+                        if(data != null) {
+                            getV().RefreshSigon(data);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<DemandCreateService.AttendanceResp>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
     }
 }

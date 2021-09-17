@@ -20,6 +20,7 @@ import com.facilityone.wireless.patrol.module.PatrolConstant;
 import com.facilityone.wireless.patrol.module.PatrolUrl;
 import com.fm.tool.network.model.BaseResponse;
 import com.fm.tool.scan.ScanActivity;
+import com.huawei.hms.ml.scan.HmsScan;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.zdf.activitylauncher.ActivityLauncher;
@@ -84,8 +85,23 @@ public class PatrolMenuPresenter extends CommonBasePresenter<PatrolMenuFragment>
      */
     public void hmsScan(){
         Intent intent = new Intent(getV().getContext(), FzScanActivity.class);
-//        ActivityLauncher.
-//        getV().startActivity(intent);
+
+
+        // 启动Activity（方式二）
+        ActivityLauncher.init(getV().getActivity())
+                .startActivityForResult(intent, new ActivityLauncher.Callback() {
+                    @Override
+                    public void onActivityResult(int resultCode, Intent data) {
+                        HmsScan result=data.getParcelableExtra("scanResult");
+                        if (result!=null){
+                            ToastUtils.showLong(result.originalValue);
+                            System.out.println(result.originalValue);
+                        }else {
+
+                        }
+
+                    }
+                });
     }
 
     /**

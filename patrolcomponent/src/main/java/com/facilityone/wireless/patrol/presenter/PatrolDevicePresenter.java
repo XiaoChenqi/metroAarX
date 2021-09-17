@@ -126,12 +126,13 @@ public class PatrolDevicePresenter extends BasePresenter<PatrolDeviceFragment> {
                     public void onSuccess(Response<BaseResponse<String>> response) {
                         getV().dismissLoading();
                         String message = response.body().message;
-                        if (message != null) {
-                            if ("execute".equals(message)){
-                                getV().startTask(time,position);
-                            }
-
-                        }
+                        getV().startTask(time,position);
+//                        if (message != null) {
+//                            if ("execute".equals(message)){
+//                                getV().startTask(time,position);
+//                            }
+//
+//                        }
                     }
                 });
     }
@@ -156,12 +157,13 @@ public class PatrolDevicePresenter extends BasePresenter<PatrolDeviceFragment> {
                     public void onSuccess(Response<BaseResponse<String>> response) {
                         getV().dismissLoading();
                         String message = response.body().message;
-                        if (message != null) {
-                            if ("cancel".equals(message)){
-                               dialog.dismiss();
-                            }
-
-                        }
+                        dialog.dismiss();
+//                        if (message != null) {
+//                            if ("cancel".equals(message)){
+//                               dialog.dismiss();
+//                            }
+//
+//                        }
                     }
                 });
     }

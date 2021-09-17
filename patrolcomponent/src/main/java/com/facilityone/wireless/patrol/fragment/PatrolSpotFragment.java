@@ -16,17 +16,21 @@ import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.offline.model.entity.DBPatrolConstant;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
+import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.patrol.NfcRedTagActivity;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.adapter.PatrolSpotAdapter;
 import com.facilityone.wireless.patrol.module.PatrolConstant;
+import com.facilityone.wireless.patrol.module.PatrolQueryService;
 import com.facilityone.wireless.patrol.module.PatrolSaveReq;
 import com.facilityone.wireless.patrol.presenter.PatrolSpotPresenter;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -59,6 +63,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     private static final String PATROL_TASK_ID = "patrol_task_id";
     private static final String PATROL_TASK_NAME = "patrol_task_name";
     private static final String PATROL_SCAN = "patrol_scan";
+    private static final String PATROL_NEED_CHECK="patrol_check";
     private static final int REQUEST_DEVICE = 30001;
 
     private List<PatrolSpotEntity> mShowEntities;
@@ -71,6 +76,10 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     private PatrolSaveReq mPatrolSaveReq;
     private String mFromScan;
     private int mNeedNfc;
+    private boolean mNeedCheck=false;
+    //签到位置
+    private PatrolQueryService.AttendanceResp mLocation;
+    private boolean mHasAttentance=false;
 
     @Override
     public PatrolSpotPresenter createPresenter() {
@@ -101,7 +110,12 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
             title = arguments.getString(PATROL_TASK_NAME, getString(R.string.patrol_spot));
             mTaskId = arguments.getLong(PATROL_TASK_ID);
             mFromScan = arguments.getString(PATROL_SCAN, "");
+            mNeedCheck=arguments.getBoolean(PATROL_NEED_CHECK,false);
+            if (mNeedCheck){
+                getPresenter().getLastAttendance();
+            }
         }
+
         setTitle(title);
         if (mTaskId == 0L) {
             pop();
@@ -110,6 +124,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
         initView();
         getSpotList();
         mNeedNfc = SPUtils.getInstance(SPKey.SP_MODEL_PATROL).getInt(SPKey.PATROL_NEED_NFC, 0);
+
     }
 
     private void initView() {
@@ -150,7 +165,20 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
 
     @Override
     public void onRightTextMenuClick(View view) {
-        syncDta(PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
+        //syncDta(PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
+        //判断是否需要验证签到状态
+        if (mNeedCheck){
+            if (mHasAttentance){
+                getPresenter().submitTask(mTaskId,PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
+//                syncDta(PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
+            }else {
+                ToastUtils.showLong("请先签到");
+            }
+        }else {
+            getPresenter().submitTask(mTaskId,PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
+//            syncDta(PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
+        }
+
     }
 
     public void error() {
@@ -194,22 +222,69 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        PatrolSpotEntity patrolSpotEntity = mShowEntities.get(position);
-        //如果远程完成了也不需要扫描二维码 加上  || patrolSpotEntity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE
 
-        if (mNeedNfc == PatrolConstant.PATROL_NEED_NFC && patrolSpotEntity.getCompleted() != DBPatrolConstant.TRUE_VALUE) {
-            ToastUtils.showShort(R.string.patrol_spot_operate_tip);
-        } else {
-            String code = patrolSpotEntity.getCode();
-            if ((!TextUtils.isEmpty(mFromScan) && !TextUtils.isEmpty(code) && mFromScan.equals(code))
-                    || patrolSpotEntity.getCompleted() == DBPatrolConstant.TRUE_VALUE
-                    || patrolSpotEntity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE) {
-                startForResult(PatrolDeviceFragment.getInstance(patrolSpotEntity.getName(), patrolSpotEntity.getPatrolSpotId()), REQUEST_DEVICE);
+
+
+        PatrolSpotEntity patrolSpotEntity = mShowEntities.get(position);
+        patrolSpotEntity.setTaskId(mTaskId);
+
+
+        //是否需要判断签到状态
+        if (mNeedCheck){
+            if (mHasAttentance){
+//                patrolSpotEntity.getLocation().buildingId.equals(mLocation.buildingId)
+                if (isLocationNull(mLocation.location,patrolSpotEntity.getLocation()) &&
+                    //判断当前点位是否在签到区间中
+                    isInLocationList(patrolSpotEntity.getLocation().buildingId,mLocation)){
+                    mHasAttentance=true;
+                    //如果远程完成了也不需要扫描二维码 加上  || patrolSpotEntity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE
+
+                    if (mNeedNfc == PatrolConstant.PATROL_NEED_NFC && patrolSpotEntity.getCompleted() != DBPatrolConstant.TRUE_VALUE) {
+                        ToastUtils.showShort(R.string.patrol_spot_operate_tip);
+                    } else {
+                        String code = patrolSpotEntity.getCode();
+                        if ((!TextUtils.isEmpty(mFromScan) && !TextUtils.isEmpty(code) && mFromScan.equals(code))
+                                || patrolSpotEntity.getCompleted() == DBPatrolConstant.TRUE_VALUE
+                                || patrolSpotEntity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE) {
+//                startForResult(PatrolDeviceFragment.getInstance(patrolSpotEntity.getName(), patrolSpotEntity.getPatrolSpotId()), REQUEST_DEVICE);
+
+                            getPresenter().judgeTask(patrolSpotEntity,false);
+                        } else {
+                            getPresenter().judgeTask(patrolSpotEntity,true);
+                            //需要扫描二维码
+                            //getPresenter().scan(patrolSpotEntity);
+                        }
+                    }
+                }else {
+                    ToastUtils.showLong("您的签到位置与当前位置不符，请确认！");
+                }
+            }else {
+                ToastUtils.showLong("请先签到");
+            }
+
+        }
+        else {
+            //如果远程完成了也不需要扫描二维码 加上  || patrolSpotEntity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE
+
+            if (mNeedNfc == PatrolConstant.PATROL_NEED_NFC && patrolSpotEntity.getCompleted() != DBPatrolConstant.TRUE_VALUE) {
+                ToastUtils.showShort(R.string.patrol_spot_operate_tip);
             } else {
-                //需要扫描二维码
-                getPresenter().scan(patrolSpotEntity);
+                String code = patrolSpotEntity.getCode();
+                if ((!TextUtils.isEmpty(mFromScan) && !TextUtils.isEmpty(code) && mFromScan.equals(code))
+                        || patrolSpotEntity.getCompleted() == DBPatrolConstant.TRUE_VALUE
+                        || patrolSpotEntity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE) {
+//                startForResult(PatrolDeviceFragment.getInstance(patrolSpotEntity.getName(), patrolSpotEntity.getPatrolSpotId()), REQUEST_DEVICE);
+
+                    getPresenter().judgeTask(patrolSpotEntity,false);
+                } else {
+                    getPresenter().judgeTask(patrolSpotEntity,true);
+                    //需要扫描二维码
+//                getPresenter().scan(patrolSpotEntity);
+                }
             }
         }
+
+
     }
 
     /**
@@ -217,9 +292,24 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
      *
      * @param patrolSpotEntity
      */
-    public void scanResult(PatrolSpotEntity patrolSpotEntity) {
-        startForResult(PatrolDeviceFragment.getInstance(patrolSpotEntity.getName(), patrolSpotEntity.getPatrolSpotId()), REQUEST_DEVICE);
+    public void scanResult(PatrolSpotEntity patrolSpotEntity,Long time) {
+
+        if (time!=0){
+            showOrderTimeDialog(time,patrolSpotEntity);
+        }else {
+            enterDeviceList(patrolSpotEntity);
+        }
+//        executeTask(patrolSpotEntity);
+//        startForResult(PatrolDeviceFragment.getInstance(patrolSpotEntity.getName(), patrolSpotEntity.getPatrolSpotId()), REQUEST_DEVICE);
     }
+
+
+    public void needScanQrcode(PatrolSpotEntity patrolSpotEntity,Long time){
+        getPresenter().scan(patrolSpotEntity,time);
+
+    }
+
+
 
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
@@ -281,7 +371,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     /**
      * 同步数据
      */
-    private void syncDta(int operateType) {
+    public void syncDta(int operateType) {
         mPatrolSaveReq = new PatrolSaveReq();
         mPatrolSaveReq.operateType = operateType;
         mPatrolSaveReq.userId = FM.getEmId();
@@ -309,6 +399,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     @Override
     public void leftBackListener() {
         popResult();
+        ActivityUtils.finishActivity(NfcRedTagActivity.class);
     }
 
     public void popResult() {
@@ -346,8 +437,13 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
         return mPatrolSaveReq;
     }
 
-    public static PatrolSpotFragment getInstance(Long taskId, String name) {
-        return getInstance(taskId, name, null);
+    public static PatrolSpotFragment getInstance(Long taskId, String name,boolean checkAttentance) {
+        if (checkAttentance){
+            return getInstance(taskId,name,null, true);
+        }else {
+            return getInstance(taskId, name, null);
+        }
+
     }
 
     public static PatrolSpotFragment getInstance(Long taskId, String name, String scan) {
@@ -360,5 +456,143 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
         return instance;
     }
 
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/30 15:38
+     * @Description: 类型为巡检时增加判断参数
+     */
+    public static PatrolSpotFragment getInstance(Long taskId, String name, String scan,boolean checkAttentance) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(PATROL_TASK_ID, taskId);
+        bundle.putString(PATROL_TASK_NAME, name);
+        bundle.putString(PATROL_SCAN, scan);
+        bundle.putBoolean(PATROL_NEED_CHECK,checkAttentance);
+        PatrolSpotFragment instance = new PatrolSpotFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
 
+
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/27 16:26
+     * @Description:请求执行当前任务
+     */
+    public void executeTask(PatrolSpotEntity entity) {
+        getPresenter().executeTask(entity);
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/27 16:26
+     * @Description:进入设备列表
+     */
+    public void enterDeviceList(PatrolSpotEntity entity){
+    startForResult(PatrolDeviceFragment.getInstance(entity.getName(), entity.getPatrolSpotId()), REQUEST_DEVICE);
+    }
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/30 9:58
+     * @Description: 剩余时间提示
+     */
+    public void showOrderTimeDialog(Long leftTime){
+        String messageFormat="";
+        String leftTimeStr="";
+
+
+        //保存此页面数据到数据库
+        FMWarnDialogBuilder builder = new FMWarnDialogBuilder(getContext());
+        builder.setTitle("提示");
+        if (leftTime>60){
+            leftTimeStr=String.valueOf(leftTime/60);
+            messageFormat="存在已执行的任务,还剩%s分钟";
+        }else {
+            leftTimeStr=String.valueOf(leftTime);
+            messageFormat="存在已执行的任务,还剩%s秒";
+        }
+//        String messageFormat="完成任务最少需要%s分钟，为满足期限。（还剩%s分钟）";
+        builder.setTip(String.format(messageFormat,leftTimeStr));
+//        builder.setTip(String.format(messageFormat,mNeedTime,leftTime));
+        builder.setCancelVisiable(false);
+        builder.addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+            @Override
+            public void onClick(QMUIDialog dialog, View view) {
+//                saveDataBefore();
+                dialog.dismiss();
+            }
+        });
+        builder.create(R.style.fmDefaultWarnDialog).show();
+    }
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/30 9:57
+     * @Description: 开启任务时提示
+     */
+    public void showOrderTimeDialog(Long time,PatrolSpotEntity entity){
+        String timeStr=String.valueOf(time/60);
+        FMWarnDialogBuilder builder = new FMWarnDialogBuilder(getContext());
+        builder.setTitle("提示");
+        builder.setCancel("返回");
+        builder.setTip("如果您确认开启该任务，最少需要"+timeStr+"分钟才能完成提交。");
+        builder.addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+            @Override
+            public void onClick(QMUIDialog dialog, View view) {
+                executeTask(entity);
+//                startForResult(PatrolItemFragment.getInstance(mSpotId, (ArrayList<PatrolEquEntity>) mEntities, position, mSpotName,time), REQUEST_ITEM);
+                dialog.dismiss();
+            }
+        });
+        builder.create(R.style.fmDefaultWarnDialog).show();
+    }
+
+    public void saveAttentanceLocation(PatrolQueryService.AttendanceResp locationBean){
+        this.mLocation=locationBean;
+    }
+
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/31 14:16
+     * @Description: 位置信息判空
+     * @return
+     */
+    private static boolean isLocationNull(LocationBean remoteBean, LocationBean localBean){
+        if (remoteBean!=null&&localBean!=null){
+            if (remoteBean.siteId!=null&&localBean.siteId!=null){
+                return remoteBean.buildingId != null && localBean.buildingId != null;
+            }else {
+                return false;
+            }
+
+        }
+        return false;
+    }
+
+    public void hasAttentanceData(boolean mHasData){
+        this.mHasAttentance=mHasData;
+    }
+
+
+    /**
+     * @return
+     * @Created by: kuuga
+     * @Date: on 2021/8/31 14:16
+     * @Description: 工单位置是否处于签到区间
+     */
+    private static boolean isInLocationList(Long orderBuildingId,PatrolQueryService.AttendanceResp remoteData){
+        for (Long id: remoteData.buildingIds) {
+            if (id.equals(orderBuildingId)){
+                return true;
+            }
+        }
+        return false;
+
+    }
 }

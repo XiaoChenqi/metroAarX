@@ -226,4 +226,8 @@
     <string name="patrol_check_item_upload_pic"> 上传照片</string>
     <!--下载进度:-->
     <string name="patrol_dowmload_progress">下载进度：</string>
+
+    <!-- 类型——巡视-->
+    <string name="patrol_task_type_inspection">巡检</string>
+    <string name="patrol_task_type_patrol">巡视</string>
 </resources>

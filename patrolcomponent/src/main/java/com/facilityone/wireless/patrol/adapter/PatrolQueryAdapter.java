@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.facilityone.wireless.a.arch.offline.model.entity.PatrolTaskEntity;
 import com.facilityone.wireless.basiclib.utils.DateUtils;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.facilityone.wireless.patrol.R;
@@ -38,6 +39,22 @@ public class PatrolQueryAdapter extends BaseQuickAdapter<PatrolQueryService.Patr
         helper.setText(R.id.people_tv, StringUtils.formatString(item.laborer));
         helper.setText(R.id.spot_number_tv, String.format(mContext.getString(R.string.patrol_task_diawei_ge_spot), item.spotNumber == null ? 0 : item.spotNumber));
 
+
+
+        if (item.ptype != null) {
+            helper.setVisible(R.id.type_tv, true);
+            if (item.ptype.equals(PatrolQueryService.PatrolQueryBodyBean.TASK_TYPE_INSPECTION)) {
+                helper.setText(R.id.type_tv, R.string.patrol_task_type_inspection);
+            } else if (item.ptype.equals(PatrolQueryService.PatrolQueryBodyBean.TASK_TYPE_PATROL)) {
+                helper.setText(R.id.type_tv, R.string.patrol_task_type_patrol);
+            } else {
+                helper.setGone(R.id.type_tv, false);
+            }
+
+        } else {
+            helper.setVisible(R.id.type_tv, false);
+        }
+
         if (item.dueStartDateTime != 0) {
             String startTime = TimeUtils.millis2String(item.dueStartDateTime, DateUtils.SIMPLE_DATE_FORMAT_ALL);
             helper.setText(R.id.patrol_task_item_start_time_tv, startTime);
@@ -60,6 +77,7 @@ public class PatrolQueryAdapter extends BaseQuickAdapter<PatrolQueryService.Patr
 
         if (item.status != null) {
             helper.setGone(R.id.state_tv, true);
+            helper.setVisible(R.id.type_tv,true);
             String status = null;
             if (item.status < mTaskStatus.length) {
                 status = mTaskStatus[item.status];
@@ -99,6 +117,7 @@ public class PatrolQueryAdapter extends BaseQuickAdapter<PatrolQueryService.Patr
 
         } else {
             helper.setGone(R.id.state_tv, false);
+            helper.setVisible(R.id.type_tv,false);
         }
 
         int layoutPosition = helper.getLayoutPosition();

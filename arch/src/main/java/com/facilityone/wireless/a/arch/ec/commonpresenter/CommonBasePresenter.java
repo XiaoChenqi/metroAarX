@@ -402,8 +402,12 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
 
 
     public void uploadFile(List<LocalMedia> paths, final int type) {
-        this.uploadFile(paths, null, type);
+        uploadFile(paths,null, type);
     }
+
+//    public void uploadFile(List<LocalMedia> paths, String url,final int type) {
+//        this.uploadFile(paths,url, type);
+//    }
 
     public void uploadFile(final List<LocalMedia> paths, final String url, final int type) {
 
@@ -471,7 +475,7 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
 
         }
 
-        request.getParams().urlParamsMap.clear();
+
         request.execute(new FMJsonCallback<BaseResponse<List<String>>>() {
             @Override
             public void onSuccess(Response<BaseResponse<List<String>>> response) {

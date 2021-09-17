@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <com.qmuiteam.qmui.widget.QMUITopBarLayout
@@ -115,8 +116,17 @@
                         <TextView
                             android:id="@+id/tv_info_priority"
                             style="@style/h5_text_style"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:visibility="gone"
+                            android:id="@+id/workorder_new_status_tv"
+                            style="@style/tag_text_style"
+                            tools:text="暂停/继续"
+                            android:layout_gravity="center_vertical"
+                            tools:background="@drawable/fm_workorder_tag_fill_created_bg" />
 
                     </LinearLayout>
 
@@ -153,6 +163,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
+
+
+
 
                     </LinearLayout>
 
@@ -372,45 +385,6 @@
                         android:layout_marginBottom="@dimen/dp_10" />
                 </LinearLayout>
 
-                <!--关联设备-->
-                <LinearLayout
-                    android:id="@+id/ll_device"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:background="@drawable/list_item_bg"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <LinearLayout
-                        style="@style/contentTitleLayoutStyle"
-                        android:background="@color/transparent">
-
-                        <View style="@style/demandWorkTitleIconStyle" />
-
-                        <TextView
-                            android:id="@+id/tv_device"
-                            style="@style/h3_text_style"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="@dimen/dp_15"
-                            android:text="@string/workorder_associated_equipment" />
-
-                        <com.joanzapata.iconify.widget.IconTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/icon_right"
-                            android:textColor="@color/grey_9"
-                            android:textSize="@dimen/sp_14" />
-                    </LinearLayout>
-
-                    <View
-                        android:id="@+id/view_device_bottom_line"
-                        style="@style/secant_line_style" />
-
-                </LinearLayout>
-
                 <!--空间位置-->
                 <LinearLayout
                     android:id="@+id/ll_space"
@@ -520,6 +494,82 @@
                 </LinearLayout>
 
 
+                <!--关联设备-->
+                <LinearLayout
+                    android:id="@+id/ll_device"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:background="@drawable/list_item_bg"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        style="@style/contentTitleLayoutStyle"
+                        android:background="@color/transparent">
+
+                        <View style="@style/demandWorkTitleIconStyle" />
+
+                        <TextView
+                            android:id="@+id/tv_device"
+                            style="@style/h3_text_style"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/dp_15"
+                            android:text="@string/workorder_associated_equipment" />
+
+                        <com.joanzapata.iconify.widget.IconTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/icon_right"
+                            android:textColor="@color/grey_9"
+                            android:textSize="@dimen/sp_14" />
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/view_device_bottom_line"
+                        style="@style/secant_line_style" />
+
+                </LinearLayout>
+
+
+                <!--工具-->
+                <!--故障原因-->
+                <LinearLayout
+                    android:id="@+id/ll_tool"
+                    style="@style/contentTitleLayoutStyle"
+                    android:background="@drawable/list_item_bg"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:visibility="gone">
+
+                    <View style="@style/demandWorkTitleIconStyle" />
+
+                    <TextView
+                        style="@style/h3_text_style"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="@dimen/dp_15"
+                        android:text="故障原因" />
+
+                    <TextView
+                        android:id="@+id/tv_tool_total"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="@dimen/dp_30"
+                        android:textColor="@color/workorder_blue"
+                        android:textSize="@dimen/sp_15" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/tv_tool_right_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/icon_right"
+                        android:textColor="@color/grey_9"
+                        android:textSize="@dimen/sp_14" />
+                </LinearLayout>
+
                 <!--物料-->
                 <LinearLayout
                     android:id="@+id/ll_material"
@@ -558,39 +608,7 @@
                         style="@style/secant_line_style" />
                 </LinearLayout>
 
-                <!--工具-->
-                <LinearLayout
-                    android:id="@+id/ll_tool"
-                    style="@style/contentTitleLayoutStyle"
-                    android:background="@drawable/list_item_bg"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:visibility="gone">
 
-                    <View style="@style/demandWorkTitleIconStyle" />
-
-                    <TextView
-                        style="@style/h3_text_style"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingLeft="@dimen/dp_15"
-                        android:text="@string/workorder_tool" />
-
-                    <TextView
-                        android:id="@+id/tv_tool_total"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="@dimen/dp_30"
-                        android:textColor="@color/workorder_red"
-                        android:textSize="@dimen/sp_15" />
-
-                    <com.joanzapata.iconify.widget.IconTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/icon_right"
-                        android:textColor="@color/grey_9"
-                        android:textSize="@dimen/sp_14" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_tool_bp"
@@ -622,7 +640,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingLeft="@dimen/dp_15"
-                        android:text="@string/workorder_charge_title" />
+                        android:text="收费明细" />
 
                     <TextView
                         android:id="@+id/tv_bp_total"
@@ -648,7 +666,7 @@
                     android:visibility="gone" />
 
 
-                <!--客户签字-->
+                <!--车站值班人员签字-->
                 <LinearLayout
                     android:id="@+id/ll_signature"
                     android:layout_width="match_parent"
@@ -672,7 +690,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingLeft="@dimen/dp_15"
-                            android:text="@string/workorder_hand_write_tip" />
+                            android:text="车站值班人员签字" />
 
                         <TextView
                             android:id="@+id/tv_signature"
@@ -748,6 +766,30 @@
                         android:id="@+id/view_signature_bottom"
                         style="@style/secant_line_style"
                         android:visibility="gone" />
+                </LinearLayout>
+
+                <!--关联设备-->
+                <LinearLayout
+                    android:id="@+id/ll_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:background="@drawable/list_item_bg"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        style="@style/contentTitleLayoutStyle"
+                        android:background="@color/transparent">
+
+                        <View style="@style/demandWorkTitleIconStyle" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/view_order_bottom_line"
+                        style="@style/secant_line_style" />
+
                 </LinearLayout>
 
                 <!--附件-->

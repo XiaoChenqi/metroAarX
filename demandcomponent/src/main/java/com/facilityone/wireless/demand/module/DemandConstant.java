@@ -14,6 +14,12 @@ public interface DemandConstant {
     int DEMAND_FINISH = 3;   //待评价
     int DEMAND_QUERY = 4;    //查询
 
+    Integer HEADQUARTERS_CODE = 0; //总部二维码
+    Integer OUT_SOURCING_CODE = 1; //委外二维码
+    Integer LINE_CODE = 2; //线路二维码
+    Integer STATION_CODE = 3; //车站二维码
+    Integer STATION_AREA_CODE = 4; //站区二维码
+
     //四运基础下标
     int DEMAND_NEW_CREATE = 0;   //创建
     int DEMAND_ASSURE_UNFINISH = 1;  //待处理报障

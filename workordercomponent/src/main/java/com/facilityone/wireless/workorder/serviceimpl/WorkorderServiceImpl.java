@@ -38,10 +38,20 @@ public class WorkorderServiceImpl implements WorkorderService {
     }
 
     @Override
+    public BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, boolean isExeption, Long woId) {
+         return WorkorderInfoFragment.getInstance(workorderStatus, code, isExeption,woId);
+    }
+
+    @Override
     public BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId, boolean isMaintenance, boolean isFinish) {
         return WorkorderInfoFragment.getInstance(workorderStatus, code, woId,isMaintenance,isFinish);
     }
 
+    //待处理
+    @Override
+    public BaseFragment getWorkorderInfoPendingFragment(int workorderStatus, String code, Long woId, Integer isPending, boolean isMaintenance) {
+        return WorkorderInfoFragment.getInstance(workorderStatus, code, woId,isPending,isMaintenance);
+    }
 
 
 

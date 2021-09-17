@@ -31,6 +31,22 @@ public class WorkorderHelper {
         return v;
     }
 
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/27
+      * @Infor: 工单标签状态
+      */
+     public static Map<Integer, String> getOrderTagStatusMap(Context context) {
+         Map<Integer, String> v = new LinkedHashMap<Integer, String>();
+         String[] array = context.getResources().getStringArray(R.array.workorder_tag_Status);
+         v.put(WorkorderConstant.APPLICATION_FOR_SUSPENSION, array[0]);
+         v.put(WorkorderConstant.PAUSE_STILL_WORKING, array[1]);
+         v.put(WorkorderConstant.PAUSE_NOT_WORKING, array[2]);
+         v.put(WorkorderConstant.APPLICATION_VOID, array[3]);
+         v.put(WorkorderConstant.STOP, array[4]);
+         return v;
+     }
+
     public static Map<Integer, String> getWorkNewStatusMap(Context context) {
         Map<Integer, String> v = new LinkedHashMap<Integer, String>();
         String[] stat = context.getResources().getStringArray(R.array.workorder_new_status);

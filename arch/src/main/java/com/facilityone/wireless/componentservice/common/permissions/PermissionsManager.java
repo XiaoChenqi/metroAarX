@@ -51,11 +51,13 @@ public class PermissionsManager {
       * @Date: 2021/8/10
       * @Infor: 新加
       */
-    public static final String ABNORMALORDERNUMBER = "abNormalOrderNumber";              //异常工单数量
+    public static final String ABNORMALORDERNUMBER = "abnormalOrderNumber";              //异常工单数量
     public static final String PATROLTASKNUMBER = "patrolTaskNumber";                        //巡检任务数量
-    public static final String UNAPPROVALREQUIREMENTNUMBER = "unApprovalRequirementNumber";  //待审核需求数量
-    public static final String UNDOREQUIREMENTNUMBER = "undoRequirementNumber";              //待处理需求数量
-    public static final String UNEVALUATEREQUIREMENTNUMBER = "unEvaluateRequirementNumber";  //待评价需求数量
+
+    public static final String UNAPPROVALREQUIREMENTNUMBER = "undoRequirementNumber";  //待处理需求数量
+    public static final String UNDOREQUIREMENTNUMBER = "unEvaluateRequirementNumber";              //待评价需求数量
+    public static final String UNEVALUATEREQUIREMENTNUMBER = "unImprovedRequirementNumber";  //待完善需求数量
+
     public static final String TOBEOUTINVENTORYNUMBER = "toBeOutInventoryNumber";            //待出库任务提示
     public static final String UNAPPROVALINVENTORYNUMBER = "unApprovalInventoryNumber";      //待审批预定单数量
     public static final String UNREADBULLETINNUMBER = "unReadBulletinNumber";                //未读公告数量
@@ -126,7 +128,7 @@ public class PermissionsManager {
                     "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
                     "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
                     "\"m-ppm\",\"m-inventory-create\",\"m-inventory-create\"," +
-                    "\"m-inventory-in\",\"m-inventory-out\",\"m-inventory-move\"," +
+                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
                     "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
                     "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-one\",\"m-ppm-two\"," +
                     "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\",]";
@@ -582,9 +584,9 @@ public class PermissionsManager {
                         icons[i], titles[i], null, i);
                 if ("m-requirement-approval".equals(per[i])) {
 //                    childMenu.jsonObjectKey = UNAPPROVALREQUIREMENTNUMBER;
-                    childMenu.jsonObjectKey = UNDOREQUIREMENTNUMBER;
-                } else if ("m-requirement-process".equals(per[i])) {
                     childMenu.jsonObjectKey = UNAPPROVALREQUIREMENTNUMBER;
+                } else if ("m-requirement-process".equals(per[i])) {
+                    childMenu.jsonObjectKey = UNDOREQUIREMENTNUMBER;
 //                    childMenu.jsonObjectKey = UNDOREQUIREMENTNUMBER;
                 } else if ("m-requirement-evaluate".equals(per[i])) {
                     childMenu.jsonObjectKey = UNEVALUATEREQUIREMENTNUMBER;
@@ -782,7 +784,7 @@ public class PermissionsManager {
     }
 
     public static boolean hasPermission(Context context, Integer type) {
-        PermissionsManager.HomeFunction instance = PermissionsManager.HomeFunction.getInstance();
+        HomeFunction instance = HomeFunction.getInstance();
         boolean has = false;
         if (type == null) {
             return false;
@@ -795,6 +797,7 @@ public class PermissionsManager {
                 has = instance.getFunctionPermission(context.getResources().getString(R.string.home_patrol_permissions));
                 break;
             case CommonConstant.MESSAGE_MAINTANCE:
+            case CommonConstant.MESSAGE_PRODUCTION_PLAN:
                 has = instance.getFunctionPermission(context.getResources().getString(R.string.home_ppm_permissions));
                 break;
             case CommonConstant.MESSAGE_ASSET:

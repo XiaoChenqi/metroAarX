@@ -30,6 +30,23 @@ public class PatrolTaskAdapter extends BaseQuickAdapter<PatrolTaskEntity, BaseVi
         if (item == null) {
             return;
         }
+
+        if (item.getpType() != null) {
+            helper.setVisible(R.id.type_tv, true);
+            if (item.getpType().equals(PatrolTaskEntity.TASK_TYPE_INSPECTION)) {
+                helper.setText(R.id.type_tv, R.string.patrol_task_type_inspection);
+            } else if (item.getpType().equals(PatrolTaskEntity.TASK_TYPE_PATROL)) {
+                helper.setText(R.id.type_tv, R.string.patrol_task_type_patrol);
+            } else {
+                helper.setGone(R.id.type_tv, false);
+            }
+
+        } else {
+            helper.setVisible(R.id.type_tv, false);
+        }
+
+
+
         helper.setText(R.id.name_tv, StringUtils.formatString(item.getTaskName()));
         helper.setText(R.id.patrol_task_item_point_tv, item.getSpotNumber() + mContext.getString(R.string.patrol_task_diawei_ge));
         helper.setText(R.id.patrol_task_item_device_tv, item.getEqNumber() + mContext.getString(R.string.patrol_task_diawei_ge));
@@ -66,9 +83,9 @@ public class PatrolTaskAdapter extends BaseQuickAdapter<PatrolTaskEntity, BaseVi
             helper.setText(R.id.state_tv, R.string.patrol_unfinish);
             helper.setBackgroundRes(R.id.state_tv, R.drawable.fm_patrol_red_tag_bg);
         }
-        
+
         helper.addOnClickListener(R.id.item_rl);
-        
+
 //        helper.setGone(R.id.exception_tv,item.getException() == DBPatrolConstant.TRUE_VALUE);
     }
 }

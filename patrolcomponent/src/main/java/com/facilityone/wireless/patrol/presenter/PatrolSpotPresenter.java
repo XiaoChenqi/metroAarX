@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -32,6 +34,7 @@ import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.fragment.PatrolSpotFragment;
 import com.facilityone.wireless.patrol.module.PatrolConstant;
+import com.facilityone.wireless.patrol.module.PatrolQueryService;
 import com.facilityone.wireless.patrol.module.PatrolSaveReq;
 import com.facilityone.wireless.patrol.module.PatrolUrl;
 import com.fm.tool.network.callback.JsonCallback;
@@ -57,6 +60,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DefaultObserver;
 import io.reactivex.schedulers.Schedulers;
+import kotlin.jvm.internal.markers.KMutableMap;
 
 /**
  * Author：gary
@@ -77,6 +81,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
             public void subscribe(@NonNull ObservableEmitter<List<PatrolSpotEntity>> emitter) throws Exception {
                 PatrolSpotDao dao = new PatrolSpotDao();
                 List<PatrolSpotEntity> entities = dao.getSpotList(taskId);
+
 
                 if (entities != null && entities.size() > 0) {
                     boolean exception = false;
@@ -724,7 +729,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
     /**
      * 二维码扫描相关逻辑
      */
-    public void scan(final PatrolSpotEntity spotEntity) {
+    public void scan(final PatrolSpotEntity spotEntity,Long time) {
         Intent intent = new Intent(getV().getContext(), ScanActivity.class);
         getV().startActivity(intent);
 
@@ -733,12 +738,154 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
             public void success(String QRCode) {
                 LogUtils.d("TAG", "扫描结果==" + QRCode);
                 String spotCode = PatrolQrcodeUtils.parseSpotCode(QRCode);
-                if (TextUtils.isEmpty(QRCode) || !spotCode.equals(spotEntity.getCode())) {
+                if (TextUtils.isEmpty(QRCode)) {
                     ToastUtils.showShort(R.string.patrol_qrcode_no_match);
                     return;
                 }
-                getV().scanResult(spotEntity);
+                if (!spotCode.equals(spotEntity.getCode())){
+                    ToastUtils.showShort("点位匹配出错，请确认点位");
+                    return;
+                }
+                getV().scanResult(spotEntity,time);
             }
         });
     }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/27 16:27
+     * @Description: 判断巡检任务点位可继续性
+     */
+    public void judgeTask(PatrolSpotEntity entity,boolean needScan){
+        PatrolQueryService.PatrolJudgeReq req=new PatrolQueryService.PatrolJudgeReq();
+        req.patrolTaskId=entity.getTaskId();
+        req.patrolTaskSpotId=entity.getPatrolSpotId();
+//        jsonObject.put("patrolTaskSpotId", entity.getPatrolSpotId());
+//        jsonObject.put("patrolTaskId", entity.getTaskId());
+        OkGo.<BaseResponse<PatrolQueryService.PatrolJudgeBean>>post(FM.getApiHost() + PatrolUrl.PATROL_JUDGE_TASK)
+                .isSpliceUrl(true)
+                .upJson(toJson(req))
+                .tag(getV())
+                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.PatrolJudgeBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<PatrolQueryService.PatrolJudgeBean>> response) {
+                        getV().dismissLoading();
+                        PatrolQueryService.PatrolJudgeBean data = response.body().data;
+                        if (data != null) {
+                            if (data.executable){
+                                if (data.time!=0){
+                                    //判断是否扫码
+                                    if (!needScan){
+                                        getV().showOrderTimeDialog(data.time,entity);
+                                    }else {
+                                        getV().needScanQrcode(entity,data.time);
+                                    }
+                                }else {
+                                    if (!needScan){
+                                        getV().enterDeviceList(entity);
+                                    }else {
+                                        getV().needScanQrcode(entity,data.time);
+
+                                    }
+
+                                }
+
+                            }else {
+                                if (data.patrolTaskId.equals(entity.getTaskId())&&data.patrolTaskSpotId.equals(entity.getPatrolSpotId())){
+                                        getV().enterDeviceList(entity);
+                                     }else {
+                                        getV().showOrderTimeDialog(data.time);
+                                    }
+                            }
+                        }
+                    }
+                });
+    }
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/30 10:25
+     * @Description: 提交任务时判断
+     */
+    public void submitTask(Long taskId,int type){
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("patrolTaskId", taskId);
+        OkGo.<BaseResponse<PatrolQueryService.PatrolJudgeBean>>post(FM.getApiHost() + PatrolUrl.PATROL_JUDGE_TASK)
+                .tag(getV())
+                .upJson(toJson(jsonObject))
+                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.PatrolJudgeBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<PatrolQueryService.PatrolJudgeBean>> response) {
+                        getV().dismissLoading();
+                        PatrolQueryService.PatrolJudgeBean data = response.body().data;
+                        if (data != null) {
+                            if (data.executable) {
+                                getV().syncDta(type);
+                            } else {
+                                getV().showOrderTimeDialog(data.time);
+                            }
+                        }
+                    }
+                });
+
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/27 16:27
+     * @Description:  执行任务
+     */
+    public void executeTask(PatrolSpotEntity entity){
+//        Map<String, Object> jsonObject = new HashMap<>();
+        PatrolQueryService.PatrolJudgeReq req=new PatrolQueryService.PatrolJudgeReq();
+        req.patrolTaskId=entity.getTaskId();
+        req.patrolTaskSpotId=entity.getPatrolSpotId();
+        OkGo.<BaseResponse<String>>post(FM.getApiHost() + PatrolUrl.PATROL_EXECUTE_TASK)
+                .tag(getV())
+                .upJson(toJson(req))
+                .execute(new FMJsonCallback<BaseResponse<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<String>> response) {
+                        getV().dismissLoading();
+                        getV().enterDeviceList(entity);
+
+                    }
+                });
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:40
+     * @Description: 获取最后一次签到记录
+     */
+    public void getLastAttendance(){
+        getV().showLoading();
+        String json = "{}";
+        OkGo.<BaseResponse<PatrolQueryService.AttendanceResp>>post(FM.getApiHost() + PatrolUrl.ATTENDANCE_LAST)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(json)
+                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.AttendanceResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
+                        getV().dismissLoading();
+                        PatrolQueryService.AttendanceResp data = response.body().data;
+                        if(data != null) {
+                            getV().hasAttentanceData(true);
+                        getV().saveAttentanceLocation(data);
+                        }else {
+                            getV().hasAttentanceData(false);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
+    }
+
+
 }

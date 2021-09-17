@@ -37,6 +37,10 @@ public class WorkorderMenuPresenter extends CommonBasePresenter<WorkorderMenuFra
                         //待审批工单
                         functionBean.undoNum = data.getInt(PermissionsManager.UNAPPROVALORDERNUMBER);
                         break;
+                    case WorkorderConstant.WORKORER_UBNORMAL:
+                        //异常工单
+                        functionBean.undoNum = data.getInt(PermissionsManager.ABNORMALORDERNUMBER);
+                        break;
                     case WorkorderConstant.WORKORER_ARCHIVE:
                         //待存档工单
                         functionBean.undoNum = data.getInt(PermissionsManager.UNARCHIVEDORDERNUMBER);

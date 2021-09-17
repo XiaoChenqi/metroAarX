@@ -98,6 +98,8 @@ public class FunctionService {
          * @Date: 2021/8/24
          * @Infor: 维护工单四运
          */
+        public int abnormalOrderNumber;
+
         public int undoPPMOrderNumber;
         public int unArrangePPMOrderNumber;
         public int unApprovalPPMOrderNumber;

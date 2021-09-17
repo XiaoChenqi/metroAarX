@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/FacilityProjects/metroAarX_aar/basiclib/src/main/res/layout/activity_simple_play.xml" value="0.20833333333333334" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/demandcomponent/src/main/res/layout/item_demand.xml" value="0.20833333333333334" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/inventorycomponent/src/main/res/layout/activity_inventory.xml" value="0.20833333333333334" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/patrolcomponent/src/main/res/layout/fragment_patrol_menu.xml" value="0.1" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/patrolcomponent/src/main/res/layout/item_patrol_item.xml" value="0.21354166666666666" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/workordercomponent/src/main/res/layout/item_workorder_payment.xml" value="0.14895833333333333" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

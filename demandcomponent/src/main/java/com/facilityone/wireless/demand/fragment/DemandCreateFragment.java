@@ -33,11 +33,13 @@ import com.facilityone.wireless.a.arch.ec.module.CommonUrl;
 import com.facilityone.wireless.a.arch.ec.module.ConstantMeida;
 import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
+import com.facilityone.wireless.a.arch.ec.module.LocationUtils;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
 import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
+import com.facilityone.wireless.a.arch.offline.dao.EquDao;
 import com.facilityone.wireless.a.arch.utils.FMFileUtils;
 import com.facilityone.wireless.a.arch.utils.NoDoubleClickListener;
 import com.facilityone.wireless.a.arch.utils.PictureSelectorManager;
@@ -53,6 +55,7 @@ import com.facilityone.wireless.basiclib.video.SimplePlayer;
 import com.facilityone.wireless.basiclib.widget.FullyGridLayoutManager;
 import com.facilityone.wireless.demand.R;
 import com.facilityone.wireless.demand.adapter.DeviceInforAdapter;
+import com.facilityone.wireless.demand.module.DemandConstant;
 import com.facilityone.wireless.demand.module.DemandCreateService;
 import com.facilityone.wireless.demand.module.DemandService;
 import com.facilityone.wireless.demand.presenter.DemandCreatePresenter;
@@ -125,10 +128,21 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
     private Boolean isCompeteDemand = false;
     private List<String> deviceIdList;
     private Long locationId; //位置Id
-    private Long deviceId; //设备Id
+    private Long deviceId = -1L; //设备Id
     private LocationBean mLocationData; // 位置对象
+    private LocationBean mLocationForDevice; // 选择设备需将部分位置去除
     private String mLocationName; //位置名称
     private String mDesc;//故障描述
+
+    private Boolean isPatrol; // 是否是巡检快速报障
+    //最后一次签到记录
+    private String locationNameLast;
+    private LocationBean locationBeanLast;
+
+    private Long contentId; //巡检Id
+    private String deviceName;
+    private String deviceCode;
+    private Boolean hasDevice = false; //判断快速报障是否带设备
 
 
     @Override
@@ -174,7 +188,15 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
             @Override
             protected void onNoDoubleClick(View view) {
                 if (!mCivLocation.getTipText().equals("")){
-                    startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_EQU,mLocationData,mLocationName), REQUEST_DEMAND_DEVICE);
+                    mLocationForDevice = new LocationBean();
+                     /**
+                      * @Auther: karelie
+                      * @Date: 2021/8/30
+                      * 只需要这些数据选择位置即可
+                      */
+                    mLocationForDevice.buildingId = mLocationData.buildingId;
+                    mLocationForDevice.siteId = mLocationData.siteId;
+                    startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_EQU,mLocationForDevice,mLocationName), REQUEST_DEMAND_DEVICE);
                 }else {
                     startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_EQU_ALL), REQUEST_DEMAND_DEVICE);
                 }
@@ -182,6 +204,14 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
             }
         });
 
+    }
+
+    public void RefreshSigon(DemandCreateService.AttendanceResp data){
+        //判断最后一条记录数据不为空且为签到状态
+        if (data != null && data.signStatus){
+            mCivLocation.setTipText(data.locationName+"");
+            mLocationData = data.location;
+        }
     }
 
     private void initAudioPlayService() {
@@ -244,8 +274,6 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
     }
 
     private void initRecyclerView() {
-
-
         mGridImageAdapter = new GridImageAdapter(mSelectList, false);
         FullyGridLayoutManager manager = new FullyGridLayoutManager(getContext(),
                 FullyGridLayoutManager.SPAN_COUNT,
@@ -289,6 +317,28 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         mLocationName=bundle.getString("locationName","");
         mLocationData=bundle.getParcelable("location");
         mDesc=bundle.getString("desc","");
+        contentId = bundle.getLong("contentId",-1);
+        deviceName = bundle.getString("deviceName")+"";
+        deviceId = bundle.getLong("deviceId",-1);
+        deviceCode = bundle.getString("deviceCode")+"";
+
+        deviceIdList = new ArrayList<>();
+
+        if (deviceId != null && deviceId != -1 && deviceId != 0){
+            deviceData = new DemandService.DeviceInforListEnity();
+            deviceData.deviceName = deviceName;
+            deviceData.deviceNumber = deviceCode;
+            //根据设备和位置列表联查名称
+            EquDao equDao = new EquDao();
+            SelectDataBean device = equDao.queryEquById(deviceId);
+            deviceData.deviceLocation = LocationUtils.getStrLocation(device.getLocation());
+            deviceList.add(deviceData);
+            mAdapter.replaceData(deviceList);
+            deviceIdList = new ArrayList<>();
+            deviceIdList.add(deviceId+"");
+        }
+
+
         ArrayList<LocalMedia> imgs=bundle.getParcelableArrayList("images");
         if (imgs!=null){
             mSelectList=new ArrayList<>();
@@ -296,10 +346,24 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
             mGridImageAdapter.replaceData(mSelectList);
             showOrHidePhoto();
         }
+        List<String> phIds = new ArrayList<>();
+        if (mSelectList != null){
+            for (LocalMedia data : mSelectList) {
+                if (data.getSrc() != null){
+                    String a = data.getSrc();
+                    String substring = a.substring(a.lastIndexOf("/") + 1);
+                    phIds.add(substring);
+                }
+            }
+        }
+
+        request.photoIds = phIds;
 
         mNumberView.setDesc(mDesc);
         mCivLocation.setTipText(mLocationName);
-        deviceIdList = new ArrayList<>();
+        isPatrol = bundle.getBoolean("isPatrol",false);
+        String toJson = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+
 
     }
 
@@ -309,6 +373,12 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
             if (userBean != null) {
                 mContactCiv.setInputText(userBean.name == null ? "" : userBean.name);
                 mTelCiv.setInputText(userBean.phone == null ? "" : userBean.phone);
+                if (userBean.type == DemandConstant.OUT_SOURCING_CODE ){
+                    getPresenter().getLastAttendance();//获取最后一次签到记录判断签入状态而后将数据写入界面
+                }else if (userBean.type == DemandConstant.STATION_CODE){
+                    mCivLocation.setTipText(userBean.locationName);
+                    mLocationData = userBean.location;
+                }
             }
         }
     }
@@ -348,27 +418,36 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
             request.requester = mContactCiv.getInputText();
             request.contact = mTelCiv.getInputText();
             request.desc = mNumberView.getDesc();
-            if (mSelectList.size() > 0) {
-                getPresenter().uploadFile(mSelectList, ConstantMeida.IMAGE);
-            } else if (mVideoSelectList.size() > 0) {
-                getPresenter().uploadFile(mVideoSelectList, CommonUrl.UPLOAD_VIDEO_URL, ConstantMeida.VIDEO);
-            } else if (mAudioSelectList.size() > 0) {
-                getPresenter().uploadFile(mAudioSelectList, CommonUrl.UPLOAD_VOICE_URL, ConstantMeida.AUDIO);
-            } else {
-                showLoading();
-                if (!isCompeteDemand){
-                    getPresenter().createDemand();
-                }else {
-                    requestComplete.reqId = 0l;
-                    requestComplete.desc = mNumberView.getDesc();
-                    requestComplete.equipment = deviceIdList;
-                    requestComplete.photoIds = request.photoIds;
-                    requestComplete.audioIds = request.audioIds;
-                    requestComplete.videoIds = request.videoIds;
-                    getPresenter().completeDevice();
-                }
-
+            showLoading();
+            if (!isCompeteDemand){
+                request.equipment = deviceIdList;
+                request.location = mLocationData;
+            }else {
+                requestComplete.reqId = 0l;
+                requestComplete.desc = mNumberView.getDesc();
+//                request.location = mLocationData;
+                requestComplete.equipment = deviceIdList;
+                requestComplete.photoIds = request.photoIds;
+                requestComplete.audioIds = request.audioIds;
+                requestComplete.videoIds = request.videoIds;
             }
+            if (contentId != null && contentId != -1){
+                request.resultId = contentId;
+            }
+            if (mSelectList != null){
+                if (mSelectList.size() > 0) {
+                    getPresenter().uploadFile(mSelectList, ConstantMeida.IMAGE);
+                } else if (mVideoSelectList.size() > 0) {
+                    getPresenter().uploadFile(mVideoSelectList, CommonUrl.UPLOAD_VIDEO_URL, ConstantMeida.VIDEO);
+                } else if (mAudioSelectList.size() > 0) {
+                    getPresenter().uploadFile(mAudioSelectList, CommonUrl.UPLOAD_VOICE_URL, ConstantMeida.AUDIO);
+                }else {
+                    getPresenter().createDemand();
+                }
+            }else {
+                getPresenter().createDemand();
+            }
+
         }
     }
 
@@ -459,7 +538,7 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
             switch (requestCode) {
                 case PictureConfig.CHOOSE_REQUEST:
                     List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
-                    mSelectList.clear();
+                    mSelectList = new ArrayList<>();
                     mSelectList.addAll(selectList);
                     mGridImageAdapter.replaceData(mSelectList);
                     showOrHidePhoto();
@@ -586,6 +665,13 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
                                     }
                                 }
                             }
+                            mSelectList.remove(position);
+                            if (request.photoIds != null){
+                                if (position <= request.photoIds.size()-1){
+                                    request.photoIds.remove(position);
+                                }
+                            }
+
                             tempAdapter.remove(position);
                             if (tempAdapter == mGridImageAdapter) {
                                 showOrHidePhoto();
@@ -652,11 +738,11 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
             case REQUEST_DEMAND_TYPE: //选择服务类型
                 if (bean == null) {
                     mTypeCiv.setTipText("");
-                    request.typeId = null;
+                    request.serviceTypeId = null;
                 } else {
                     mTypeCiv.setTipText(StringUtils.formatString(bean.getFullName()));
-                    request.typeId = bean.getId();
-                    LogUtils.d("demand type :" + request.typeId);
+                    request.serviceTypeId = bean.getId();
+                    LogUtils.d("demand type :" + request.serviceTypeId);
                 }
                 break;
             case REQUEST_DEMAND_LOCATION: //选择位置
@@ -664,6 +750,8 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
                     mCivLocation.setTipText(bean.getFullName()+"");
                     locationId = bean.getId();
                     mLocationData = bean.getLocation();
+//                    mLocationData.floorId = null;
+//                    mLocationData.roomId = null;
                     mLocationName = bean.getFullName()+"";
                 } else {
                     mCivLocation.setTipText("");
@@ -674,28 +762,28 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
                 break;
             case REQUEST_DEMAND_DEVICE: //选择设备
                 if (bean == null){
-
+                    return;
                 }else {
-                    if (deviceIdList.size()>0){
-                        mNumberView.setDesc("");
-                    }
-                    mLocationData = null;
                     deviceList = new ArrayList<>();
                     deviceIdList = new ArrayList<>();
                     deviceData = new DemandService.DeviceInforListEnity();
-                    deviceData.deviceLocation  = bean.getLocationName()+"";
+                    deviceData.deviceLocation  = LocationUtils.getStrLocation(bean.getLocation())+"";
                     deviceData.deviceName = bean.getName()+"";
                     deviceData.deviceNumber = bean.getFullName()+"";
                     deviceList.add(deviceData);
                     mAdapter.replaceData(deviceList);
                     String desc = mNumberView.getDesc();
-                    mNumberView.setDesc(bean.getName()+bean.getFullName()+desc);
+//                    mNumberView.setDesc(bean.getName()+bean.getFullName()+desc);
                     deviceIdList.add(bean.getId()+"");
-                    if (bean.getLocation() != null){
+                    if (bean.getLocation() != null &&  mCivLocation.getTipText() == null){
                         mLocationData = bean.getLocation();
+                        mLocationName = bean.getLocationName()+"";
                     }
-                    mLocationName = bean.getLocationName()+"";
-                    mCivLocation.setTipText(bean.getLocationName()+"");
+
+                    if (mCivLocation.getTipText().equals("") || mCivLocation.getTipText() == null){
+                        mCivLocation.setTipText(LocationUtils.getStrLocation(bean.getLocation())+"");
+                    }
+
                 }
                 break;
         }
@@ -742,19 +830,28 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         return instance;
     }
 
-    public static DemandCreateFragment getInstance(Long reqId,String title,String locationName,LocationBean locationBean,String desc,boolean isComplete,List<LocalMedia> imageIds) {
+    public static DemandCreateFragment getInstance(Long reqId,String title,String locationName,LocationBean locationBean,String desc,boolean isComplete,List<LocalMedia> imageIds,boolean isPatrol,Long contentId,String deviceName,Long deviceId,String code) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("location",locationBean);
         bundle.putString("locationName",locationName);
         bundle.putString("desc",desc);
         bundle.putString("title", title);
-
+        bundle.putBoolean("isPatrol",isPatrol);
+        bundle.putString("deviceName",deviceName);
+        if (deviceId != null){
+            bundle.putLong("deviceId",deviceId);
+        }else {
+            bundle.putLong("deviceId",-1);
+        }
+        bundle.putString("deviceCode",code);
 
         if (imageIds!=null){
             ArrayList<LocalMedia> medias = new ArrayList<>(imageIds);
             bundle.putParcelableArrayList("images",medias);
         }
-
+        if (contentId != null){
+            bundle.putLong("contentId",contentId);
+        }
         bundle.putBoolean("IsComplete",isComplete);
         DemandCreateFragment instance = new DemandCreateFragment();
         instance.setArguments(bundle);

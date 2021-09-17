@@ -27,9 +27,14 @@ public interface WorkorderService extends IService {
       */
     BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId,boolean isMaintenance);
 
+    BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, boolean isExeption,Long woId);
+
     BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId,boolean isMaintenance,boolean isFinish);
 
     BaseFragment getOrderDispatchFragment(ArrayList<String> woId, String code, String sendWorkContent, Long estimateStartTime, Long estimateEndTime,Long workTeamId);
+
+    //待处理
+    BaseFragment getWorkorderInfoPendingFragment(int workorderStatus, String code, Long woId, Integer isPending, boolean isMaintenance);
 
     BaseFragment getWorkorderQueryFragment(boolean my);
 

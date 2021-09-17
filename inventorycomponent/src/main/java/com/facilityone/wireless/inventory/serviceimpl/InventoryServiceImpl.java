@@ -28,8 +28,8 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public BaseFragment getReserveRecordInfoFragment(long activityId) {
-        return ReserveRecordInfoFragment.getInstance(InventoryConstant.INVENTORY_MY,activityId);
+    public BaseFragment getReserveRecordInfoFragment(long activityId,boolean fromMessage) {
+        return ReserveRecordInfoFragment.getInstance(InventoryConstant.INVENTORY_MY,activityId,fromMessage);
     }
 
     @Override
@@ -43,8 +43,8 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public BaseFragment getMaterialInfoFragment(Long inventoryId) {
-        return MaterialInfoFragment.getInstance(inventoryId);
+    public BaseFragment getMaterialInfoFragment(Long inventoryId,Boolean fromMessage) {
+        return MaterialInfoFragment.getInstance(inventoryId,fromMessage);
     }
 
     @Override

@@ -106,7 +106,7 @@ public class InventoryReserveOutFragment extends BaseFragment<InventoryReserveOu
         InventoryOutFragment parentFragment = (InventoryOutFragment) getParentFragment();
         ReserveService.ReserveRecordBean reserveRecordBean = ((InventoryReserveListAdapter) adapter).getData().get(position);
         if(reserveRecordBean != null) {
-            parentFragment.startForResult(ReserveRecordInfoFragment.getInstance(InventoryConstant.INVENTORY_OUT,reserveRecordBean.activityId),INVENTORY_RESERVE_OUT_REQUEST_CODE);
+            parentFragment.startForResult(ReserveRecordInfoFragment.getInstance(InventoryConstant.INVENTORY_OUT,reserveRecordBean.activityId,false),INVENTORY_RESERVE_OUT_REQUEST_CODE);
         }
     }
 

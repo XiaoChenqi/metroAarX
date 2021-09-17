@@ -3,11 +3,16 @@ package com.facilityone.wireless.workorder.presenter;
 import android.content.Context;
 import android.view.View;
 
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
+import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.Page;
+import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
+import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.widget.BottomTextListSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.FMBottomInputSheetBuilder;
@@ -45,8 +50,6 @@ import java.util.Map;
 public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfoFragment> {
 
 
-
-
     @Override
     public void getWorkorderInfoSuccess(Long woId, WorkorderService.WorkorderInfoBean data) {
         super.getWorkorderInfoSuccess(woId, data);
@@ -77,6 +80,65 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
     public void getWorkorderInfoError() {
         super.getWorkorderInfoError();
         getV().refreshError();
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:40
+     * @Description: 获取最后一次签到记录
+     */
+    public void getLastAttendance(LocationBean workInfoLocation) {
+        getV().showLoading();
+        String json = "{}";
+        OkGo.<BaseResponse<WorkorderService.WorkorderAttendanceResp>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_ATTENDANCE_LAST)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(json)
+                .execute(new FMJsonCallback<BaseResponse<WorkorderService.WorkorderAttendanceResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<WorkorderService.WorkorderAttendanceResp>> response) {
+                        getV().dismissLoading();
+                        WorkorderService.WorkorderAttendanceResp data = response.body().data;
+                        if (data != null) {
+//                            String userInfo= SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+//                            UserService.UserInfoBean infoBean= GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+//                            System.out.println(GsonUtils.toJson(infoBean.location));
+//                            System.out.println(GsonUtils.toJson(data.location));
+                            //判空
+                            if (isLocationNull(data.location, workInfoLocation)) {
+                                if (data.location.siteId != null && workInfoLocation.siteId != null) {
+
+                                    if (data.buildingIds != null && workInfoLocation.buildingId != null) {
+//                                        workInfoLocation.buildingId.equals(data.location.buildingId)
+                                        if (workInfoLocation.siteId.equals(data.location.siteId) && isInLocationList(workInfoLocation.buildingId,data)) {
+                                            getV().canOpt(true, true);
+                                        } else {
+                                            getV().canOpt(false, true);
+//
+                                        }
+                                    } else {
+                                        getV().canOpt(false, true);
+                                    }
+
+                                } else {
+                                    getV().canOpt(false, true);
+                                }
+
+
+                            } else {
+                                getV().canOpt(false, false);
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<WorkorderService.WorkorderAttendanceResp>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                        getWorkorderInfoError();
+                    }
+                });
     }
 
     /**
@@ -156,14 +218,17 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 
     /**
      * 更多按钮点击后显示的菜单
-     *  @param context    上下文
-     * @param status     工单状态
-     * @param woId       工单id
-     * @param approvalId 执行人id
-     * @param code       工单code
+     *
+     * @param context            上下文
+     * @param status             工单状态
+     * @param woId               工单id
+     * @param approvalId         执行人id
+     * @param code               工单code
      * @param workOrderMaterials 物料
      */
     public void onMoreMenuClick(final Context context,
+                                final Boolean isSign,
+                                final Boolean needSignOn,
                                 final int status,
                                 final boolean acceptWorkOrder,
                                 final Long woId,
@@ -171,7 +236,9 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                                 final String code,
                                 final String sendWorkContent,
                                 final Long estimateStartTime,
-                                final Long estimateEndTime, final List<WorkorderService.WorkorderReserveRocordBean> workOrderMaterials) {
+                                final Long estimateEndTime,
+                                final List<WorkorderService.WorkorderReserveRocordBean> workOrderMaterials,
+                                Boolean isSignOn) {
         List<String> menu = new ArrayList<>();
         boolean finished = false;
         switch (status) {
@@ -203,11 +270,11 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             case WorkorderConstant.WORK_STATUS_SUSPENDED_GO:// 已暂停(继续工作)
                 menu.add(getV().getString(R.string.workorder_continue_order));
                 break;
-                 /**
-                  * @Auther: karelie
-                  * @Date: 2021/8/12
-                  * @Infor: 四运独有 新派工单
-                  */
+            /**
+             * @Auther: karelie
+             * @Date: 2021/8/12
+             * @Infor: 四运独有 新派工单
+             */
             case WorkorderConstant.WORK_STATUS_TERMINATED:// 已终止
                 menu.add("新派工单");
                 menu.add(getV().getString(R.string.workorder_verify_tip));
@@ -233,8 +300,19 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 menu.add("验证");
                 menu.add("存档");
                 break;
+            case WorkorderConstant.WORK_STATUS_MAINTENCE_NOT:// 计划性维护
+                menu.add("抽检");
+                menu.add("存档");
+                break;
 
         }
+
+//        if (tag == 1){
+//            menu.clear();
+//            menu.add("新派工单");
+//            menu.add(getV().getString(R.string.workorder_verify_tip));
+//            menu.add("作废申请");
+//        }
 
         if (menu.size() == 0) {
             return;
@@ -249,20 +327,21 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
                 dialog.dismiss();
                 if (tag.equals(getV().getString(R.string.workorder_arrange_order))) {
+
                     boolean isDispatch = true;
-                    if(workOrderMaterials != null && workOrderMaterials.size() > 0) {
+                    if (workOrderMaterials != null && workOrderMaterials.size() > 0) {
                         for (WorkorderService.WorkorderReserveRocordBean workorderReserveRocordBean : workOrderMaterials) {
-                            if(workorderReserveRocordBean.reservationPersonId == null
+                            if (workorderReserveRocordBean.reservationPersonId == null
                                     || workorderReserveRocordBean.administrator == null
                                     || workorderReserveRocordBean.supervisor == null) {
                                 isDispatch = false;
                             }
                         }
                     }
-                    if(isDispatch) {
+                    if (isDispatch) {
                         getV().startForResult(WorkorderDispatchFragment.getInstance(woId, code, sendWorkContent, estimateStartTime, estimateEndTime),
                                 WorkorderInfoFragment.DISPATCH_REQUEST_CODE);
-                    }else {
+                    } else {
                         FMWarnDialogBuilder warnDialogBuilder = new FMWarnDialogBuilder(context);
                         warnDialogBuilder.setTitle(getV().getString(R.string.workorder_tip_title));
                         warnDialogBuilder.setSure(getV().getString(R.string.workorder_confirm));
@@ -285,43 +364,107 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         warnDialogBuilder.create(R.style.fmDefaultWarnDialog).show();
                     }
                 } else if (tag.equals(getV().getString(R.string.workorder_stop))) {
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
                     if (getV().isAllStart() || finalFinished) {
                         endWorkOrder(context, woId);
                     } else {
                         ToastUtils.showShort(R.string.workorder_terminal_error);
                     }
                 } else if (tag.equals(getV().getString(R.string.workorder_approval_title))) {
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
                     getV().startForResult(WorkorderApprovalFragment.getInstance(woId)
                             , WorkorderInfoFragment.APPROVAL_REQUEST_CODE);
                 } else if (tag.equals(getV().getString(R.string.workorder_approval_order))) {
-                    approvalWorkOrder(context, woId, approvalId);
-                } else if (tag.equals(getV().getString(R.string.workorder_verify_tip))) {
-                    if (status == WorkorderConstant.WORK_STATUS_TERMINATED){
-                        verifiedWorkOrder(context, woId,true);
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
+                    if (status == WorkorderConstant.WORK_STATUS_UBNORMAL){
+                        approvalWorkOrder(context, woId, approvalId,true);
                     }else {
-                        verifiedWorkOrder(context, woId,false);
+                        approvalWorkOrder(context, woId, approvalId,false);
+                    }
+                } else if (tag.equals(getV().getString(R.string.workorder_verify_tip))) {
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
+                    if (status == WorkorderConstant.WORK_STATUS_TERMINATED) {
+                        verifiedWorkOrder(context, woId, true);
+                    } else {
+                        verifiedWorkOrder(context, woId, false);
                     }
 
                 } else if (tag.equals(getV().getString(R.string.workorder_archive))) {
-                    workorderOptCommon(woId, null, WorkorderConstant.WORKORDER_OPT_TYPE_ARCHIVE);
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
+                    workorderOptCommon(woId, null, null,WorkorderConstant.WORKORDER_OPT_TYPE_ARCHIVE);
                 } else if (tag.equals(getV().getString(R.string.workorder_accept_order))) {
-                    workorderOptCommon(woId, null, WorkorderConstant.WORKORDER_OPT_TYPE_ORDER, false);
+                    workorderOptCommon(woId, null, WorkorderConstant.WORKORDER_OPT_TYPE_ORDER, null,false);
                 } else if (tag.equals(getV().getString(R.string.workorder_finish))) {
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
+
+                     //判断是否条件处理完成
+                    if (!getV().canDo()){
+                        return;
+                    }
+
+                    if (isSignOn) {
+                        ToastUtils.showShort("车站值班人员未签字");
+                        return;
+                    }
+
+
                     if (getV().isAllStart()) {
                         int allDeviceFinished = getV().isAllDeviceFinished();
                         if (allDeviceFinished == 0) {
-                            workorderOptCommon(woId, null, WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION);
+                            workorderOptCommon(woId, null, getV().getOperateReasonId(),WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION);
                         } else {
                             new FMWarnDialogBuilder(context).setIconVisible(false)
                                     .setSureBluBg(true)
                                     .setTitle(R.string.workorder_tip_title)
                                     .setSure(R.string.workorder_confirm)
-                                    .setTip(String.format(getV().getString(R.string.workorder_device_un_completed_tip),allDeviceFinished))
+                                    .setTip(String.format(getV().getString(R.string.workorder_device_un_completed_tip), allDeviceFinished))
                                     .addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
                                         @Override
                                         public void onClick(QMUIDialog dialog, View view) {
                                             dialog.dismiss();
-                                            workorderOptCommon(woId, null, WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION);
+                                            workorderOptCommon(woId, null,getV().getOperateReasonId(), WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION);
                                         }
                                     }).create(R.style.fmDefaultWarnDialog).show();
                         }
@@ -329,23 +472,80 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         ToastUtils.showShort(R.string.workorder_finish_error);
                     }
                 } else if (tag.equals(getV().getString(R.string.workorder_stop_order))) {
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
                     suspendedWorkOrder(context, woId);
                 } else if (tag.equals(getV().getString(R.string.workorder_back_order))) {
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
                     backWorkOrder(context, woId);
                 } else if (tag.equals(getV().getString(R.string.workorder_approval_title))) {
-                    approvalWorkOrder(context, woId, approvalId);
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
+
+                    approvalWorkOrder(context, woId, approvalId,false);
                 } else if (tag.equals(getV().getString(R.string.workorder_continue_order))) {
-                    workorderOptCommon(woId, null, WorkorderConstant.WORKORDER_OPT_TYPE_CONTINUE,
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
+                    workorderOptCommon(woId, null, WorkorderConstant.WORKORDER_OPT_TYPE_CONTINUE,null,
                             false);
-                }else if (tag.equals("新派工单")){
+                } else if (tag.equals("新派工单")) {
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
                     getV().newOrder();
-                }else if (tag.equals("作废申请")){
+                } else if (tag.equals("作废申请")) {
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
                     getV().invalidOrder(woId);
-                }else if (tag.equals("抽检")){
+                } else if (tag.equals("抽检")) {
+                    if (!isSign) {
+                        ToastUtils.showShort("请先签到");
+                        return;
+                    }
+                    if (!needSignOn) {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                        return;
+                    }
                     Router router = Router.getInstance();
                     com.facilityone.wireless.componentservice.maintenance.MaintenanceService workorderService = (com.facilityone.wireless.componentservice.maintenance.MaintenanceService) router.getService(com.facilityone.wireless.componentservice.maintenance.MaintenanceService.class.getSimpleName());
                     if (workorderService != null) {
-                        BaseFragment fragment=workorderService.getElectronicLedger();
+                        BaseFragment fragment = workorderService.getElectronicLedger();
                         getV().start(fragment);
                     }
                 }
@@ -357,7 +557,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 
 
     //申请作废
-    public void invalidOrderPost(Long woId,String desc,Long operateReasonId){
+    public void invalidOrderPost(Long woId, String desc, Long operateReasonId) {
         getV().showLoading();
         WorkorderOptService.InvalidOrderPostReq request = new WorkorderOptService.InvalidOrderPostReq();
         request.woId = woId;
@@ -391,7 +591,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             @Override
             public void onSaveClick(QMUIBottomSheet dialog, String input) {
                 dialog.dismiss();
-                workorderOptCommon(woId, input, WorkorderConstant.WORKORDER_OPT_TYPE_TERMINATE);
+                workorderOptCommon(woId, input,null, WorkorderConstant.WORKORDER_OPT_TYPE_TERMINATE);
             }
 
             @Override
@@ -415,7 +615,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
     }
 
     //审批
-    private void approvalWorkOrder(Context context, final Long woId, final Long approvalId) {
+    private void approvalWorkOrder(Context context, final Long woId, final Long approvalId,boolean isError) {
         FMBottomInputSheetBuilder builder = new FMBottomInputSheetBuilder(context);
         builder.setOnSaveInputListener(new FMBottomInputSheetBuilder.OnInputBtnClickListener() {
             @Override
@@ -426,13 +626,23 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             @Override
             public void onLeftClick(QMUIBottomSheet dialog, String input) {
                 dialog.dismiss();
-                approvalWorkorder(woId, approvalId, input, WorkorderConstant.WORKORDER_APPROVAL_FAIL);
+                if (isError){
+                    approvalErrorWorkorder(woId, approvalId, input, 1);
+                }else {
+                    approvalWorkorder(woId, approvalId, input, WorkorderConstant.WORKORDER_APPROVAL_FAIL);
+                }
+
             }
 
             @Override
             public void onRightClick(QMUIBottomSheet dialog, String input) {
                 dialog.dismiss();
-                approvalWorkorder(woId, approvalId, input, WorkorderConstant.WORKORDER_APPROVAL_PASS);
+                if (isError){
+                    approvalErrorWorkorder(woId, approvalId, input, 0);
+                }else {
+                    approvalWorkorder(woId, approvalId, input, WorkorderConstant.WORKORDER_APPROVAL_PASS);
+                }
+
             }
         });
         QMUIBottomSheet build = builder.build();
@@ -478,8 +688,38 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 });
     }
 
+
+    //异常审批
+    private void approvalErrorWorkorder(final Long woId, final Long approvalId, String input, int type) {
+        getV().showLoading();
+        WorkorderOptService.WorkorderOptApprovalVErrorReq request = new WorkorderOptService.WorkorderOptApprovalVErrorReq();
+        request.woId = woId;
+        request.approveNote = input;
+        request.status = type;
+        OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_OPT_APPROVAL_V_ERROR_URL)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<Object>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<Object>> response) {
+                        getV().dismissLoading();
+                        ToastUtils.showShort(R.string.workorder_operate_success);
+                        getV().setNeedJump(true);
+                        getV().pop();
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<Object>> response) {
+                        ToastUtils.showShort(R.string.workorder_operate_fail);
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
+    }
+
     //验证
-    private void verifiedWorkOrder(Context context, final Long woId,boolean hideRight) {
+    private void verifiedWorkOrder(Context context, final Long woId, boolean hideRight) {
         FMBottomInputSheetBuilder builder = new FMBottomInputSheetBuilder(context);
         builder.setOnSaveInputListener(new FMBottomInputSheetBuilder.OnInputBtnClickListener() {
             @Override
@@ -490,20 +730,20 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             @Override
             public void onLeftClick(QMUIBottomSheet dialog, String input) {
                 dialog.dismiss();
-                workorderOptCommon(woId, input, WorkorderConstant.WORKORDER_OPT_TYPE_VERIFY_FAIL);
+                workorderOptCommon(woId, input, null,WorkorderConstant.WORKORDER_OPT_TYPE_VERIFY_FAIL);
             }
 
             @Override
             public void onRightClick(QMUIBottomSheet dialog, String input) {
                 dialog.dismiss();
-                workorderOptCommon(woId, input, WorkorderConstant.WORKORDER_OPT_TYPE_VERIFY_PASS);
+                workorderOptCommon(woId, input, null,WorkorderConstant.WORKORDER_OPT_TYPE_VERIFY_PASS);
             }
         });
         QMUIBottomSheet build = builder.build();
         builder.getLLTwoBtn().setVisibility(View.VISIBLE);
-        if (hideRight){
+        if (hideRight) {
             builder.getRightBtn().setVisibility(View.GONE);
-        }else {
+        } else {
             builder.getRightBtn().setVisibility(View.VISIBLE);
         }
         builder.setTitle(R.string.workorder_tip_verify);
@@ -518,19 +758,19 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 
     //显示暂停弹窗
     private void suspendedWorkOrder(Context context, final Long woId) {
-        getV().showPauseDialog(context,woId);
+        getV().showPauseDialog(context, woId);
     }
 
 
     //暂停工单
-    public void pauseWorkOrder(Long woId, String input, Long optId,int type, Long time){
+    public void pauseWorkOrder(Long woId, String input, Long optId, int type, Long time) {
         getV().showLoading();
         WorkorderOptService.WorkorderOptPauseReq request = new WorkorderOptService.WorkorderOptPauseReq();
         request.woId = woId;
         request.desc = input;
         request.type = type;
-        request.operateReasonId=optId;
-        request.endTime=time;
+        request.operateReasonId = optId;
+        request.endTime = time;
         OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_OPT_PAUSE_URL)
                 .tag(getV())
                 .isSpliceUrl(true)
@@ -542,10 +782,10 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         ToastUtils.showShort(R.string.workorder_operate_success);
                         getV().setNeedJump(false);
                         if (false) {
-                            if(type == WorkorderConstant.WORKORDER_OPT_TYPE_SUSPENSION_CONTINUED){
+                            if (type == WorkorderConstant.WORKORDER_OPT_TYPE_SUSPENSION_CONTINUED) {
                                 getV().setRefreshStatus(WorkorderConstant.WORK_STATUS_SUSPENDED_GO);
                                 getV().setNeedJump(false);
-                            }else if(type == WorkorderConstant.WORKORDER_OPT_TYPE_VERIFY_PASS){
+                            } else if (type == WorkorderConstant.WORKORDER_OPT_TYPE_VERIFY_PASS) {
                                 getV().setRefreshStatus(WorkorderConstant.WORK_STATUS_VERIFIED);
                                 getV().setNeedJump(false);
                             }
@@ -566,12 +806,12 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
     }
 
     //异常工单审批请求
-    public void approveExceptionWorkorder(Long woId,int status,String approvalNote){
+    public void approveExceptionWorkorder(Long woId, int status, String approvalNote) {
         getV().showLoading();
         WorkorderOptService.WorkorderOptExceptionApprovalReq request = new WorkorderOptService.WorkorderOptExceptionApprovalReq();
         request.woId = woId;
-        request.status=status;
-        request.approveNote=approvalNote;
+        request.status = status;
+        request.approveNote = approvalNote;
         OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_OPT_EXCEPTION_APPROVAL_V_URL)
                 .tag(getV())
                 .isSpliceUrl(true)
@@ -597,26 +837,26 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 
 
     //原因列表
-    private void reasonList(){
+    private void reasonList() {
         getV().showLoading();
         WorkorderService.WorkorderReasonQueryReq request = new WorkorderService.WorkorderReasonQueryReq();
-        request.type=0;
-        request.page=new Page();
+        request.type = 0;
+        request.page = new Page();
         OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_REASON_URL)
                 .tag(getV())
                 .isSpliceUrl(true)
                 .upJson(toJson(request))
                 .execute(new FMJsonCallback<BaseResponse<Object>>() {
-                             @Override
-                             public void onSuccess(Response<BaseResponse<Object>> response) {
-                                 getV().dismissLoading();
-                                 Object temp = response.body().data;
-                             }
+                    @Override
+                    public void onSuccess(Response<BaseResponse<Object>> response) {
+                        getV().dismissLoading();
+                        Object temp = response.body().data;
+                    }
 
 
-
-    });
+                });
     }
+
     //退单
     private void backWorkOrder(Context context, final Long woId) {
         FMBottomInputSheetBuilder builder = new FMBottomInputSheetBuilder(context);
@@ -624,7 +864,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             @Override
             public void onSaveClick(QMUIBottomSheet dialog, String input) {
                 dialog.dismiss();
-                workorderOptCommon(woId, input, WorkorderConstant.WORKORDER_OPT_TYPE_SINGLE_BACK);
+                workorderOptCommon(woId, input, null,WorkorderConstant.WORKORDER_OPT_TYPE_SINGLE_BACK);
             }
 
             @Override
@@ -648,16 +888,17 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
     }
 
     //通用工单操作
-    private void workorderOptCommon(Long woId, String input, int type) {
-        workorderOptCommon(woId, input, type, true);
+    private void workorderOptCommon(Long woId, String input, Long operateReasonId,int type) {
+        workorderOptCommon(woId, input, type, operateReasonId,true);
     }
 
-    private void workorderOptCommon(Long woId, String input, final int type, final boolean needJump) {
+    private void workorderOptCommon(Long woId, String input, final int type,Long operateReasonId, final boolean needJump) {
         getV().showLoading();
         WorkorderOptService.WorkorderOptCommonReq request = new WorkorderOptService.WorkorderOptCommonReq();
         request.woId = woId;
         request.operateDescription = input;
         request.operateType = type;
+        request.operateReasonId = operateReasonId;
 
         OkGo.<BaseResponse<Object>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_OPT_COMMON_URL)
                 .tag(getV())
@@ -670,10 +911,10 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         ToastUtils.showShort(R.string.workorder_operate_success);
                         getV().setNeedJump(needJump);
                         if (needJump) {
-                            if(type == WorkorderConstant.WORKORDER_OPT_TYPE_SUSPENSION_CONTINUED){
+                            if (type == WorkorderConstant.WORKORDER_OPT_TYPE_SUSPENSION_CONTINUED) {
                                 getV().setRefreshStatus(WorkorderConstant.WORK_STATUS_SUSPENDED_GO);
                                 getV().setNeedJump(false);
-                            }else if(type == WorkorderConstant.WORKORDER_OPT_TYPE_VERIFY_PASS){
+                            } else if (type == WorkorderConstant.WORKORDER_OPT_TYPE_VERIFY_PASS) {
                                 getV().setRefreshStatus(WorkorderConstant.WORK_STATUS_VERIFIED);
                                 getV().setNeedJump(false);
                             }
@@ -706,6 +947,36 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
     public void getWorkOrderMaterialSuccess(List<WorkorderService.WorkorderReserveRocordBean> data) {
         getV().refreshMaterialUI(data);
     }
+
+
+    /**
+     * @return
+     * @Created by: kuuga
+     * @Date: on 2021/8/31 14:16
+     * @Description: 位置信息判空
+     */
+    private static boolean isLocationNull(LocationBean remoteBean, LocationBean localBean) {
+        return remoteBean != null && localBean != null;
+
+    }
+
+
+    /**
+     * @return
+     * @Created by: kuuga
+     * @Date: on 2021/8/31 14:16
+     * @Description: 工单位置是否处于签到区间
+     */
+    private static boolean isInLocationList(Long orderBuildingId,WorkorderService.WorkorderAttendanceResp remoteData){
+        for (Long id: remoteData.buildingIds) {
+            if (id.equals(orderBuildingId)){
+                return true;
+            }
+        }
+        return false;
+
+    }
+
 
 
 }

@@ -16,6 +16,16 @@ public class PatrolStatusEntity {
     private Boolean isHandler;
     private List<PatrolSpotsBean> patrolSpots;
 
+    public Integer getPtype() {
+        return ptype;
+    }
+
+    public void setPtype(Integer ptype) {
+        this.ptype = ptype;
+    }
+
+    private Integer ptype;
+
 
     public Long getPatrolTaskId() {
         return patrolTaskId;

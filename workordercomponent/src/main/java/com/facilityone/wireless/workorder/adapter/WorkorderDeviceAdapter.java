@@ -26,11 +26,13 @@ public class WorkorderDeviceAdapter extends BaseQuickAdapter<WorkorderService.Wo
     private boolean mOpt;
     private boolean needScan;
     private OnItemClick mOnItemClick;
+    private Boolean isMaintenanceOrder;
 
-    public WorkorderDeviceAdapter(@Nullable List<WorkorderService.WorkOrderEquipmentsBean> data, boolean opt, boolean needScan) {
+    public WorkorderDeviceAdapter(@Nullable List<WorkorderService.WorkOrderEquipmentsBean> data, boolean opt, boolean needScan,boolean isMaintenanceOrder) {
         super(R.layout.adapter_workorder_device_item, data);
         mOpt = opt;
         this.needScan = needScan;
+        this.isMaintenanceOrder = isMaintenanceOrder;
     }
 
     @Override
@@ -69,6 +71,12 @@ public class WorkorderDeviceAdapter extends BaseQuickAdapter<WorkorderService.Wo
             helper.setGone(R.id.fault_device_stat_tv, false);
             helper.setText(R.id.fault_device_stat_tv, "");
         }
+
+//        if (isMaintenanceOrder){
+            helper.setGone(R.id.btn_delete,false);
+//        }else {
+//            helper.setGone(R.id.btn_delete,true);
+//        }
 
         helper.setOnClickListener(R.id.btn_delete, new NoDoubleClickListener() {
             @Override

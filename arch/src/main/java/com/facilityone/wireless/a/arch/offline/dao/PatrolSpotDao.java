@@ -242,7 +242,7 @@ public class PatrolSpotDao {
         Long userId = FM.getEmId();
         List<PatrolSpotEntity> temp = new ArrayList<>();
 
-        String sql = "SELECT S.REMOTE_COMPLETED,S.EXCEPTION,S.COMPLETED,S.SYNCED,S.COMP_NUMBER,S.EQ_NUMBER,S.ID,S.HANDLER,B.NAME,B.CODE,B.SPOT_LOCATION ,T.TASK_NAME ,T.DUE_START_DATE_TIME ,T.DUE_END_DATE_TIME,S.TASK_ID,T.PLAN_ID FROM DBPATROLSPOT AS S LEFT JOIN DBPATROLBASESPOT AS B ON S.SPOT_ID = B.ID  AND S.PROJECT_ID = B.PROJECT_ID LEFT JOIN DBPATROLTASK AS T ON  S.TASK_ID = T.ID AND S.PROJECT_ID = T.PROJECT_ID AND S.USER_ID = T.USER_ID WHERE B.CODE = ? AND S.PROJECT_ID = ? AND S.USER_ID = ?  ORDER BY T.STATUS DESC,T.DUE_START_DATE_TIME ASC ,T.DUE_END_DATE_TIME ASC,S.SORT ASC,S.SPOT_ID ASC;";
+        String sql = "SELECT S.REMOTE_COMPLETED,S.EXCEPTION,S.COMPLETED,S.SYNCED,S.COMP_NUMBER,S.EQ_NUMBER,S.ID,S.HANDLER,B.NAME,B.CODE,B.SPOT_LOCATION ,T.TASK_NAME ,T.DUE_START_DATE_TIME ,T.DUE_END_DATE_TIME,S.TASK_ID,T.PLAN_ID , B.CITY_ID,B.SITE_ID,B.BUILDING_ID,B.FLOOR_ID,B.ROOM_ID FROM DBPATROLSPOT AS S LEFT JOIN DBPATROLBASESPOT AS B ON S.SPOT_ID = B.ID  AND S.PROJECT_ID = B.PROJECT_ID LEFT JOIN DBPATROLTASK AS T ON  S.TASK_ID = T.ID AND S.PROJECT_ID = T.PROJECT_ID AND S.USER_ID = T.USER_ID WHERE B.CODE = ? AND S.PROJECT_ID = ? AND S.USER_ID = ?  ORDER BY T.STATUS DESC,T.DUE_START_DATE_TIME ASC ,T.DUE_END_DATE_TIME ASC,S.SORT ASC,S.SPOT_ID ASC;";
         String[] args = { code, projectId + "", userId + "" };
 
         LogUtils.d(sql);
@@ -267,6 +267,12 @@ public class PatrolSpotDao {
                 bean.setCode(cursor.getString(cursor.getColumnIndex("CODE")));
                 bean.setTaskName(cursor.getString(cursor.getColumnIndex("TASK_NAME")));
                 bean.setLocationName(cursor.getString(cursor.getColumnIndex("SPOT_LOCATION")));
+                LocationBean tempLocation=new LocationBean();
+                tempLocation.siteId=cursor.getLong(cursor.getColumnIndex("SITE_ID"));
+                tempLocation.buildingId=cursor.getLong(cursor.getColumnIndex("BUILDING_ID"));
+                tempLocation.floorId=cursor.getLong(cursor.getColumnIndex("FLOOR_ID"));
+                tempLocation.roomId=cursor.getLong(cursor.getColumnIndex("ROOM_ID"));
+                bean.setLocation(tempLocation);
                 temp.add(bean);
             }
             cursor.close();

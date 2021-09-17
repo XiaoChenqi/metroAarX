@@ -18,7 +18,7 @@ public class FMDBHelper extends SQLiteOpenHelper {
     //数据库名称
     private static final String DB_NAME = "fm.db";
     //版本号
-    private static final int DB_VERSION = 5;
+    private static final int DB_VERSION = 6;
 
     public FMDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);

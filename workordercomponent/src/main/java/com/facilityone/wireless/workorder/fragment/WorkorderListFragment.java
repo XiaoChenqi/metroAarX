@@ -35,10 +35,8 @@ public class WorkorderListFragment extends BaseFragment<WorkorderListPresenter> 
     private RecyclerView mRecyclerView;
     private SmartRefreshLayout mRefreshLayout;
     private DrawerLayout mDrawerLayout;
-
     private WorkorderListAdapter mAdapter;
     private Page mPage;
-
     private static final String LIST_TYPE = "list_type";
     private static final int WORKORDER_INFO = 4001;
 
@@ -106,7 +104,6 @@ public class WorkorderListFragment extends BaseFragment<WorkorderListPresenter> 
         mAdapter = new WorkorderListAdapter(mType);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
-
         onRefresh();
 
     }
@@ -128,12 +125,12 @@ public class WorkorderListFragment extends BaseFragment<WorkorderListPresenter> 
         Long woId = workorderItemBean.woId;
         String code = workorderItemBean.code;
         if (mType==WorkorderConstant.WORKORER_UBNORMAL){
-            startForResult(WorkorderInfoFragment.getInstance(WorkorderConstant.WORK_STATUS_UBNORMAL, code, woId), WORKORDER_INFO);
+            startForResult(WorkorderInfoFragment.getInstance(WorkorderConstant.WORK_STATUS_UBNORMAL, code,true, woId), WORKORDER_INFO);
+        }else if (mType==WorkorderConstant.WORKORER_PROCESS){
+            startForResult(WorkorderInfoFragment.getInstance(status, code, woId,1,false), WORKORDER_INFO);
         }else {
             startForResult(WorkorderInfoFragment.getInstance(status, code, woId), WORKORDER_INFO);
         }
-
-
     }
 
     @Override
@@ -178,7 +175,7 @@ public class WorkorderListFragment extends BaseFragment<WorkorderListPresenter> 
             return;
         }
 //        Integer originStatus = mAdapter.getData().get(clickPosition).status;
-        int status = data.getInt(WorkorderInfoFragment.WORKORDER_STATUS);
+//        int status = data.getInt(WorkorderInfoFragment.WORKORDER_STATUS);
         boolean needJump = data.getBoolean(WorkorderInfoFragment.WORKORDER_NEED_JUMP);
 //        if (originStatus == status) {
 //            return;
@@ -214,12 +211,12 @@ public class WorkorderListFragment extends BaseFragment<WorkorderListPresenter> 
                 mAdapter.setEmptyView(getNoDataView(mRefreshLayout));
             }
         } else {
-            if(status == WorkorderConstant.WORK_STATUS_VERIFIED) {
+//            if(status == WorkorderConstant.WORK_STATUS_VERIFIED) {
                 onRefresh();
-            }else {
-                mAdapter.getData().get(clickPosition).status = status;
-                mAdapter.notifyItemChanged(clickPosition);
-            }
+//            }else {
+//                mAdapter.getData().get(clickPosition).status = status;
+//                mAdapter.notifyItemChanged(clickPosition);
+//            }
         }
     }
 

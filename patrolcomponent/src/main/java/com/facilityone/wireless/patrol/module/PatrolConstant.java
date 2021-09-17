@@ -7,6 +7,14 @@ package com.facilityone.wireless.patrol.module;
  * Date: 2018/10/30 3:10 PM
  */
 public interface PatrolConstant {
+
+
+    Integer HEADQUARTERS_CODE = 0; //总部二维码
+    Integer OUT_SOURCING_CODE = 1; //委外二维码
+    Integer LINE_CODE = 2; //线路二维码
+    Integer STATION_CODE = 3; //车站二维码
+    Integer STATION_AREA_CODE = 4; //站区二维码
+
     //二级菜单
     int PATROL_TASK = 0;          //巡检任务
     int PATROL_QUERY = 1;         //巡检查询

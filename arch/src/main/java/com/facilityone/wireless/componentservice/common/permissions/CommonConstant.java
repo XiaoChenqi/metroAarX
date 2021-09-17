@@ -24,6 +24,7 @@ public interface CommonConstant {
     int MESSAGE_MONITORING = 8;     //传感器 监测
     int MESSAGE_BULLETIN = 100;     //公告
     int MESSAGE_INSPECTION = 9;     //承接查验
+    int MESSAGE_PRODUCTION_PLAN = 10; //生产计划
     int MESSAGE_ENERGY = 10;          //能源
     int MESSAGE_SIGN = 11;        //在岗管理
     int MESSAGE_CHART = 12;       //报表

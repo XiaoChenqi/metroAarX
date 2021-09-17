@@ -46,8 +46,12 @@ public class DemandServiceImpl implements DemandService {
     }
 
     @Override
-    public BaseFragment goToQuickReport(long equipmentId, String locationName, LocationBean locationBean, String desc, List<LocalMedia>imageIds) {
-        return DemandCreateFragment.getInstance(equipmentId,"快速报障",locationName,locationBean,desc,true,imageIds);
+    public BaseFragment goToQuickReport(long equipmentId, String locationName, LocationBean locationBean, String desc, List<LocalMedia>imageIds,Boolean isPatrol,Long contentId,String deviceName,Long deviceId,String code) {
+
+        /**
+         * 目前取消完善，isComplete参数暂写死False
+         * */
+        return DemandCreateFragment.getInstance(equipmentId,"快速报障",locationName,locationBean,desc,false,imageIds,isPatrol,contentId,deviceName,deviceId,code);
     }
 
 

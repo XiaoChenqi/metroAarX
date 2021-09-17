@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:id="@+id/root_ll"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/item_rl"
@@ -31,6 +32,15 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"/>
+
+            <TextView
+                android:id="@+id/type_tv"
+                style="@style/patrolTagStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_12"
+                android:background="@drawable/fm_patrol_ing_tag_bg"
+                android:text=""/>
 
             <TextView
                 android:id="@+id/state_tv"

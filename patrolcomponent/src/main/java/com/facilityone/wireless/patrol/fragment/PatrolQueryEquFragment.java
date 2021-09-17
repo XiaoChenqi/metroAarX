@@ -75,6 +75,8 @@ public class PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter
     private long mEquId;
     private String mLocationName;
     private LocationBean mLocationBean;
+    private String deviceName;
+    private String code;
 
     @Override
     public PatrolQueryEquPresenter createPresenter() {
@@ -179,6 +181,8 @@ public class PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter
 
     public void refreshUI(PatrolQueryService.PatrolQueryEquResp data) {
         mTvName.setText(StringUtils.formatString(data.name));
+        deviceName = data.name+"";
+        code = data.code+"";
         mTvType.setText(StringUtils.formatString(data.sysType));
         if (data.exceptionStatus != null && data.exceptionStatus.equals(PatrolConstant.EQU_STOP)) {
             mTvStop.setVisibility(View.VISIBLE);
@@ -249,7 +253,7 @@ public class PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter
                     } else if (tag.equals("快速报障")) {
                         DemandService demandService = (DemandService) Router.getInstance().getService(DemandService.class.getSimpleName());
                         if (demandService != null) {
-                            startForResult(demandService.goToQuickReport(mEquId,mLocationName,mLocationBean,comment,localMedias),REQUEST_CREATE_ORDER);
+                            startForResult(demandService.goToQuickReport(mEquId,mLocationName,mLocationBean,comment,localMedias,true,patrolQueryItemBean.patrolTaskSpotResultId,deviceName,mEquId,code),REQUEST_CREATE_ORDER);
 //                            startForResult(demandService.goToQuickReport(WorkorderService.CREATE_ORDER_BY_PATROL_QUERY_REPAIR, mEquId, mLocationName, mLocationBean, localMedias, patrolQueryItemBean.patrolTaskSpotResultId, comment, null, null, null, true), REQUEST_CREATE_ORDER);
                         }
                     }

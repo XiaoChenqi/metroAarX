@@ -41,6 +41,7 @@ public class MaterialInfoFragment extends BaseFragment<MaterialInfoPresenter> im
     private static final String WAREHOUSE_ID = "warehouse_id";
     private static final String MATERIAL_CODE = "material_code";
     private static final String FROM_SCAN = "from_scan";
+    private static final String FROM_MESSAGE = "from_message";
     public static final int INFO_INVENTORY_IN_REQUEST_CODE = 1201;
     public static final int INFO_INVENTORY_OUT_REQUEST_CODE = 1202;
     public static final int INFO_INVENTORY_MOVE_REQUEST_CODE = 1203;
@@ -93,6 +94,7 @@ public class MaterialInfoFragment extends BaseFragment<MaterialInfoPresenter> im
     private Page mPage;
     private MaterialService.MaterialInfo mMaterialInfo;//物资详情
     private List<StorageService.Storage> mStorageList;//所有仓库列表，用于判断是否有权限
+    private Boolean fromMessage; //从消息出发
 
 
     @Override
@@ -125,6 +127,7 @@ public class MaterialInfoFragment extends BaseFragment<MaterialInfoPresenter> im
             mInventoryId = bundle.getLong(INVENTORY_ID, -1);
             isFromScan = bundle.getBoolean(FROM_SCAN, false);
             mWarehouseId = bundle.getLong(WAREHOUSE_ID, -1);
+            fromMessage = bundle.getBoolean(FROM_MESSAGE,false);
             mCode = bundle.getString(MATERIAL_CODE, "");
         }
 
@@ -166,7 +169,7 @@ public class MaterialInfoFragment extends BaseFragment<MaterialInfoPresenter> im
         mPhotoRv.setNestedScrollingEnabled(false);
         mMaterialRecordRv.setNestedScrollingEnabled(false);
 
-        if(isFromScan) {
+        if(isFromScan || fromMessage) {
             setMoreMenu();
         }else {
             setMenuVisibility(false);
@@ -415,10 +418,11 @@ public class MaterialInfoFragment extends BaseFragment<MaterialInfoPresenter> im
         return mStorage;
     }
 
-    public static MaterialInfoFragment getInstance(long inventoryId) {
+    public static MaterialInfoFragment getInstance(long inventoryId,boolean fromMessage) {
         MaterialInfoFragment fragment = new MaterialInfoFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(INVENTORY_ID, inventoryId);
+        bundle.putBoolean(FROM_MESSAGE, fromMessage);
         fragment.setArguments(bundle);
         return fragment;
     }

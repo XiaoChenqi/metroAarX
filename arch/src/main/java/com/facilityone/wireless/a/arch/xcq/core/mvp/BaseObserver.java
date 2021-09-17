@@ -37,13 +37,14 @@ public  class BaseObserver<T> implements Observer<T> {
     @Override
     public void onNext(T response) {
         if(response instanceof BaseResponse){
-            if(((BaseResponse) response).isOk()){
-                if(callback!=null) {
-                    callback.getSuccess(((BaseResponse) response).data);
-                }
-            } else{
-                callback.getErrorCode(((BaseResponse) response).code,((BaseResponse) response).message);
-                //callback.getErrorCode(((BaseResponse) response).getCode(),((BaseResponse) response).getErrMsg());
+//            if(((BaseResponse) response).isOk()){
+//
+//            } else{
+//                callback.getErrorCode(((BaseResponse) response).code,((BaseResponse) response).message);
+//                //callback.getErrorCode(((BaseResponse) response).getCode(),((BaseResponse) response).getErrMsg());
+//            }
+            if(callback!=null) {
+                callback.getSuccess(((BaseResponse) response).data);
             }
         }else{//TODO 这个地方回头要修改一下
             if (callback != null) {

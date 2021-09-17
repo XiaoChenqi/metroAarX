@@ -46,6 +46,7 @@ import static com.facilityone.wireless.inventory.model.InventoryConstant.SELECT_
 public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPresenter> implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
 
     private static final String FROM_TYPE = "from_type";
+    private static final String FROM_MESSAGE = "from_message";
     private static final String ACTIVITY_ID = "activity_id";
     private static final String STATUS = "status";
     private static final String WORKORDER_STATUS = "workorder_status";
@@ -102,6 +103,8 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
     private long mSupervisorId;//主管id
     private LinearLayout mBasicLl;
 
+    private Boolean fromMessage; //从消息传过来
+
 
     @Override
     public ReserveRecordInfoPresenter createPresenter() {
@@ -133,6 +136,7 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
             mActivityid = bundle.getLong(ACTIVITY_ID, -1);
             mStatus = bundle.getInt(STATUS, -1);
             mWorkorderStatus = bundle.getInt(WORKORDER_STATUS, -1);
+            fromMessage =  bundle.getBoolean(FROM_MESSAGE,false);
         }
 
         mRequest = new MaterialService.MaterialOutRequest();
@@ -189,59 +193,63 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
         //查看全部点击事件
         mCheckAllLl.setOnClickListener(this);
 
-        switch (mFromType) {
-            case InventoryConstant.INVENTORY_OUT://出库
-                removeRightView();
-                setMoreMenu();
-                mBasicDescLl.setVisibility(View.GONE);
-                mReceivingPersonLl.setVisibility(View.VISIBLE);
-                mDescLl.setVisibility(View.VISIBLE);
-                break;
-            case InventoryConstant.INVENTORY_MY://我的预定
-                removeRightView();
-                mBasicDescLl.setVisibility(View.VISIBLE);
-                mReceivingPersonLl.setVisibility(View.GONE);
-                mDescLl.setVisibility(View.GONE);
-                if (mStatus == InventoryConstant.RESERVE_STATUS_VERIFY_WAIT) {
-                    setRightTextButton(R.string.inventory_reserve_cancel, R.id.inventory_reserve_cancel_id);
-                }
-                break;
-            case InventoryService.TYPE_FROM_WORKORDER://来自工单
-                removeRightView();
-                mBasicDescLl.setVisibility(View.VISIBLE);
-                mReceivingPersonLl.setVisibility(View.GONE);
-                mDescLl.setVisibility(View.GONE);
-                if (mStatus == InventoryConstant.RESERVE_STATUS_VERIFY_WAIT) {
-                    if (mWorkorderStatus == InventoryConstant.WORK_STATUS_CREATED) {
-                        setRightTextButton(R.string.inventory_save, R.id.inventory_reserve_save_id);
-                        mAdministratorTv.showRed(true);
-                        mAdministratorTv.showIcon(true);
-                        mReservationPersonTv.showRed(true);
-                        mReservationPersonTv.showIcon(true);
-                        mSupervisorTv.showRed(true);
-                        mSupervisorTv.showIcon(true);
-                        mAdministratorTv.setOnClickListener(this);
-                        mReservationPersonTv.setOnClickListener(this);
-                        mSupervisorTv.setOnClickListener(this);
-                    } else if (mWorkorderStatus == InventoryConstant.WORK_STATUS_PROCESS) {
+
+        if (!fromMessage){
+            switch (mFromType) {
+                case InventoryConstant.INVENTORY_OUT://出库
+                    removeRightView();
+                    setMoreMenu();
+                    mBasicDescLl.setVisibility(View.GONE);
+                    mReceivingPersonLl.setVisibility(View.VISIBLE);
+                    mDescLl.setVisibility(View.VISIBLE);
+                    break;
+                case InventoryConstant.INVENTORY_MY://我的预定
+                    removeRightView();
+                    mBasicDescLl.setVisibility(View.VISIBLE);
+                    mReceivingPersonLl.setVisibility(View.GONE);
+                    mDescLl.setVisibility(View.GONE);
+                    if (mStatus == InventoryConstant.RESERVE_STATUS_VERIFY_WAIT) {
                         setRightTextButton(R.string.inventory_reserve_cancel, R.id.inventory_reserve_cancel_id);
                     }
-                }
-                break;
-            case InventoryConstant.INVENTORY_APPROVAL_WAIT://库存审核(待审核)
-                removeRightView();
-                mBasicDescLl.setVisibility(View.VISIBLE);
-                mReceivingPersonLl.setVisibility(View.GONE);
-                mDescLl.setVisibility(View.GONE);
-                setRightTextButton(R.string.inventory_menu_approval, R.id.inventory_reserve_approval_id);
-                break;
-            case InventoryConstant.INVENTORY_APPROVALED://库存审核(已审核)
-                removeRightView();
-                mBasicDescLl.setVisibility(View.VISIBLE);
-                mReceivingPersonLl.setVisibility(View.GONE);
-                mDescLl.setVisibility(View.GONE);
-                break;
+                    break;
+                case InventoryService.TYPE_FROM_WORKORDER://来自工单
+                    removeRightView();
+                    mBasicDescLl.setVisibility(View.VISIBLE);
+                    mReceivingPersonLl.setVisibility(View.GONE);
+                    mDescLl.setVisibility(View.GONE);
+                    if (mStatus == InventoryConstant.RESERVE_STATUS_VERIFY_WAIT) {
+                        if (mWorkorderStatus == InventoryConstant.WORK_STATUS_CREATED) {
+                            setRightTextButton(R.string.inventory_save, R.id.inventory_reserve_save_id);
+                            mAdministratorTv.showRed(true);
+                            mAdministratorTv.showIcon(true);
+                            mReservationPersonTv.showRed(true);
+                            mReservationPersonTv.showIcon(true);
+                            mSupervisorTv.showRed(true);
+                            mSupervisorTv.showIcon(true);
+                            mAdministratorTv.setOnClickListener(this);
+                            mReservationPersonTv.setOnClickListener(this);
+                            mSupervisorTv.setOnClickListener(this);
+                        } else if (mWorkorderStatus == InventoryConstant.WORK_STATUS_PROCESS) {
+                            setRightTextButton(R.string.inventory_reserve_cancel, R.id.inventory_reserve_cancel_id);
+                        }
+                    }
+                    break;
+                case InventoryConstant.INVENTORY_APPROVAL_WAIT://库存审核(待审核)
+                    removeRightView();
+                    mBasicDescLl.setVisibility(View.VISIBLE);
+                    mReceivingPersonLl.setVisibility(View.GONE);
+                    mDescLl.setVisibility(View.GONE);
+                    setRightTextButton(R.string.inventory_menu_approval, R.id.inventory_reserve_approval_id);
+                    break;
+                case InventoryConstant.INVENTORY_APPROVALED://库存审核(已审核)
+                    removeRightView();
+                    mBasicDescLl.setVisibility(View.VISIBLE);
+                    mReceivingPersonLl.setVisibility(View.GONE);
+                    mDescLl.setVisibility(View.GONE);
+                    break;
+            }
         }
+
     }
 
     @Override
@@ -295,6 +303,33 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
         mReservePersonId = data.reservationPersonId == null ? -1 : data.reservationPersonId;
         mSupervisorId = data.supervisor == null ? -1 : data.supervisor;
         mStatus = data.status;
+
+        if (fromMessage){
+            removeRightView();
+            switch (data.status) {
+                case InventoryConstant.RESERVE_STATUS_VERIFY_WAIT:
+                    mBasicDescLl.setVisibility(View.VISIBLE);
+                    mReceivingPersonLl.setVisibility(View.GONE);
+                    mDescLl.setVisibility(View.GONE);
+                    setRightTextButton(R.string.inventory_menu_approval, R.id.inventory_reserve_approval_id);
+                    break;
+                case InventoryConstant.RESERVE_STATUS_VERIFY_PASS:
+                    setMoreMenu();
+                    mBasicDescLl.setVisibility(View.GONE);
+                    mReceivingPersonLl.setVisibility(View.VISIBLE);
+                    mDescLl.setVisibility(View.VISIBLE);
+                    break;
+                case InventoryConstant.RESERVE_STATUS_VERIFY_BACK:
+                    mDescLl.setVisibility(View.GONE);
+                    mReceivingPersonLl.setVisibility(View.GONE);
+                    break;
+                case InventoryConstant.RESERVE_STATUS_DELIVERIED:
+                    mReceivingPersonLl.setVisibility(View.GONE);
+                    mDescLl.setVisibility(View.GONE);
+                    break;
+            }
+        }
+
         mWoId = data.woId == null ? -1 : data.woId;
         mWoCode = StringUtils.formatString(data.woCode);
         mReservationCodeTv.setText(StringUtils.formatString(data.reservationCode));
@@ -593,11 +628,12 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
         return mRequest;
     }
 
-    public static ReserveRecordInfoFragment getInstance(int type, long activityId) {
+    public static ReserveRecordInfoFragment getInstance(int type, long activityId,boolean fromMessage) {
         ReserveRecordInfoFragment fragment = new ReserveRecordInfoFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(FROM_TYPE, type);
         bundle.putLong(ACTIVITY_ID, activityId);
+        bundle.putBoolean(FROM_MESSAGE,fromMessage);
         fragment.setArguments(bundle);
         return fragment;
     }

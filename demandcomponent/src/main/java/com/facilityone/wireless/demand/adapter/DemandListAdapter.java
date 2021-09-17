@@ -25,11 +25,11 @@ public class DemandListAdapter extends BaseQuickAdapter<DemandService.DemandBean
 
     private final int type;
 
+
     public DemandListAdapter(int type) {
         super(R.layout.item_demand);
         this.type = type;
     }
-
     @Override
     protected void convert(final BaseViewHolder helper, final DemandService.DemandBean item) {
 
@@ -106,32 +106,32 @@ public class DemandListAdapter extends BaseQuickAdapter<DemandService.DemandBean
             } else {
                 helper.setVisible(R.id.demand_status_tv, false);
             }
-            helper.setBackgroundRes(R.id.demand_new_status_tv, R.drawable.demand_fill_created_bg);
+//            helper.setBackgroundRes(R.id.demand_new_status_tv, R.drawable.demand_fill_created_bg);
 
-//            helper.setText(R.id.demand_type_tv, StringUtils.formatString(item.type));
-//            if(item.orders != null && item.orders.size() > 0) {
-//                helper.setGone(R.id.demand_related_order_ll,true);
-//                StringBuffer buffer = new StringBuffer();
-//                for (int i = 0; i < item.orders.size(); i++) {
-//                    DemandService.RelatedOrder order = item.orders.get(i);
-//                    String status = "";
-//                    if(order.status != null) {
-//                        status = DemandHelper.getWorkOrderStatusMap(mContext).get(order.status);
-//                    }
-//                    if(i != 0) {
-//                        buffer.append("、");
-//                    }
-//                    buffer.append(StringUtils.formatString(order.code));
-//                    if(!TextUtils.isEmpty(status)) {
-//                        buffer.append("(");
-//                        buffer.append(status);
-//                        buffer.append(")");
-//                    }
-//                }
-//                helper.setText(R.id.demand_related_order_tv, buffer.toString());
-//            }else {
-//                helper.setGone(R.id.demand_related_order_ll,false);
-//            }
+            helper.setText(R.id.demand_type_tv, StringUtils.formatString(item.type));
+            if(item.orders != null && item.orders.size() > 0) {
+                helper.setGone(R.id.demand_related_order_ll,true);
+                StringBuffer buffer = new StringBuffer();
+                for (int i = 0; i < item.orders.size(); i++) {
+                    DemandService.RelatedOrder order = item.orders.get(i);
+                    String status = "";
+                    if(order.status != null) {
+                        status = DemandHelper.getWorkOrderStatusMap(mContext).get(order.status);
+                    }
+                    if(i != 0) {
+                        buffer.append("、");
+                    }
+                    buffer.append(StringUtils.formatString(order.code));
+                    if(!TextUtils.isEmpty(status)) {
+                        buffer.append("(");
+                        buffer.append(status);
+                        buffer.append(")");
+                    }
+                }
+                helper.setText(R.id.demand_related_order_tv, buffer.toString());
+            }else {
+                helper.setGone(R.id.demand_related_order_ll,false);
+            }
         }
     }
 }

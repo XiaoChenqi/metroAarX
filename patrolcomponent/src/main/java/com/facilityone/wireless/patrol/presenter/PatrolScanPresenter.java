@@ -1,5 +1,9 @@
 package com.facilityone.wireless.patrol.presenter;
 
+import android.util.ArrayMap;
+
+import androidx.annotation.Nullable;
+
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.mvp.BasePresenter;
 import com.facilityone.wireless.a.arch.offline.dao.PatrolDeviceDao;
@@ -9,8 +13,10 @@ import com.facilityone.wireless.a.arch.offline.model.entity.DBPatrolConstant;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolTaskEntity;
 import com.facilityone.wireless.basiclib.app.FM;
+import com.facilityone.wireless.basiclib.utils.GsonUtils;
 import com.facilityone.wireless.patrol.fragment.PatrolScanFragment;
 import com.facilityone.wireless.patrol.module.PatrolConstant;
+import com.facilityone.wireless.patrol.module.PatrolQueryService;
 import com.facilityone.wireless.patrol.module.PatrolStatusEntity;
 import com.facilityone.wireless.patrol.module.PatrolStatusReq;
 import com.facilityone.wireless.patrol.module.PatrolUrl;
@@ -19,7 +25,9 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -44,7 +52,8 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<PatrolSpotEntity>> emitter) throws Exception {
                 PatrolSpotDao spotDao = new PatrolSpotDao();
-                List<PatrolSpotEntity> temp = spotDao.getSpotList(code);
+                //为防止二维码出现空格之类的，做如下处理code.trim();
+                List<PatrolSpotEntity> temp = spotDao.getSpotList(code.trim());
                 emitter.onNext(temp);
                 emitter.onComplete();
             }
@@ -182,6 +191,10 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
                         if (patrolStatusEntity.getStatus() != null && patrolStatusEntity.getStatus() == PatrolConstant.PATROL_STATUS_ING) {
                             entity.setStatus(patrolStatusEntity.getStatus());
                         }
+                        System.out.println("服务器状态");
+                        System.out.println(patrolStatusEntity.getPtype());
+                        entity.setpType(patrolStatusEntity.getPtype());
+
 //                        entity.setCompleted(taskCompleted ? DBPatrolConstant.TRUE_VALUE : DBPatrolConstant.FALSE_VALUE);
                         patrolTaskEntities.add(entity);
                     }
@@ -207,6 +220,10 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
                     for (PatrolTaskEntity patrolTaskEntity : patrolTaskEntities) {
                         if (patrolTaskEntity.getStatus() != null) {
                             taskDao.update(patrolTaskEntity.getStatus(), patrolTaskEntity.getTaskId());
+                        }
+                        else if (patrolTaskEntity.getpType()!=null){
+                            //只判断任务类型
+                            taskDao.update(patrolTaskEntity.getTaskId(),patrolTaskEntity.getpType());
                         }
                     }
                 }
@@ -375,4 +392,143 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
                     }
                 });
     }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:40
+     * @Description: 获取最后一次签到记录
+     */
+    public void getLastAttendance(){
+        getV().showLoading();
+        String json = "{}";
+        OkGo.<BaseResponse<PatrolQueryService.AttendanceResp>>post(FM.getApiHost() + PatrolUrl.ATTENDANCE_LAST)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(json)
+                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.AttendanceResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
+                        getV().dismissLoading();
+                        PatrolQueryService.AttendanceResp data = response.body().data;
+                        if(data != null) {
+                            getV().hasAttentanceData(true);
+                            getV().saveAttentanceLocation(data);
+                        }else {
+                            getV().hasAttentanceData(false);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/31 9:22
+     * @Description: 判断点位任务是否可执行
+     * @param 'patrolTaskId'  巡检任务ID
+     * @param 'patrolTaskSpotId' 巡检点位ID
+     */
+    public void judgeTask(PatrolSpotEntity entity){
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("patrolTaskSpotId", entity.getPatrolSpotId());
+        jsonObject.put("patrolTaskId", entity.getTaskId());
+        OkGo.<BaseResponse<PatrolQueryService.PatrolJudgeBean>>post(FM.getApiHost() + PatrolUrl.PATROL_JUDGE_TASK)
+                .tag(getV())
+                .upJson(toJson(jsonObject))
+                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.PatrolJudgeBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<PatrolQueryService.PatrolJudgeBean>> response) {
+                        getV().dismissLoading();
+                        PatrolQueryService.PatrolJudgeBean data = response.body().data;
+                        if (data != null) {
+                            if (data.executable){
+
+                                if (data.time!=0){
+                                    getV().showOrderTimeDialog(data.time,entity);
+
+                                }else {
+                                    getV().enterDeviceList(entity);
+                                }
+                            }else {
+                                if (data.patrolTaskId.equals(entity.getTaskId())&&data.patrolTaskSpotId.equals(entity.getPatrolSpotId())){
+                                    getV().enterDeviceList(entity);
+                                }else {
+                                    getV().showLefTimeDialog(data.time);
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/27 16:27
+     * @Description:  执行任务
+     */
+    public void executeTask(PatrolSpotEntity entity){
+        PatrolQueryService.PatrolJudgeReq req=new PatrolQueryService.PatrolJudgeReq();
+        req.patrolTaskId=entity.getTaskId();
+        req.patrolTaskSpotId=entity.getPatrolSpotId();
+        OkGo.<BaseResponse<String>>post(FM.getApiHost() + PatrolUrl.PATROL_EXECUTE_TASK)
+                .tag(getV())
+                .upJson(toJson(req))
+                .execute(new FMJsonCallback<BaseResponse<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<String>> response) {
+                        getV().dismissLoading();
+                        getV().enterDeviceList(entity);
+
+                    }
+                });
+    }
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/9/2 15:33
+     * @Description: 获取当前所有任务
+     */
+    public void getCurrentTask() {
+        Observable.create(new ObservableOnSubscribe<ArrayMap<Long,PatrolTaskEntity>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<ArrayMap<Long,PatrolTaskEntity>> emitter) throws Exception {
+                PatrolTaskDao dao = new PatrolTaskDao();
+                ArrayMap<Long,PatrolTaskEntity> taskIds = dao.getTaskMap(null);
+                System.out.println(GsonUtils.toJson(taskIds));
+                emitter.onNext(taskIds);
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DefaultObserver<ArrayMap<Long,PatrolTaskEntity>>() {
+                    @Override
+                    public void onNext(@NonNull ArrayMap<Long,PatrolTaskEntity> taskEntitys) {
+                        if (taskEntitys.size()==0) {
+                            getV().refreshUI(null);
+                        } else {
+                            getV().checkCurrentTaskEntity(taskEntitys);
+                        }
+                        cancel();
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        getV().error();
+                        cancel();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
 }

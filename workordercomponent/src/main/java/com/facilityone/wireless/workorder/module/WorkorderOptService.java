@@ -36,6 +36,7 @@ public class WorkorderOptService {
         public Long woId;
         public Integer operateType;
         public String operateDescription;
+        public Long operateReasonId; //操作原因Id
     }
 
     //暂停工单
@@ -71,6 +72,13 @@ public class WorkorderOptService {
         public Long approvalId;
         public Integer operateType;
         public String content;
+    }
+
+    //异常审批
+    public static class WorkorderOptApprovalVErrorReq {
+        public Long woId;
+        public Integer status;
+        public String approveNote;
     }
 
     /* 处理工单操作 */

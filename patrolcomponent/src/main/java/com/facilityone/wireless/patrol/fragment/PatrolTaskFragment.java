@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -181,7 +182,12 @@ public class PatrolTaskFragment extends BaseFragment<PatrolTaskPresenter> implem
         PatrolTaskEntity patrolTaskEntity = mShowEntities.get(position);
         boolean can = getPresenter().canGo(patrolTaskEntity, mShowEntities);
         if (can) {
-            startForResult(PatrolSpotFragment.getInstance(patrolTaskEntity.getTaskId(), patrolTaskEntity.getTaskName()), REQUEST_SPOT);
+            if (patrolTaskEntity.getpType().equals(0)){
+                startForResult(PatrolSpotFragment.getInstance(patrolTaskEntity.getTaskId(), patrolTaskEntity.getTaskName(),true), REQUEST_SPOT);
+            }else {
+                startForResult(PatrolSpotFragment.getInstance(patrolTaskEntity.getTaskId(), patrolTaskEntity.getTaskName(),false), REQUEST_SPOT);
+            }
+
         } else {
             ToastUtils.showShort(R.string.patrol_overdue_task_tip);
         }

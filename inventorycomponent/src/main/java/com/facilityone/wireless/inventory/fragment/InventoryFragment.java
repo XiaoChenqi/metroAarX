@@ -168,6 +168,7 @@ public class InventoryFragment extends BaseFragment<InventoryPresenter> implemen
                         start(MaterialInfoFragment.getInstance(inventoryQRCodeBean.code,wareHouseId,true));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
+                        ToastUtils.showShort("此二维码无法识别");
                     }
                 }
             });

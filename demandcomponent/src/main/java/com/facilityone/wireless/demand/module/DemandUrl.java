@@ -11,9 +11,11 @@ public interface DemandUrl {
     //获取需求列表。
     String DEMAND_LIST_URL = "/m/v1/servicecenter/list";
     //创建需求
-    String DEMAND_CREATE_URL = "/m/v2/servicecenter/create";
+    String DEMAND_CREATE_URL = "/m/v3/servicecenter/create";
+    //巡检报障创建
+    String PARTROL_QUICK_CREATE_URL = "/m/v2/servicecenter/submit";
     //需求详情
-    String DEMAND_INFO_URL = "/m/v1/servicecenter/detail";
+    String DEMAND_INFO_URL = "/m/v2/servicecenter/detail";
     //需求操作 需求审核，保存，完成
     String DEMAND_OPT_URL = "/m/v1/servicecenter/operation";
     //满意度评价
@@ -23,5 +25,8 @@ public interface DemandUrl {
     String DEMAND_COMPLETE_DEVICE  = "/m/v1/servicecenter/improve";
     //需求操作
     String DEMAND_REPORT_OBSTACLE_OPERATION  = "/m/v1/servicecenter/operation";
+
+    //最后一次签到记录
+    String ATTENDANCE_LAST = "/m/v1/user/attendance/last";
 
 }

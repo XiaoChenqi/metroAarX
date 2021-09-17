@@ -178,6 +178,15 @@ public class PatrolTaskPresenter extends BasePresenter<PatrolTaskFragment> {
                         if (patrolStatusEntity.getStatus() != null && patrolStatusEntity.getStatus() == PatrolConstant.PATROL_STATUS_ING) {
                             entity.setStatus(patrolStatusEntity.getStatus());
                         }
+                        entity.setpType(patrolStatusEntity.getPtype());
+
+//                        if (patrolStatusEntity.getStatus() != null ) {
+//                            entity.setStatus(patrolStatusEntity.getStatus());
+
+//                        }
+
+
+
                         PatrolSpotDao spotDao = new PatrolSpotDao();
                         List<PatrolSpotEntity> spotList = spotDao.getSpotList(patrolStatusEntity.getPatrolTaskId());
                         if (spotList != null && patrolSpotFinishId.size() > 0 && spotList.size() > 0) {
@@ -223,6 +232,9 @@ public class PatrolTaskPresenter extends BasePresenter<PatrolTaskFragment> {
                     for (PatrolTaskEntity patrolTaskEntity : patrolTaskEntities) {
                         if (patrolTaskEntity.getStatus() != null) {
                             taskDao.update(patrolTaskEntity.getStatus(), patrolTaskEntity.getCompleted(), patrolTaskEntity.getTaskId());
+                        }else if (patrolTaskEntity.getpType()!=null){
+                            //只判断任务类型
+                            taskDao.update(patrolTaskEntity.getTaskId(),patrolTaskEntity.getpType());
                         }
                     }
                 }

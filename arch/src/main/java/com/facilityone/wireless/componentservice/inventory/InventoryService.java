@@ -25,7 +25,7 @@ public interface InventoryService extends IService {
      * @param activityId
      * @return
      */
-    BaseFragment getReserveRecordInfoFragment(long activityId);
+    BaseFragment getReserveRecordInfoFragment(long activityId,boolean fromMessage);
 
     /**
      * 获取物资预定界面
@@ -50,7 +50,7 @@ public interface InventoryService extends IService {
      * @param inventoryId
      * @return
      */
-    BaseFragment getMaterialInfoFragment(Long inventoryId);
+    BaseFragment getMaterialInfoFragment(Long inventoryId,Boolean isScan);
 
 
      /**

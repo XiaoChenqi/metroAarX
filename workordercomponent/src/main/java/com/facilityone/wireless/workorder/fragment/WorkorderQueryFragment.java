@@ -293,7 +293,8 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
         showConditionTime();
         mConditionBean.priority = null;
         mConditionBean.typeId = null;
-        mConditionBean.status = null;
+        mConditionBean.newStatus = null;
+        mConditionBean.tag=null;
         for (AttachmentBean priorityA : mPriorityAs) {
             priorityA.check = false;
             if (priorityA.value == -1L) {
@@ -473,15 +474,12 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
         for (AttachmentBean a : mStatusAs) {
             if (a.value != -1L && a.check) {
                 statusId.add(a.value);
-                if (a.value == WorkorderConstant.WORK_STATUS_SUSPENDED_GO) {
-                    statusId.add((long) WorkorderConstant.WORK_STATUS_SUSPENDED_NO);
-                }
             }
         }
         if (statusId.size() > 0) {
-            mConditionBean.status = statusId;
+            mConditionBean.newStatus = statusId;
         } else {
-            mConditionBean.status = null;
+            mConditionBean.newStatus = null;
         }
     }
 
@@ -490,9 +488,6 @@ public class WorkorderQueryFragment extends BaseFragment<WorkorderQueryPresenter
         for (AttachmentBean a : mLabelAs) {
             if (a.value != -1L && a.check) {
                 labelId.add(a.value);
-                if (a.value == WorkorderConstant.WORK_STATUS_SUSPENDED_GO) {
-                    labelId.add((long) WorkorderConstant.WORK_STATUS_SUSPENDED_NO);
-                }
             }
         }
         if (labelId.size() > 0) {

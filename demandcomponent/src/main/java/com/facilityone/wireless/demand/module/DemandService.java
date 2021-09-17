@@ -5,6 +5,7 @@ import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.OrdersBean;
 import com.facilityone.wireless.a.arch.ec.module.Page;
 import com.facilityone.wireless.a.arch.ec.module.RequesterBean;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -80,10 +81,11 @@ public class DemandService {
         public Long createDate;
         public String telephone;
         public Long signImgId;
+        @SerializedName("location")
         public String locationName;
         public Long reserveStartTime;
         public Long reserveEndTime;
-
+        @SerializedName("locationId")
         public LocationBean location;
         public RequesterBean requester;
         public List<RecordsBean> records;
@@ -93,6 +95,14 @@ public class DemandService {
         public List<String> videos;
         public List<Integer> currentRoles;
         public List<AttachmentBean> attachment;
+
+         /**
+          * @Auther: karelie
+          * @Date: 2021/8/27
+          * @Infor: 需求类型
+          */
+         public String serviceType; //需求类型
+         public Long serviceTypeId; //需求类型Id
 
     }
 

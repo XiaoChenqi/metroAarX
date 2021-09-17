@@ -10,6 +10,7 @@ import com.joanzapata.iconify.Icon;
  */
 public enum ResIcons implements Icon {
     icon_scan('\ue600'),
+    icon_nfc('\ue6d6'),
     icon_camera('\ue636'),
     icon_down('\ue601'),
     icon_right('\ue602'),

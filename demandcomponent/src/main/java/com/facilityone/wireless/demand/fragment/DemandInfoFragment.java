@@ -407,8 +407,12 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
             mAssureNumber.setText(data.code + "");
         }
 
+        if (data.serviceType != null) {
+            mTvType.setText(data.serviceType + "");
+        }
+
+
         updateTag(data);
-        mTvType.setText(StringUtils.formatString(data.type));
         updateOrigin(data);
         if (!TextUtils.isEmpty(data.locationName)) {
             mTvLocation.setText(StringUtils.formatString(data.locationName, ""));

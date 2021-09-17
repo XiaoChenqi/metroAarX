@@ -248,6 +248,8 @@
     <string name="inventory_expiration_time">过期时间：</string>
     <!--过期时间-->
     <string name="inventory_expiration_time_a">过期时间</string>
+    <!--提醒提前天数-->
+    <string name="inventory_days_in_advance_time_a">提醒提前天数</string>
     <!--请选择过期时间-->
     <string name="inventory_select_expiration_time_hint">请选择过期时间</string>
     <!--单价(元)：-->
@@ -484,6 +486,8 @@
     <string name="inventory_material_input_price_hint">请输入单价</string>
     <!--请选择过期时间-->
     <string name="inventory_material_create_due_date_select_hint">请选择过期时间</string>
+    <!--请输入提醒提前天数-->
+    <string name="inventory_material_create_expirtion_select_hint">请输入提醒提前天数</string>
     <!--操作步骤-->
     <string name="inventory_record_history_step">操作步骤：</string>
     <!--操作内容-->

@@ -9,6 +9,10 @@ package com.facilityone.wireless.a.arch.ec.module;
 public class UserService {
     //用户信息bean
     public static class UserInfoBean {
+
+
+
+
         public String pictureId;
         public Long userId;
         public Long emId;
@@ -25,9 +29,10 @@ public class UserService {
         public LocationBean location;
         public String skills;
         public String title;
-        public String type;
+        public Integer type;
         public String adImageId;
         public Long adTimeInterval;
         public String qrcodeId;
+        public String locationName;//位置名称
     }
 }

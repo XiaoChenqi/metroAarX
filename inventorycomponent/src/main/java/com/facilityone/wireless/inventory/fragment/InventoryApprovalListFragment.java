@@ -126,7 +126,7 @@ public class InventoryApprovalListFragment extends BaseFragment<InventoryApprova
         ReserveService.ReserveRecordBean reserveRecordBean = ((InventoryReserveListAdapter) adapter).getData().get(position);
         if(reserveRecordBean != null) {
             InventoryApprovalFragment parentFragment = (InventoryApprovalFragment) getParentFragment();
-            parentFragment.startForResult(ReserveRecordInfoFragment.getInstance(mType,reserveRecordBean.activityId),
+            parentFragment.startForResult(ReserveRecordInfoFragment.getInstance(mType,reserveRecordBean.activityId,false),
                     INVENTORY_APPROVAL_REQUEST_CODE);
         }
     }

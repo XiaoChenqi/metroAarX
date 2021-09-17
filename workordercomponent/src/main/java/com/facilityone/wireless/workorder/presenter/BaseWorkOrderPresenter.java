@@ -1,10 +1,14 @@
 package com.facilityone.wireless.workorder.presenter;
 
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.ec.commonpresenter.CommonBasePresenter;
 import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
 import com.facilityone.wireless.a.arch.ec.module.Page;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
+import com.facilityone.wireless.a.arch.ec.module.UserService;
+import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.offline.dao.PriorityDao;
 import com.facilityone.wireless.basiclib.app.FM;
@@ -195,36 +199,7 @@ public class BaseWorkOrderPresenter<V extends BaseFragment> extends CommonBasePr
     }
 
 
-    /**
-     * @Created by: kuuga
-     * @Date: on 2021/8/25 10:40
-     * @Description: 获取最后一次签到记录
-     */
-    public void getLastAttendance(){
-        getV().showLoading();
-        String json = "{}";
-        OkGo.<BaseResponse<WorkorderService.WorkorderAttendanceResp>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_ATTENDANCE_LAST)
-                .tag(getV())
-                .isSpliceUrl(true)
-                .upJson(json)
-                .execute(new FMJsonCallback<BaseResponse<WorkorderService.WorkorderAttendanceResp>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponse<WorkorderService.WorkorderAttendanceResp>> response) {
-                        getV().dismissLoading();
-                        WorkorderService.WorkorderAttendanceResp data = response.body().data;
-                        if(data != null) {
-                        }else {
-                        }
-                    }
 
-                    @Override
-                    public void onError(Response<BaseResponse<WorkorderService.WorkorderAttendanceResp>> response) {
-                        super.onError(response);
-                        getV().dismissLoading();
-                        getWorkorderInfoError();
-                    }
-                });
-    }
 
     /**
      * @Created by: kuuga

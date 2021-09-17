@@ -22,7 +22,22 @@ public class PatrolQrcodeUtils {
         }
         String tmp = qrcode.replace(" ", "");
         String[] data = tmp.split("\\|");
+        if (data.length > 2) {
+            //四运新需求
+            result = data[1];
+        }
+        return result;
+    }
+
+    public static String parseSpotCodeType(String qrcode) {
+        String result = "";
+        if (TextUtils.isEmpty(qrcode)) {
+            return result;
+        }
+        String tmp = qrcode.replace(" ", "");
+        String[] data = tmp.split("\\|");
         if (data.length > 1) {
+            //四运新需求
             result = data[0];
         }
         return result;

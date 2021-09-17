@@ -1,6 +1,7 @@
 package com.facilityone.wireless.a.arch.presenter;
 
 
+import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.model.UserModel;
 import com.facilityone.wireless.a.arch.net.FmNetApi;
 import com.facilityone.wireless.a.arch.xcq.core.mvp.BasePresenter;
@@ -60,6 +61,11 @@ public class UserBehaviorPresenter extends BasePresenter<MvpView> {
 //    public void saveTaskDetail(InspectionTaskDetailRequest bean, final int requestCode) {
 //        taskModel.saveTaskDetail(bean, new BaseNetCallback(getMvpView(), requestCode));
 //    }
+
+
+    public void userInfor(final int requestCode) {
+        userModel.getUserInfor( new BaseNetCallback<UserService.UserInfoBean>(getMvpView(), requestCode));
+    }
 
 
 }

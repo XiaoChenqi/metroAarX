@@ -146,7 +146,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         deviceList = ArrayList()
         newrequest = WorkorderCreateService.newOrderCreate()
         mDeviceOnlineData = SelectDataBean()
-        binding.civContact.inputText =SPUtils.getInstance(SPKey.SP_MODEL).getString(SPKey.USERNAME)
+        binding.civContact.inputText =SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.EM_NAME)
         binding.civContact.canInput(false)
         if (bundle != null) {
             mFromType = bundle.getInt(FROM_TYPE, -1)
@@ -317,7 +317,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
                         mDeviceAdapter!!.notifyDataSetChanged()
                         if ((mDevices as ArrayList<SelectDataBean>).size == 0) {
                             binding.deviceRecyclerView.visibility = View.GONE
-                            binding.deviceRecyclerView.visibility = View.GONE
+                            binding.deviceTv.visibility = View.GONE
                         }
                         dialog.dismiss()
                     }).create(R.style.fmDefaultWarnDialog).show()
@@ -706,6 +706,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
                         return
                     }
                 }
+                mDevices!!.clear()
                 mDevices!!.add(bean)
                 binding.deviceTv.visibility=View.VISIBLE
                 binding.deviceRecyclerView.visibility=View.VISIBLE
@@ -857,10 +858,21 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
             bundle.putString(SERVICETYPE,data.nameAll.serviceType)
             bundle.putString(PRIORITY,data.nameAll.priority)
             bundle.putInt(WORKORDER_TYPE,data.woType)
-            bundle.putLong(ORDER_REQID,data.reqId)
-            bundle.putLong(ORDER_SERVICEID,data.serviceTypeId)
-            bundle.putLong(ORDER_FLOWID,data.processId)
-            bundle.putLong(ORDER_PRIORITYID,data.priorityId)
+            if (data.reqId != null){
+                bundle.putLong(ORDER_REQID,data.reqId)
+            }
+
+            if (data.serviceTypeId != null){
+                bundle.putLong(ORDER_SERVICEID,data.serviceTypeId)
+            }
+            if (data.processId != null){
+                bundle.putLong(ORDER_FLOWID,data.processId)
+            }
+
+            if (data.priorityId != null){
+                bundle.putLong(ORDER_PRIORITYID,data.priorityId)
+            }
+
             if(data.equipmentSystemName != null){
                 bundle.putParcelableArrayList(DEVICE_LIST,data.equipmentSystemName as java.util.ArrayList<out Parcelable>)
             }

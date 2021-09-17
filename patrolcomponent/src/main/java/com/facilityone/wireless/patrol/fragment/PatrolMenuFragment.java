@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -145,7 +146,6 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         if (mAllProgress > 0) {
             return;
         }
-
 
         if (mDialog != null && !mDialog.isShowing()) {
             setTipView(getString(R.string.patrol_dowmload_progress) + "0%");
@@ -350,7 +350,10 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
     }
 
     public void scanResult(String spotCode) {
-        start(PatrolScanFragment.getInstance(spotCode));
+        /**
+         * 巡检模块扫描点位
+         * */
+        start(PatrolScanFragment.getInstance(spotCode,false));
     }
 
     public static PatrolMenuFragment getInstance(Bundle bundle) {

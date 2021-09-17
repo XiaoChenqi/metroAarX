@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,8 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.PhoneUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -32,8 +38,10 @@ import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
 import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
+import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
 import com.facilityone.wireless.a.arch.ec.ui.SignatureActivity;
+import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.utils.UrlUtils;
 import com.facilityone.wireless.a.arch.widget.FMBottomChoiceSheetBuilder;
@@ -58,6 +66,7 @@ import com.facilityone.wireless.workorder.module.WorkorderLaborerService;
 import com.facilityone.wireless.workorder.module.WorkorderService;
 import com.facilityone.wireless.workorder.module.WorkorderUrl;
 import com.facilityone.wireless.workorder.presenter.WorkorderInfoPresenter;
+import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -134,11 +143,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     private View mViewApprovalContent;
 //    private LoadingLayout mEui;
 
+    private IconTextView tv_right_icon_tol;
+
     public static final String WORKORDER_STATUS = "workorder_status";
     public static final String WORKORDER_NEED_JUMP = "workorder_need_jump";
     public static final String WORKORDER_CODE = "workorder_code";
     public static final String WORKORDER_ID = "workorder_id";
     public static final String IS_MAINTENANCE = "maintenance_order";
+    public static final String IS_PENDING = "is_pending";
     public static final String IS_FINISH = "maintenance_finish_order";
     public static final String ARRIVAL_DATE_TIME = "arrival_date_time";
     public static final String ARRIVAL_DATE_END_TIME = "arrival_date_end_time";
@@ -154,6 +166,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public static final int SPACE_LOCATION = 4011;
     public static final int PAYMENT = 4012;
     private final static int REQUEST_REASON = 20007;
+    private final static int CAUSE_REASON = 20009; //故障原因
     private final static int REQUEST_INVALID = 20008;
     public Long mWoId;
     private String mCode;
@@ -198,7 +211,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     private ArrayList<WorkorderService.WorkOrderEquipmentsBean> mWorkOrderEquipments;
     //物料
     private List<WorkorderService.WorkorderReserveRocordBean> mWorkOrderMaterials;
-    //工具
+    //故障原因
     private ArrayList<WorkorderService.WorkOrderToolsBean> mWorkOrderTools;
     //收取明细
     private ArrayList<WorkorderService.ChargesBean> mCharges;
@@ -233,15 +246,27 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     private WorkorderApprovalContentAdapter mApprovalContentAdapter;
     private WorkorderService.WorkorderInfoBean data;
     private FMBottomChoiceSheetBuilder builderChoice;
-    private QMUIBottomSheet buildInvalid ;
-    private String invalidReason ; //作废原因
-    private Long operateReasonId ; //申请作废原因Id
+    private QMUIBottomSheet buildInvalid;
+    private String invalidReason; //作废原因
+    private Long operateReasonId; //申请作废原因Id
     FMBottomPauseSelectSheetBuilder pauseDialogBuilder;
     QMUIBottomSheet pauseDialog;
-    private final static String RESULT_REASON="pause_reason";
+    private final static String RESULT_REASON = "pause_reason";
     private Long InvalidId;
     private Boolean isMaintenanceOrder; //是否是维护工单
     private Boolean isFinish; //是否待存档工单
+    private LinearLayout mOrderLl;
+
+    private Boolean isException = false;//是否异常工单
+    private Boolean isAttendance = false;//签到记录是否有效
+    private Boolean hasAttendanceData = false;//是否有签到记录
+    private TextView mOrderTagTv; //工单标签状态
+    private Boolean isSignOn = false; //已签到
+    private Integer tagStatus; //工单标签
+    private Integer isPending = -1; //是否是待处理工单内内容
+    private String workOrderContent; // 工作内容
+    private Long operateOrderReasonId; //故障原因Id
+
     @Override
     public WorkorderInfoPresenter createPresenter() {
         return new WorkorderInfoPresenter();
@@ -279,10 +304,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         Bundle bundle = getArguments();
         if (bundle != null) {
             mStatus = bundle.getInt(WORKORDER_STATUS, WorkorderConstant.WORK_STATUS_NONE);
+            if (mStatus == WorkorderConstant.WORK_STATUS_UBNORMAL) {
+                isException = true;
+            }
             mCode = bundle.getString(WORKORDER_CODE, "");
             mWoId = bundle.getLong(WORKORDER_ID);
-            isMaintenanceOrder = bundle.getBoolean(IS_MAINTENANCE,false);
-            isFinish = bundle.getBoolean(IS_FINISH,false);
+            isMaintenanceOrder = bundle.getBoolean(IS_MAINTENANCE, false);
+            isFinish = bundle.getBoolean(IS_FINISH, false);
+            isPending = bundle.getInt(IS_PENDING, -1);
         }
         refreshStatus = mStatus;
         mToolCost = new WorkorderService.ChargesBean();
@@ -309,10 +338,12 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mTvDesc = findViewById(R.id.tv_desc);
         mTvToolTotal = findViewById(R.id.tv_tool_total);
         mTvChargeTotal = findViewById(R.id.tv_bp_total);
-        mTvDevice=findViewById(R.id.tv_device);
-        if (!isMaintenanceOrder){
+        mTvDevice = findViewById(R.id.tv_device);
+        if (!isMaintenanceOrder) {
             mTvDevice.setText(getString(R.string.workorder_fault_device));
         }
+        mOrderTagTv = findViewById(R.id.workorder_new_status_tv); //工单标签状态
+
 //        mTvApprovalContent = findViewById(R.id.approvalContent_tv);
         mPriorityLl = findViewById(R.id.priority_ll);
         mRvApprovalContent = findViewById(R.id.approvalContent_rv);
@@ -350,6 +381,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mRvAttachments = findViewById(R.id.rv_attachment);
         mRvHistories = findViewById(R.id.rv_history);
 
+        tv_right_icon_tol = findViewById(R.id.tv_tool_right_icon);
+
         mRefreshLayout.setEnablePureScrollMode(false);
         mRefreshLayout.setRefreshFooter(new FalsifyFooter(getContext()));
         mRvExecutor.setNestedScrollingEnabled(false);
@@ -368,6 +401,9 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mRvPhoto.setNestedScrollingEnabled(false);
         mRvVideo.setNestedScrollingEnabled(false);
 
+
+        mOrderLl = findViewById(R.id.ll_order);
+
         mRefreshLayout.setOnRefreshListener(this);
         mCall.setOnClickListener(this);
         mLlExpand.setOnClickListener(this);
@@ -375,12 +411,13 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mLlEqu.setOnClickListener(this);
         mLlMaterial.setOnClickListener(this);
         mLlSignatureCustomer.setOnClickListener(this);
-        mLlSignatureDirector.setOnClickListener(this);
+//        mLlSignatureDirector.setOnClickListener(this);
         mLlTool.setOnClickListener(this);
         mLlBpDetail.setOnClickListener(this);
         mLlPlanStep.setOnClickListener(this);
         mLlSpace.setOnClickListener(this);
         mLlPay.setOnClickListener(this);
+        mOrderLl.setOnClickListener(this);
 //        mEui.showContent();
     }
 
@@ -425,32 +462,71 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
     @Override
     public void onMoreMenuClick(View view) {
-        if (isFinish){
-            getPresenter().onMoreMenuClick(getContext(), WorkorderConstant.WORK_STATUS_MAINTENCE, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials);
-
-        }else {
-            getPresenter().onMoreMenuClick(getContext(), refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials);
+        if (isPending != 1) {
+            if (tagStatus != null && (tagStatus == WorkorderConstant.APPLICATION_FOR_SUSPENSION || tagStatus == WorkorderConstant.APPLICATION_VOID)) {
+                if (isException) {
+                    getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+                } else {
+                    getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_APPROVAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+                }
+            } else if (isException) {
+                getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+            } else if (isFinish) {
+                if (isMaintenanceOrder) {
+                    if (tagStatus != null && tagStatus == WorkorderConstant.STOP) {
+                        getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_TERMINATED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+                    } else {
+                        if (refreshStatus == WorkorderConstant.WORK_STATUS_VERIFIED) {
+                            getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_MAINTENCE_NOT, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+                        } else {
+                            getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_MAINTENCE, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+                        }
+                    }
+                } else {
+                    getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_COMPLETED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+                }
+            } else {
+                getPresenter().onMoreMenuClick(getContext(), true, true, refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+            }
+        } else {
+            if (tagStatus != null && (tagStatus == WorkorderConstant.APPLICATION_FOR_SUSPENSION || tagStatus == WorkorderConstant.APPLICATION_VOID)) {
+                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_APPROVAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+            } else if (isException) {
+                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+            } else if (isFinish) {
+                if (isMaintenanceOrder) {
+                    if (tagStatus != null && tagStatus == WorkorderConstant.STOP) {
+                        getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_TERMINATED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+                    } else {
+                        getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_MAINTENCE, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+                    }
+                } else {
+                    getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_COMPLETED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+                }
+            } else {
+                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn);
+            }
 
         }
 
     }
 
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/12
-      * @Infor: 新派工单
-      */
-    public void newOrder(){
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/12
+     * @Infor: 新派工单
+     */
+    public void newOrder() {
         WorkorderCreateService.newOrderCreateReq newOrderBunder = new WorkorderCreateService.newOrderCreateReq();
         WorkorderCreateService.newOrderCreateAllName nameAll = new WorkorderCreateService.newOrderCreateAllName();
         newOrderBunder.userId = FM.getEmId(); //userId
-        newOrderBunder.name = data.applicantName+""; //操作人名字
-        newOrderBunder.phone = data.applicantPhone+""; //操作人电话
+        newOrderBunder.name = data.applicantName + ""; //操作人名字
+        newOrderBunder.phone = data.applicantPhone + ""; //操作人电话
         newOrderBunder.organizationId = data.orgId; //部门Id
-        newOrderBunder.serviceTypeId  = data.serviceTypeId; //服务类型Id
-        newOrderBunder.scDescription  = data.woDescription; //描述
-        newOrderBunder.priorityId  = data.priorityId; //优先级Id
-        newOrderBunder.processId  = data.flowId; //流程ID
+        newOrderBunder.serviceTypeId = data.serviceTypeId; //服务类型Id
+        newOrderBunder.scDescription = data.woDescription; //描述
+        newOrderBunder.priorityId = data.priorityId; //优先级Id
+        newOrderBunder.processId = data.flowId; //流程ID
         newOrderBunder.woType = data.type; //工单类型
         newOrderBunder.reqId = data.woId; //工单Id
         //名称
@@ -465,14 +541,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         start(WorkorderCreateFragment.getInstance(newOrderBunder));
     }
 
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/16
-      * @Infor: 作废申请
-      */
-    public void invalidOrder(Long woId){
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/16
+     * @Infor: 作废申请
+     */
+    public void invalidOrder(Long woId) {
 
-         builderChoice = new FMBottomChoiceSheetBuilder(getContext());
+        builderChoice = new FMBottomChoiceSheetBuilder(getContext());
         builderChoice.setOnSaveInputListener(new FMBottomChoiceSheetBuilder.OnInputBtnClickListener() {
             @Override
             public void onSaveClick(QMUIBottomSheet dialog, String input) {
@@ -489,7 +565,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             public void onRightClick(QMUIBottomSheet dialog, String input) {
                 dialog.dismiss();
                 showLoading();
-                getPresenter().invalidOrderPost(woId,input,InvalidId);
+                getPresenter().invalidOrderPost(woId, input, InvalidId);
             }
         });
         buildInvalid = builderChoice.build();
@@ -508,26 +584,42 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             public void onClick(View v) {
                 buildInvalid.hide();
                 startForResult(
-                        SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_INVALIDD,ISelectDataService.REASON_TYPE_INVALID),
+                        SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_INVALIDD, ISelectDataService.REASON_TYPE_INVALID),
                         REQUEST_INVALID);
             }
         });
 
     }
 
-    public void getData(WorkorderService.WorkorderInfoBean data){
+    public void getData(WorkorderService.WorkorderInfoBean data) {
         this.data = data;
     }
 
     private void onRefresh() {
         getPresenter().getWorkorderInfo(mWoId);
-        getPresenter().getLastAttendance();
+
     }
 
     //刷新基础信息
     public void refreshBasicInfoUI(WorkorderService.WorkorderInfoBean data) {
         //工作组id
         mWoTeamId = data.workTeamId;
+
+        workOrderContent = data.workContent;
+
+        if (refreshStatus == WorkorderConstant.WORK_STATUS_COMPLETED && !isMaintenanceOrder){
+            if (data.failueDescription == null){
+                mTvToolTotal.setText("");
+                tv_right_icon_tol.setVisibility(View.GONE);
+            }else {
+                mTvToolTotal.setText(data.failueDescription+"");
+                tv_right_icon_tol.setVisibility(View.GONE);
+            }
+
+        }
+
+        //工单标签
+        tagStatus = data.tag;
         //派工需要
         mSendContent = data.sendWorkContent == null ? "" : data.sendWorkContent;
         mEstimateStartTime = data.estimateStartTime == null ? -1L : data.estimateStartTime;
@@ -537,6 +629,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         if (mCategory != null && mCategory == WorkorderConstant.WORK_TYPE_PM) {
             mPriorityLl.setVisibility(View.GONE);
         }
+        //根据详情内字段
         mNeedScan = data.needScan == null ? false : data.needScan;
         mCode = data.code;
         setTitle(mCode);
@@ -546,7 +639,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 //        mEui.showContent();
         mApprovalId = data.approvalId;
         mLocationId = data.locationId;
-        mRealStatus = data.status;
+        mRealStatus = data.newStatus;
         //不是工单查询的时候再去赋值
         if (refreshStatus != WorkorderConstant.WORK_STATUS_NONE) {
             refreshStatus = data.status == null ? refreshStatus : data.status;
@@ -559,8 +652,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             if (workOrderLaborers != null && workOrderLaborers.size() > 0 && emId != null) {
                 for (WorkorderLaborerService.WorkorderLaborerBean workOrderLaborer : workOrderLaborers) {
                     if (workOrderLaborer.status != null
-//                            && workOrderLaborer.laborerId != null
-//                            && emId.equals(workOrderLaborer.laborerId)
+                            && workOrderLaborer.laborerId != null
+                            && emId.equals(workOrderLaborer.laborerId)
                             && workOrderLaborer.status == WorkorderConstant.WORKORDER_STATUS_PERSONAL_ACCEPT) {
                         mCanOpt = true;
                         mAcceptWorkOrder = true;
@@ -627,13 +720,17 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         updateApprovalContent(data);
         updateCategory(data);
         updateSpace(data);
+
+        //判断用户类型
+        checkRole(mLocationId);
+
+
     }
 
     //维护步骤
     private void updateCategory(WorkorderService.WorkorderInfoBean data) {
         mSteps = (ArrayList<WorkorderService.StepsBean>) data.steps;
-        if (mCategory != null && mCategory == WorkorderConstant.WORK_TYPE_PM
-                && mSteps != null && mSteps.size() > 0) {
+        if (isMaintenanceOrder && mSteps != null && mSteps.size() > 0) {
             mLlPlanStep.setVisibility(View.VISIBLE);
         } else {
             mLlPlanStep.setVisibility(View.GONE);
@@ -750,9 +847,11 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             mLlSignatureCustomer.setVisibility(View.VISIBLE);
             mTvSignatureCustomer.setVisibility(View.VISIBLE);
             if (customerSignatureId == null) {
+                isSignOn = true;
                 mTvSignatureCustomer.setTextColor(getContext().getResources().getColor(R.color.grey_9));
                 mTvSignatureCustomer.setText(R.string.workorder_hand_no_sign_tip);
             } else {
+                isSignOn = false;
                 mTvSignatureCustomer.setTextColor(getContext().getResources().getColor(R.color.green_1ab394));
                 mTvSignatureCustomer.setText(R.string.workorder_hand_ok_tip);
             }
@@ -771,8 +870,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                         || refreshStatus == WorkorderConstant.WORK_STATUS_COMPLETED
                 ))) {
             mLlSignature.setVisibility(View.VISIBLE);
-            mLlSignatureDirector.setVisibility(View.VISIBLE);
-            mTvSignatureDirector.setVisibility(View.VISIBLE);
+//            mLlSignatureDirector.setVisibility(View.VISIBLE);
+            mLlSignatureDirector.setVisibility(View.GONE);
             if (directorSignatureId == null) {
                 mTvSignatureDirector.setTextColor(getContext().getResources().getColor(R.color.grey_c));
                 mTvSignatureDirector.setText(R.string.workorder_hand_no_sign_tip);
@@ -782,7 +881,10 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             }
         }
 
-        if (mLlSignatureCustomer.getVisibility() == View.VISIBLE && mLlSignatureDirector.getVisibility() == View.VISIBLE) {
+//        if (mLlSignatureCustomer.getVisibility() == View.VISIBLE && mLlSignatureDirector.getVisibility() == View.VISIBLE) {
+//            mViewSignature.setVisibility(View.VISIBLE);
+//        }
+        if (mLlSignatureCustomer.getVisibility() == View.VISIBLE) {
             mViewSignature.setVisibility(View.VISIBLE);
         }
     }
@@ -810,11 +912,11 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mAllStart = false;
         if (data.workOrderLaborers != null && data.workOrderLaborers.size() > 0) {
             workOrderLaborers = new ArrayList<>();
-//            mLaborer = getPresenter().processingLaborer(data.workOrderLaborers, mStatus, data.status);
-//            if (!mLaborer && refreshStatus == WorkorderConstant.WORK_STATUS_PUBLISHED) {
-//                pop();
-//                return;
-//            }
+            mLaborer = getPresenter().processingLaborer(data.workOrderLaborers, mStatus, data.status);
+            if (!mLaborer && refreshStatus == WorkorderConstant.WORK_STATUS_PUBLISHED) {
+                pop();
+                return;
+            }
             workOrderLaborers.addAll(data.workOrderLaborers);
             int count = 0;
             for (WorkorderLaborerService.WorkorderLaborerBean workOrderLaborer : workOrderLaborers) {
@@ -843,9 +945,9 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     //设备
     public void refreshEquipmentUI(WorkorderService.WorkorderInfoBean data) {
         mWorkOrderEquipments = (ArrayList<WorkorderService.WorkOrderEquipmentsBean>) data.workOrderEquipments;
-        if (refreshStatus == WorkorderConstant.WORK_STATUS_PROCESS) {
-            mLlEqu.setVisibility(View.VISIBLE);
-        } else if (mWorkOrderEquipments != null && mWorkOrderEquipments.size() > 0) {
+        Integer equStatus = data.newStatus;
+        if ((equStatus == WorkorderConstant.WORK_NEW_STATUS_ARCHIVED_WAIT ||
+                equStatus == WorkorderConstant.WORK_NEW_STATUS_PROCESS)) {
             mLlEqu.setVisibility(View.VISIBLE);
         } else {
             mLlEqu.setVisibility(View.GONE);
@@ -871,12 +973,26 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mLlToolBp.setVisibility(View.GONE);
         mViewToolBpBottom.setVisibility(View.GONE);
 
-        if (refreshStatus == WorkorderConstant.WORK_STATUS_PROCESS) {
-            //工具 收支明细
-            mLlTool.setVisibility(View.VISIBLE);
-            mLlBpDetail.setVisibility(View.VISIBLE);
-            mLlToolBp.setVisibility(View.VISIBLE);
-            mViewToolBpBottom.setVisibility(View.VISIBLE);
+        if (refreshStatus == WorkorderConstant.WORK_STATUS_PROCESS || refreshStatus == WorkorderConstant.WORK_STATUS_COMPLETED) {
+            if ((refreshStatus == WorkorderConstant.WORK_STATUS_COMPLETED || refreshStatus == WorkorderConstant.WORK_STATUS_PROCESS) && !isMaintenanceOrder){
+                //工具 收支明细
+                mLlTool.setVisibility(View.VISIBLE);
+                mLlBpDetail.setVisibility(View.GONE);
+                mLlToolBp.setVisibility(View.VISIBLE);
+                mViewToolBpBottom.setVisibility(View.VISIBLE);
+            }else {
+                //工具 收支明细
+                mLlTool.setVisibility(View.GONE);
+                mLlBpDetail.setVisibility(View.GONE);
+                mLlToolBp.setVisibility(View.GONE);
+                mViewToolBpBottom.setVisibility(View.GONE);
+            }
+
+        }else {
+            mLlTool.setVisibility(View.GONE);
+            mLlBpDetail.setVisibility(View.GONE);
+            mLlToolBp.setVisibility(View.GONE);
+            mViewToolBpBottom.setVisibility(View.GONE);
         }
 
         boolean haveTools = false;
@@ -889,12 +1005,12 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             mWorkOrderTools = new ArrayList<>();
         }
 
-        toolTotal();
+//        toolTotal();
 
         mCharges = (ArrayList<WorkorderService.ChargesBean>) data.charges;
 
         if (mCharges != null && mCharges.size() > 0) {
-            mLlBpDetail.setVisibility(View.VISIBLE);
+            mLlBpDetail.setVisibility(View.GONE);
             if (haveTools) {
                 mLlToolBp.setVisibility(View.VISIBLE);
             } else {
@@ -926,6 +1042,10 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         if (mPayments == null) {
             mPayments = new ArrayList<>();
         }
+    }
+
+    public Long getOperateReasonId(){
+        return operateOrderReasonId;
     }
 
     private void updateMedia(WorkorderService.WorkorderInfoBean data) {
@@ -1096,14 +1216,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     }
 
     private void refreshTag(WorkorderService.WorkorderInfoBean data) {
-        if (data.status == null) {
+        if (data.newStatus == null) {
             mTvStatus.setVisibility(View.INVISIBLE);
             return;
         }
         mTvStatus.setVisibility(View.VISIBLE);
         int resId = R.drawable.workorder_fill_grey_background;
-        mTvStatus.setText(WorkorderHelper.getWorkStatusMap(getContext()).get(data.status));
-        switch (data.status) {
+        mTvStatus.setText(WorkorderHelper.getWorkNewStatusMap(getContext()).get(data.newStatus));
+        switch (data.newStatus) {
             case WorkorderConstant.WORK_STATUS_CREATED:
                 resId = R.drawable.fm_workorder_tag_fill_created_bg;
                 break;
@@ -1136,6 +1256,15 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                 break;
         }
         mTvStatus.setBackgroundResource(resId);
+
+        if (data.tag != null) {
+            mOrderTagTv.setBackgroundResource(R.drawable.fm_workorder_tag_fill_created_bg);
+            mOrderTagTv.setVisibility(View.VISIBLE);
+            mOrderTagTv.setText(WorkorderHelper.getOrderTagStatusMap(getContext()).get(data.tag));
+        } else {
+            mOrderTagTv.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -1147,6 +1276,33 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         ToastUtils.showShort(R.string.workorder_get_data_error);
         mRefreshLayout.finishRefresh(false);
 //        mEui.showError();
+    }
+
+    public boolean canDo() {
+        Boolean cando = false;
+        if (!isMaintenanceOrder) {
+            if (mTvToolTotal.getText().equals("") || mTvToolTotal.getText() == null) {
+                ToastUtils.showShort("选择故障原因");
+                cando = false;
+            } else {
+                if (workOrderContent == null || workOrderContent.equals("")) {
+                    ToastUtils.showShort("请填写工作内容");
+                    cando = false;
+                } else {
+                    cando = true;
+                }
+            }
+        } else {
+            if (workOrderContent == null || workOrderContent.equals("")) {
+                ToastUtils.showShort("请填写工作内容");
+                cando = false;
+            } else {
+                cando = true;
+            }
+        }
+
+
+        return cando;
     }
 
     @Override
@@ -1180,61 +1336,170 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             v.setTag(!tag);
             expand(!tag);
         } else if (id == R.id.ll_input) {//进入输入页面
-            startForResult(WorkorderInputFragment.getInstance(mWoId, mCode), INPUT_REQUEST_CODE);
-        } else if (id == R.id.ll_signature_customer) {//客户签字
-            SignatureActivity.startActivityForResult(getActivity()
-                    , this
-                    , CUSTOMER_SIGNATURE_REQUEST_CODE
-                    , FM.getApiHost() + WorkorderUrl.WORKORDER_SIGNATURE_UPLOAD_URL
-                    , SignatureActivity.SIGNATURE_TYPE_CUSTOMER
-                    , mWoId
-                    , customerSignatureId);
-        } else if (id == R.id.ll_signature_director) {//主管签字
-            SignatureActivity.startActivityForResult(getActivity()
-                    , this
-                    , CUSTOMER_SIGNATURE_REQUEST_CODE
-                    , FM.getApiHost() + WorkorderUrl.WORKORDER_SIGNATURE_UPLOAD_URL
-                    , SignatureActivity.SIGNATURE_TYPE_DIRECTOR
-                    , mWoId
-                    , directorSignatureId);
-        } else if (id == R.id.ll_device) {//关联设备
-            boolean pm = mCategory != null && mCategory == WorkorderConstant.WORK_TYPE_PM;
-            if (!pm) {
-                mNeedScan = false;
-            }
-            WorkorderDataHolder.setDeviceData(mWorkOrderEquipments);
-            startForResult(WorkorderDeviceFragment.getInstance(mWoId, mCanOpt, mNeedScan,mTvDevice.getText().toString())
-                    , FAULT_DEVICE);
-        } else if (id == R.id.ll_material) {//物料
-            String inventory = getResources().getString(R.string.home_inventory_permissions);
-            boolean inventoryPermission = PermissionsManager.HomeFunction.getInstance().getFunctionPermission(inventory);
-            if (inventoryPermission) {
-                if (refreshStatus == WorkorderConstant.WORK_STATUS_SUSPENDED_GO) {
-                    ToastUtils.showShort(R.string.workorder_continue_tip);
-                    return;
-                }
-                start(WorkorderReserveRecordListFragment.getInstance(refreshStatus, mLaborer, mWoId, mCode));
+            if (isPending != 1) {
+                startForResult(WorkorderInputFragment.getInstance(mWoId, mCode), INPUT_REQUEST_CODE);
             } else {
-                ToastUtils.showShort(R.string.workorder_no_permission);
+                if (hasAttendanceData) {
+                    if (isAttendance) {
+                        startForResult(WorkorderInputFragment.getInstance(mWoId, mCode), INPUT_REQUEST_CODE);
+                    } else {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                    }
+                } else {
+                    ToastUtils.showShort("请先签到");
+                }
+
+            }
+
+
+        } else if (id == R.id.ll_signature_customer) {//客户签字
+            if (isPending != 1) {
+                SignatureActivity.startActivityForResult(getActivity()
+                        , this
+                        , CUSTOMER_SIGNATURE_REQUEST_CODE
+                        , FM.getApiHost() + WorkorderUrl.WORKORDER_SIGNATURE_UPLOAD_URL
+                        , SignatureActivity.SIGNATURE_TYPE_CUSTOMER
+                        , mWoId
+                        , customerSignatureId);
+            } else {
+                if (hasAttendanceData) {
+                    if (isAttendance) {
+                        SignatureActivity.startActivityForResult(getActivity()
+                                , this
+                                , CUSTOMER_SIGNATURE_REQUEST_CODE
+                                , FM.getApiHost() + WorkorderUrl.WORKORDER_SIGNATURE_UPLOAD_URL
+                                , SignatureActivity.SIGNATURE_TYPE_CUSTOMER
+                                , mWoId
+                                , customerSignatureId);
+                    } else {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                    }
+                } else {
+                    ToastUtils.showShort("请先签到");
+                }
+
+            }
+
+
+        } else if (id == R.id.ll_signature_director) {//主管签字
+
+
+        } else if (id == R.id.ll_device) {//关联设备
+            if (isPending != 1) {
+//                boolean pm = mCategory != null && mCategory == WorkorderConstant.WORK_TYPE_PM;
+//                if (!pm) {
+//                    mNeedScan = false;
+//                }
+                WorkorderDataHolder.setDeviceData(mWorkOrderEquipments);
+                startForResult(WorkorderDeviceFragment.getInstance(mWoId, mCanOpt, mNeedScan, mTvDevice.getText().toString(),isMaintenanceOrder)
+                        , FAULT_DEVICE);
+            } else {
+                if (hasAttendanceData) {
+                    if (isAttendance) {
+//                        boolean pm = mCategory != null && mCategory == WorkorderConstant.WORK_TYPE_PM;
+//                        if (!pm) {
+//                            mNeedScan = false;
+//                        }
+                        WorkorderDataHolder.setDeviceData(mWorkOrderEquipments);
+                        startForResult(WorkorderDeviceFragment.getInstance(mWoId, mCanOpt, mNeedScan, mTvDevice.getText().toString(),isMaintenanceOrder)
+                                , FAULT_DEVICE);
+                    } else {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                    }
+                } else {
+                    ToastUtils.showShort("请先签到");
+                }
+
+            }
+
+
+        } else if (id == R.id.ll_material) {//物料
+
+            if (isPending != 1) {
+                String inventory = getResources().getString(R.string.home_inventory_permissions);
+                boolean inventoryPermission = PermissionsManager.HomeFunction.getInstance().getFunctionPermission(inventory);
+                if (inventoryPermission) {
+                    if (refreshStatus == WorkorderConstant.WORK_STATUS_SUSPENDED_GO) {
+                        ToastUtils.showShort(R.string.workorder_continue_tip);
+                        return;
+                    }
+                    start(WorkorderReserveRecordListFragment.getInstance(refreshStatus, mLaborer, mWoId, mCode));
+                } else {
+                    ToastUtils.showShort(R.string.workorder_no_permission);
+                }
+            } else {
+                if (hasAttendanceData) {
+                    if (isAttendance) {
+                        String inventory = getResources().getString(R.string.home_inventory_permissions);
+                        boolean inventoryPermission = PermissionsManager.HomeFunction.getInstance().getFunctionPermission(inventory);
+                        if (inventoryPermission) {
+                            if (refreshStatus == WorkorderConstant.WORK_STATUS_SUSPENDED_GO) {
+                                ToastUtils.showShort(R.string.workorder_continue_tip);
+                                return;
+                            }
+                            start(WorkorderReserveRecordListFragment.getInstance(refreshStatus, mLaborer, mWoId, mCode));
+                        } else {
+                            ToastUtils.showShort(R.string.workorder_no_permission);
+                        }
+                    } else {
+                        ToastUtils.showShort(R.string.workorder_sign_error);
+                    }
+                } else {
+                    ToastUtils.showShort("请先签到");
+                }
+
             }
         } else if (id == R.id.ll_pay) {//缴费单列表
-            String pay = getResources().getString(R.string.home_pay_permissions);
-            boolean payPermission = PermissionsManager.HomeFunction.getInstance().getFunctionPermission(pay);
-            if (payPermission) {
-                if (mSpaceLocations == null || mSpaceLocations.size() == 0) {
-                    startForResult(WorkorderPaymentFragment.getInstance(mPayments, mLocationId, refreshStatus, mWoId, mCanOpt), PAYMENT);
+            if (hasAttendanceData) {
+
+                if (isAttendance) {
+                    String pay = getResources().getString(R.string.home_pay_permissions);
+                    boolean payPermission = PermissionsManager.HomeFunction.getInstance().getFunctionPermission(pay);
+                    if (payPermission) {
+                        if (mSpaceLocations == null || mSpaceLocations.size() == 0) {
+                            startForResult(WorkorderPaymentFragment.getInstance(mPayments, mLocationId, refreshStatus, mWoId, mCanOpt), PAYMENT);
+                        } else {
+                            startForResult(WorkorderPaymentFragment.getInstance(mPayments, mSpaceLocations, refreshStatus, mWoId, mCanOpt), PAYMENT);
+                        }
+                    } else {
+                        ToastUtils.showShort(R.string.workorder_no_permission);
+                    }
                 } else {
-                    startForResult(WorkorderPaymentFragment.getInstance(mPayments, mSpaceLocations, refreshStatus, mWoId, mCanOpt), PAYMENT);
+                    ToastUtils.showShort(R.string.workorder_sign_error);
                 }
             } else {
-                ToastUtils.showShort(R.string.workorder_no_permission);
+                ToastUtils.showShort("请先签到");
             }
-        } else if (id == R.id.ll_tool) {//工具
-            startForResult(WorkorderToolFragment.getInstance(mWorkOrderTools, mWoId, mCanOpt)
-                    , TOOLS);
+
+        } else if (id == R.id.ll_tool) {// 故障原因
+            if (refreshStatus == WorkorderConstant.WORK_STATUS_PROCESS){
+                if (hasAttendanceData) {
+                if (isAttendance) {
+                    startForResult(
+                            SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_REASON, ISelectDataService.REASON_TYPE_EXCEPTION),
+                            CAUSE_REASON);
+                } else {
+                    ToastUtils.showShort(R.string.workorder_sign_error);
+                }
+            } else {
+                ToastUtils.showShort("请先签到");
+            }
+            }
+
+
         } else if (id == R.id.ll_bp_detail) {//收支明细
-            startForResult(WorkorderChargeFragment.getInstance(mCharges, mWoId, mToolCost, mCanOpt)
-                    , CHARGE);
+            if (hasAttendanceData) {
+                if (isAttendance) {
+                    startForResult(WorkorderChargeFragment.getInstance(mCharges, mWoId, mToolCost, mCanOpt)
+                            , CHARGE);
+                } else {
+                    ToastUtils.showShort(R.string.workorder_sign_error);
+                }
+
+            } else {
+                ToastUtils.showShort("请先签到");
+            }
+
         } else if (id == R.id.ll_plan_step) {//维护步骤
             startForResult(WorkorderStepFragment.getInstance(mSteps, mWoId, mWoTeamId, mCanOpt), STEP);
         } else if (id == R.id.ll_space) {//空间位置
@@ -1306,7 +1571,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (requestCode == TOOLS) {
-            toolTotal();
+//            toolTotal();
         } else if (requestCode == CHARGE) {
             chargeTotal();
         } else if (requestCode == PAYMENT) {
@@ -1340,12 +1605,20 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                 pauseDialog.show();
                 break;
             case REQUEST_INVALID:
-                SelectDataBean reason=data.getParcelable(ISelectDataService.SELECT_OFFLINE_DATA_BACK);
-                if (reason != null){
-                    builderChoice.getDescEt().setText(reason.getName()+"");
+                SelectDataBean reason = data.getParcelable(ISelectDataService.SELECT_OFFLINE_DATA_BACK);
+                if (reason != null) {
+                    builderChoice.getDescEt().setText(reason.getFullName() + "");
                     InvalidId = reason.getId();
                 }
                 buildInvalid.show();
+                break;
+            case CAUSE_REASON:
+                SelectDataBean cause_reason = data.getParcelable(ISelectDataService.SELECT_OFFLINE_DATA_BACK);
+                if (cause_reason != null) {
+                    mTvToolTotal.setText(cause_reason.getFullName());
+                    operateOrderReasonId = cause_reason.getId(); //获取ID
+                }
+
                 break;
         }
     }
@@ -1478,12 +1751,27 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         return infoFragment;
     }
 
-    public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Long woId,boolean isMaintenance) {
+    public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Boolean isException, Long woId) {
+        Bundle bundle = new Bundle();
+        if (isException) {
+            bundle.putInt(WORKORDER_STATUS, WorkorderConstant.WORK_STATUS_UBNORMAL);
+        } else {
+            bundle.putInt(WORKORDER_STATUS, workorderStatus);
+        }
+
+        bundle.putString(WORKORDER_CODE, code);
+        bundle.putLong(WORKORDER_ID, woId);
+        WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
+        infoFragment.setArguments(bundle);
+        return infoFragment;
+    }
+
+    public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Long woId, boolean isMaintenance) {
         Bundle bundle = new Bundle();
         bundle.putInt(WORKORDER_STATUS, workorderStatus);
         bundle.putString(WORKORDER_CODE, code);
         bundle.putLong(WORKORDER_ID, woId);
-        bundle.putBoolean(IS_MAINTENANCE,isMaintenance);
+        bundle.putBoolean(IS_MAINTENANCE, isMaintenance);
         WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
         infoFragment.setArguments(bundle);
         return infoFragment;
@@ -1491,13 +1779,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
 
     //待存档
-    public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Long woId,boolean isMaintenance,boolean isFinish) {
+    public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Long woId, boolean isMaintenance, boolean isFinish) {
         Bundle bundle = new Bundle();
         bundle.putInt(WORKORDER_STATUS, workorderStatus);
         bundle.putString(WORKORDER_CODE, code);
         bundle.putLong(WORKORDER_ID, woId);
-        bundle.putBoolean(IS_MAINTENANCE,isMaintenance);
-        bundle.putBoolean(IS_FINISH,isFinish);
+        bundle.putBoolean(IS_MAINTENANCE, isMaintenance);
+        bundle.putBoolean(IS_FINISH, isFinish);
+
         WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
         infoFragment.setArguments(bundle);
         return infoFragment;
@@ -1510,22 +1799,40 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         return infoFragment;
     }
 
+    //处理
+    public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Long woId, Integer isPending, boolean isMaintenance) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(WORKORDER_STATUS, workorderStatus);
+        bundle.putString(WORKORDER_CODE, code);
+        bundle.putLong(WORKORDER_ID, woId);
+        if (isPending == null) {
+            bundle.putInt(IS_PENDING, -1);
+        } else {
+            bundle.putInt(IS_PENDING, isPending);
+        }
+        bundle.putBoolean(IS_MAINTENANCE, isMaintenance);
+        WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
+        infoFragment.setArguments(bundle);
+        return infoFragment;
+    }
+
+
     //显示暂停弹窗
-    public void showPauseDialog(Context context,Long woId){
-        Long sWoId=woId;
+    public void showPauseDialog(Context context, Long woId) {
+        Long sWoId = woId;
         pauseDialogBuilder = new FMBottomPauseSelectSheetBuilder(context);
         pauseDialogBuilder.setOnPauseInputListener(new FMBottomPauseSelectSheetBuilder.OnPauseInputBtnClickListener() {
 
             @Override
             public void onLeftClick(QMUIBottomSheet dialog, SelectDataBean dataBean, Long time) {
-                if (time!=null&dataBean!=null){
-                    if (time<System.currentTimeMillis()){
+                if (time != null & dataBean != null) {
+                    if (time < System.currentTimeMillis()) {
                         ToastUtils.showShort("暂停结束时间必须晚于当前时间,请重新选择");
-                    }else {
+                    } else {
                         dialog.dismiss();
-                       getPresenter().pauseWorkOrder(woId, dataBean.getDesc(), dataBean.getId(), WorkorderConstant.WORKORDER_OPT_TYPE_PAUSE_NO_FURTHER,time);
+                        getPresenter().pauseWorkOrder(woId, dataBean.getDesc(), dataBean.getId(), WorkorderConstant.WORKORDER_OPT_TYPE_PAUSE_NO_FURTHER, time);
                     }
-                }else {
+                } else {
                     ToastUtils.showShort("请重新选择暂停结束时间");
                 }
 
@@ -1533,15 +1840,15 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             }
 
             @Override
-            public void onRightClick(QMUIBottomSheet dialog, SelectDataBean dataBean,Long time) {
-                if (time!=null&dataBean!=null){
-                    if (time<System.currentTimeMillis()){
+            public void onRightClick(QMUIBottomSheet dialog, SelectDataBean dataBean, Long time) {
+                if (time != null & dataBean != null) {
+                    if (time < System.currentTimeMillis()) {
                         ToastUtils.showShort("暂停结束时间必须晚于当前时间,请重新选择");
-                    }else {
+                    } else {
                         dialog.dismiss();
-                        getPresenter().pauseWorkOrder(woId,dataBean.getDesc(), dataBean.getId(), WorkorderConstant.WORKORDER_OPT_TYPE_PAUSE_CONTINUED,time);
+                        getPresenter().pauseWorkOrder(woId, dataBean.getDesc(), dataBean.getId(), WorkorderConstant.WORKORDER_OPT_TYPE_PAUSE_CONTINUED, time);
                     }
-                }else {
+                } else {
                     ToastUtils.showShort("请重新选择暂停结束时间");
                 }
 
@@ -1555,7 +1862,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             public void onClick(View v) {
                 pauseDialog.hide();
                 startForResult(
-                        SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_REASON,ISelectDataService.REASON_TYPE_PAUSE),
+                        SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_REASON, ISelectDataService.REASON_TYPE_PAUSE),
                         REQUEST_REASON
                 );
             }
@@ -1571,6 +1878,32 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         pauseDialogBuilder.setRightBtnText(R.string.workorder_continue_order);
         pauseDialog.setCanceledOnTouchOutside(true);
         pauseDialog.show();
+    }
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/27 9:56
+     * @Description: //设置签到可操作
+     */
+    public void canOpt(boolean canOpt, boolean hasData) {
+        this.isAttendance = canOpt;
+        this.hasAttendanceData = hasData;
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/27 9:56
+     * @Description: 判断用户类型
+     */
+    public void checkRole(LocationBean bean) {
+        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+        if (infoBean.type.equals(1)) {
+            getPresenter().getLastAttendance(bean);
+        } else {
+            canOpt(true, true);
+        }
     }
 
 }

@@ -11,7 +11,7 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragment;
  */
 public interface PatrolService extends IService {
     BaseFragment getPatrolQuerySpotFragment(Long patrolTaskId, String title);
-    BaseFragment goToScanForInfor(String scanResult);
+    BaseFragment goToScanForInfor(String scanResult,Boolean needRefresh);
     BaseFragment goToMenu(boolean needDownload);
 
 }

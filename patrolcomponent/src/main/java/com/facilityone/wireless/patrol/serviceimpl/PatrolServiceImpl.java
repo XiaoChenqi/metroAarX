@@ -33,7 +33,7 @@ public class PatrolServiceImpl implements PatrolService {
     }
 
     @Override
-    public BaseFragment goToScanForInfor(String scanResult) {
-        return PatrolScanFragment.getInstance(scanResult);
+    public BaseFragment goToScanForInfor(String scanResult,Boolean needRefresh) {
+        return PatrolScanFragment.getInstance(scanResult,needRefresh);
     }
 }

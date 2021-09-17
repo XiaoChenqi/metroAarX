@@ -10,7 +10,6 @@ import com.facilityone.wireless.a.arch.utils.DeviceUtils;
 import com.facilityone.wireless.a.arch.xcq.Constants.Constant;
 import com.facilityone.wireless.a.arch.xcq.net.download.DownloadProgressListener;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
 
@@ -152,8 +151,7 @@ public class NetWork_OkHttp3 implements DownloadProgressListener {
 //                        .addQueryParameter("platformKey", "app_video_request") 每个接口的公共参数
                         .build();
                 Request newRequest = chain.request().newBuilder()
-                        .addHeader("platformKey", "test_xcq")// 每个接口的公共header
-                        //.addHeader("Cookie",cookie)
+                        //.addHeader("platformKey", "test_xcq") 每个接口的公共header
                         .addHeader("Content-Type","application/json")
                         .addHeader("Device-Type", "android")
                         .addHeader("Device-Id", DeviceUtils.getDeviceId())
@@ -179,21 +177,21 @@ public class NetWork_OkHttp3 implements DownloadProgressListener {
 //
 //                    }
 //                })
-                .cookieJar(new CookieJarImpl(new SPCookieStore(BaseApplication.getInstance().getApplicationContext())))//读取okgo的cookie
                 .connectTimeout(TIMEOUT, TimeUnit.SECONDS)//设置连接超时时间
                 .readTimeout(TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
                 .writeTimeout(TIMEOUT, TimeUnit.SECONDS)//设置写入超时时间
                 .addInterceptor(loggingInterceptor)//添加日志拦截器
                 .addInterceptor(interceptor)
+                .cookieJar(new CookieJarImpl(new SPCookieStore(BaseApplication.getInstance().getApplicationContext())))
                 .build();
 
-        Gson gson = new GsonBuilder().create();
+        Gson temp = BaseApplication.getInstance().gson;
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(serviceUrl)
                 .addCallAdapterFactory(
                         RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(
-                        gson))
+                        BaseApplication.getInstance().gson))
                 .client(okHttp3Client)
                 .build();
         partRetrofit = retrofit;

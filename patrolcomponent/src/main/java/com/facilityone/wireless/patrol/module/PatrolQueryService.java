@@ -50,6 +50,13 @@ public class PatrolQueryService {
     }
 
     public static class PatrolQueryBodyBean {
+
+
+        //巡检
+        public static final int TASK_TYPE_INSPECTION=0;
+        //巡视
+        public static final int TASK_TYPE_PATROL=1;
+
         public Long patrolTaskId;
         public String patrolName;
         public String laborer;
@@ -61,6 +68,7 @@ public class PatrolQueryService {
         public Integer repairNumber;
         public Integer spotNumber;
         public Integer status;
+        public Integer ptype;
     }
 
     //巡检查询点位响应
@@ -169,5 +177,31 @@ public class PatrolQueryService {
         public String  spotJobName;
         //时间(executable为true时为所需时间,executable为false时为当前正在执行点位任务剩余时间,单位为秒)
         public Long time;
+        //正在执行的Id
+        public Long patrolTaskSpotId;
+        //当前任务ID
+        public Long patrolTaskId;
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:55
+     * @Description: 签到记录响应体
+     */
+    public static class AttendanceResp {
+        public Long contactId;
+        public String contactName;
+        public String locationName;
+        public Boolean signStatus;
+        public LocationBean location;
+        public Long createTime;
+        //站点和管理的所有区间
+        public List<Long> buildingIds;
+    }
+
+    public static class PatrolJudgeReq{
+        public Long patrolTaskSpotId;
+        //当前任务ID
+        public Long patrolTaskId;
     }
 }

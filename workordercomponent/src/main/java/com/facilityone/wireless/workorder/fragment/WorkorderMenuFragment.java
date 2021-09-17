@@ -111,26 +111,26 @@ public class WorkorderMenuFragment extends BaseFragment<WorkorderMenuPresenter> 
         FunctionService.FunctionBean functionBean = mFunctionBeanList.get(position);
         BaseFragment baseFragment = null;
         switch (functionBean.index) {
-            case WorkorderConstant.WORKORER_CREATE:
-                //创建工单
+            case WorkorderConstant.WORKORER_CREATE: //创建工单
+
                 baseFragment = WorkorderCreateFragment.getInstance();
                 break;
-            case WorkorderConstant.WORKORER_PROCESS:
-                //待处理工单
-            case WorkorderConstant.WORKORER_DISPATCHING:
-                //待派工工单
-            case WorkorderConstant.WORKORER_AUDIT:
-                //待审批工单
-            case WorkorderConstant.WORKORER_VALIDATION:
-                //待验证工单
-            case WorkorderConstant.WORKORER_ARCHIVE:
-                //待存档工单
-            case WorkorderConstant.WORKORER_UBNORMAL:
-                //异常工单
+            case WorkorderConstant.WORKORER_PROCESS: //待处理工单
+
+            case WorkorderConstant.WORKORER_DISPATCHING://待派工工单
+
+            case WorkorderConstant.WORKORER_AUDIT://待审批工单
+
+            case WorkorderConstant.WORKORER_VALIDATION://待验证工单
+
+            case WorkorderConstant.WORKORER_ARCHIVE://待存档工单
+
+            case WorkorderConstant.WORKORER_UBNORMAL://异常工单
+
                 baseFragment = WorkorderListFragment.getInstance(functionBean.index);
                 break;
-            case WorkorderConstant.WORKORER_QUERY:
-                //工单查询
+            case WorkorderConstant.WORKORER_QUERY: //工单查询
+
                 baseFragment = WorkorderQueryFragment.getInstance();
                 break;
         }

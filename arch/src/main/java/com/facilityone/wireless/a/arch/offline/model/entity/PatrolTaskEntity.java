@@ -11,6 +11,12 @@ import java.util.List;
  */
 public class PatrolTaskEntity {
 
+    //巡检
+    public static final int TASK_TYPE_INSPECTION=0;
+    //巡视
+    public static final int TASK_TYPE_PATROL=1;
+
+
     private Long taskId;
     private Long planId;
     private String taskName;
@@ -26,6 +32,10 @@ public class PatrolTaskEntity {
     private int exception;
     private int needSync;
     private int completed;
+
+
+
+    private Integer ptype;
     private List<PatrolSpotEntity> spots;
 
     public Long getTaskId() {
@@ -146,6 +156,14 @@ public class PatrolTaskEntity {
 
     public void setCompleted(int completed) {
         this.completed = completed;
+    }
+
+    public Integer getpType() {
+        return ptype;
+    }
+
+    public void setpType(Integer pType) {
+        this.ptype = pType;
     }
 
     public List<PatrolSpotEntity> getSpots() {

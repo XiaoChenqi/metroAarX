@@ -473,4 +473,6 @@
     <string name="workoder_select_approver_tip">请至少选择一个审批人</string>
     <!--该设备已经存在-->
     <string name="workorder_equipment_exist">该设备已经存在</string>
+    <!--签到失败-->
+    <string name="workorder_sign_error">您的签到位置与当前位置不符，请确认！</string>
 </resources>

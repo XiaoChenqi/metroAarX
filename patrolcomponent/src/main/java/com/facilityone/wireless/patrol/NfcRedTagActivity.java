@@ -135,15 +135,25 @@ public class NfcRedTagActivity extends BaseFragmentActivity {
             this.finish();
             return;
         }
+
+        if (body.equals("") || body==null){
+            ToastUtils.showShort("NFC格式校验失败,请匹配正确的设备");
+            return;
+        }
         
         String code = PatrolQrcodeUtils.parseSpotCode(body);
-        if (TextUtils.isEmpty(code)) {
-//            ToastUtils.showShort("设备异常，请匹配正确的设备");
-            startForResult(PatrolSpotFragment.getInstance(445L, "测试"), REQUEST_SPOT);
-        } else {
-            startForResult(PatrolSpotFragment.getInstance(445L, "测试"), REQUEST_SPOT);
+        String codeType = PatrolQrcodeUtils.parseSpotCodeType(body);
+
+        if (!codeType.equals("PATROL")){
+            ToastUtils.showShort("NFC格式校验失败,请匹配正确的设备");
         }
-//        finish();
+
+        if (!TextUtils.isEmpty(code)) {
+            startForResult(PatrolScanFragment.getInstance(code+"",true), REQUEST_SPOT);
+        } else {
+            ToastUtils.showShort("设备异常，请匹配正确的设备");
+            finish();
+        }
     }
 
     NdefMessage[] getNdefMessages(Intent intent) {

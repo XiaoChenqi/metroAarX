@@ -106,10 +106,9 @@ public class PatrolDeviceFragment extends BaseFragment<PatrolDevicePresenter> im
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-//        ToastUtils.showLong(GsonUtils.toJson(mAdapter.getData().get(position)));
         Long spotId=mAdapter.getData().get(position).getSpotId();
-        showLoading();
-        getPresenter().judgeTask(spotId,position);
+        //检查项页面
+        startForResult(PatrolItemFragment.getInstance(spotId, (ArrayList<PatrolEquEntity>) mEntities, position, mSpotName), REQUEST_ITEM);
 
     }
 
@@ -168,7 +167,8 @@ public class PatrolDeviceFragment extends BaseFragment<PatrolDevicePresenter> im
     }
 
     public void startTask(String time,Integer position){
-        startForResult(PatrolItemFragment.getInstance(mSpotId, (ArrayList<PatrolEquEntity>) mEntities, position, mSpotName,time), REQUEST_ITEM);
+
+//        startForResult(PatrolItemFragment.getInstance(mSpotId, (ArrayList<PatrolEquEntity>) mEntities, position, mSpotName,time), REQUEST_ITEM);
 
     }
 

@@ -85,6 +85,7 @@ public interface WorkorderUrl {
     //扫一扫签到
     String WORKORDER_ATTENDANCE_OPT = "/m/v1/user/attendance/operate";
 
-
+    //异常审批
+    String WORKORDER_OPT_APPROVAL_V_ERROR_URL = "/m/v1/workorder/exception/approve";
 
 }

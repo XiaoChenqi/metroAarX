@@ -26,4 +26,7 @@ public interface PatrolUrl {
     String PATROL_JUDGE_TASK = "/m/v1/patrol/tasks/judge";
     //执行任务
     String PATROL_EXECUTE_TASK = "/m/v1/patrol/tasks/execute";
+
+    //最后一次签到记录
+    String ATTENDANCE_LAST = "/m/v1/user/attendance/last";
 }

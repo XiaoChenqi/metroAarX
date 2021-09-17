@@ -33,6 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 public class PatrolBaseSpotNet {
 
     public static void requestPatrolBaseSpot(final DownloadReq req, final OnPatrolListener listener) {
+        req.preRequestDate = 0L;
         OkGo.<BaseResponse<DownloadResp<PatrolBaseSpotEntity>>>post(FM.getApiHost() + OfflineUri.PATROL_BASE_SPOT_URL)
                 .upJson(GsonUtils.toJson(req, false))
                 .isSpliceUrl(true)

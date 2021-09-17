@@ -181,7 +181,9 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
             req.laborers = mLaborerIds;
             req.estimatedArrivalDate = startTime;
             req.estimatedCompletionDate = endTime;
-            req.estimatedWorkingTime = TimeUtils.getTimeSpan(endTime, startTime, TimeConstants.MIN);
+            if (endTime != null && startTime != null){
+                req.estimatedWorkingTime = TimeUtils.getTimeSpan(endTime, startTime, TimeConstants.MIN);
+            }
             getPresenter().disbatchPostOrder(req);
         }else {
             getPresenter().uploadDispatchData(mWoId, startTime, endTime, desc.getDesc(), mUploadLaborers);

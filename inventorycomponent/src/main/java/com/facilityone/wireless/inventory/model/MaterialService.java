@@ -34,6 +34,7 @@ public class MaterialService {
         public Long dueDate;//过期时间
         public String desc;//备注
         public List<String> pictures;//图片 ID 数组
+        public Integer remindAhead; //提醒提前天数
 
     }
 
