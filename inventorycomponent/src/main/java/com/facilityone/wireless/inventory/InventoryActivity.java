@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
+import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.inventory.fragment.InventoryFragment;
@@ -34,6 +35,7 @@ public class InventoryActivity extends BaseFragmentActivity implements EmptyFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
+        MetroUtils.getParamFromMetro(this);
     }
 
     @Override

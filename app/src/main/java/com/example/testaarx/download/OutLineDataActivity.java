@@ -3,6 +3,7 @@ package com.example.testaarx.download;
 
 import android.os.Bundle;
 
+import com.example.testaarx.MetroUtils;
 import com.example.testaarx.R;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
@@ -37,10 +38,7 @@ public class OutLineDataActivity extends BaseFragmentActivity implements EmptyFr
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
 
-        //TODO xcq 获取色值
-        if(0 != getIntent().getIntExtra("COLOR",0)){
-            themeColor = getIntent().getIntExtra("COLOR",0);
-        }
+        MetroUtils.getParamFromMetro(this);
     }
 
     @Override

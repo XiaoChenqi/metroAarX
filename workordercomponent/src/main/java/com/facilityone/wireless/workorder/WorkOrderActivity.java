@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
+import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.workorder.fragment.WorkorderMenuFragment;
@@ -43,6 +44,7 @@ public class WorkOrderActivity extends BaseFragmentActivity implements EmptyFrag
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
         DialogX.init(this);
+        MetroUtils.getParamFromMetro(this);
     }
 
     @Override

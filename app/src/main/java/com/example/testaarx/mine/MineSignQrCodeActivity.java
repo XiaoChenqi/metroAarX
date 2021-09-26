@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.example.testaarx.MetroUtils;
 import com.example.testaarx.R;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
@@ -38,10 +39,7 @@ public class MineSignQrCodeActivity extends BaseFragmentActivity implements Empt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
-        if(0 != getIntent().getIntExtra("COLOR",0)){
-            themeColor = getIntent().getIntExtra("COLOR",0);
-            THEME_COLOR = themeColor;
-        }
+        MetroUtils.getParamFromMetro(this);
         DialogX.init(this);
     }
 

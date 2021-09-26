@@ -28,6 +28,8 @@ public class Constant {
     public static final int CODE_OK=200;//
 
     public static  int THEME_COLOR=0;//
+    public static  String USERNAME="";//
+    public static  String PASSWORD="";//
 
 
     //列表筛选条件，str字符串，存入shreprefrence用

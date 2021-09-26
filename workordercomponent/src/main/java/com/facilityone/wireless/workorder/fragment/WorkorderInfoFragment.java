@@ -722,7 +722,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         updateSpace(data);
 
         //判断用户类型
-        checkRole(mLocationId);
+        canOpt(true,true);
+//        checkRole(mLocationId);
 
 
     }

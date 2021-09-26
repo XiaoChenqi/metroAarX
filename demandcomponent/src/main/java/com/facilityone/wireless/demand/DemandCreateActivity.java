@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
+import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.demand.fragment.DemandCreateFragment;
@@ -25,10 +26,7 @@ public class DemandCreateActivity extends BaseFragmentActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
-        //TODO xcq 获取色值
-        if(0 != getIntent().getIntExtra("COLOR",0)){
-            themeColor = getIntent().getIntExtra("COLOR",0);
-        }
+        MetroUtils.getParamFromMetro(this);
     }
 
     @Override

@@ -2,9 +2,11 @@ package com.facilityone.wireless.workorder;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
+import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.workorder.fragment.WorkorderCreateFragment;
@@ -23,37 +25,39 @@ public class WorkorderCreateActivity extends BaseFragmentActivity
     public static int themeColor =0;
     public static String equipId = "";
 
+    String TAG = "林晓旭";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
-        if(0 != getIntent().getIntExtra("COLOR",0)){
-            themeColor = getIntent().getIntExtra("COLOR",0);
-            //themeColor = (Color.parseColor("#ff6666"));;
-            THEME_COLOR = themeColor;
-        }
+        Log.d(TAG, "onCreate: ");
+        MetroUtils.getParamFromMetro(this);
         if(getIntent().getStringExtra("EquipmentId")!=null){
             equipId = getIntent().getStringExtra("EquipmentId");
         }
-        //equipId = "1819191105010000000010";
-        //THEME_COLOR = Color.parseColor("#ff6666");
+
+
     }
 
     @Override
     protected int getContextViewId() {
+        Log.d(TAG, "getContextViewId: ");
         return R.id.workorder_main_id;//todo  xcq
     }
 
     @Override
     protected FMFragment setRootFragment() {
+        Log.d(TAG, "setRootFragment: ");
         mInstance = EmptyFragment.getInstance(CommonConstant.MESSAGE_WORK_ORDER);
         mInstance.setOnGoFragmentListener(this);
+
         return mInstance;
         //return DemandCreateFragment.getInstance();
     }
 
     @Override
     public Object createPresenter() {
+        Log.d(TAG, "createPresenter: ");
         return null;
     }
 
@@ -61,17 +65,20 @@ public class WorkorderCreateActivity extends BaseFragmentActivity
     int CREATE_ORDER_BY_PATROL_QUERY_REPAIR = 2002;//巡检查询报修
     @Override
     public void goFragment(Bundle bundle) {
-       mInstance.startWithPop(WorkorderCreateFragment.getInstance(CREATE_ORDER_BY_OTHER,equipId));
-        //mInstance.startWithPop(WorkorderInfoFragment.getInstance(1L));
+        Log.d(TAG, "goFragment: ");
+       //mInstance.startWithPop(WorkorderCreateFragment.getInstance(CREATE_ORDER_BY_OTHER,equipId));
     }
 
     @Override
     protected boolean isImmersionBarEnabled() {//fmfactivity中
+        Log.d(TAG, "isImmersionBarEnabled: ");
         return true;
     }
 
     @Override
     public void onBackPressedSupport() {
+
+        Log.d(TAG, "onBackPressedSupport: ");
 
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             pop();

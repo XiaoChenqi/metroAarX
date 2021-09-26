@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
+import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.workorder.fragment.WorkorderCreateFragment;
@@ -14,16 +15,16 @@ import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.THEME_COLOR
 
 public class WorkOrderInfoActivity extends
         //AppCompatActivity
-        BaseFragmentActivity implements EmptyFragment.OnGoFragmentListener
-{
+        BaseFragmentActivity implements EmptyFragment.OnGoFragmentListener {
 
 
     //再点一次退出程序时间设置
     private static final long WAIT_TIME = 2000L;
     private long TOUCH_TIME = 0L;
     private EmptyFragment mInstance;
-    public static int themeColor =0;
+    public static int themeColor = 0;
     public static long woId = -1L;
+
     @Override
     protected int getContextViewId() {
         return R.id.workorder_main_id;
@@ -40,15 +41,11 @@ public class WorkOrderInfoActivity extends
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
-        //setContentView(R.layout.activity_oder_info);
-        if(0 != getIntent().getIntExtra("COLOR",0)){
-            themeColor = getIntent().getIntExtra("COLOR",0);
-            THEME_COLOR = themeColor;
+        MetroUtils.getParamFromMetro(this);
+        if (getIntent().getStringExtra("woId") != null) {
+            woId = Long.parseLong(getIntent().getStringExtra("woId"));
         }
-        if(getIntent().getStringExtra("woId")!=null){
-            woId = getIntent().getLongExtra("woId",-1L);
-        }
-        //woId=30;
+        woId=22;
     }
 
     @Override
@@ -61,6 +58,7 @@ public class WorkOrderInfoActivity extends
         mInstance.startWithPop(WorkorderInfoFragment.getInstance(woId));
 
     }
+
     @Override
     protected boolean isImmersionBarEnabled() {//fmfactivity中
         return true;

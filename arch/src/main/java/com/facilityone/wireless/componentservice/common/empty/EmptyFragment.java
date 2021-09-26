@@ -11,7 +11,10 @@ import com.facilityone.wireless.a.arch.R;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.net.FmNetApi;
 import com.facilityone.wireless.a.arch.presenter.UserBehaviorPresenter;
+import com.facilityone.wireless.a.arch.xcq.Constants.Constant;
 import com.facilityone.wireless.a.arch.xcq.core.mvp.MvpView;
+
+import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.PASSWORD;
 
 /**
  * Author：gary
@@ -52,7 +55,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
         //xcqPresenter.attachView(this);
 
         showLoading();
-        getPresenter().logon("weiwai", "111111");
+        getPresenter().logon(Constant.USERNAME, PASSWORD);
         showLogonButton();
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +63,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
                 //TODO xcq
 
                 showLoading();
-                getPresenter().logon("weiwai", "111111");
+                getPresenter().logon("chezhan", "111111");
 
                 //xcqPresenter.login(new FmNetApi.LoginBean(),4444);
             }
@@ -74,7 +77,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
     }
 
     public void showLogonButton() {
-        mBtn.setVisibility(View.VISIBLE);
+//        mBtn.setVisibility(View.VISIBLE);
     }
 
     public void setOnGoFragmentListener(OnGoFragmentListener onGoFragmentListener) {

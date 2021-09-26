@@ -55,9 +55,10 @@
             android:exported="true" />
         <activity
             android:name="com.facilityone.wireless.maintenance.MaintenanceActivity"
-            android:exported="true" /> <!-- <activity -->
-        <!-- android:name="com.example.scanzxing.ScanZingMainActivity" -->
-        <!-- android:exported="true" /> -->
+            android:exported="true" />
+         <activity
+         android:name="com.example.scanzxing.ScanZingMainActivity"
+         android:exported="true" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

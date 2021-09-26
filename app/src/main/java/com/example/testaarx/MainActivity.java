@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.example.testaarx.download.OutLineDataActivity;
 import com.example.testaarx.mine.MineSignQrCodeActivity;
 import com.example.testaarx.scan.FmScanBaseActivity;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mBtn1;
     private Button mButtonStorage;
     private Button mOutBtn;
+    private Button mLoginBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +150,12 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityUtils.startActivity("com.facilityone.product.fouth.metrosh","com.facilityone.wireless.a.launcher.WelcomeActivity");
+            }
+        });
     }
 
     private void initView() {
@@ -162,5 +170,6 @@ public class MainActivity extends AppCompatActivity {
         mBtn1 = (Button) findViewById(R.id.btn1);
         mButtonStorage = (Button) findViewById(R.id.buttonStorage);
         mOutBtn = (Button) findViewById(R.id.outBtn);
+        mLoginBtn = (Button) findViewById(R.id.loginBtn);
     }
 }

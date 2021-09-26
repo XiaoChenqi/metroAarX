@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.example.testaarx.MetroUtils;
 import com.example.testaarx.R;
 import com.example.testaarx.download.APPUrl;
 import com.facilityone.wireless.a.arch.base.FMFragment;
@@ -26,7 +27,9 @@ import com.luojilab.component.componentlib.router.Router;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
+import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.PASSWORD;
 import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.THEME_COLOR;
+import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.USERNAME;
 
 public class FmScanBaseActivity extends BaseFragmentActivity
         implements EmptyFragment.OnGoFragmentListener {
@@ -51,11 +54,7 @@ public class FmScanBaseActivity extends BaseFragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
-        if(0 != getIntent().getIntExtra("COLOR",0)){
-            themeColor = getIntent().getIntExtra("COLOR",0);
-            //themeColor = (Color.parseColor("#ff6666"));;
-            THEME_COLOR = themeColor;
-        }
+        MetroUtils.getParamFromMetro(this);
     }
 
     @Override

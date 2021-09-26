@@ -3,11 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/FacilityProjects/metroAarX_aar/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/arch/src/main/res/layout/fragment_empty.xml" value="0.24592391304347827" />
         <entry key="..\:/FacilityProjects/metroAarX_aar/basiclib/src/main/res/layout/activity_simple_play.xml" value="0.20833333333333334" />
         <entry key="..\:/FacilityProjects/metroAarX_aar/demandcomponent/src/main/res/layout/item_demand.xml" value="0.20833333333333334" />
         <entry key="..\:/FacilityProjects/metroAarX_aar/inventorycomponent/src/main/res/layout/activity_inventory.xml" value="0.20833333333333334" />
         <entry key="..\:/FacilityProjects/metroAarX_aar/patrolcomponent/src/main/res/layout/fragment_patrol_menu.xml" value="0.1" />
         <entry key="..\:/FacilityProjects/metroAarX_aar/patrolcomponent/src/main/res/layout/item_patrol_item.xml" value="0.21354166666666666" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/scanzxing/src/main/res/drawable/switch_button_md_back_off.xml" value="0.134375" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/scanzxing/src/main/res/drawable/switch_button_md_back_on.xml" value="0.134375" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/scanzxing/src/main/res/drawable/switch_button_md_thumb.xml" value="0.134375" />
         <entry key="..\:/FacilityProjects/metroAarX_aar/workordercomponent/src/main/res/layout/item_workorder_payment.xml" value="0.14895833333333333" />
       </map>
     </option>
