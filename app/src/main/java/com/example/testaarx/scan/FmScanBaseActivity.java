@@ -64,6 +64,8 @@ public class FmScanBaseActivity extends BaseFragmentActivity
 
     @Override
     public void goFragment(Bundle bundle) {
+
+        mInstance.getActivity().finish();
         //mInstance.startWithPop(WorkorderCreateFragment.getInstance(CREATE_ORDER_BY_OTHER,equipId));
         //todo 登录成功以后，直接扫码
         Intent intent = new Intent(this, ScanActivity.class);
@@ -89,7 +91,8 @@ public class FmScanBaseActivity extends BaseFragmentActivity
     public void onBackPressedSupport() {
 
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            pop();
+            //pop();
+            finish();
         } else {
             this.finish();
 //            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {

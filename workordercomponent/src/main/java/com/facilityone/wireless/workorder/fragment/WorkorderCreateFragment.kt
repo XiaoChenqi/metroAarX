@@ -354,6 +354,10 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         if (!TextUtils.isEmpty(userInfo)) {
             userBean = GsonUtils.fromJson(userInfo, UserInfoBean::class.java)
         }
+        if (userBean != null) {
+            binding.civContact.inputText = if (userBean.name == null) "" else userBean.name
+        }
+
         if (TextUtils.isEmpty(mPeople)) {
             if (userBean != null) {
                 binding.civLocation.inputText = if (userBean.name == null) "" else userBean.name

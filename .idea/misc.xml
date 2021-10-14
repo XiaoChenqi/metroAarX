@@ -13,6 +13,9 @@
         <entry key="..\:/FacilityProjects/metroAarX_aar/scanzxing/src/main/res/drawable/switch_button_md_back_off.xml" value="0.134375" />
         <entry key="..\:/FacilityProjects/metroAarX_aar/scanzxing/src/main/res/drawable/switch_button_md_back_on.xml" value="0.134375" />
         <entry key="..\:/FacilityProjects/metroAarX_aar/scanzxing/src/main/res/drawable/switch_button_md_thumb.xml" value="0.134375" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/scanzxing/src/main/res/layout/activity_zxing_main.xml" value="0.24114583333333334" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/workordercomponent/src/main/res/layout/adapter_workorder_create_device_item.xml" value="0.33" />
+        <entry key="..\:/FacilityProjects/metroAarX_aar/workordercomponent/src/main/res/layout/fragment_workorder_create.xml" value="0.22192028985507245" />
         <entry key="..\:/FacilityProjects/metroAarX_aar/workordercomponent/src/main/res/layout/item_workorder_payment.xml" value="0.14895833333333333" />
       </map>
     </option>
