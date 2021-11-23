@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.annotation.Nullable;
-
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -60,7 +58,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DefaultObserver;
 import io.reactivex.schedulers.Schedulers;
-import kotlin.jvm.internal.markers.KMutableMap;
 
 /**
  * Author：gary
@@ -751,6 +748,35 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
         });
     }
 
+
+
+    /**
+     * 二维码扫描相关逻辑
+     */
+    public void workingScan(final PatrolSpotEntity spotEntity,Long time) {
+        Intent intent = new Intent(getV().getContext(), ScanActivity.class);
+        getV().startActivity(intent);
+
+        ScanActivity.setOnScanResultListener(new ScanActivity.OnScanResultListener() {
+            @Override
+            public void success(String QRCode) {
+                LogUtils.d("TAG", "扫描结果==" + QRCode);
+                String spotCode = PatrolQrcodeUtils.parseSpotCode(QRCode);
+                if (TextUtils.isEmpty(QRCode)) {
+                    ToastUtils.showShort(R.string.patrol_qrcode_no_match);
+                    return;
+                }
+                if (!spotCode.equals(spotEntity.getCode())){
+                    ToastUtils.showShort("点位匹配出错，请确认点位");
+                    return;
+                }
+                getV().workingScanResult(spotEntity,time);
+            }
+        });
+    }
+
+
+
     /**
      * @Created by: kuuga
      * @Date: on 2021/8/27 16:27
@@ -772,15 +798,17 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                         getV().dismissLoading();
                         PatrolQueryService.PatrolJudgeBean data = response.body().data;
                         if (data != null) {
+                            //是否可以开启新任务
                             if (data.executable){
                                 if (data.time!=0){
-                                    //判断是否扫码
+                                    //判断是否需要扫码,不需要则直接进去
                                     if (!needScan){
                                         getV().showOrderTimeDialog(data.time,entity);
                                     }else {
                                         getV().needScanQrcode(entity,data.time);
                                     }
                                 }else {
+                                    //判断是否需要扫码,不需要则直接进去
                                     if (!needScan){
                                         getV().enterDeviceList(entity);
                                     }else {
@@ -791,9 +819,18 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                                 }
 
                             }else {
+                                //当前有任务是进入,判断是否同一个任务及点位
                                 if (data.patrolTaskId.equals(entity.getTaskId())&&data.patrolTaskSpotId.equals(entity.getPatrolSpotId())){
+
+                                    if (!needScan){
                                         getV().enterDeviceList(entity);
-                                     }else {
+                                    }else {
+                                        getV().needWorkingScanQrcode(entity,data.time);
+                                    }
+
+
+                                //非同一个任务及点位时,提示当前有任务进行以及剩余时间
+                                }else {
                                         getV().showOrderTimeDialog(data.time);
                                     }
                             }

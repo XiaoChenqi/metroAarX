@@ -2,10 +2,6 @@ package com.facilityone.wireless.patrol.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +34,10 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import me.yokeyword.fragmentation.SwipeBackLayout;
 
 /**
@@ -303,13 +303,32 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
 //        startForResult(PatrolDeviceFragment.getInstance(patrolSpotEntity.getName(), patrolSpotEntity.getPatrolSpotId()), REQUEST_DEVICE);
     }
 
+    /**
+     * 扫描结果匹配
+     *
+     * @param patrolSpotEntity
+     */
+    public void workingScanResult(PatrolSpotEntity patrolSpotEntity,Long time) {
+
+
+
+            enterDeviceList(patrolSpotEntity);
+
+//        executeTask(patrolSpotEntity);
+//        startForResult(PatrolDeviceFragment.getInstance(patrolSpotEntity.getName(), patrolSpotEntity.getPatrolSpotId()), REQUEST_DEVICE);
+    }
+
+
 
     public void needScanQrcode(PatrolSpotEntity patrolSpotEntity,Long time){
         getPresenter().scan(patrolSpotEntity,time);
 
     }
 
+    public void needWorkingScanQrcode(PatrolSpotEntity patrolSpotEntity,Long time){
+        getPresenter().workingScan(patrolSpotEntity,time);
 
+    }
 
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {

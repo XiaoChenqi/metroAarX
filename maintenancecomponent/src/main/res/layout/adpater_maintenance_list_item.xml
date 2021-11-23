@@ -60,9 +60,9 @@
                     android:paddingBottom="@dimen/dp_18"
                     android:paddingRight="@dimen/dp_30"/>
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/status_tv"
                     style="@style/tag_text_style"
-                    tools:text="处理中"
                     tools:background="@drawable/fm_workorder_tag_fill_process_bg"/>
 
             </LinearLayout>
@@ -81,6 +81,12 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tag_tv"
+                    style="@style/tag_text_style"
+                    tools:background="@drawable/fm_workorder_tag_fill_process_bg"/>
 
             </LinearLayout>
 
@@ -101,7 +107,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/ll_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

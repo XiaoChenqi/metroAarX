@@ -14,6 +14,7 @@ import java.util.List;
 public class ElectronicLedgerAdapter extends MultipleItemRvAdapter<MaintenanceEnity.ElectronicLedgerEntity, BaseViewHolder> {
 
     public static final int TYPE_HEADER = 100;
+    public static final int TYPE_SUB_HEADER = 101;
     public static final int TYPE_RADIO = 200;
     public static final int TYPE_RADIO_SUB = 210;
     public static final int TYPE_EDIT = 300;
@@ -31,7 +32,11 @@ public class ElectronicLedgerAdapter extends MultipleItemRvAdapter<MaintenanceEn
     protected int getViewType(MaintenanceEnity.ElectronicLedgerEntity entity) {
         if (entity.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_HEADER) {
             return TYPE_HEADER;
-        } else if (entity.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO) {
+        }
+        else if (entity.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_SUB_HEADER) {
+            return TYPE_SUB_HEADER;
+        }
+        else if (entity.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO) {
             return TYPE_RADIO;
         }
         else if (entity.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO_SUB) {
@@ -45,6 +50,7 @@ public class ElectronicLedgerAdapter extends MultipleItemRvAdapter<MaintenanceEn
     @Override
     public void registerItemProvider() {
         mProviderDelegate.registerProvider(new ELHeaderProvider());
+        mProviderDelegate.registerProvider(new ELSubTitleProvider());
         mProviderDelegate.registerProvider(new ELSelectorProvider());
         mProviderDelegate.registerProvider(new ELTextProvider());
         mProviderDelegate.registerProvider(new ELSubSelectorProvider());

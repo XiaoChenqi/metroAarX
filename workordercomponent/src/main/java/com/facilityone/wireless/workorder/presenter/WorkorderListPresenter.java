@@ -79,4 +79,14 @@ public class WorkorderListPresenter extends BaseWorkOrderPresenter<WorkorderList
     public void setPriority(Map<Long, String> p) {
         getV().setPriority(p);
     }
+
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/10/11
+     * @TIME: 16:09
+     * @Introduce: 判断维护工单当前是否有进行中的倒计时
+     **/
+    private static boolean isDoneDevice(){
+        return false;
+    }
 }

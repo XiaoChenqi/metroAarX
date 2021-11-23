@@ -54,13 +54,20 @@ public class MaintenanceEnity {
       public static class MaintenanceListReq{
           public Integer type; //列表类型
           public Page page; //分页
-          public MaintenanceService.ConditionBean condition;//筛选
+          public MaintenanceService.ConditionBean searchCondition;//筛选
       }
 
       public static class ElectronicLedgerEntity{
+          public ElectronicLedgerEntity(int type, Object content,int parent) {
+              this.type = type;
+              this.content = content;
+              this.parent=parent;
+          }
+
           public ElectronicLedgerEntity(int type, Object content) {
               this.type = type;
               this.content = content;
+              this.parent=-1;
           }
 
           public ElectronicLedgerEntity(int type) {
@@ -68,10 +75,12 @@ public class MaintenanceEnity {
           }
 
           public int type;
+          public int parent;
           public Object content;
           public String value;
           public String subValue;
           public static final int TYPE_HEADER = 1;
+          public static final int TYPE_SUB_HEADER = 5;
           public static final int TYPE_RADIO = 2;
           public static final int TYPE_EDIT = 3;
           public static final int TYPE_RADIO_SUB = 4;

@@ -1,9 +1,6 @@
 package com.facilityone.wireless.workorder.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
@@ -22,6 +19,10 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Author：gary
@@ -53,6 +54,9 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
     private String mTitle;//页面标题
 
     private Boolean isMaintenanceOrder; //是否是维护工单
+    private boolean taskStatus; //任务状态
+
+    private final static int REFRESH = 500001; // 界面刷新
 
     @Override
     public WorkorderDevicePresenter createPresenter() {
@@ -185,6 +189,24 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
     }
 
     @Override
+    public void leftBackListener() {
+        Bundle bundle = new Bundle();
+        bundle.putLong(WORKORDER_ID,mWoId);
+        setFragmentResult(RESULT_OK,bundle);
+        pop();
+    }
+
+    @Override
+    public boolean onBackPressedSupport() {
+        Bundle bundle = new Bundle();
+        bundle.putLong(WORKORDER_ID,mWoId);
+        setFragmentResult(RESULT_OK,bundle);
+        pop();
+        return true;
+
+    }
+
+    @Override
     public void onDestroyView() {
         if (opt) {
             setFragmentResult(RESULT_OK, new Bundle());
@@ -201,12 +223,23 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
              * @Date: 2021/8/24
              * @Infor: 未加判断，需要根据needScan参数判断是否可以扫码
              */
+
                 if (mNeedScan) {
-                    getPresenter().scan(workOrderEquipmentsBean);
+                    //判断是否存在倒计时
+                    getPresenter().isDoneDevice(mWoId,workOrderEquipmentsBean.equipmentCode,workOrderEquipmentsBean);
                 } else {
                     result(workOrderEquipmentsBean);
                 }
         }
+    }
+
+    public void setCando(Boolean cando,WorkorderService.WorkOrderEquipmentsBean workOrderEquipmentsBean){
+        taskStatus = cando;
+        if (workOrderEquipmentsBean.finished == 0 && taskStatus){
+            ToastUtils.showShort("已有进行中的计划性维护，无法开启其他维护计划");
+            return;
+        }
+        getPresenter().scan(workOrderEquipmentsBean);
     }
 
     public void result(WorkorderService.WorkOrderEquipmentsBean workOrderEquipmentsBean) {

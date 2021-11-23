@@ -10,6 +10,15 @@
         <item name="android:paddingRight">@dimen/dp_16</item>
     </style>
 
+    <style name="contentsubTitleLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/dp_14</item>
+        <item name="android:paddingRight">@dimen/dp_14</item>
+    </style>
+
     <style name="demandWorkTitleIconStyle">
         <item name="android:layout_width">@dimen/dp_6</item>
         <item name="android:layout_height">@dimen/dp_17</item>

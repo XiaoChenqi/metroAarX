@@ -3,24 +3,16 @@ package com.facilityone.wireless.workorder.presenter;
 import android.content.Context;
 import android.view.View;
 
-import com.blankj.utilcode.util.GsonUtils;
-import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
-import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.Page;
-import com.facilityone.wireless.a.arch.ec.module.UserService;
-import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
-import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.widget.BottomTextListSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.FMBottomInputSheetBuilder;
-import com.facilityone.wireless.a.arch.widget.FMBottomPauseSelectSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.workorder.R;
-
 import com.facilityone.wireless.workorder.fragment.WorkorderApprovalFragment;
 import com.facilityone.wireless.workorder.fragment.WorkorderDispatchFragment;
 import com.facilityone.wireless.workorder.fragment.WorkorderInfoFragment;
@@ -48,6 +40,8 @@ import java.util.Map;
  * Date: 2018/7/11 上午10:11
  */
 public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfoFragment> {
+    private static String TAG = "Karelie";
+    private boolean taskStatus = false;
 
 
     @Override
@@ -238,7 +232,9 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                                 final Long estimateStartTime,
                                 final Long estimateEndTime,
                                 final List<WorkorderService.WorkorderReserveRocordBean> workOrderMaterials,
-                                Boolean isSignOn) {
+                                Boolean isSignOn,
+                                final boolean isMaintenanceOrder
+                                ) {
         List<String> menu = new ArrayList<>();
         boolean finished = false;
         switch (status) {
@@ -430,6 +426,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 } else if (tag.equals(getV().getString(R.string.workorder_accept_order))) {
                     workorderOptCommon(woId, null, WorkorderConstant.WORKORDER_OPT_TYPE_ORDER, null,false);
                 } else if (tag.equals(getV().getString(R.string.workorder_finish))) {
+
                     if (!isSign) {
                         ToastUtils.showShort("请先签到");
                         return;
@@ -438,6 +435,12 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         ToastUtils.showShort(R.string.workorder_sign_error);
                         return;
                     }
+
+                    if (taskStatus){
+                        ToastUtils.showShort("目前已经有维护任务在执行中，请先完成。");
+                        return;
+                    }
+
 
                      //判断是否条件处理完成
                     if (!getV().canDo()){
@@ -688,7 +691,6 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 });
     }
 
-
     //异常审批
     private void approvalErrorWorkorder(final Long woId, final Long approvalId, String input, int type) {
         getV().showLoading();
@@ -760,7 +762,6 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
     private void suspendedWorkOrder(Context context, final Long woId) {
         getV().showPauseDialog(context, woId);
     }
-
 
     //暂停工单
     public void pauseWorkOrder(Long woId, String input, Long optId, int type, Long time) {
@@ -834,7 +835,6 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                     }
                 });
     }
-
 
     //原因列表
     private void reasonList() {
@@ -976,6 +976,51 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
         return false;
 
     }
+    
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/10/11
+     * @TIME: 16:09
+     * @Introduce: 判断维护工单当前是否有进行中的倒计时
+    **/
+    public void isDoneDevice(Long woId,String eqCode){
+        final boolean[] cando = {false};
+        WorkorderService.ShortestTimeReq request = new WorkorderService.ShortestTimeReq();
+        request.woId = woId;
+        request.eqCode = eqCode;
+        OkGo.<BaseResponse<WorkorderService.ShortestTimeResp>>post(FM.getApiHost() + WorkorderUrl.QUERY_SHORTEST_TIME)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<WorkorderService.ShortestTimeResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<WorkorderService.ShortestTimeResp>> response) {
+                        getV().dismissLoading();
+                        WorkorderService.ShortestTimeResp resp = response.body().data;
+                        if (resp!= null){
+                            if (resp.executable == true){
+                                taskStatus = true;
+                            }else {
+                                taskStatus = false;
+                            }
+                        }else {
+                            taskStatus = false;
+                        }
+                        getV().setTaskStatus(taskStatus);
+
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<WorkorderService.ShortestTimeResp>> response) {
+                        ToastUtils.showShort(R.string.workorder_operate_fail);
+                        super.onError(response);
+                        ToastUtils.showShort("数据异常");
+                    }
+                });
+
+    }
+
+
 
 
 

@@ -38,7 +38,7 @@ public class MaintenanceListPresenter extends CommonBasePresenter<MaintenanceLis
          getV().showLoading();
          final MaintenanceEnity.MaintenanceListReq request = new MaintenanceEnity.MaintenanceListReq();
          request.type=type;
-         request.condition=conditionBean;
+         request.searchCondition=conditionBean;
          String url = "";
          switch (type) {
              case MaintenanceConstant.ZERO: //待处理维护工单
@@ -83,6 +83,7 @@ public class MaintenanceListPresenter extends CommonBasePresenter<MaintenanceLis
                              return;
                          }
                          getV().refreshSuccessUI(data.contents,refresh,data.page);
+
 
                      }
 

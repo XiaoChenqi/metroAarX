@@ -88,4 +88,16 @@ public interface MaintenanceConstant {
     int STATUS_PERSONAL_SUBMIT = 3;   //已提交
 
 
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/27
+      * @Infor: 工单标签
+      */
+     int APPLICATION_FOR_SUSPENSION = 0 ; //暂停申请中
+     int PAUSE_STILL_WORKING = 1 ; //暂停（继续工作）
+     int PAUSE_NOT_WORKING = 2 ; //暂停(不继续工作)
+     int APPLICATION_VOID = 3 ; //作废申请中
+     int STOP = 4 ; //终止
+
+
 }

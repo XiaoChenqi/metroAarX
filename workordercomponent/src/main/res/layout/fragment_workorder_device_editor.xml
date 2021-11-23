@@ -68,25 +68,25 @@
                 <TextView
                     style="@style/content_title_style1"
                     android:paddingRight="@dimen/dp_0"
-                    android:text="故障描述"/>
+                    android:text="现场描述"/>
 
                 <com.facilityone.wireless.a.arch.widget.EditNumberView
                     android:id="@+id/workorder_device_desc_env"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:fm_edit_number_desc="请输入故障描述"/>
+                    app:fm_edit_number_desc="请输入现场描述"/>
 
 
                 <TextView
                     style="@style/content_title_style1"
                     android:paddingRight="@dimen/dp_0"
-                    android:text="维修描述"/>
+                    android:text="处理方式"/>
 
                 <com.facilityone.wireless.a.arch.widget.EditNumberView
                     android:id="@+id/workorder_device_deal_way_env"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:fm_edit_number_desc="请输入维修方式"/>
+                    app:fm_edit_number_desc="请输入处理方式"/>
 
 
             </LinearLayout>

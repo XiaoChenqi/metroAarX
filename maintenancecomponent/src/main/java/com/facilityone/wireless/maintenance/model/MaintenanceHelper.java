@@ -23,19 +23,30 @@ public class MaintenanceHelper {
         return v;
     }
 
+    public static Map<Integer, String> getMaintenanceTagStatusMap(Context context) {
+        Map<Integer, String> v = new LinkedHashMap<Integer, String>();
+        String[] array = context.getResources().getStringArray(R.array.maintenance_tag_Status);
+        v.put(MaintenanceConstant.APPLICATION_FOR_SUSPENSION, array[0]);
+        v.put(MaintenanceConstant.PAUSE_STILL_WORKING, array[1]);
+        v.put(MaintenanceConstant.PAUSE_NOT_WORKING, array[2]);
+        v.put(MaintenanceConstant.APPLICATION_VOID, array[3]);
+        v.put(MaintenanceConstant.STOP, array[4]);
+        return v;
+    }
+
     public static Map<Integer, String> getMaintenanceWorkorderStatusMap(Context context) {
         Map<Integer, String> v = new LinkedHashMap<Integer, String>();
-        String[] stat = context.getResources().getStringArray(R.array.maintenance_workorder_status);
+        String[] stat = context.getResources().getStringArray(R.array.maintenance_query_stat);
         v.put(MaintenanceConstant.WORKORDER_STATUS_CREATED, stat[0]);
         v.put(MaintenanceConstant.WORKORDER_STATUS_PUBLISHED, stat[1]);
         v.put(MaintenanceConstant.WORKORDER_STATUS_PROCESS, stat[2]);
         v.put(MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_GO, stat[3]);
         v.put(MaintenanceConstant.WORKORDER_STATUS_TERMINATED, stat[4]);
         v.put(MaintenanceConstant.WORKORDER_STATUS_COMPLETED, stat[5]);
-        v.put(MaintenanceConstant.WORKORDER_STATUS_VERIFIED, stat[6]);
-        v.put(MaintenanceConstant.WORKORDER_STATUS_ARCHIVED, stat[7]);
-        v.put(MaintenanceConstant.WORKORDER_STATUS_APPROVAL, stat[8]);
-        v.put(MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_NO, stat[9]);
+//        v.put(MaintenanceConstant.WORKORDER_STATUS_VERIFIED, stat[6]);
+//        v.put(MaintenanceConstant.WORKORDER_STATUS_ARCHIVED, stat[7]);
+//        v.put(MaintenanceConstant.WORKORDER_STATUS_APPROVAL, stat[8]);
+//        v.put(MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_NO, stat[9]);
         return v;
     }
 

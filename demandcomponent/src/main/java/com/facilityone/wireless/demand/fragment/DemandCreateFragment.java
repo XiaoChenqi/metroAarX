@@ -3,10 +3,6 @@ package com.facilityone.wireless.demand.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
@@ -70,6 +66,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Author：gary
@@ -269,7 +270,6 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         mCivLocation = findViewById(R.id.civ_location);
         mChooseDevice = findViewById(R.id.demand_create_choose_device_all);
         mDeviceList = findViewById(R.id.demand_create__device_list);
-
 
     }
 

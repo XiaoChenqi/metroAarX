@@ -1,7 +1,9 @@
 package com.facilityone.wireless.maintenance.adapter
 
 
+import android.text.TextUtils
 import android.view.View
+import androidx.core.text.TextUtilsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.chad.library.adapter.base.BaseViewHolder
@@ -39,6 +41,13 @@ class ELSelectorProvider : BaseItemProvider<MaintenanceEnity.ElectronicLedgerEnt
             binding.rbNormal.text="携带"
             binding.rbException.text="未携带"
         }
+        if (TextUtils.isEmpty(selectorModel.tips)){
+            binding.taskTipTv.visibility=View.GONE
+        }else{
+            binding.taskTipTv.visibility=View.VISIBLE
+            binding.taskTipTv.text = selectorModel.tips
+        }
+
 
         if (3==selectorModel.state){
             binding.rgSelect.clearCheck()

@@ -1,9 +1,6 @@
 package com.facilityone.wireless.workorder.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,6 +13,10 @@ import com.facilityone.wireless.workorder.presenter.WorkorderStepPresenter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Author：gary
@@ -73,6 +74,18 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
         }
     }
 
+    public void initStepView(){
+        getPresenter().getStepInfor(mWoId);
+    }
+
+    public void refreshStep(WorkorderService.WorkorderInfoBean data){
+        if (data.steps != null && data.steps.size() > 0){
+//            mSteps.clear();
+//            mSteps.addAll(data.steps);
+            mAdapter.replaceData(data.steps);
+        }
+    }
+
     private void initView() {
         setTitle(R.string.workorder_menu_step);
         mRecyclerView = findViewById(R.id.recyclerView);
@@ -108,7 +121,7 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            mAdapter.notifyDataSetChanged();
+            initStepView();
         }
     }
 

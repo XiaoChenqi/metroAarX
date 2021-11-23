@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.Page;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.Comparator;
 import java.util.List;
@@ -765,4 +764,60 @@ public class WorkorderService {
         public List<WorkorderAttendanceResp> contents;
 
     }
+
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/10/13
+     * @TIME: 14:09
+     * @Introduce: 查询最短完成时间请求体
+    **/
+    public static class ShortestTimeReq{
+        public String eqCode; //设备编码
+        public Long woId; //维护工单Id
+    }
+
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/10/13
+     * @TIME: 14:25
+     * @Introduce: 查询最短完成时间响应体
+    **/
+    public static class ShortestTimeResp{
+        public Boolean executable ;//判断是否有倒计时
+        public Long woId;//维护账单Id
+        public Long pmId;//维护计划Id
+        public Long eqId; //设备Id
+        public String eqCode; //设备Code
+        public Integer countdown; //设置租店完成时间
+        public Integer status; //当前设备任务状态
+    }
+    
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/10/13
+     * @TIME: 14:31
+     * @Introduce: 执行最短完成时间请求体
+    **/
+    public static class DoShortestTaskReq{
+        public String eqCode; //设备编码
+        public Long woId; //维护工单Id
+    }
+
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/10/13
+     * @TIME: 14:32
+     * @Introduce: 执行最短完成时间响应体(暂时废弃 响应转成boolean)
+    **/
+    public static class DoShortestTaskResp{
+        public Boolean executable ;//判断是否有倒计时
+        public Long woId;//维护账单Id
+        public Long pmId;//维护计划Id
+        public Long eqId; //设备Id
+        public String eqCode; //设备Code
+        public Integer countdown; //设置租店完成时间
+        public Integer status; //当前设备任务状态
+    }
+    
+
 }

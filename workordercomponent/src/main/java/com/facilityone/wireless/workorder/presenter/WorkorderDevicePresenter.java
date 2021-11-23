@@ -1,9 +1,7 @@
 package com.facilityone.wireless.workorder.presenter;
 
 import android.content.Intent;
-import android.text.TextUtils;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.basiclib.app.FM;
@@ -23,6 +21,7 @@ import com.lzy.okgo.model.Response;
  * Date: 2018/9/20 下午5:02
  */
 public class WorkorderDevicePresenter extends WorkorderBasePresenter<WorkorderDeviceFragment> {
+    private boolean taskStatus = false;
     @Override
     public void onEditorWorkorderDeviceSuccess() {
         getV().refreshList();
@@ -46,7 +45,12 @@ public class WorkorderDevicePresenter extends WorkorderBasePresenter<WorkorderDe
 //                } else {
 //                    ToastUtils.showShort(R.string.workorder_qrcode_no_match);
 //                }
-                getV().result(equipmentCode);
+                String[] qrcdoeList = QRCode.split(",");
+                if (equipmentCode.equipmentCode.equals(qrcdoeList[0])){
+                    getV().result(equipmentCode);
+                }else {
+                    ToastUtils.showShort("请确认扫码是否匹配当前设备");
+                }
             }
         });
     }
@@ -78,4 +82,67 @@ public class WorkorderDevicePresenter extends WorkorderBasePresenter<WorkorderDe
                     }
                 });
     }
+
+
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/10/11
+     * @TIME: 16:09
+     * @Introduce: 判断维护工单当前是否有进行中的倒计时
+     **/
+    //判断是否有任务且该任务为当前处理中的任务
+    public void isDoneDevice(Long woId,String eqCode,WorkorderService.WorkOrderEquipmentsBean  bean){
+        WorkorderService.ShortestTimeReq request = new WorkorderService.ShortestTimeReq();
+        request.woId = woId;
+        request.eqCode = eqCode;
+        OkGo.<BaseResponse<WorkorderService.ShortestTimeResp>>post(FM.getApiHost() + WorkorderUrl.QUERY_SHORTEST_TIME)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<WorkorderService.ShortestTimeResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<WorkorderService.ShortestTimeResp>> response) {
+                        getV().dismissLoading();
+                        WorkorderService.ShortestTimeResp resp = response.body().data;
+                        if (resp.executable != null){
+                            if (resp.executable == true){
+                                if (woId.equals(resp.woId) && eqCode.equals(resp.eqCode)){
+                                    taskStatus = false;
+                                }else {
+                                    taskStatus = true;
+                                }
+                                getV().setCando(taskStatus,bean);
+                            }else {
+                                taskStatus = false;
+                                getV().setCando(taskStatus,bean);
+                            }
+                        }else {
+                            taskStatus = false;
+                            getV().setCando(taskStatus,bean);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<WorkorderService.ShortestTimeResp>> response) {
+                        ToastUtils.showShort(R.string.workorder_operate_fail);
+                        super.onError(response);
+                        ToastUtils.showShort("数据异常");
+                    }
+                });
+
+    }
+    
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/10/11
+     * @TIME: 16:23
+     * @Introduce: 开始当前设备任务
+    **/
+    public void beginToDo(){
+
+    }
+
+    
+    
 }

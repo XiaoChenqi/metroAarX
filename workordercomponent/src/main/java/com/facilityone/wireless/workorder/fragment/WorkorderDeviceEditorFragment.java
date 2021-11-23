@@ -1,7 +1,6 @@
 package com.facilityone.wireless.workorder.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,12 +12,16 @@ import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.widget.CustomContentItemView;
 import com.facilityone.wireless.a.arch.widget.EditNumberView;
+import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.facilityone.wireless.workorder.R;
 import com.facilityone.wireless.workorder.module.WorkorderConstant;
 import com.facilityone.wireless.workorder.module.WorkorderOptService;
 import com.facilityone.wireless.workorder.module.WorkorderService;
 import com.facilityone.wireless.workorder.presenter.WorkorderDeviceEditorPresenter;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+
+import androidx.annotation.Nullable;
 
 /**
  * Author：gary
@@ -45,6 +48,8 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
     private WorkorderService.WorkOrderEquipmentsBean mEquipmentsBean;
     private WorkorderService.WorkOrderEquipmentsBean mAddUpdateEquipmentsBean;
     private SelectDataBean mBean;
+    private String eqCode; //设备编号
+    private Integer time; //完成任务的时间--Min
 
     @Override
     public WorkorderDeviceEditorPresenter createPresenter() {
@@ -66,6 +71,8 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
         super.onViewCreated(view, savedInstanceState);
         initData();
         initView();
+
+
     }
 
     private void initData() {
@@ -76,9 +83,10 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
             mEquipmentsBean = arguments.getParcelable(WORKORDER_DEVICE);
             if (mEquipmentsBean != null){
                 setTitle(mEquipmentsBean.equipmentName+""); // 四运
+                eqCode = mEquipmentsBean.equipmentCode;
             }
-
         }
+        getPresenter().isDoneDevice(mWoId,eqCode);
     }
 
     private void initView() {
@@ -102,6 +110,44 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
         }
         setRightTextButton(R.string.workorder_save, R.id.workorder_device_save_menu_id);
 
+    }
+
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/10/12
+     * @TIME: 14:58
+     * @Introduce: 弹出弹窗提示用户是否需要开启任务 （当前没有开启任务）
+    **/
+    public void showTaskDialog(Integer time){
+        FMWarnDialogBuilder builder = new FMWarnDialogBuilder(getContext());
+        builder.setTitle("提示");
+        String messageFormat="如果您确认开启该维护计划，最少需要%s分钟才能完成提交。同时不能开启其他设备的维护计划。";
+        builder.setTip(String.format(messageFormat,time));
+        builder.addOnBtnCancelClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+            @Override
+            public void onClick(QMUIDialog dialog, View view) {
+                pop();
+                dialog.dismiss();
+            }
+        });
+        builder.addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+            @Override
+            public void onClick(QMUIDialog dialog, View view) {
+                dialog.dismiss();
+                getPresenter().beganToTask(mWoId,eqCode);
+            }
+        });
+        builder.create(R.style.fmDefaultWarnDialog).show();
+    }
+
+
+    public void setTaskTime(Integer min){
+        time = min;
+    }
+    public void setHasDoneDevice(Boolean cando){
+        if (cando){
+            showTaskDialog(time);
+        }
     }
 
     @Override

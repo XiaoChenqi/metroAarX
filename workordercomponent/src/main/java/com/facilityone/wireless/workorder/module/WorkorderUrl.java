@@ -70,22 +70,21 @@ public interface WorkorderUrl {
     String WORKORDER_OPT_PAUSE_URL="/m/v1/workorder/operate/request/pause";
     //原因列表
     String WORKORDER_REASON_URL="/m/v1/workorder/reason/list";
-
     //异常工单审批
     String WORKORDER_OPT_EXCEPTION_APPROVAL_V_URL = "/m/v1/workorder/exception/approve";
-
-
     //批量派单
     String MAINTENANCE_ORDER_DEISPATCH = "/m/v1/workorder/operate/dispatch/batch";
-
     //最后一次签到记录
     String WORKORDER_ATTENDANCE_LAST = "/m/v1/user/attendance/last";
     //我的签到记录
     String WORKORDER_ATTENDANCE_LIST = "/m/v1/user/attendance/list";
     //扫一扫签到
     String WORKORDER_ATTENDANCE_OPT = "/m/v1/user/attendance/operate";
-
     //异常审批
     String WORKORDER_OPT_APPROVAL_V_ERROR_URL = "/m/v1/workorder/exception/approve";
+    //查询最短完成时间
+    String QUERY_SHORTEST_TIME = "/m/v1/workorder/ppm/countdown/";
+    //执行最短完成时间
+    String DO_SHORTEST_TASK = "/m/v1/workorder/ppm/addCountdown";
 
 }

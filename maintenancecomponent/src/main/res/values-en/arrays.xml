@@ -8,6 +8,14 @@
         <item>Missed</item>
     </string-array>
 
+    <string-array name="maintenance_tag_Status">
+        <item>暂停申请中</item>
+        <item>暂停(继续工作)</item>
+        <item>暂停(不继续工作)</item>
+        <item>作废申请中</item>
+        <item>已终止</item>
+    </string-array>
+
     <!-- 月份转换 -->
     <string-array name="month_trans">
         <item>Jan</item>

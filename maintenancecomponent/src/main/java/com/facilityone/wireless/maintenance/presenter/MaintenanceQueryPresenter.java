@@ -35,7 +35,7 @@ public class MaintenanceQueryPresenter extends BaseMaintenancePresenter<Maintena
         getV().showLoading();
         MaintenanceEnity.MaintenanceListReq request = new MaintenanceEnity.MaintenanceListReq();
         request.type=type;
-        request.condition=conditionBean;
+        request.searchCondition=conditionBean;
         String url = "";
         switch (type) {
             case MaintenanceConstant.ZERO: //待处理维护工单
@@ -72,20 +72,16 @@ public class MaintenanceQueryPresenter extends BaseMaintenancePresenter<Maintena
                         getV().dismissLoading();
                         MaintenanceEnity.MaintenanceListResp data = response.body().data;
                         if (data == null || data.contents == null || data.contents.size() == 0) {
-                            getV().noDataRefresh();
+                            getV().noDataRefresh(data.contents);
                             return;
                         }
                         getV().refreshSuccessUI(data.contents,page,refresh);
-
-//                         getV().refreshSuccessUI(data.contents, data.page, refresh);
-//                         getV().refreshSuccessUI(data.contents);
                     }
 
                     @Override
                     public void onError(Response<BaseResponse<MaintenanceEnity.MaintenanceListResp>> response) {
                         super.onError(response);
                         getV().dismissLoading();
-//                         getV().refreshErrorUI();
                     }
                 });
     }

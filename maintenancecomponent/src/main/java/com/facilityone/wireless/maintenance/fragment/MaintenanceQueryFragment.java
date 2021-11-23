@@ -21,8 +21,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.ec.adapter.GridTagAdapter;
@@ -33,6 +36,7 @@ import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
 import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.utils.DatePickUtils;
+import com.facilityone.wireless.basiclib.utils.DateUtils;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.facilityone.wireless.basiclib.utils.SystemDateUtils;
 import com.facilityone.wireless.componentservice.workorder.WorkorderService;
@@ -41,6 +45,7 @@ import com.facilityone.wireless.maintenance.adapter.MaintenanceListAdapter;
 import com.facilityone.wireless.maintenance.model.MaintenanceConstant;
 import com.facilityone.wireless.maintenance.model.MaintenanceEnity;
 import com.facilityone.wireless.maintenance.model.MaintenanceService;
+import com.facilityone.wireless.maintenance.presenter.MaintenancePresenter;
 import com.facilityone.wireless.maintenance.presenter.MaintenanceQueryPresenter;
 
 import com.luojilab.component.componentlib.router.Router;
@@ -171,7 +176,7 @@ public class MaintenanceQueryFragment extends BaseFragment<MaintenanceQueryPrese
             mQueryMenuIv.setVisibility(View.GONE);
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         } else {
-            setTitle("工单查询");
+            setTitle("维护工单查询");
             mQueryHead.setVisibility(View.VISIBLE);
             mQueryMenuIv.setVisibility(View.VISIBLE);
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -262,22 +267,19 @@ public class MaintenanceQueryFragment extends BaseFragment<MaintenanceQueryPrese
             mPage = new Page();
         }
         mPage.reset();
-        getPresenter().getMaintenanceList(MaintenanceConstant.SIX,mPage,null,false);
+        getPresenter().getMaintenanceList(MaintenanceConstant.SIX,mPage,mConditionBean,false);
     }
 
     private void resetCondition() {
         mCodeEt.setText("");
         mSiteEt.setText("");
-
-
-
         mConditionBean.woCode = null;
 //        showConditionTime();
         mConditionBean.priority = null;
         mConditionBean.period=null;
         mConditionBean.location=null;
         mConditionBean.typeId = null;
-        mConditionBean.status = null;
+        mConditionBean.newStatus = null;
         for (AttachmentBean cycleA : mCycleAs) {
             cycleA.check = false;
             if ( cycleA.value == -1L) {
@@ -357,8 +359,6 @@ public class MaintenanceQueryFragment extends BaseFragment<MaintenanceQueryPrese
             mDrawerLayout.openDrawer(Gravity.RIGHT);
         }
 
-//
-
         else if (viewId == R.id.work_order_site) {//选择站点
             startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_LOCATION), REQUEST_LOCATION);
         } else if (viewId == R.id.work_order_query_menu_filter_reset_btn) {//重置
@@ -370,7 +370,6 @@ public class MaintenanceQueryFragment extends BaseFragment<MaintenanceQueryPrese
             } else {
                 mConditionBean.planName = code;
             }
-
             getCycle();
             getStatus();
             getLabel();
@@ -403,15 +402,12 @@ public class MaintenanceQueryFragment extends BaseFragment<MaintenanceQueryPrese
         for (AttachmentBean a : mStatusAs) {
             if (a.value != -1L && a.check) {
                 statusId.add(a.value);
-                if (a.value == MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_GO) {
-                    statusId.add((long) MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_GO);
-                }
             }
         }
         if (statusId.size() > 0) {
-            mConditionBean.status = statusId;
+            mConditionBean.newStatus = statusId;
         } else {
-            mConditionBean.status = null;
+            mConditionBean.newStatus = null;
         }
     }
 
@@ -420,9 +416,6 @@ public class MaintenanceQueryFragment extends BaseFragment<MaintenanceQueryPrese
         for (AttachmentBean a : mLabelAs) {
             if (a.value != -1L && a.check) {
                 labelId.add(a.value);
-                if (a.value == MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_GO) {
-                    labelId.add((long) MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_GO);
-                }
             }
         }
         if (labelId.size() > 0) {
@@ -481,7 +474,9 @@ public class MaintenanceQueryFragment extends BaseFragment<MaintenanceQueryPrese
         mPage.reset();
         getPresenter().getMaintenanceList(MaintenanceConstant.SIX,mPage,mConditionBean,true);
     }
-    public void noDataRefresh() {
+    public void noDataRefresh(List<MaintenanceEnity.MaintenanceListEnity> data) {
+        mAdapter.setNewData(data);
+        mAdapter.notifyDataSetChanged();
         mAdapter.setEmptyView(getNoDataView(mRefreshLayout));
     }
 
@@ -583,6 +578,9 @@ public class MaintenanceQueryFragment extends BaseFragment<MaintenanceQueryPrese
                 } else {
                     mSiteEt.setText(StringUtils.formatString(bean.getFullName()));
                     mConditionBean.location=bean.getLocation();
+                    mConditionBean.location.roomId=null;
+                    mConditionBean.location.floorId=null;
+                    mConditionBean.location.cityId=null;
                 }
                 break;
         }

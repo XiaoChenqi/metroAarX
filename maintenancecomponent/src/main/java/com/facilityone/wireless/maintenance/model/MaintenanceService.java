@@ -480,6 +480,7 @@ public class MaintenanceService {
         public String woDescription;
         public List<Long> priority;
         public List<Long> status;
+        public List<Long> newStatus;
         public List<Long> tag;
         public Long typeId;
         public Long startDateTime;

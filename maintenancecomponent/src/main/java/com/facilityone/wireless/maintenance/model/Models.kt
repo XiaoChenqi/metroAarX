@@ -5,13 +5,15 @@ data class SelectorModel(
     var name:String?=null,
     var value:Int?=null,
     var state:Int?=null,
-    var sub: SelectorModel?
+    var sub: SelectorModel?,
+    var pid:Int?=null,
+    var tips:String?=null
 
 ){
-    constructor(name: String?,value: Int?):this(name,value,3,null)
-    constructor(name: String, value: Int, sub: SelectorModel) : this(name,value,3,sub) {
+    constructor(name: String?,value: Int?,pid:Int?=null):this(name,value,3,null,pid)
+    constructor(name: String, value: Int, sub: SelectorModel,pid: Int) : this(name,value,3,sub,pid)
 
-    }
+    constructor(name: String?,value: Int?,pid:Int?=null,tip:String):this(name,value,3,null,pid,tip)
 
 }
 
@@ -37,3 +39,27 @@ class ElectronicLedgerEntity{
     }
 
 }
+
+
+data class AccountCheck(
+    var titles:List<CheckModel>?=null
+)
+
+
+data class CheckModel(
+    var title:String?=null,
+    var contents:List<CheckContentModel>?=null,
+    var remark:String?=null
+){
+    constructor():this(null,null,null)
+}
+
+data class CheckContentModel(
+    var name: String?=null,
+    var value:String?=null,
+    var otherValue:String?=null,
+    var selectedValue:String?=null
+){
+    constructor():this(null,null,null,null)
+}
+

@@ -8,9 +8,10 @@ import android.widget.TextView;
 import com.example.testaarx.R;
 import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
+import com.facilityone.wireless.a.arch.presenter.UserBehaviorPresenter;
 import com.facilityone.wireless.a.arch.utils.UrlUtils;
+import com.facilityone.wireless.a.arch.xcq.core.mvp.MvpView;
 import com.facilityone.wireless.basiclib.utils.ImageLoadUtils;
-import com.scwang.smartrefresh.header.material.CircleImageView;
 
 import androidx.annotation.Nullable;
 
@@ -20,11 +21,12 @@ import androidx.annotation.Nullable;
   * @Date: 2021/8/6
   * @Infor: 我的二维码界面
   */
-public class MineSignQrcodeFragment extends BaseFragment<MineSignQrcodePresenter> {
+public class MineSignQrcodeFragment extends BaseFragment<MineSignQrcodePresenter> implements MvpView {
     private ImageView mUserImgae;
     private TextView mUserName;
     private TextView mPostion;
     private ImageView im_qrcode;
+    private UserBehaviorPresenter mpresenter;
     @Override
     public Object setLayout() {
         return R.layout.mine_sign_qrcode_fragment;
@@ -38,7 +40,10 @@ public class MineSignQrcodeFragment extends BaseFragment<MineSignQrcodePresenter
     }
 
     private void initData() {
+        mpresenter = new UserBehaviorPresenter();
         getPresenter().getInfor(); // 获取数据
+//        mpresenter.attachView(this);
+//        mpresenter.userInfor(1);
     }
 
     private void initView() {
@@ -47,6 +52,7 @@ public class MineSignQrcodeFragment extends BaseFragment<MineSignQrcodePresenter
         mUserName = findViewById(R.id.tv_user_name);
         mPostion = findViewById(R.id.tv_user_position);
         im_qrcode = findViewById(R.id.iv_qrcode_pic);
+
     }
     @Override
     protected int setTitleBar() {
@@ -85,4 +91,29 @@ public class MineSignQrcodeFragment extends BaseFragment<MineSignQrcodePresenter
     }
 
 
+    @Override
+    public void onStartRequest(int requestCode) {
+
+    }
+
+    @Override
+    public void onSuccess(int requestCode, Object o) {
+        UserService.UserInfoBean data = (UserService.UserInfoBean) o;
+        refreshView(data);
+    }
+
+    @Override
+    public void onErrorCode(int resultCode, String msg, int requestCode) {
+
+    }
+
+    @Override
+    public void onEndRequest(int requestCode) {
+
+    }
+
+    @Override
+    public void onFailure(Throwable e) {
+
+    }
 }
