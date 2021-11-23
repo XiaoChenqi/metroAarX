@@ -24,18 +24,18 @@ android {
         //buildConfigField "String", "SERVER_URL", "\"http://shmetro.wuxi.fmone.cn\""
         //buildConfigField "String", "SERVER_URL", "\"http://shdt.wuxi.fmone.cn\""
 
-        buildConfigField "String", "SERVER_URL", "\"http://47.99.236.153:8071/fz_iframe\""
-        //buildConfigField "String", "SERVER_URL", "\"http://192.168.1.89:23456/fz_iframe\""
+//        buildConfigField "String", "SERVER_URL", "\"http://47.99.236.153:8071/fz_iframe\""
+        buildConfigField "String", "SERVER_URL", "\"http://192.168.10.18:23456/fz_iframe\""
+//        buildConfigField "String", "SERVER_URL", "http://172.20.32.71:8071/fz_iframe"
 
-
-        buildConfigField "String", "UPDATE_CHANNEL", "\"AzTj2xWHbEpXnfQw\""
-        buildConfigField "String", "UPDATE_APP_KEY", "\"jCZamTWiwGfrKEM3jmzDysb2amjazfJy\""
+        buildConfigField "String", "UPDATE_CHANNEL", "\"fr2eHkk5TrExzAfD\""
+        buildConfigField "String", "UPDATE_APP_KEY", "\"hZ7STcR2d5eyrNAaN4paZDj5SBYQ6AEN\""
 
         buildConfigField "String", "APP_KEY", "\"00000000\""
         buildConfigField "String", "APP_SECRET", "\"11111111\""
 
         buildConfigField "boolean", "NEED_UPDATE_RECORD", "true"
-        buildConfigField "String", "CUSTOMER_CODE", "\"zSXDCeATbPymrsDi\""
+        buildConfigField "String", "CUSTOMER_CODE", "\"aWGT4FTmGni56Rfx\""
 
         buildConfigField "String", "UMENG_CHANNEL_KEY", "\"${UMENG_CHANNEL_KEY}\""
         buildConfigField "String", "UMENG_CHANNEL_VALUE", "\"${UMENG_CHANNEL_VALUE}\""

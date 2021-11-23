@@ -24,9 +24,9 @@ android {
         //TODO xcq
         //buildConfigField "String", "SERVER_URL", "\"https://wechat.fmone.cn\""
         buildConfigField "String", "SERVER_URL", "\"http://192.168.1.66:8080\""
-        buildConfigField "String", "CUSTOMER_CODE", "\"dWGitJATnhziWBt7\""
-        buildConfigField "String", "UPDATE_CHANNEL", "\"kDsx2HrR75QZ7BfZ\""
-        buildConfigField "String", "UPDATE_APP_KEY", "\"a3KwjjbdEYDAQjcGCc7D6ZHNzYrxsKTa\""
+        buildConfigField "String", "CUSTOMER_CODE", "\"aWGT4FTmGni56Rfx\""
+        buildConfigField "String", "UPDATE_CHANNEL", "\"fr2eHkk5TrExzAfD\""
+        buildConfigField "String", "UPDATE_APP_KEY", "\"hZ7STcR2d5eyrNAaN4paZDj5SBYQ6AEN\""
         buildConfigField "String", "UMENG_CHANNEL_KEY", "\"${UMENG_CHANNEL_KEY}\""
         buildConfigField "String", "UMENG_CHANNEL_VALUE", "\"${UMENG_CHANNEL_VALUE}\""
         buildConfigField "String", "QQZONE_KEY", "\"${QQZONE_KEY}\""

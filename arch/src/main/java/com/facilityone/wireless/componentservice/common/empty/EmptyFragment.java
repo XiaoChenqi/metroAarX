@@ -55,8 +55,8 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
         //xcqPresenter.attachView(this);
 
         showLoading();
-        getPresenter().logon(Constant.USERNAME, PASSWORD);
-        //getPresenter().logon("weiwai", "111111");
+//        getPresenter().logon(Constant.USERNAME, PASSWORD);
+        getPresenter().logon("4", "111111");
         showLogonButton();
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override

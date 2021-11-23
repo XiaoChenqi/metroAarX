@@ -13,6 +13,7 @@ import com.blankj.utilcode.util.SPUtils;
 import com.example.testaarx.R;
 import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
+import com.facilityone.wireless.a.arch.ec.utils.UpdateUtils;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.utils.NoDoubleClickListener;
 import com.facilityone.wireless.a.arch.utils.PictureSelectorManager;
@@ -50,6 +51,8 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
 
     private CustomListItemView mDataView;
 
+    private CustomListItemView mCheckVersion;
+
     public static final int REQUEST_PHONE_CODE = 1001;
     private boolean mShowUserInfo;
     private boolean mShowDataStatus;
@@ -78,8 +81,11 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
 //        final RefreshLayout refreshLayout = findViewById(R.id.refreshLayout);
 
         mDataView = findViewById(R.id.item_data);
+        mCheckVersion = findViewById(R.id.item_update);
+
 
         mDataView.setOnClickListener(this);
+        mCheckVersion.setOnClickListener(this);
 
 //        refreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
 //            @Override
@@ -109,6 +115,9 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
             case R.id.item_data:
                 toFragment = OutlineDataFragment.newInstance(mOfflineDataStatusEntity, mShowDataStatus, mRequestTime);
                 break;
+            case R.id.item_update:
+                checkUpdate();
+                break;
         }
 
         if (toFragment != null) {
@@ -130,6 +139,9 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
         mShowDataStatus = showRed;
     }
 
+    public void checkUpdate(){
+        UpdateUtils.updateCheck(this,null);
+    }
 
 
     public static MineFragment newInstance() {
