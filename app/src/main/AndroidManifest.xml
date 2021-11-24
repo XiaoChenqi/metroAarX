@@ -66,8 +66,8 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <!-- <data android:host="MainActivity" android:scheme="com.tq.time" -->
-                <!-- tools:ignore="AppLinkUrlError" /> -->
+                 <data android:host="MainActivity" android:scheme="com.tq.time"
+                 tools:ignore="AppLinkUrlError" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
