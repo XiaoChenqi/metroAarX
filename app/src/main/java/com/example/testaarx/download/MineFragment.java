@@ -86,6 +86,7 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
 
         mDataView.setOnClickListener(this);
         mCheckVersion.setOnClickListener(this);
+        mCheckVersion.showRedPoint(false);
 
 //        refreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
 //            @Override
