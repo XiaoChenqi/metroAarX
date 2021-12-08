@@ -33,4 +33,7 @@
     <string name="app_version_checkout">检查更新</string>
     <!--下载完成-->
     <string name="app_download_success">下载完成</string>
+
+    <!--服务器地址-->
+    <string name="app_version_server">服务器地址</string>
 </resources>

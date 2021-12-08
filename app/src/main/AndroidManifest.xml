@@ -63,6 +63,10 @@
          <activity
          android:name="com.example.scanzxing.ScanZingMainActivity"
          android:exported="true" />
+        <activity
+            android:name=".HostSettingActivity"
+            android:exported="true" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

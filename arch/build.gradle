@@ -88,6 +88,10 @@ dependencies {
 //    api 'com.github.XiaoChenqi.metroAarX:basiclib:1.1'
 //    api 'com.github.XiaoChenqi.metroAarX:basicres:1.1'
 
+
+    api "com.tencent:mmkv-static:1.2.10"
+    api "com.github.liangjingkanji:Serialize:1.2.2"
+
 }
 
 //uploadArchives {

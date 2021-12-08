@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mButtonStorage;
     private Button mOutBtn;
     private Button mLoginBtn;
+    private Button mServerBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +157,14 @@ public class MainActivity extends AppCompatActivity {
                 ActivityUtils.startActivity("com.facilityone.product.fouth.metrosh","com.facilityone.wireless.a.launcher.WelcomeActivity");
             }
         });
+
+       mServerBtn.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Intent intent = new Intent(MainActivity.this, HostSettingActivity.class);
+               MainActivity.this.startActivity(intent);
+           }
+       });
     }
 
     private void initView() {
@@ -171,5 +180,6 @@ public class MainActivity extends AppCompatActivity {
         mButtonStorage = (Button) findViewById(R.id.buttonStorage);
         mOutBtn = (Button) findViewById(R.id.outBtn);
         mLoginBtn = (Button) findViewById(R.id.loginBtn);
+        mServerBtn = (Button) findViewById(R.id.serverBtn);
     }
 }
