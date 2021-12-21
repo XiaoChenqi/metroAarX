@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.componentservice.maintenance.MaintenanceService;
 import com.facilityone.wireless.maintenance.fragment.MaintenanceContentFragment;
+import com.facilityone.wireless.maintenance.fragment.MaintenanceElectronicLedgerFragment;
 import com.facilityone.wireless.maintenance.fragment.MaintenanceMenuFragment;
 
 /**

@@ -55,8 +55,6 @@ import com.facilityone.wireless.patrol.module.PatrolUrl;
 import com.fm.tool.network.callback.JsonCallback;
 import com.fm.tool.network.model.BaseResponse;
 import com.fm.tool.scan.ScanActivity;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableMap;
 import com.huawei.hms.ml.scan.HmsScan;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
