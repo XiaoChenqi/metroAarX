@@ -156,6 +156,7 @@ public class Facility {
 
         OkHttpClient.Builder builder = OkGo.getInstance().getOkHttpClient().newBuilder();
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(context)));
+
         OkGo.getInstance().init((Application) context.getApplicationContext()).setOkHttpClient(builder.build());
 
         FM.getConfigurator().withEmId(SPUtils.getInstance(SPKey.SP_MODEL_USER).getLong(SPKey.EM_ID));
@@ -192,8 +193,8 @@ public class Facility {
             SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.APP_PRE_SERVER, appServer);
         }
 
-        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.APP_SERVER, localAppServer);
-        FM.getConfigurator().withApiHost(localAppServer);
+        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.APP_SERVER, appServer);
+        FM.getConfigurator().withApiHost(appServer);
     }
 
     private static void saveChannelParam() {

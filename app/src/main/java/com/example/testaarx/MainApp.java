@@ -29,7 +29,6 @@ public class MainApp extends Application {
         Router.registerComponent("com.facilityone.wireless.workorder.applike.WorkorderApplike");
         Facility.init(this, AppConfig.INSTANCE.getServerHost(), BuildConfig.DEBUG);
 //        Facility.init(this, "http://192.168.1.89:23456/fz_iframe", BuildConfig.DEBUG);
-        MMKV.initialize(this);
         DBManager.getInstance();
 
     }

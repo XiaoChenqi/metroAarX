@@ -1,5 +1,8 @@
 package com.facilityone.wireless.workorder;
 
+import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.PASSWORD;
+import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.USERNAME;
+
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.ToastUtils;
