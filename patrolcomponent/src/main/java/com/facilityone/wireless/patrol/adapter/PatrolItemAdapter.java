@@ -71,7 +71,7 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
 
         if (item.getContent().equals("地面生活总进水水表读数")){
             helper.setGone(R.id.question_record_last,true);
-            if (!TextUtils.isEmpty(item.getLastReading())){
+            if (!TextUtils.isEmpty(item.getLastReading()) && !item.getLastReading().equals("-1")){
                 helper.setText(R.id.question_lastReading,"上次读数为："+item.getLastReading()+"");
             }else {
                 helper.setText(R.id.question_lastReading,"上次读数为："+"");
@@ -161,6 +161,8 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
         if (!TextUtils.isEmpty(item.getComment())) {
             helper.setGone(R.id.question_comment_tv, true);
             helper.setText(R.id.question_comment_tv, item.getComment());
+        }else {
+            helper.setGone(R.id.question_comment_tv, false);
         }
 
         helper.addOnClickListener(R.id.question_edit_iv);
@@ -330,12 +332,12 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
                                 }
                                 if (exception) {
                                     helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.red_ff6666));
-                                    helper.setGone(R.id.question_report_iv,true);//下次开启
+                                    helper.setGone(R.id.question_report_iv,true);
                                 }
                             } else {
                                 if (!rightValue.equals(resultSelect)) {
                                     helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.red_ff6666));
-                                    helper.setGone(R.id.question_report_iv,true);//下次开启
+                                    helper.setGone(R.id.question_report_iv,true);
                                 }
                             }
                         }else {

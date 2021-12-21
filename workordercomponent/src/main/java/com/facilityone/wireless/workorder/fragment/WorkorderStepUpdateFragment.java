@@ -288,7 +288,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         }
 
         if (needInput && TextUtils.isEmpty(mEtMaintenanceResult.getText()+"")){
-            ToastUtils.showShort("请输入内容");
+            ToastUtils.showShort("请输入维护结果");
             return;
         }
 

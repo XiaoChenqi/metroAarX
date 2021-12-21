@@ -67,6 +67,7 @@ class PrecautionsFragment : BaseFragment<PrecautionsPresenter>() {
         binding.envDesc.canInput(false)
         binding.envDesc.setInputDisp(false)
         setTitle(getString(R.string.workorder_step_warning))
+        binding.envDesc.showHint(false)
 
     }
 
@@ -75,7 +76,10 @@ class PrecautionsFragment : BaseFragment<PrecautionsPresenter>() {
         if (bundle != null){
             infor = bundle.getString(PrecautionsFragment.PRECAUTIONS)
         }
-        binding.envDesc.desc = infor+""
+        if (infor != null){
+            binding.envDesc.desc = infor+""
+        }
+
 
 
     }

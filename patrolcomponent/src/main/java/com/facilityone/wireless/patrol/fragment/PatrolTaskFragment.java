@@ -110,9 +110,10 @@ public class PatrolTaskFragment extends BaseFragment<PatrolTaskPresenter> implem
             getDBPatrolTask(true);
         }
 
-        if (NetworkUtils.isConnected()){
-            getPresenter().getLastAttendance(); // 获取签到数据存入数据库
-        }
+        //TODO 12.30后开启
+//        if (NetworkUtils.isConnected()){
+//            getPresenter().getLastAttendance(); // 获取签到数据存入数据库
+//        }
     }
 
     public void getDBPatrolTask(boolean needTime) {//需要当前时间戳去获取离线预期结束比当前时间戳晚的任务

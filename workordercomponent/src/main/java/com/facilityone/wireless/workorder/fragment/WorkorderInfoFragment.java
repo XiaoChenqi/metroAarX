@@ -42,7 +42,7 @@ import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
 import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
-import com.facilityone.wireless.a.arch.ec.selectdata.SelectNewFragment;
+
 import com.facilityone.wireless.a.arch.ec.ui.SignatureActivity;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
@@ -188,6 +188,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public static final int TOOLS = 4008;
     public static final int CHARGE = 4009;
     public static final int STEP = 4010;
+    public static final int NEW_ORDER = 4013;
     public static final int SPACE_LOCATION = 4011;
     public static final int PAYMENT = 4012;
     private final static int REQUEST_REASON = 20007;
@@ -195,6 +196,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     private final static int REQUEST_INVALID = 20008;
     private final static int CAUSE_DEFAULT_OBJECT = 20010; //故障对象
     private final static int REFRESH = 500001; // 界面刷新
+    private final static int REFRESH_POP = 500009; // 跳回列表
     public Long mWoId;
     private String mCode;
     private int mStatus;
@@ -567,8 +569,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         WorkorderCreateService.newOrderCreateReq newOrderBunder = new WorkorderCreateService.newOrderCreateReq();
         WorkorderCreateService.newOrderCreateAllName nameAll = new WorkorderCreateService.newOrderCreateAllName();
         newOrderBunder.userId = FM.getEmId(); //userId
-        newOrderBunder.name = data.applicantName + ""; //操作人名字
-        newOrderBunder.phone = data.applicantPhone + ""; //操作人电话
+        newOrderBunder.name = data.applicantName+""; //操作人名字
+        newOrderBunder.phone = data.applicantPhone+""; //操作人电话
         newOrderBunder.organizationId = data.orgId; //部门Id
         newOrderBunder.serviceTypeId = data.serviceTypeId; //服务类型Id
         newOrderBunder.scDescription = data.woDescription; //描述
@@ -583,9 +585,9 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         nameAll.departmentName = data.organizationName;//部门名称
 
         newOrderBunder.equipmentSystemName = data.workOrderEquipments;
-
+        newOrderBunder.location = data.locationId;
         newOrderBunder.nameAll = nameAll; //需要用到的名称
-        start(WorkorderCreateFragment.getInstance(newOrderBunder));
+        startForResult(WorkorderCreateFragment.getInstance(newOrderBunder),NEW_ORDER);
     }
 
     /**
@@ -1346,6 +1348,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                 break;
             case WorkorderConstant.WORK_NEW_STATUS_DESTORY:
                 resId = R.drawable.fm_workorder_tag_fill_suspended_go_bg;
+                removeRightView(); //已作废状态下无任何操作
                 break;
         }
         mTvStatus.setBackgroundResource(resId);
@@ -1471,7 +1474,13 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
      * NFCConnect 判断当前工单是否可以进行操作--NFC标签是否进行过对接
      */
     public void WorkOrderCanDo(Integer doWhat) {
-        getPresenter().NFCPremission(mWoId, doWhat);
+        //待存档工单以及查询工单不做NFC校验
+        if (refreshStatus == WorkorderConstant.WORK_STATUS_NONE || mRealStatus == WorkorderConstant.WORK_NEW_STATUS_ARCHIVED_WAIT){
+            NFCPression(true,doWhat);
+        }else {
+            getPresenter().NFCPremission(mWoId, doWhat);
+        }
+
     }
 
     @Override
@@ -1510,7 +1519,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             } else {
                 if (hasAttendanceData) {
                     if (isAttendance) {
-                        if (isMaintenanceOrder) {
+                        if (isMaintenanceOrder ) {
                             WorkOrderCanDo(WorkorderConstant.PRINT);
                         } else {
                             startForResult(WorkorderInputFragment.getInstance(mWoId, mCode), INPUT_REQUEST_CODE);
@@ -1832,9 +1841,19 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             onRefresh();
             return;
         }
+
+
+
+        if (resultCode == REFRESH_POP){
+            pop();
+            return;
+        }
+
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
+
+
 
 
         switch (requestCode) {
@@ -2017,6 +2036,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mPriority = priority;
     }
 
+    public static WorkorderInfoFragment getInstance(Long mWoId) {
+        WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong(WORKORDER_ID, mWoId);
+        infoFragment.setArguments(bundle);
+        return infoFragment;
+    }
+
     public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Long woId) {
         Bundle bundle = new Bundle();
         bundle.putInt(WORKORDER_STATUS, workorderStatus);
@@ -2086,13 +2113,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         return infoFragment;
     }
 
-    public static WorkorderInfoFragment getInstance(Long woId) {
-        Bundle bundle = new Bundle();
-        bundle.putLong(WORKORDER_ID, woId);
-        WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
-        infoFragment.setArguments(bundle);
-        return infoFragment;
-    }
+
     //显示暂停弹窗
     public void showPauseDialog(Context context, Long woId) {
         Long sWoId = woId;

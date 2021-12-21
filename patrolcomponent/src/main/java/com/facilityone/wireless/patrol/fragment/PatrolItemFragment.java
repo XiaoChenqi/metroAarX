@@ -65,6 +65,13 @@ import java.util.Locale;
  * description:巡检检查项
  * Date: 2018/11/8 5:11 PM
  */
+
+/**
+ * @Creator:Karelie
+ * @Data: 2021/12/21
+ * @TIME: 9:16
+ * @Introduce: 隧道院需求修改 -- 根据车站工况二次修改
+**/
 public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implements View.OnClickListener
         , CompoundButton.OnCheckedChangeListener
         , BaseQuickAdapter.OnItemChildClickListener
@@ -111,6 +118,7 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     private String attention ;
     private String name = "";
     private Integer itemChoice = -1;
+    private String choice = "";
 
 
     @Override
@@ -150,6 +158,10 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
             return;
         }
 
+        if (mEntities.get(0) != null && mEntities.get(0).getContents().equals("车站工况")){
+            mChange = true;
+        }
+
 
         initView();
         initOnClick();
@@ -162,8 +174,10 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
                 public void onClick(View view) {
                     if (view.getId()== R.id.rb_patrol_item_left){
                         checkRadioFun(view,"normal");
+                        choice = "通风";
                     }else if (view.getId()== R.id.rb_patrol_item_right){
                         checkRadioFun(view,"abnormal");
+                        choice = "空调";
                     }
                 }
             });
@@ -248,6 +262,8 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
                mRbLeft.setChecked(true);
            }
             mAdapter.setNewData(extracted());
+        }else {
+            mItemChoiceList = mItemEntities;
         }
 
     }
@@ -303,7 +319,9 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
                 }
             }
             itemChoice = 1;
+            choice = "通风";
             mItemEntities.get(0).setSelect("通风");
+            mChange = true;
         }else if (mRbRight.isChecked()){
             for (PatrolItemEntity item : mItemEntities) {
                 if (item.getValidStatus() != null &&
@@ -313,11 +331,15 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
                 }
             }
             itemChoice = 2;
+            choice = "空调";
             mItemEntities.get(0).setSelect("空调");
+            mChange = true;
         }else {
             mItemChoiceList = mItemEntities;
             itemChoice = 1; //初始化
             mItemEntities.get(0).setSelect("");
+            choice = "";
+            mChange = true;
         }
 
         return mItemChoiceList;
@@ -385,6 +407,11 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
 
 
     private void saveDataBefore() {
+
+        if (choice.equals("") && mItemEntities.get(0).getContent().equals("车站工况")){
+            mItemEntities.get(0).setSelect("");
+        }
+
         final int position = getPresenter().haveMiss(mItemEntities,itemChoice);
         if (position == -1) {
             getPresenter().saveData2Db(mItemEntities, mEntities, mTempPosition, false, mClickLastOne, mChange, mBack);
@@ -437,12 +464,27 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
         }
     }
 
+    public PatrolItemEntity getEnity(Long contentId,Long taskId){
+        for (PatrolItemEntity mItemEntity : mItemEntities) {
+            if (contentId == mItemEntity.getContentId() && taskId == mItemEntity.getTaskId()){
+                return mItemEntity;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         mItemClickPosition = position;
         int id = view.getId();
+
         if (id == R.id.question_edit_iv) {
-            PatrolItemEntity patrolItemEntity = mItemEntities.get(position);
+            PatrolItemEntity patrolItemEntity = null;
+            if (mItemEntities.get(0).getContent().equals("车站工况") && !TextUtils.isEmpty(mItemEntities.get(0).getSelect())){
+                patrolItemEntity= mItemChoiceList.get(position);
+            }else {
+                patrolItemEntity= mItemEntities.get(position);
+            }
             String exceptions = patrolItemEntity.getExceptions();
             String comment = patrolItemEntity.getComment();
             startForResult(PatrolExceptionFragment.getInstance(comment, exceptions), REQUEST_EXCEPTION);
@@ -465,7 +507,7 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
             Router router = Router.getInstance();
             WorkorderService workorderService = (WorkorderService) router.getService(WorkorderService.class.getSimpleName());
             if (workorderService != null) {
-                PatrolItemEntity patrolItemEntity = mItemEntities.get(position);
+                PatrolItemEntity patrolItemEntity = mItemChoiceList.get(position);
                 String desc=StringUtils.formatString(patrolItemEntity.getContent()) + (TextUtils.isEmpty(patrolItemEntity.getUnit()) ? "" : "(" + patrolItemEntity.getUnit() + ")");
                 Long eqId=patrolItemEntity.getEqId();
                 BaseFragment workorderCreateFragment = workorderService.getWorkorderCreateFragment(-1,eqId,desc,mPatrolSpotEntity.getLocation(),mPatrolSpotEntity.getLocationName(),patrolItemEntity.getContentResultId());
@@ -532,7 +574,13 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
                 case PictureConfig.CHOOSE_REQUEST:
                 case PictureConfig.REQUEST_CAMERA:
                     mChange = true;
-                    List<PatrolPicEntity> picEntities = mItemEntities.get(mItemClickPosition).getPicEntities();
+                    List<PatrolPicEntity> picEntities = new ArrayList<>();
+                    if (mItemEntities.get(0).getContent().equals("车站工况") && !TextUtils.isEmpty(mItemEntities.get(0).getSelect())){
+                        picEntities = mItemChoiceList.get(mItemClickPosition).getPicEntities();
+                    }else {
+                        picEntities = mItemEntities.get(mItemClickPosition).getPicEntities();
+                    }
+
                     if (picEntities == null) {
                         picEntities = new ArrayList<>();
                     }
@@ -567,7 +615,13 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
         switch (requestCode) {
             case REQUEST_EXCEPTION:
                 String comment = data.getString(PatrolTransmitService.PATROL_ITEM_EXCEPTION);
-                PatrolItemEntity patrolItemEntity = mItemEntities.get(mItemClickPosition);
+                PatrolItemEntity patrolItemEntity = null;
+                if (mItemEntities.get(0).getContent().equals("车站工况") && !TextUtils.isEmpty(mItemEntities.get(0).getSelect())){
+                    patrolItemEntity = mItemChoiceList.get(mItemClickPosition);
+                }else {
+                    patrolItemEntity = mItemEntities.get(mItemClickPosition);
+                }
+
                 String mark = patrolItemEntity.getComment();
                 if (!TextUtils.isEmpty(comment) && TextUtils.isEmpty(mark)) {
                     mChange = true;

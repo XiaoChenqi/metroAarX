@@ -148,37 +148,147 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                             //输入
                             case PatrolDbService.QUESTION_TYPE_INPUT:
                                 String input = itemEntity.getInput();
-                                if (!TextUtils.isEmpty(input)) {
-                                    Double d = 0D;
-                                    try {
-                                        d = Double.parseDouble(input);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    if (itemEntity.getInputUpper() != null) {
-                                        if (d > itemEntity.getInputUpper()) {
-                                            exception = true;
+                                PatrolItemEntity dbFirst = finalItemEntities.get(0);
+
+                                if (dbFirst.getContent().equals("车站工况")){
+                                    if (dbFirst.getSelect().equals("通风")){
+                                        if (itemEntity.getResultType() != null
+                                                && ((itemEntity.getValidStatus()==  PatrolConstant.EQU_STOP
+                                                || itemEntity.getValidStatus() == PatrolConstant.EQU_ALL))){
+                                            if (!TextUtils.isEmpty(input)) {
+                                                Double d = 0D;
+                                                try {
+                                                    d = Double.parseDouble(input);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                                if (itemEntity.getInputUpper() != null) {
+                                                    if (d > itemEntity.getInputUpper()) {
+                                                        exception = true;
+                                                    }
+                                                }
+                                                if (itemEntity.getInputFloor() != null) {
+                                                    if (d < itemEntity.getInputFloor()) {
+                                                        exception = true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }else if (dbFirst.getSelect().equals( "空调")){
+                                        if (itemEntity.getResultType() != null  &&
+                                                ((itemEntity.getValidStatus()==  PatrolConstant.EQU_USE
+                                                        || itemEntity.getValidStatus() == PatrolConstant.EQU_ALL))){
+                                            if (!TextUtils.isEmpty(input)) {
+                                                Double d = 0D;
+                                                try {
+                                                    d = Double.parseDouble(input);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                                if (itemEntity.getInputUpper() != null) {
+                                                    if (d > itemEntity.getInputUpper()) {
+                                                        exception = true;
+                                                    }
+                                                }
+                                                if (itemEntity.getInputFloor() != null) {
+                                                    if (d < itemEntity.getInputFloor()) {
+                                                        exception = true;
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
-                                    if (itemEntity.getInputFloor() != null) {
-                                        if (d < itemEntity.getInputFloor()) {
-                                            exception = true;
+                                }else {
+                                    if (!TextUtils.isEmpty(input)) {
+                                        Double d = 0D;
+                                        try {
+                                            d = Double.parseDouble(input);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        if (itemEntity.getInputUpper() != null) {
+                                            if (d > itemEntity.getInputUpper()) {
+                                                exception = true;
+                                            }
+                                        }
+                                        if (itemEntity.getInputFloor() != null) {
+                                            if (d < itemEntity.getInputFloor()) {
+                                                exception = true;
+                                            }
                                         }
                                     }
                                 }
+
                                 break;
                             //单选
                             case PatrolDbService.QUESTION_TYPE_SINGLE:
                                 if (TextUtils.isEmpty(itemEntity.getSelect())) {
-                                    itemEntity.setSelect(itemEntity.getSelectRightValue() == null ? "" : itemEntity.getSelectRightValue());
+                                    if (itemEntity.getContent().equals("车站工况")){
+                                        itemEntity.setSelect(itemEntity.getSelect());
+                                    }else {
+                                        itemEntity.setSelect(itemEntity.getSelectRightValue() == null ? "" : itemEntity.getSelectRightValue());
+                                    }
+
                                 }
+                                PatrolItemEntity dbOne = finalItemEntities.get(0);
+                                String[] right = itemEntity.getSelectRightValue().split(",");
                                 if (itemEntity.getSelectRightValue() != null && !TextUtils.isEmpty(itemEntity.getSelectRightValue())) {
-                                    String[] right = itemEntity.getSelectRightValue().split(",");
                                     boolean ex = true;
-                                    for (String s : right) {
-                                        if (s.equals(itemEntity.getSelect())) {
+                                    if (dbOne.getContent().equals("车站工况")){
+                                        if (itemEntity.getContent().equals("车站工况")){
                                             ex = false;
-                                            break;
+                                        }else {
+                                            if (!TextUtils.isEmpty(dbOne.getSelect())){
+                                                if (dbOne.getSelect().equals("通风")){
+                                                    if (itemEntity.getResultType() != null
+                                                            && ((itemEntity.getValidStatus()==  PatrolConstant.EQU_STOP
+                                                            || itemEntity.getValidStatus() == PatrolConstant.EQU_ALL))){
+                                                        for (String s : right) {
+                                                            if (s.equals(itemEntity.getSelect())) {
+                                                                ex = false;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }else {
+                                                        ex = false;
+                                                    }
+                                                }else if (dbOne.getSelect().equals( "空调")){
+                                                    if (itemEntity.getResultType() != null  &&
+                                                            ((itemEntity.getValidStatus()==  PatrolConstant.EQU_USE
+                                                                    || itemEntity.getValidStatus() == PatrolConstant.EQU_ALL))){
+                                                        for (String s : right) {
+                                                            if (s.equals(itemEntity.getSelect())) {
+                                                                ex = false;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }else {
+                                                        ex = false;
+                                                    }
+                                                }
+                                            }else {
+                                                if (itemEntity.getResultType() != null  &&
+                                                        ((itemEntity.getValidStatus()==  PatrolConstant.EQU_USE
+                                                                || itemEntity.getValidStatus() == PatrolConstant.EQU_STOP
+                                                                || itemEntity.getValidStatus() == PatrolConstant.EQU_ALL))){
+                                                    for (String s : right) {
+                                                        if (s.equals(itemEntity.getSelect())) {
+                                                            ex = false;
+                                                            break;
+                                                        }
+                                                    }
+                                                }else {
+                                                    ex = false;
+                                                }
+                                            }
+
+                                        }
+                                    }else {
+                                        for (String s : right) {
+                                            if (s.equals(itemEntity.getSelect())) {
+                                                ex = false;
+                                                break;
+                                            }
                                         }
                                     }
                                     if (ex) {
@@ -198,6 +308,9 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
 
                 itemDao.updatePatrolItem(finalItemEntities);
                 equEntity.setCompleted(DBPatrolConstant.TRUE_VALUE);
+                PatrolItemEntity enity = null;
+
+
                 equEntity.setException(exception ? DBPatrolConstant.TRUE_VALUE : DBPatrolConstant.FALSE_VALUE);
 
                 deviceDao.updateStatus(equEntity.getEqId(), equEntity.getSpotId(), equEntity.isDeviceStatus(), equEntity.isMiss(), equEntity.getException(), equEntity.getCompleted());
@@ -273,6 +386,7 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                     }
                 });
     }
+    
 
     public int haveMiss(List<PatrolItemEntity> itemEntities,Integer choice) {
         if (choice == -1){
@@ -308,7 +422,6 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
         }else {
             return -1;
         }
-
         return -1;
     }
 

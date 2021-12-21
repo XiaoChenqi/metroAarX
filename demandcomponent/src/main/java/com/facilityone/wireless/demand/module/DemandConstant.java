@@ -11,8 +11,8 @@ public interface DemandConstant {
     int DEMAND_CREATE = 0;   //创建
     int DEMAND_UNCHECK = 1;  //待审批
     int DEMAND_UNFINISH = 2; //待处理
-    int DEMAND_FINISH = 3;   //待评价
-    int DEMAND_QUERY = 4;    //查询
+    int DEMAND_QUERY = 3;   //待评价
+//    int DEMAND_QUERY = 4;    //查询
 
     Integer HEADQUARTERS_CODE = 0; //总部二维码
     Integer OUT_SOURCING_CODE = 1; //委外二维码

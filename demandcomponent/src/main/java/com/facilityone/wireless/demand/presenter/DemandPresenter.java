@@ -31,9 +31,9 @@ public class DemandPresenter extends CommonBasePresenter<DemandFragment> {
                     case DemandConstant.DEMAND_UNFINISH:
                         functionBean.undoNum = data.getInt(PermissionsManager.UNDOREQUIREMENTNUMBER);
                         break;
-                    case DemandConstant.DEMAND_FINISH:
-                        functionBean.undoNum = data.getInt(PermissionsManager.UNEVALUATEREQUIREMENTNUMBER);
-                        break;
+//                    case DemandConstant.DEMAND_FINISH:
+//                        functionBean.undoNum = data.getInt(PermissionsManager.UNEVALUATEREQUIREMENTNUMBER);
+//                        break;
                     case DemandConstant.DEMAND_CREATE://创建需求
                     case DemandConstant.DEMAND_QUERY://需求查询
                     default:

@@ -122,10 +122,10 @@ public class DemandFragment extends BaseFragment<DemandPresenter> implements Bas
                 //待评价报障
                 baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_ASSURE_EVALUATED);
                 break;
-            case DemandConstant.DEMAND_FINISH:
-                //待完善报障
-                baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_ASSURE_COMPLETE);
-                break;
+//            case DemandConstant.DEMAND_FINISH:
+//                //待完善报障
+//                baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_ASSURE_COMPLETE);
+//                break;
             case DemandConstant.DEMAND_QUERY:
                 //报障查询
                 baseFragment = DemandListFragment.getInstance(DemandConstant.DEMAND_ASSURE_QUERY);

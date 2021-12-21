@@ -340,6 +340,7 @@ public class PatrolTaskPresenter extends BasePresenter<PatrolTaskFragment> {
                     @Override
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         PatrolQueryService.AttendanceResp data = response.body().data;
+
                         UserInfor user = new UserInfor();
                         box.removeAll();
                         user.setId(0L);

@@ -46,6 +46,7 @@ import com.luck.picture.lib.entity.LocalMedia
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import me.yokeyword.fragmentation.SwipeBackLayout
+import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -61,6 +62,8 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
     BottomTextListSheetBuilder.OnSheetItemClickListener {
 
     lateinit var binding:FragmentWorkorderCreateBinding
+
+    private val REFRESH = 500001 // 界面刷新
 
 
     //图片
@@ -154,7 +157,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         newrequest = WorkorderCreateService.newOrderCreate()
         mDeviceOnlineData = SelectDataBean()
         binding.civContact.inputText =SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.EM_NAME)
-        binding.civContact.canInput(false)
+        binding.civContact.canInput(true)
         if (bundle != null) {
             mFromType = bundle.getInt(FROM_TYPE, -1)
             mWaterMark = bundle.getBoolean(WATER_MARK, false)
@@ -191,7 +194,12 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
 
             if (newOrder){
                 reqId = bundle.getLong(ORDER_REQID)
-                binding.civTel.inputText = mPhone
+                if (mPhone !=null && !mPhone.equals("null")){
+                    binding.civTel.inputText = mPhone
+                }else{
+                    binding.civTel.inputText = ""
+                    binding.civTel.setHint("")
+                }
                 binding.civContact.inputText = bundle.getString(ORDER_PEOPLE)
                 if(mDesc==null || mDesc.equals("")){
                     binding.envDesc.desc = " "
@@ -203,7 +211,6 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
                     binding.civDep.tipText = " "
                 }else{
                     binding.civDep.tipText = bundle.getString(DEPARTMENT_NAME)
-
 
                 }
 
@@ -271,6 +278,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
             binding.civPriority.setOnClickListener(this)
             binding.ivAddMenu.setOnClickListener(this)
             binding.civWorkorderType.tipText=getString(R.string.workorder_report_self)
+            binding.civTel.showRed(false)
         }else{
             setTitle(title)
             binding.civDep.setOnClickListener(this)
@@ -360,6 +368,8 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         if (mOtherDepartmentId!=null && mOtherDepartmentId != -1L){
             request!!.organizationId=mOtherDepartmentId
         }
+
+
     }
 
     fun getUserInfoSuccess(userInfo: String?) {
@@ -383,7 +393,12 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
                 binding.civTel.inputText = if (userBean.phone == null) "" else userBean.phone
             }
         } else {
-            binding.civTel.inputText = mPhone
+            if (mPhone.equals("null")){
+                binding.civTel.inputText = ""
+            }else{
+                binding.civTel.inputText = mPhone
+            }
+
         }
     }
 
@@ -401,6 +416,12 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         }
     }
 
+    fun popForResult(){
+        val bundle = Bundle()
+        setFragmentResult(REFRESH, bundle)
+        pop()
+    }
+
     override fun onRightTextMenuClick(view: View) {
         if (prioritySelect()) {
             return
@@ -409,11 +430,11 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
             ToastUtils.showShort(R.string.workorder_stype_hint)
             return
         }
-        if (TextUtils.isEmpty(binding.civTel.inputText)) {
+        if (TextUtils.isEmpty(binding.civTel.inputText) && !newOrder) {
             ToastUtils.showShort(R.string.workorder_phone_hint)
             return
         }
-        if (TextUtils.isEmpty(binding.civPriority.tipText)&& !newOrder) {
+        if (TextUtils.isEmpty(binding.civPriority.tipText)) {
             ToastUtils.showShort(R.string.workorder_priority_hint)
             return
         }
@@ -910,6 +931,10 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
             bundle.putInt(WORKORDER_TYPE,data.woType)
             if (data.reqId != null){
                 bundle.putLong(ORDER_REQID,data.reqId)
+            }
+
+            if(data.location != null){
+                bundle.putParcelable(LOCATION_INFO, data.location)
             }
 
             if (data.serviceTypeId != null){
