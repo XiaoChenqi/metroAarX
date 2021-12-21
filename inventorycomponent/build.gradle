@@ -68,6 +68,3 @@ dependencies {
 //    isRegisterCompoAuto = false
 //}
 
-repositories {
-    mavenCentral()
-}

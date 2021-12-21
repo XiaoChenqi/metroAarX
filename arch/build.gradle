@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.objectbox'
+
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -88,7 +88,7 @@ dependencies {
 //    api 'com.github.XiaoChenqi.TestFmAarSecond:basiclib:3.4'
 //    api 'com.github.XiaoChenqi.metroAarX:basiclib:1.1'
 //    api 'com.github.XiaoChenqi.metroAarX:basicres:1.1'
-
+    api("androidx.core:core-ktx:1.3.2")
 
     api "com.tencent:mmkv-static:1.2.10"
     api "com.github.liangjingkanji:Serialize:1.2.2"
@@ -99,7 +99,7 @@ dependencies {
     kapt("io.objectbox:objectbox-processor:$objectboxVersion")
 
 }
-
+apply plugin: 'io.objectbox'
 //uploadArchives {
 //    configuration = configurations.archives
 //    repositories {

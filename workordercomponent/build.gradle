@@ -71,9 +71,6 @@ dependencies {
 //    isRegisterCompoAuto = false
 //}
 
-repositories {
-    mavenCentral()
-}
 
 //uploadArchives {
 //    configuration = configurations.archives
