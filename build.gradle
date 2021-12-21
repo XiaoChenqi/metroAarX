@@ -20,7 +20,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:4.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.luojilab.ddcomponent:build-gradle:1.2.0'
         classpath "com.mob.sdk:MobSDK:2018.0319.1724"
@@ -75,9 +75,9 @@ tasks.withType(JavaCompile) {
 //}
 
 ext {
-    versionCode = 2
+    versionCode = 3
     versionName_app = '0.0.0'
-    versionName_lib = '1.0.1'
+    versionName_lib = '1.0.2'
 
     libMinSdkVersion = 21
     appMinSdkVersion = 21
