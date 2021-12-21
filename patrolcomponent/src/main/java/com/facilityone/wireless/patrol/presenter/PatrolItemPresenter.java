@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.mvp.BasePresenter;
+import com.facilityone.wireless.a.arch.offline.dao.BuildingDao;
 import com.facilityone.wireless.a.arch.offline.dao.PatrolDeviceDao;
 import com.facilityone.wireless.a.arch.offline.dao.PatrolItemDao;
 import com.facilityone.wireless.a.arch.offline.dao.PatrolPicDao;
@@ -18,6 +19,7 @@ import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.patrol.fragment.PatrolItemFragment;
+import com.facilityone.wireless.patrol.module.PatrolConstant;
 import com.facilityone.wireless.patrol.module.PatrolQueryService;
 import com.facilityone.wireless.patrol.module.PatrolUrl;
 import com.fm.tool.network.model.BaseResponse;
@@ -61,7 +63,9 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                     PatrolPicDao picDao = new PatrolPicDao();
                     for (PatrolItemEntity patrolItemEntity : itemList) {
                         if (equEntity.getCompleted() != DBPatrolConstant.TRUE_VALUE) {
-                            patrolItemEntity.setSelect(patrolItemEntity.getDefaultSelectValue());
+                            if (!patrolItemEntity.getContent().equals("车站工况")){
+                                patrolItemEntity.setSelect(patrolItemEntity.getDefaultSelectValue());
+                            }
                             patrolItemEntity.setInput(patrolItemEntity.getDefaultInputValue() == null ? "" : patrolItemEntity.getDefaultInputValue().toString());
                         }
                         List<PatrolPicEntity> p = picDao.getPicSyncList(patrolItemEntity.getContentResultId());
@@ -92,6 +96,9 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                     }
                 });
     }
+
+
+
 
     /**
      * 保存数据
@@ -179,6 +186,10 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                                     }
                                 }
                                 break;
+                            case PatrolDbService.QUESTION_TYPE_TEXT:
+                                exception = false;
+
+                                break;
                             default:
                                 break;
                         }
@@ -227,7 +238,6 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                     }
 
                     spot.setException(spotException ? DBPatrolConstant.TRUE_VALUE : DBPatrolConstant.FALSE_VALUE);
-
                     spotDao.update(equEntity.getSpotId(), spot.getCompleted(), spot.getException(), spot.getNeedSync(), spot.getStartTime(), spot.getEndTime());
                 }
 
@@ -264,13 +274,41 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                 });
     }
 
-    public int haveMiss(List<PatrolItemEntity> itemEntities) {
-        for (PatrolItemEntity itemEntity : itemEntities) {
-            if (itemEntity.getResultType() != null && itemEntity.getResultType() == PatrolDbService.QUESTION_TYPE_INPUT
-                    && TextUtils.isEmpty(itemEntity.getInput())) {
-                return itemEntities.indexOf(itemEntity);
+    public int haveMiss(List<PatrolItemEntity> itemEntities,Integer choice) {
+        if (choice == -1){
+            for (PatrolItemEntity itemEntity : itemEntities) {
+                if (itemEntity.getResultType() != null
+                        && (itemEntity.getResultType() == PatrolDbService.QUESTION_TYPE_INPUT
+                        ||itemEntity.getResultType() == PatrolDbService.QUESTION_TYPE_TEXT
+                )
+                        && TextUtils.isEmpty(itemEntity.getInput())) {
+                    return itemEntities.indexOf(itemEntity);
+                }
             }
+        }else if (choice == 1){
+            for (PatrolItemEntity itemEntity : itemEntities) {
+                if (itemEntity.getResultType() != null
+                        && (itemEntity.getResultType() == PatrolDbService.QUESTION_TYPE_INPUT
+                        ||itemEntity.getResultType() == PatrolDbService.QUESTION_TYPE_TEXT
+                ) && TextUtils.isEmpty(itemEntity.getInput()) && ((itemEntity.getValidStatus()==  PatrolConstant.EQU_STOP
+                        || itemEntity.getValidStatus() == PatrolConstant.EQU_ALL))) {
+                    return itemEntities.indexOf(itemEntity);
+                }
+            }
+        }else if (choice == 2){
+            for (PatrolItemEntity itemEntity : itemEntities) {
+                if (itemEntity.getResultType() != null
+                        && (itemEntity.getResultType() == PatrolDbService.QUESTION_TYPE_INPUT
+                        ||itemEntity.getResultType() == PatrolDbService.QUESTION_TYPE_TEXT
+                ) && TextUtils.isEmpty(itemEntity.getInput()) && ((itemEntity.getValidStatus()==  PatrolConstant.EQU_USE
+                        || itemEntity.getValidStatus() == PatrolConstant.EQU_ALL))) {
+                    return itemEntities.indexOf(itemEntity);
+                }
+            }
+        }else {
+            return -1;
         }
+
         return -1;
     }
 

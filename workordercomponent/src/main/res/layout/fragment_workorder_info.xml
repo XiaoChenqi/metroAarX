@@ -27,15 +27,13 @@
             android:layout_height="match_parent"
             android:background="@color/app_bg"
             android:fillViewport="true"
-            android:focusableInTouchMode="true"
+            android:focusableInTouchMode="false"
             android:overScrollMode="never">
 
             <LinearLayout
                 android:id="@+id/ll_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:descendantFocusability="blocksDescendants"
-                android:focusable="true"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -533,15 +531,14 @@
 
                 </LinearLayout>
 
-
-                <!--工具-->
-                <!--故障原因-->
+                <!--故障对象-->
                 <LinearLayout
-                    android:id="@+id/ll_tool"
+                    android:id="@+id/ll_object"
                     style="@style/contentTitleLayoutStyle"
                     android:background="@drawable/list_item_bg"
                     android:layout_marginBottom="@dimen/dp_10"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    >
 
                     <View style="@style/demandWorkTitleIconStyle" />
 
@@ -551,10 +548,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingLeft="@dimen/dp_15"
-                        android:text="故障原因" />
+                        android:text="故障对象" />
 
                     <TextView
-                        android:id="@+id/tv_tool_total"
+                        android:id="@+id/tv_object_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingRight="@dimen/dp_30"
@@ -562,13 +559,75 @@
                         android:textSize="@dimen/sp_15" />
 
                     <com.joanzapata.iconify.widget.IconTextView
-                        android:id="@+id/tv_tool_right_icon"
+                        android:id="@+id/tv_object_right_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/icon_right"
                         android:textColor="@color/grey_9"
                         android:textSize="@dimen/sp_14" />
                 </LinearLayout>
+
+                <!--工具-->
+                <!--故障原因-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ll_tool"
+                    android:visibility="gone"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    >
+
+                    <LinearLayout
+                        style="@style/contentTitleLayoutStyle"
+                        android:background="@drawable/list_item_bg"
+                        >
+
+                        <View style="@style/demandWorkTitleIconStyle" />
+
+                        <TextView
+                            style="@style/h3_text_style"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/dp_15"
+                            android:text="故障原因" />
+
+                        <TextView
+                            android:id="@+id/tv_tool_total"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="@dimen/dp_30"
+                            android:textColor="@color/workorder_blue"
+                            android:textSize="@dimen/sp_15" />
+
+                        <com.joanzapata.iconify.widget.IconTextView
+                            android:id="@+id/tv_tool_right_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/icon_right"
+                            android:textColor="@color/grey_9"
+                            android:textSize="@dimen/sp_14" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_fault_object_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
+                        <com.facilityone.wireless.a.arch.widget.EditNumberView
+                            android:id="@+id/et_fault_object_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+
 
                 <!--物料-->
                 <LinearLayout
@@ -603,9 +662,9 @@
 
                     </LinearLayout>
 
-                    <View
-                        android:id="@+id/view_material_bottom"
-                        style="@style/secant_line_style" />
+<!--                    <View-->
+<!--                        android:id="@+id/view_material_bottom"-->
+<!--                        style="@style/secant_line_style" />-->
                 </LinearLayout>
 
 
@@ -679,7 +738,6 @@
                         android:id="@+id/ll_signature_customer"
                         style="@style/contentTitleLayoutStyle"
                         android:background="@drawable/list_item_bg"
-                        android:layout_marginBottom="@dimen/dp_10"
                         android:visibility="gone">
 
                         <View style="@style/demandWorkTitleIconStyle" />

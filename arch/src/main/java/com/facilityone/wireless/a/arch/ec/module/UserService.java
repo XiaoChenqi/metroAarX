@@ -9,6 +9,10 @@ package com.facilityone.wireless.a.arch.ec.module;
 public class UserService {
     //用户信息bean
     public static class UserInfoBean {
+
+
+
+
         public String pictureId;
         public Long userId;
         public Long emId;

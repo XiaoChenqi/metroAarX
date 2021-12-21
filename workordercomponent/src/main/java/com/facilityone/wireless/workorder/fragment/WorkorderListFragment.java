@@ -7,7 +7,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -35,6 +37,7 @@ public class WorkorderListFragment extends BaseFragment<WorkorderListPresenter> 
     private RecyclerView mRecyclerView;
     private SmartRefreshLayout mRefreshLayout;
     private DrawerLayout mDrawerLayout;
+
     private WorkorderListAdapter mAdapter;
     private Page mPage;
     private static final String LIST_TYPE = "list_type";

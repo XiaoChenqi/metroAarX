@@ -45,6 +45,9 @@ public class PatrolSpotDao {
                 "HANDLER TEXT," + // 13: handler
                 "DELETED INTEGER," + // 14: deleted
                 "PROJECT_ID INTEGER ," + // 15: projectId
+                "TASK_NAME TEXT ," + // 16: task_name
+                "TASK_TIME INTEGER ," + // 17: task_time
+                "TASK_STATUS INTEGER ," + // 18: task_status
                 "PRIMARY KEY (ID,USER_ID,PROJECT_ID));");
     }
 
@@ -82,7 +85,7 @@ public class PatrolSpotDao {
         boolean result = false;
         try {
             mDbManager.beginTransaction();
-            String sql = "INSERT OR REPLACE INTO DBPATROLSPOT VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT OR REPLACE INTO DBPATROLSPOT VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             for (PatrolSpotEntity entity : spotEntities) {
                 Object[] args = {
@@ -101,7 +104,11 @@ public class PatrolSpotDao {
                         , userId
                         , null
                         , entity.getDeleted()
-                        , projectId };
+                        , projectId
+                        , entity.getSpotTaskName()
+                        , entity.getTaskTime()*60
+
+                };
                 mDbManager.insert(args, sql);
             }
 
@@ -178,6 +185,19 @@ public class PatrolSpotDao {
         mDbManager.update(args, sql);
     }
 
+    /**
+     * 保存完成时间
+     * @param startTime 任务开启时间
+     * */
+    public void upDateTaskTime(Long patrolSpotId,Long startTime){
+        Long projectId = FM.getProjectId();
+        Long userId = FM.getEmId();
+        String sql = "UPDATE DBPATROLSPOT SET TASK_STATUS = ? WHERE PROJECT_ID = ? AND USER_ID = ? AND ID = ?;";
+        LogUtils.d(sql);
+        Object[] args = {  startTime,projectId, userId, patrolSpotId };
+        mDbManager.update(args,sql);
+    }
+
     public PatrolSpotEntity getSpot(Long id) {
         Long projectId = FM.getProjectId();
         Long userId = FM.getEmId();
@@ -193,6 +213,10 @@ public class PatrolSpotDao {
                 bean.setNeedSync(cursor.getInt(cursor.getColumnIndex("SYNCED")));
                 bean.setStartTime(cursor.getLong(cursor.getColumnIndex("START_DATE")));
                 bean.setEndTime(cursor.getLong(cursor.getColumnIndex("END_DATE")));
+                bean.setTaskId(cursor.getLong(cursor.getColumnIndex("TASK_ID")));
+                bean.setTaskName(cursor.getString(cursor.getColumnIndex("TASK_NAME")));
+                bean.setTaskTime(cursor.getInt(cursor.getColumnIndex("TASK_TIME")));
+                bean.setTaskStatus(cursor.getLong(cursor.getColumnIndex("TASK_STATUS")));
             }
             cursor.close();
         }
@@ -205,7 +229,7 @@ public class PatrolSpotDao {
         Long userId = FM.getEmId();
         List<PatrolSpotEntity> temp = new ArrayList<>();
 
-        String sql = "SELECT S.ID,S.SPOT_ID,S.REMOTE_COMPLETED,S.COMP_NUMBER,S.EQ_NUMBER,S.START_DATE,S.END_DATE,S.EXCEPTION,S.COMPLETED,S.SYNCED,S.HANDLER,B.NAME,B.CODE,B.SPOT_LOCATION,B.CITY_ID,B.SITE_ID,B.BUILDING_ID,B.FLOOR_ID,B.ROOM_ID FROM DBPATROLSPOT AS S LEFT JOIN DBPATROLBASESPOT AS B ON S.SPOT_ID = B.ID  AND S.PROJECT_ID = B.PROJECT_ID WHERE S.TASK_ID = ? AND S.PROJECT_ID = ? AND S.USER_ID = ? ORDER BY S.SORT ";
+        String sql = "SELECT S.ID,S.SPOT_ID,S.REMOTE_COMPLETED,S.COMP_NUMBER,S.EQ_NUMBER,S.START_DATE,S.END_DATE,S.EXCEPTION,S.COMPLETED,S.SYNCED,S.HANDLER,S.TASK_NAME,S.TASK_TIME,S.TASK_STATUS,B.NAME,B.CODE,B.SPOT_LOCATION,B.CITY_ID,B.SITE_ID,B.BUILDING_ID,B.FLOOR_ID,B.ROOM_ID FROM DBPATROLSPOT AS S LEFT JOIN DBPATROLBASESPOT AS B ON S.SPOT_ID = B.ID  AND S.PROJECT_ID = B.PROJECT_ID WHERE S.TASK_ID = ? AND S.PROJECT_ID = ? AND S.USER_ID = ? ORDER BY S.SORT ";
         String[] args = { taskId + "", projectId + "", userId + "" };
 
         LogUtils.d(sql);
@@ -228,14 +252,41 @@ public class PatrolSpotDao {
                 bean.setName(cursor.getString(cursor.getColumnIndex("NAME")));
                 bean.setCode(cursor.getString(cursor.getColumnIndex("CODE")));
                 bean.setLocationName(cursor.getString(cursor.getColumnIndex("SPOT_LOCATION")));
+                bean.setSpotTaskName(cursor.getString(cursor.getColumnIndex("TASK_NAME")));
                 LocationBean locationBean = LocationNullUtils.getNullLocation(cursor);
                 bean.setLocation(locationBean);
+                bean.setTaskTime(cursor.getInt(cursor.getColumnIndex("TASK_TIME")));
+                bean.setTaskStatus(cursor.getLong(cursor.getColumnIndex("TASK_STATUS")));
+
                 temp.add(bean);
             }
             cursor.close();
         }
         return temp;
     }
+
+
+
+    public String getTaskName(Long spotId){
+        String sql = "SELECT T.TASK_NAME FROM DBPATROLTASK AS T WHERE T.ID = (SELECT ID FROM DBPATROLSPOT  AS S WHERE S.ID=?)";
+
+        String[] args = { spotId+"" };
+        Cursor cursor= mDbManager.query(args,sql);
+        List<String> result = new ArrayList<>();
+        if (cursor!=null){
+            while (cursor.moveToNext()){
+                String taskName=cursor.getString(cursor.getColumnIndex("TASK_NAME"));
+                result.add(taskName);
+            }
+        }
+        if (!result.isEmpty()){
+           return result.get(0);
+        }else {
+            return "";
+        }
+
+    }
+
 
     public List<PatrolSpotEntity> getSpotList(String code) {
         Long projectId = FM.getProjectId();

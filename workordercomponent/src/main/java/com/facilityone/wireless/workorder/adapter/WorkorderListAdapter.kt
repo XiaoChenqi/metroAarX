@@ -75,23 +75,23 @@ class WorkorderListAdapter(private val type: Int) :
                 }
                 1->{
                     helper.setGone(R.id.demand_new_status_tv,true)
-                    helper.setText(R.id.demand_new_status_tv,"暂停(继续工作)")
-                    helper.setBackgroundRes(R.id.demand_new_status_tv, R.drawable.fm_workorder_tag_fill_created_bg)
+                    helper.setText(R.id.demand_new_status_tv,"暂停|继续")
+                    helper.setBackgroundRes(R.id.demand_new_status_tv,R.drawable.fm_workorder_tag_fill_created_bg)
                 }
                 2-> {
                     helper.setGone(R.id.demand_new_status_tv,true)
-                    helper.setText(R.id.demand_new_status_tv,"暂停(不继续工作)")
-                    helper.setBackgroundRes(R.id.demand_new_status_tv, R.drawable.fm_workorder_tag_fill_created_bg)
+                    helper.setText(R.id.demand_new_status_tv,"暂停|不继续")
+                    helper.setBackgroundRes(R.id.demand_new_status_tv, R.drawable.fm_workorder_tag_fill_process_bg)
                 }
                 3->{
                     helper.setGone(R.id.demand_new_status_tv,true)
                     helper.setText(R.id.demand_new_status_tv,"作废申请中")
-                    helper.setBackgroundRes(R.id.demand_new_status_tv, R.drawable.fm_workorder_tag_fill_created_bg)
+                    helper.setBackgroundRes(R.id.demand_new_status_tv, R.drawable.fm_workorder_tag_fill_process_bg)
                 }
                 4->{
                     helper.setGone(R.id.demand_new_status_tv,true)
                     helper.setText(R.id.demand_new_status_tv,"已终止")
-                    helper.setBackgroundRes(R.id.demand_new_status_tv, R.drawable.fm_workorder_tag_fill_created_bg)
+                    helper.setBackgroundRes(R.id.demand_new_status_tv, R.drawable.fm_workorder_tag_fill_suspended_go_bg)
                 }
                 else ->{
                     helper.setGone(R.id.demand_new_status_tv,false)
@@ -110,26 +110,41 @@ class WorkorderListAdapter(private val type: Int) :
             var resId = R.drawable.workorder_fill_grey_background
             helper.setText(R.id.status_tv, WorkorderHelper.getWorkNewStatusMap(mContext)[item.newStatus])
             when (item.newStatus) {
-                WorkorderConstant.WORK_STATUS_CREATED -> resId =
+//                WorkorderConstant.WORK_STATUS_CREATED -> resId =
+//                    R.drawable.fm_workorder_tag_fill_created_bg
+//                WorkorderConstant.WORK_STATUS_PUBLISHED -> resId =
+//                    R.drawable.fm_workorder_tag_fill_published_bg
+//                WorkorderConstant.WORK_STATUS_PROCESS -> resId =
+//                    R.drawable.fm_workorder_tag_fill_process_bg
+//                WorkorderConstant.WORK_STATUS_SUSPENDED_GO -> resId =
+//                    R.drawable.fm_workorder_tag_fill_suspended_go_bg
+//                WorkorderConstant.WORK_STATUS_TERMINATED -> resId =
+//                    R.drawable.fm_workorder_tag_fill_terminated_bg
+//                WorkorderConstant.WORK_STATUS_COMPLETED -> resId =
+//                    R.drawable.fm_workorder_tag_fill_completed_bg
+//                WorkorderConstant.WORK_STATUS_VERIFIED -> resId =
+//                    R.drawable.fm_workorder_tag_fill_verified_bg
+//                WorkorderConstant.WORK_STATUS_ARCHIVED -> resId =
+//                    R.drawable.fm_workorder_tag_fill_archived_bg
+//                WorkorderConstant.WORK_STATUS_APPROVAL -> resId =
+//                    R.drawable.fm_workorder_tag_fill_approval_bg
+//                WorkorderConstant.WORK_STATUS_SUSPENDED_NO -> resId =
+//                    R.drawable.fm_workorder_tag_fill_suspended_no_bg
+
+                WorkorderConstant.WORK_NEW_STATUS_DISPATCHING -> resId = //待派工
                     R.drawable.fm_workorder_tag_fill_created_bg
-                WorkorderConstant.WORK_STATUS_PUBLISHED -> resId =
-                    R.drawable.fm_workorder_tag_fill_published_bg
-                WorkorderConstant.WORK_STATUS_PROCESS -> resId =
+                WorkorderConstant.WORK_NEW_STATUS_PROCESS -> resId =     //处理中
                     R.drawable.fm_workorder_tag_fill_process_bg
-                WorkorderConstant.WORK_STATUS_SUSPENDED_GO -> resId =
-                    R.drawable.fm_workorder_tag_fill_suspended_go_bg
-                WorkorderConstant.WORK_STATUS_TERMINATED -> resId =
-                    R.drawable.fm_workorder_tag_fill_terminated_bg
-                WorkorderConstant.WORK_STATUS_COMPLETED -> resId =
-                    R.drawable.fm_workorder_tag_fill_completed_bg
-                WorkorderConstant.WORK_STATUS_VERIFIED -> resId =
-                    R.drawable.fm_workorder_tag_fill_verified_bg
-                WorkorderConstant.WORK_STATUS_ARCHIVED -> resId =
-                    R.drawable.fm_workorder_tag_fill_archived_bg
-                WorkorderConstant.WORK_STATUS_APPROVAL -> resId =
+                WorkorderConstant.WORK_NEW_STATUS_ARCHIVED_WAIT -> resId =  //待存档
+                    R.drawable.fm_workorder_tag_fill_published_bg
+                WorkorderConstant.WORK_NEW_STATUS_APPROVAL_WAIT -> resId =  //待审核
                     R.drawable.fm_workorder_tag_fill_approval_bg
-                WorkorderConstant.WORK_STATUS_SUSPENDED_NO -> resId =
-                    R.drawable.fm_workorder_tag_fill_suspended_no_bg
+//                    R.drawable.fm_workorder_tag_fill_archived_bg
+                WorkorderConstant.WORK_NEW_STATUS_ARCHIVED -> resId =   //已存档
+                    R.drawable.fm_workorder_tag_fill_archived_bg
+//                    R.drawable.fm_workorder_tag_fill_approval_bg
+                WorkorderConstant.WORK_NEW_STATUS_DESTORY -> resId =     //已作废
+                    R.drawable.fm_workorder_tag_fill_suspended_go_bg
             }
             helper.setBackgroundRes(R.id.status_tv, resId)
         } else {

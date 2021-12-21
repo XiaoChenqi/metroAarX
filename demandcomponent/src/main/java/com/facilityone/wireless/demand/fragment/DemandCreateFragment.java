@@ -3,6 +3,10 @@ package com.facilityone.wireless.demand.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
@@ -66,11 +70,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
-
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Author：gary
@@ -244,6 +243,7 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         mTypeCiv.setOnClickListener(this);
 
         mTelCiv.getInputEt().setInputType(InputType.TYPE_CLASS_PHONE);
+        mContactCiv.canInput(false);
 
         mContactCiv.setInputText(SPUtils.getInstance(SPKey.SP_MODEL).getString(SPKey.USERNAME));
 
@@ -314,14 +314,19 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         request = new DemandCreateService.DemandCreateReq();
         requestComplete = new DemandCreateService.CompleteDeviceReq();
         isCompeteDemand = bundle.getBoolean("IsComplete",false);
-        mLocationName=bundle.getString("locationName","");
-        mLocationData=bundle.getParcelable("location");
+        if (bundle.getString("locationName","") != null){
+            mLocationName=bundle.getString("locationName","");
+        }
+
+        if (bundle.getParcelable("location")!= null){
+            mLocationData=bundle.getParcelable("location");
+        }
+
         mDesc=bundle.getString("desc","");
         contentId = bundle.getLong("contentId",-1);
         deviceName = bundle.getString("deviceName")+"";
         deviceId = bundle.getLong("deviceId",-1);
         deviceCode = bundle.getString("deviceCode")+"";
-
         deviceIdList = new ArrayList<>();
 
         if (deviceId != null && deviceId != -1 && deviceId != 0){
@@ -360,7 +365,10 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         request.photoIds = phIds;
 
         mNumberView.setDesc(mDesc);
-        mCivLocation.setTipText(mLocationName);
+        if (!TextUtils.isEmpty(mLocationName)){
+            mCivLocation.setTipText(mLocationName);
+        }
+
         isPatrol = bundle.getBoolean("isPatrol",false);
         String toJson = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
 
@@ -376,7 +384,8 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
                 if (userBean.type == DemandConstant.OUT_SOURCING_CODE ){
                     getPresenter().getLastAttendance();//获取最后一次签到记录判断签入状态而后将数据写入界面
                 }else if (userBean.type == DemandConstant.STATION_CODE){
-                    mCivLocation.setTipText(userBean.locationName);
+                    mLocationName = LocationUtils.getStrLocation(userBean.location);
+                    mCivLocation.setTipText(mLocationName);
                     mLocationData = userBean.location;
                 }
             }

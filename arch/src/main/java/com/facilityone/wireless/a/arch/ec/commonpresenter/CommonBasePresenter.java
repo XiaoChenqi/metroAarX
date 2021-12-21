@@ -93,7 +93,6 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
                     LogonManager.getInstance().saveToken(body.data);
                     SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.USERNAME, username);
                     SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PASSWORD, password);
-//                    SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.SP_MODEL_USER,);
                     ToastUtils.showShort(R.string.arch_login_success);
                     onLogonSuccess();
                 }

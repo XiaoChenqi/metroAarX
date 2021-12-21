@@ -284,6 +284,8 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
             }
             mAllProgress = 0;
             ToastUtils.showShort(R.string.patrol_offline_download_success);
+            getPresenter().getServicePatrolTask();
+
         }
 
         if (!saveDataSuccess) {
@@ -346,7 +348,6 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         if (viewId == R.id.scan_patrol_itv){
             getPresenter().scan();
         }
-
     }
 
     public void scanResult(String spotCode) {

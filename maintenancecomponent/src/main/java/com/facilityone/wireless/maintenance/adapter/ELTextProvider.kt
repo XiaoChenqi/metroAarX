@@ -37,7 +37,9 @@ class ELTextProvider: BaseItemProvider<MaintenanceEnity.ElectronicLedgerEntity, 
         position: Int
     ) {
         val binding=getBinding<ItemElTextBinding>(helper.itemView.rootView)
-        binding!!.etInput.addTextChangedListener(object :TextWatcher{
+        binding!!.tvTitle.text=(item!!.content) as String
+        binding.etInput.hint = "请输入"+((item.content) as String)
+        binding.etInput.addTextChangedListener(object :TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -47,11 +49,35 @@ class ELTextProvider: BaseItemProvider<MaintenanceEnity.ElectronicLedgerEntity, 
             }
 
             override fun afterTextChanged(s: Editable?) {
-               item!!.value=s.toString()
+
+                //通过反射获取adapter对象
+                val adapterReflection = helper.javaClass.getDeclaredField("adapter")
+                adapterReflection.isAccessible = true
+                val tempAdapter: ElectronicLedgerAdapter =
+                    adapterReflection.get(helper) as ElectronicLedgerAdapter
+                //从adapter对象中获取recycleview容器用于判断滑动状态
+                val recyclerView = tempAdapter.tempRecycleView
+                if (recyclerView.isComputingLayout) {
+                    recyclerView.post {
+                        Runnable {
+                            item.value = s.toString()
+                            tempAdapter.notifyItemChanged(
+                                helper.layoutPosition,
+                                ElectronicLedgerAdapter.ITEM_0_PAYLOAD
+                            )
+                        }
+                    }
+                } else {
+                    item.value = s.toString()
+                    tempAdapter.notifyItemChanged(
+                        helper.layoutPosition,
+                        ElectronicLedgerAdapter.ITEM_0_PAYLOAD
+                    )
+                }
             }
 
         })
-//        binding.taskTitleTv.text=selectorModel.name
+
     }
 
     fun <DB: ViewDataBinding>getBinding(view:View):DB?{

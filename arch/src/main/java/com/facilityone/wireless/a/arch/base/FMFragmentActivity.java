@@ -71,7 +71,6 @@ public abstract class FMFragmentActivity extends CommonActivity {
 
     public void finish() {
         super.finish();
-
     }
 
     public void hideSoftKeyBoard() {

@@ -1,9 +1,13 @@
 package com.facilityone.wireless.workorder.fragment;
 
 import android.os.Bundle;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.workorder.R;
@@ -13,10 +17,6 @@ import com.facilityone.wireless.workorder.presenter.WorkorderStepPresenter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
-
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Author：gary
@@ -35,12 +35,16 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
     private static final String CAN_OPT = "can_opt";
     private static final String WORKORDER_ID = "workorder_id";
     private static final String WORK_TEAM_ID = "work_team_id";
+    private static final String COUNT_ACCORD = "count_accord";
+    private static final String ATTENTION = "attention";
     private static final int UPDATE = 7000;
 
     private ArrayList<WorkorderService.StepsBean> mSteps;
     private boolean mCanOpt;
     private long mWoId;
     private Long mWoTeamId;
+    private Boolean countAccord;//是否需要输入设备数量
+    private String attention; //注意事项
 
     @Override
     public WorkorderStepPresenter createPresenter() {
@@ -71,6 +75,8 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
             mWoTeamId = arguments.getLong(WORK_TEAM_ID, -1L);
             mSteps = arguments.getParcelableArrayList(WORKORDER_STEPS);
             mCanOpt = arguments.getBoolean(CAN_OPT, false);
+            countAccord = arguments.getBoolean(COUNT_ACCORD);
+            attention = arguments.getString(ATTENTION);
         }
     }
 
@@ -109,11 +115,11 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
                 && stepsBean != null
                 && stepsBean.workTeamId != null
                 && mWoTeamId.equals(stepsBean.workTeamId)) {
-            if (stepsBean.finished != null && stepsBean.finished) {
+//            if (stepsBean.finished != null && stepsBean.finished) {
 //                ToastUtils.showShort(R.string.workorder_steps_completed_notice_tip);
-                return;
-            }
-            startForResult(WorkorderStepUpdateFragment.getInstance(stepsBean, mWoId), UPDATE);
+//                return;
+//            }
+            startForResult(WorkorderStepUpdateFragment.getInstance(stepsBean, mWoId,countAccord,attention), UPDATE);
         }
     }
 
@@ -128,12 +134,17 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
     public static WorkorderStepFragment getInstance(ArrayList<WorkorderService.StepsBean> s
             , Long woId
             , Long workTeamId
-            , boolean canOpt) {
+            , boolean canOpt
+            , boolean eqCountAccord //是否需要输入设备数量
+            , String mattersNeedingAttention //注意事项
+    ) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(WORKORDER_STEPS, s);
         bundle.putLong(WORKORDER_ID, woId);
         bundle.putLong(WORK_TEAM_ID, workTeamId);
         bundle.putBoolean(CAN_OPT, canOpt);
+        bundle.putBoolean(COUNT_ACCORD,eqCountAccord);
+        bundle.putString(ATTENTION,mattersNeedingAttention);
         WorkorderStepFragment instance = new WorkorderStepFragment();
         instance.setArguments(bundle);
         return instance;

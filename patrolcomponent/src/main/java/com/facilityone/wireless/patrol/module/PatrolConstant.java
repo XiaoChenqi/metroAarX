@@ -41,6 +41,7 @@ public interface PatrolConstant {
     int EQU_USE = 2;//在用
     int EQU_REPAIR = 3;//维修
     int EQU_BAD = 4;//报废
+    int EQU_ALL = 100; //不限
 
     //检查项状态
     int ITEM_STATUS_NORMAL = 0;//正常
@@ -48,4 +49,9 @@ public interface PatrolConstant {
     int ITEM_STATUS_MISS = 2;//漏检
     int ITEM_STATUS_ADD = 3;//补检
     int ITEM_STATUS_EXCEPTION_DEL = 4;//异常已处理
+
+    //UserInfor--Object--查询标记写死
+    String USERLOGIN_ID = "FONE2015";
+    String PATROL_TASK_OUTLINE = "FONE_TASK";
+
 }

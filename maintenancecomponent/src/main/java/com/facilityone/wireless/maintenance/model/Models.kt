@@ -1,20 +1,23 @@
 package com.facilityone.wireless.maintenance.model
 
+import android.os.Parcelable
+
 
 data class SelectorModel(
     var name:String?=null,
     var value:Int?=null,
     var state:Int?=null,
     var sub: SelectorModel?,
-    var pid:Int?=null,
-    var tips:String?=null
+    var pid:Long?=null,
+    var tips:String?=null,
+    var selectValues: List<String>?
 
 ){
-    constructor(name: String?,value: Int?,pid:Int?=null):this(name,value,3,null,pid)
-    constructor(name: String, value: Int, sub: SelectorModel,pid: Int) : this(name,value,3,sub,pid)
+    constructor(name: String?,value: Int?,pid:Long?=null):this(name,value,3,null,pid,null,null)
+    constructor(name: String, value: Int, sub: SelectorModel,pid: Long) : this(name,value,3,sub,pid,null,null)
 
-    constructor(name: String?,value: Int?,pid:Int?=null,tip:String):this(name,value,3,null,pid,tip)
-
+    constructor(name: String?,value: Int?,pid:Long?=null,tip:String):this(name,value,3,null,pid,tip,null)
+    constructor(name: String?,value: Int?,selectValues: List<String>?):this(name,value,3,null,null,null,selectValues)
 }
 
 
@@ -62,4 +65,90 @@ data class CheckContentModel(
 ){
     constructor():this(null,null,null,null)
 }
+
+
+
+
+
+/**
+ * @Created by: kuuga
+ * @Date: on 2021/11/26 14:19
+ * @Description:抽检模板数据
+ */
+data class TemplateModel(
+    var templateId:Long?=null,
+    var tasks:List<TemplateTask>?=null
+)
+
+/**
+ * @Created by: kuuga
+ * @Date: on 2021/11/26 14:19
+ * @Description:模板任务数据
+ */
+data class TemplateTask(
+    var taskId:Long?=null,
+    var taskName:String?=null,
+    var contents: List<TaskContent>?
+)
+
+/**
+ * @Created by: kuuga
+ * @Date: on 2021/11/26 14:19
+ * @Description:任务内容数据
+ */
+data class TaskContent(
+    var content: String?,
+    var contentId: Long?,
+    var selectValues: List<String>?,
+    var type: Int?,
+    var unit: String?
+){
+    companion object{
+        const val CHOICE=0
+        const val INPUT=1
+
+    }
+}
+
+
+/**
+ * @Created by: kuuga
+ * @Date: on 2021/11/29 10:47
+ * @Description:提交模板数据
+ */
+data class UploadTemplateData(
+    var woId:Long?=null,
+    var templateId:Long?=null,
+    var startTime:Long?=null,
+    var pass:Boolean?=null,
+    var tasks: List<UploadTask>?=null
+){
+    constructor():this(null,null,null,null,null)
+}
+
+/**
+ * @Created by: kuuga
+ * @Date: on 2021/11/29 10:47
+ * @Description:提交模板任务
+ */
+data class UploadTask (
+    var taskId:Long?=null,
+    var taskName:String?=null,
+    var contents:List<UploadTaskContent>?=null
+){
+//    constructor(takId: Long?,taskName: String?):this(taskId,taskName,null)
+//    constructor():this(null,null,null)
+}
+/**
+ * @Created by: kuuga
+ * @Date: on 2021/11/29 10:49
+ * @Description:提交任务内容
+ */
+data class UploadTaskContent(
+    val contentId:Long,
+    val content:String,
+    val inputValue:String?=null,
+    val selectValue:String?=null
+)
+
 

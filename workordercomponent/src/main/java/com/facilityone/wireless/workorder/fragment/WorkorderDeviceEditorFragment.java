@@ -1,11 +1,13 @@
 package com.facilityone.wireless.workorder.fragment;
 
 import android.os.Bundle;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.facilityone.wireless.a.arch.base.BaseScanFragment;
 import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
 import com.facilityone.wireless.a.arch.ec.selectdata.SelectDataFragment;
@@ -20,8 +22,6 @@ import com.facilityone.wireless.workorder.module.WorkorderOptService;
 import com.facilityone.wireless.workorder.module.WorkorderService;
 import com.facilityone.wireless.workorder.presenter.WorkorderDeviceEditorPresenter;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-
-import androidx.annotation.Nullable;
 
 /**
  * Author：gary
@@ -40,6 +40,7 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
     public static final String WORKORDER_DEVICE = "workorder_device";
     private static final String WORKORDER_ID = "workorder_id";
     private static final String ADD_DEVICE = "add_device";
+    private static final String MAINTENCE = "makintence";
     private static final int REQUEST_EQU = 80012;
 
 
@@ -50,6 +51,7 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
     private SelectDataBean mBean;
     private String eqCode; //设备编号
     private Integer time; //完成任务的时间--Min
+    private boolean isMaintence; //是否是维护工单
 
     @Override
     public WorkorderDeviceEditorPresenter createPresenter() {
@@ -81,6 +83,7 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
             mWoId = arguments.getLong(WORKORDER_ID);
             mAddDevice = arguments.getBoolean(ADD_DEVICE, true);
             mEquipmentsBean = arguments.getParcelable(WORKORDER_DEVICE);
+            isMaintence = arguments.getBoolean(MAINTENCE,false);
             if (mEquipmentsBean != null){
                 setTitle(mEquipmentsBean.equipmentName+""); // 四运
                 eqCode = mEquipmentsBean.equipmentCode;
@@ -121,6 +124,7 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
     public void showTaskDialog(Integer time){
         FMWarnDialogBuilder builder = new FMWarnDialogBuilder(getContext());
         builder.setTitle("提示");
+        builder.setCanceledOnTouchOutside(false);
         String messageFormat="如果您确认开启该维护计划，最少需要%s分钟才能完成提交。同时不能开启其他设备的维护计划。";
         builder.setTip(String.format(messageFormat,time));
         builder.addOnBtnCancelClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
@@ -145,7 +149,7 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
         time = min;
     }
     public void setHasDoneDevice(Boolean cando){
-        if (cando){
+        if (cando && isMaintence){
             showTaskDialog(time);
         }
     }
@@ -208,11 +212,12 @@ public class WorkorderDeviceEditorFragment extends BaseFragment<WorkorderDeviceE
     }
 
     public static WorkorderDeviceEditorFragment getInstance(WorkorderService.WorkOrderEquipmentsBean device
-            , Long woId, boolean add) {
+            , Long woId, boolean add,boolean isMaintence) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(WORKORDER_DEVICE, device);
         bundle.putLong(WORKORDER_ID, woId);
         bundle.putBoolean(ADD_DEVICE, add);
+        bundle.putBoolean(MAINTENCE,isMaintence);
         WorkorderDeviceEditorFragment fragment = new WorkorderDeviceEditorFragment();
         fragment.setArguments(bundle);
         return fragment;

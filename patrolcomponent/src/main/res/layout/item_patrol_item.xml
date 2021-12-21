@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/app_bg"
-              android:descendantFocusability="beforeDescendants"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/app_bg"
+    android:descendantFocusability="beforeDescendants"
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/ll_patrol_item_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp_10"
@@ -65,64 +67,239 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/question_record_last"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_24"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:id="@+id/question_lastReading"
+                style="@style/h3_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="@dimen/dp_6"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:textColorHint="@color/grey_c"
+                android:imeOptions="actionDone"/>
+
+            <TextView
+                android:id="@+id/question_checkTime"
+                style="@style/h3_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="@dimen/dp_6"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:textColorHint="@color/grey_c"
+                android:imeOptions="actionDone"/>
+
+
+        </LinearLayout>
+
         <View
             style="@style/secant_line_style"
             android:layout_marginTop="@dimen/dp_24"/>
 
-        <LinearLayout
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/question_edit_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_19"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dp_30"
-                android:layout_weight="1"/>
-
-            <LinearLayout
-                android:id="@+id/question_edit_edit_ll"
+            android:layout_marginTop="@dimen/dp_19">
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/question_edit_iv"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center">
-
-                <com.joanzapata.iconify.widget.IconTextView
-                    android:id="@+id/question_edit_iv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp_30"
-                    android:gravity="center"
-                    android:text="@string/icon_input"
-                    android:textColor="@color/grey_9"
-                    android:textSize="@dimen/sp_24"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="0dp"
                 android:layout_height="@dimen/dp_30"
-                android:layout_weight="1"/>
+                android:text="@string/icon_input"
+                android:textColor="@color/grey_9"
+                android:textSize="@dimen/sp_24"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/question_take_photo_iv"
+                app:layout_constraintHorizontal_weight="1"/>
 
-            <LinearLayout
-                android:id="@+id/question_take_photo_ll"
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/question_take_photo_iv"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center">
-
-                <com.joanzapata.iconify.widget.IconTextView
-                    android:id="@+id/question_take_photo_iv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp_30"
-                    android:gravity="center"
-                    android:text="@string/icon_camera"
-                    android:textColor="@color/grey_9"
-                    android:textSize="@dimen/sp_24"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="0dp"
                 android:layout_height="@dimen/dp_30"
-                android:layout_weight="1"/>
-        </LinearLayout>
+                android:gravity="center"
+                android:text="@string/icon_camera"
+                android:textColor="@color/grey_9"
+                android:textSize="@dimen/sp_24"
+                app:layout_constraintTop_toTopOf="@id/question_edit_iv"
+                app:layout_constraintBottom_toBottomOf="@id/question_edit_iv"
+                app:layout_constraintStart_toEndOf="@id/question_edit_iv"
+                app:layout_constraintEnd_toStartOf="@id/question_report_iv"
+                app:layout_constraintBaseline_toBaselineOf="@id/question_edit_iv"
+                app:layout_constraintHorizontal_weight="1"/>
+
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/question_report_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_30"
+                android:text="@string/icon_repair"
+                android:textColor="@color/grey_9"
+                android:textSize="25sp"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="@id/question_edit_iv"
+                app:layout_constraintBottom_toBottomOf="@id/question_edit_iv"
+                app:layout_constraintStart_toEndOf="@id/question_take_photo_iv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@id/question_edit_iv"
+                app:layout_constraintHorizontal_weight="1"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/question_edit_ll"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="@dimen/dp_19"-->
+<!--            android:orientation="horizontal">-->
+
+
+
+<!--&lt;!&ndash;            <View&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="@dimen/dp_30"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_weight="1"/>&ndash;&gt;-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/question_edit_edit_ll"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:gravity="center">-->
+
+<!--&lt;!&ndash;                <com.joanzapata.iconify.widget.IconTextView&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:id="@+id/question_edit_iv"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_height="@dimen/dp_30"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:gravity="center"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:text="@string/icon_input"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:textColor="@color/grey_9"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:textSize="@dimen/sp_24"/>&ndash;&gt;-->
+<!--            </LinearLayout>-->
+
+<!--&lt;!&ndash;            <View&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="@dimen/dp_30"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_weight="1"/>&ndash;&gt;-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/question_take_photo_ll"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center">-->
+
+
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/question_quick_ll"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center">-->
+
+
+<!--            </LinearLayout>-->
+
+<!--&lt;!&ndash;            <View&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="@dimen/dp_30"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_weight="1"/>&ndash;&gt;-->
+<!--        </LinearLayout>-->
+
+
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/question_edit_ll"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="@dimen/dp_19"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            &lt;!&ndash;            <View&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_height="@dimen/dp_30"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_weight="1"/>&ndash;&gt;-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/question_edit_edit_ll"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:gravity="center">-->
+
+<!--                <com.joanzapata.iconify.widget.IconTextView-->
+<!--                    android:id="@+id/question_edit_iv"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="@dimen/dp_30"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="@string/icon_input"-->
+<!--                    android:textColor="@color/grey_9"-->
+<!--                    android:textSize="@dimen/sp_24"/>-->
+<!--            </LinearLayout>-->
+
+<!--            &lt;!&ndash;            <View&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_height="@dimen/dp_30"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_weight="1"/>&ndash;&gt;-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/question_take_photo_ll"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center">-->
+
+<!--                <com.joanzapata.iconify.widget.IconTextView-->
+<!--                    android:id="@+id/question_take_photo_iv"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="@dimen/dp_30"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="@string/icon_camera"-->
+<!--                    android:textColor="@color/grey_9"-->
+<!--                    android:textSize="@dimen/sp_24"/>-->
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/question_quick_ll"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center">-->
+
+<!--                <com.joanzapata.iconify.widget.IconTextView-->
+<!--                    android:id="@+id/question_quick_iv"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="@dimen/dp_30"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="@string/icon_camera"-->
+<!--                    android:textColor="@color/grey_9"-->
+<!--                    android:textSize="@dimen/sp_24"/>-->
+<!--            </LinearLayout>-->
+
+<!--            &lt;!&ndash;            <View&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_height="@dimen/dp_30"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_weight="1"/>&ndash;&gt;-->
+<!--        </LinearLayout>-->
+
 
         <TextView
             android:id="@+id/question_comment_tv"

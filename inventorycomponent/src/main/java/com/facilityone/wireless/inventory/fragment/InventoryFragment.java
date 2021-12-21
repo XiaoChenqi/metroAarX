@@ -12,13 +12,16 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.ec.adapter.FunctionAdapter;
 import com.facilityone.wireless.a.arch.ec.module.FunctionService;
 import com.facilityone.wireless.a.arch.ec.module.IService;
+import com.facilityone.wireless.a.arch.ec.ui.FzScanActivity;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.inventory.R;
 import com.facilityone.wireless.inventory.model.InventoryConstant;
 import com.facilityone.wireless.inventory.model.MaterialService;
 import com.facilityone.wireless.inventory.presenter.InventoryPresenter;
 import com.fm.tool.scan.ScanActivity;
+import com.huawei.hms.ml.scan.HmsScan;
 import com.joanzapata.iconify.widget.IconTextView;
+import com.zdf.activitylauncher.ActivityLauncher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,26 +155,31 @@ public class InventoryFragment extends BaseFragment<InventoryPresenter> implemen
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.scan_inventory_itv) {//二维码扫描
-            Intent intent = new Intent(getContext(), ScanActivity.class);
-            startActivity(intent);
-            ScanActivity.setOnScanResultListener(new ScanActivity.OnScanResultListener() {
-                @Override
-                public void success(String s) {
-                    MaterialService.InventoryQRCodeBean inventoryQRCodeBean = getPresenter().getInventoryQRCodeBean(s);
-                    if(inventoryQRCodeBean == null) {
-                        ToastUtils.showShort(R.string.inventory_qr_code_error);
-                        return;
-                    }
+            Intent intent = new Intent(getContext(), FzScanActivity.class);
+            ActivityLauncher.init(getActivity())
+                    .startActivityForResult(intent, new ActivityLauncher.Callback() {
+                        @Override
+                        public void onActivityResult(int resultCode, Intent data) {
+                            if (data != null){
+                                HmsScan result=data.getParcelableExtra("scanResult");
+                                if (result!=null){
+                                    if (result.originalValue != null){
+                                        MaterialService.InventoryQRCodeBean inventoryQRCodeBean = getPresenter().getInventoryQRCodeBean(result.originalValue);
+                                        try {
+                                            long wareHouseId = Long.parseLong(inventoryQRCodeBean.wareHouseId);
+                                            start(MaterialInfoFragment.getInstance(inventoryQRCodeBean.code,wareHouseId,true));
+                                        } catch (NumberFormatException e) {
+                                            e.printStackTrace();
+                                            ToastUtils.showShort("此二维码无法识别");
+                                        }
+                                    }else {
+                                        ToastUtils.showShort(R.string.inventory_qr_code_error);
+                                    }
+                                }
+                            }
 
-                    try {
-                        long wareHouseId = Long.parseLong(inventoryQRCodeBean.wareHouseId);
-                        start(MaterialInfoFragment.getInstance(inventoryQRCodeBean.code,wareHouseId,true));
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        ToastUtils.showShort("此二维码无法识别");
-                    }
-                }
-            });
+                        }
+                    });
         }
     }
 

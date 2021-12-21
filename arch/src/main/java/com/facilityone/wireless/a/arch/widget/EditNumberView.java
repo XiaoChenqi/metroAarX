@@ -122,7 +122,9 @@ public class EditNumberView extends LinearLayout implements TextWatcher {
     public void canInput(boolean b){
         if (!b){
             mDescEt.setFocusable(false);
+            mDescEt.setEnabled(false);
         }else {
+            mDescEt.setFocusableInTouchMode(true);
             mDescEt.setFocusable(true);
         }
     }
@@ -132,6 +134,17 @@ public class EditNumberView extends LinearLayout implements TextWatcher {
             mCountTv.setVisibility(GONE);
         }else {
             mCountTv.setVisibility(VISIBLE);
+        }
+    }
+
+    /**
+     * 展示或隐藏hint
+     * */
+    public void showHint(boolean show){
+        if (show){
+            mDescEt.setHint(mContext.getString(R.string.arch_describe_hint));
+        }else {
+            mDescEt.setHint("");
         }
     }
 }

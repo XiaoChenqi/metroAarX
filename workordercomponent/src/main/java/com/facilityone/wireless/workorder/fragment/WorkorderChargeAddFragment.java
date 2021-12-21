@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.facilityone.wireless.a.arch.base.BaseScanFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.utils.ViewUtil;
 import com.facilityone.wireless.a.arch.widget.CustomContentItemView;
@@ -141,4 +142,5 @@ public class WorkorderChargeAddFragment extends BaseFragment<WorkorderChargeAddP
         fragment.setArguments(bundle);
         return fragment;
     }
+
 }

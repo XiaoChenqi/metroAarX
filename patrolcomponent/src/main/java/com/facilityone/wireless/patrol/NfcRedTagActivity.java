@@ -1,7 +1,9 @@
 package com.facilityone.wireless.patrol;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -12,6 +14,7 @@ import android.os.Parcelable;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.SPUtils;
@@ -21,12 +24,14 @@ import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.a.arch.offline.util.PatrolQrcodeUtils;
+import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.componentservice.patrol.PatrolService;
 import com.facilityone.wireless.componentservice.workorder.WorkorderService;
 import com.facilityone.wireless.patrol.fragment.NfcFragment;
 import com.facilityone.wireless.patrol.fragment.PatrolScanFragment;
 import com.facilityone.wireless.patrol.fragment.PatrolSpotFragment;
 import com.luojilab.component.componentlib.router.Router;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import java.util.List;
 
@@ -39,10 +44,8 @@ import static com.blankj.utilcode.util.ToastUtils.showShort;
  * Date: 2018/11/16 6:07 PM
  */
 public class NfcRedTagActivity extends BaseFragmentActivity {
-
     private NfcFragment mNfcFragment;
     private static final int REQUEST_SPOT = 20002;
-
     @Override
     public Object createPresenter() {
         return null;
@@ -138,14 +141,17 @@ public class NfcRedTagActivity extends BaseFragmentActivity {
 
         if (body.equals("") || body==null){
             ToastUtils.showShort("NFC格式校验失败,请匹配正确的设备");
+            this.finish();
             return;
         }
-        
+
         String code = PatrolQrcodeUtils.parseSpotCode(body);
         String codeType = PatrolQrcodeUtils.parseSpotCodeType(body);
 
         if (!codeType.equals("PATROL")){
             ToastUtils.showShort("NFC格式校验失败,请匹配正确的设备");
+            this.finish();
+            return;
         }
 
         if (!TextUtils.isEmpty(code)) {

@@ -489,6 +489,8 @@ public class MaintenanceService {
         public Long emId;
         public String planName;
         public List<Long>period;
+        public Long locationId; //站点ID
+        public Long specialty; //专业Id
 
     }
 

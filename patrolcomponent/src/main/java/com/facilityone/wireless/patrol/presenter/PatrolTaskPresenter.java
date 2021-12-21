@@ -1,6 +1,13 @@
 package com.facilityone.wireless.patrol.presenter;
 
+import android.util.Log;
+
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.facilityone.wireless.ObjectBox;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
+import com.facilityone.wireless.a.arch.ec.module.UserService;
+import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BasePresenter;
 import com.facilityone.wireless.a.arch.offline.dao.PatrolDeviceDao;
 import com.facilityone.wireless.a.arch.offline.dao.PatrolSpotDao;
@@ -8,9 +15,11 @@ import com.facilityone.wireless.a.arch.offline.dao.PatrolTaskDao;
 import com.facilityone.wireless.a.arch.offline.model.entity.DBPatrolConstant;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolTaskEntity;
+import com.facilityone.wireless.a.arch.offline.objectbox.user.UserInfor;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.patrol.fragment.PatrolTaskFragment;
 import com.facilityone.wireless.patrol.module.PatrolConstant;
+import com.facilityone.wireless.patrol.module.PatrolQueryService;
 import com.facilityone.wireless.patrol.module.PatrolStatusEntity;
 import com.facilityone.wireless.patrol.module.PatrolStatusReq;
 import com.facilityone.wireless.patrol.module.PatrolUrl;
@@ -21,6 +30,7 @@ import com.lzy.okgo.model.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.objectbox.Box;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -36,6 +46,7 @@ import io.reactivex.schedulers.Schedulers;
  * Date: 2018/11/6 9:39 AM
  */
 public class PatrolTaskPresenter extends BasePresenter<PatrolTaskFragment> {
+    private Box<UserInfor> box; //用户信息
 
     //获取巡检任务列表
     public void getDBPatrolTask(final Long time) {
@@ -309,4 +320,49 @@ public class PatrolTaskPresenter extends BasePresenter<PatrolTaskFragment> {
         }
         return true;
     }
+
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/12/15
+     * @TIME: 9:52
+     * @Introduce: 巡检任务界面先获取当前用户的签到信息并存入数据库当中
+    **/
+    public void getLastAttendance(){
+        box = ObjectBox.INSTANCE.getBoxStore().boxFor(UserInfor.class);
+        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+        String json = "{}";
+        OkGo.<BaseResponse<PatrolQueryService.AttendanceResp>>post(FM.getApiHost() + PatrolUrl.ATTENDANCE_LAST)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(json)
+                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.AttendanceResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
+                        PatrolQueryService.AttendanceResp data = response.body().data;
+                        UserInfor user = new UserInfor();
+                        box.removeAll();
+                        user.setId(0L);
+                        user.setUserKey(PatrolConstant.USERLOGIN_ID);
+                        if (data.location != null){
+                            user.setLocationBean(data.location);
+                            user.setBuidlings(data.buildingIds);
+                        }
+                        box.put(user);
+                        Log.e("LAST_ATTENDANCE","===============***============="+user.toString());
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
+
+
+    }
+
+
+
+
 }

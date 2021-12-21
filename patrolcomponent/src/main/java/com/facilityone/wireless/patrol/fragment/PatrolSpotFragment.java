@@ -2,23 +2,38 @@ package com.facilityone.wireless.patrol.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.DragAndDropPermissions;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.ObjectBox;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
+import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
+import com.facilityone.wireless.a.arch.offline.dao.PatrolSpotDao;
+import com.facilityone.wireless.a.arch.offline.dao.PatrolTaskDao;
 import com.facilityone.wireless.a.arch.offline.model.entity.DBPatrolConstant;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
+import com.facilityone.wireless.a.arch.offline.model.entity.PatrolTaskEntity;
+import com.facilityone.wireless.a.arch.offline.objectbox.patrol.CompleteTime;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.basiclib.app.FM;
+import com.facilityone.wireless.basiclib.utils.SystemDateUtils;
 import com.facilityone.wireless.patrol.NfcRedTagActivity;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.adapter.PatrolSpotAdapter;
@@ -34,10 +49,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import io.objectbox.Box;
 import me.yokeyword.fragmentation.SwipeBackLayout;
 
 /**
@@ -80,6 +92,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     //签到位置
     private PatrolQueryService.AttendanceResp mLocation;
     private boolean mHasAttentance=false;
+    private Box<CompleteTime> taskBox; //任务开启
 
     @Override
     public PatrolSpotPresenter createPresenter() {
@@ -112,7 +125,13 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
             mFromScan = arguments.getString(PATROL_SCAN, "");
             mNeedCheck=arguments.getBoolean(PATROL_NEED_CHECK,false);
             if (mNeedCheck){
-                getPresenter().getLastAttendance();
+                if (NetworkUtils.isConnected()){
+                    getPresenter().getLastAttendance();
+                }else {
+                    //离线状态下查询数据库
+                    getPresenter().getLastAttendanceOutLine();
+                }
+
             }
         }
 
@@ -382,6 +401,8 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
             mShowEntities.addAll(mUncompletedEntities);
         }
 
+
+
         mRecyclerView.scrollToPosition(0);
         mAdapter.setEmptyView(getNoDataView((ViewGroup) mRecyclerView.getParent()));
         mAdapter.notifyDataSetChanged();
@@ -509,7 +530,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
      * @Description:进入设备列表
      */
     public void enterDeviceList(PatrolSpotEntity entity){
-    startForResult(PatrolDeviceFragment.getInstance(entity.getName(), entity.getPatrolSpotId()), REQUEST_DEVICE);
+    startForResult(PatrolDeviceFragment.getInstance(entity.getName(), entity.getPatrolSpotId(),entity), REQUEST_DEVICE);
     }
 
 
@@ -562,7 +583,22 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
         builder.addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
             @Override
             public void onClick(QMUIDialog dialog, View view) {
-                executeTask(entity);
+                if (NetworkUtils.isConnected()){
+                    executeTask(entity);
+                }else {
+                    taskBox = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
+                    taskBox.removeAll();
+                    CompleteTime da = new CompleteTime();
+                    Long timeForNow = SystemDateUtils.getCurrentTimeMillis();
+                    da.setStarTime(timeForNow);
+                    da.setSportId(entity.getSpotId());
+                    da.setCheckTime(entity.getTaskTime());
+                    da.setPatrolSpotId(entity.getPatrolSpotId());
+                    da.setTaskTip(PatrolConstant.PATROL_TASK_OUTLINE);
+                    taskBox.put(da);
+                    Log.i("任务开启", "onClick: "+da+"");
+                    enterDeviceList(entity);
+                }
 //                startForResult(PatrolItemFragment.getInstance(mSpotId, (ArrayList<PatrolEquEntity>) mEntities, position, mSpotName,time), REQUEST_ITEM);
                 dialog.dismiss();
             }
@@ -606,11 +642,18 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
      * @Description: 工单位置是否处于签到区间
      */
     private static boolean isInLocationList(Long orderBuildingId,PatrolQueryService.AttendanceResp remoteData){
-        for (Long id: remoteData.buildingIds) {
-            if (id.equals(orderBuildingId)){
-                return true;
+        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+        if (!infoBean.type.equals(1)){
+            return true;
+        }else {
+            for (Long id: remoteData.buildingIds) {
+                if (id.equals(orderBuildingId)){
+                    return true;
+                }
             }
         }
+
         return false;
 
     }

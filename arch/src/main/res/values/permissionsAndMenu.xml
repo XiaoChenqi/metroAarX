@@ -21,11 +21,11 @@
 
     <!--扫一扫-->
     <string name="home_scan_menu_title">扫一扫</string>
-    <string name="home_scan_permissions" translatable="false">m-scan</string>
+    <string name="home_scan_permissions" translatable="false">m-scanner</string>
 
     <!--快速报障-->
     <string name="home_quickreport_menu_title">快速报障</string>
-    <string name="home_quickreport_permissions" translatable="false">m-quickreport</string>
+    <string name="home_quickreport_permissions" translatable="false">m-report</string>
 
     <!--**********************服务台**********************-->
     <string name="home_service_menu_title">服务台</string>
@@ -35,13 +35,11 @@
         <item>创建新需求</item>
         <item>待处理报障</item>
         <item>待评价报障</item>
-        <item>待完善报障</item>
         <item>报障查询</item>
     </string-array>
 
     <string-array name="home_service_menu_child_permissions">
         <item>m-requirement-create</item>
-        <item>m-requirement-approval</item>
         <item>m-requirement-process</item>
         <item>m-requirement-evaluate</item>
         <item>m-requirement-query</item>
@@ -69,7 +67,7 @@
         <item>m-wo-dispach</item>
         <item>m-wo-approval</item>
         <item>m-wo-verify</item>
-        <item>m-wo-abnormal</item>
+        <item>m-wo-exception</item>
         <item>m-wo-close</item>
         <item>m-wo-query</item>
     </string-array>
@@ -90,13 +88,13 @@
     </string-array>
 
     <string-array name="home_ppm_menu_child_permissions">
-        <item>m-ppm-one</item>
-        <item>m-ppm-two</item>
-        <item>m-ppm-three</item>
-        <item>m-ppm-four</item>
-        <item>m-ppm-five</item>
-        <item>m-ppm-six</item>
-        <item>m-ppm-seven</item>
+        <item>m-ppm-calendar</item>
+        <item>m-ppm-process</item>
+        <item>m-ppm-dispach</item>
+        <item>m-ppm-approval</item>
+        <item>m-ppm-exception</item>
+        <item>m-ppm-close</item>
+        <item>m-ppm-query</item>
     </string-array>
 
 

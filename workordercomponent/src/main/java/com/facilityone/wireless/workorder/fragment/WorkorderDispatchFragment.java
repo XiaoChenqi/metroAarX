@@ -13,6 +13,7 @@ import com.blankj.utilcode.constant.TimeConstants;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.a.arch.base.BaseScanFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.utils.DatePickUtils;
 import com.facilityone.wireless.a.arch.widget.CustomContentItemView;
@@ -383,6 +384,5 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
         instance.setArguments(bundle);
         return instance;
     }
-
 
 }

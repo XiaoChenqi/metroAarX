@@ -105,8 +105,6 @@ public class WorkorderInputFragment extends BaseFragment<WorkorderInputPresenter
         mGridImageAdapter.setOnItemChildClickListener(this);
         mGridImageAdapter.setOnItemClickListener(this);
 
-
-
     }
 
     @Override

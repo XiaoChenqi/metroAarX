@@ -359,6 +359,8 @@
     <string name="workorder_send_work_content_hint">请输入工作内容...</string>
     <!--请输入工作内容-->
     <string name="workorder_send_work_content_hint_t">请输入工作内容...</string>
+    <!--请输入故障原因-->
+    <string name="workorder_send_wrongreason_content_hint_t">请输入故障原因...</string>
     <!--实际到场时间-->
     <string name="workorder_person_arrive_time">实际到场时间</string>
     <!--日期选择-->
@@ -475,4 +477,23 @@
     <string name="workorder_equipment_exist">该设备已经存在</string>
     <!--签到失败-->
     <string name="workorder_sign_error">您的签到位置与当前位置不符，请确认！</string>
+    <!--设备数量-->
+    <string name="workorder_step_department_number">设备数量</string>
+    <!--维护结果-->
+    <string name="workorder_step_maintenance_result">维护结果</string>
+    <!--注意事项-->
+    <string name="workorder_step_warning">注意事项</string>
+
+    <!--正常-->
+    <string name="workorder_step_nomal">正常</string>
+    <!--异常-->
+    <string name="workorder_step_abnomal">异常</string>
+    <!--请输入备注-->
+    <string name="workorder_step_not_input">请输入备注</string>
+    <!--结果正常-->
+    <string name="workorder_step_normal">结果正常</string>
+    <!--结果异常-->
+    <string name="workorder_step_abnormal">结果异常</string>
+    <!--备注:-->
+    <string name="workorder_step_remark">备注：</string>
 </resources>

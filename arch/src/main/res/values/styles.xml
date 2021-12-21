@@ -8,7 +8,23 @@
         <!--取消actionbar-->
         <item name="windowActionBar">false</item>
         <!--背景透明-->
+        <item name="android:windowIsTranslucent">false</item>
+
+        <!--toolbar高度-->
+        <item name="qmui_topbar_height">48dp</item>
+        <!--加载布局-->
+        <item name="styleLoadingLayout">@style/LoadingLayoutStyle</item>
+    </style>
+
+    <style name="AppTheme.Transparent" parent="FMAppTheme">
+        <!--取消标题-->
+        <item name="windowNoTitle">true</item>
+        <!--取消actionbar-->
+        <item name="windowActionBar">false</item>
+        <!--背景透明-->
         <item name="android:windowIsTranslucent">true</item>
+
+        <item name="android:windowBackground">#00000000</item>
         <!--toolbar高度-->
         <item name="qmui_topbar_height">48dp</item>
         <!--加载布局-->
@@ -31,8 +47,9 @@
     </style>
 
     <style name="AppTheme.Fullscreen" parent="AppTheme.NoActionBar">
+        <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <!--有返回按钮的topbar-->

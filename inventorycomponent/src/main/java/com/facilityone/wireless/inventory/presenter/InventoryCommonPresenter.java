@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.ec.commonpresenter.CommonBasePresenter;
 import com.facilityone.wireless.a.arch.ec.module.Page;
+import com.facilityone.wireless.a.arch.ec.ui.FzScanActivity;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.inventory.R;
@@ -16,8 +17,10 @@ import com.facilityone.wireless.inventory.model.ReserveService;
 import com.facilityone.wireless.inventory.model.StorageService;
 import com.fm.tool.network.model.BaseResponse;
 import com.fm.tool.scan.ScanActivity;
+import com.huawei.hms.ml.scan.HmsScan;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.zdf.activitylauncher.ActivityLauncher;
 
 import java.util.List;
 
@@ -34,40 +37,45 @@ public class InventoryCommonPresenter<V extends BaseFragment> extends CommonBase
      * 扫描物资二维码
      */
     public void scanMaterialQRCode(final long warehouseId, final String selectStorage) {
-        Intent intent = new Intent(getV().getContext(), ScanActivity.class);
-        startActivity(intent);
-        ScanActivity.setOnScanResultListener(new ScanActivity.OnScanResultListener() {
-            @Override
-            public void success(String s) {
-                MaterialService.InventoryQRCodeBean inventoryQRCodeBean = getInventoryQRCodeBean(s);
-                if (inventoryQRCodeBean != null) {
-                    try {
-                        long tempWarehouseId = Long.parseLong(inventoryQRCodeBean.wareHouseId);
-                        if (warehouseId != -1 && warehouseId != tempWarehouseId) {
-                            if (!TextUtils.isEmpty(selectStorage)) {
-                                ToastUtils.showShort(String.format(getV().getString(R.string.inventory_material_no_exist_inventory_tip), selectStorage));
-                            } else {
-                                ToastUtils.showShort(String.format(getV().getString(R.string.inventory_material_no_exist_inventory_tip), ""));
+        Intent intent = new Intent(getV().getContext(), FzScanActivity.class);
+        ActivityLauncher.init(getV().getActivity())
+                .startActivityForResult(intent, new ActivityLauncher.Callback() {
+                    @Override
+                    public void onActivityResult(int resultCode, Intent data) {
+                        if (data != null){
+                            HmsScan result=data.getParcelableExtra("scanResult");
+                            if (result!=null){
+                                if (result.originalValue != null){
+                                    MaterialService.InventoryQRCodeBean inventoryQRCodeBean = getInventoryQRCodeBean(result.originalValue);
+                                    try {
+                                        long tempWarehouseId = Long.parseLong(inventoryQRCodeBean.wareHouseId);
+                                        if (warehouseId != -1 && warehouseId != tempWarehouseId) {
+                                            if (!TextUtils.isEmpty(selectStorage)) {
+                                                ToastUtils.showShort(String.format(getV().getString(R.string.inventory_material_no_exist_inventory_tip), selectStorage));
+                                            } else {
+                                                ToastUtils.showShort(String.format(getV().getString(R.string.inventory_material_no_exist_inventory_tip), ""));
+                                            }
+
+                                            return;
+                                        }
+
+                                        if (TextUtils.isEmpty(inventoryQRCodeBean.code) || tempWarehouseId == -1) {
+                                            ToastUtils.showShort(R.string.inventory_qr_code_error);
+                                            return;
+                                        }
+                                        //根据二维码获取物资详情
+                                        getMaterialInfoByQRCode(tempWarehouseId, inventoryQRCodeBean.code);
+                                    } catch (NumberFormatException e) {
+                                        e.printStackTrace();
+                                    }
+                                }else {
+                                    ToastUtils.showShort(R.string.inventory_qr_code_error);
+                                }
                             }
-
-                            return;
                         }
 
-                        if (TextUtils.isEmpty(inventoryQRCodeBean.code) || tempWarehouseId == -1) {
-                            ToastUtils.showShort(R.string.inventory_qr_code_error);
-                            return;
-                        }
-                        //根据二维码获取物资详情
-                        getMaterialInfoByQRCode(tempWarehouseId, inventoryQRCodeBean.code);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
                     }
-
-                } else {
-                    ToastUtils.showShort(R.string.inventory_qr_code_error);
-                }
-            }
-        });
+                });
     }
 
     /**

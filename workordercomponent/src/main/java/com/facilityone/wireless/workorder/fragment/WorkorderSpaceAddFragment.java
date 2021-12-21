@@ -1,5 +1,6 @@
 package com.facilityone.wireless.workorder.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import androidx.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.facilityone.wireless.a.arch.base.BaseScanFragment;
 import com.facilityone.wireless.a.arch.ec.module.ISelectDataService;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
@@ -16,6 +18,7 @@ import com.facilityone.wireless.a.arch.widget.CustomContentItemView;
 import com.facilityone.wireless.a.arch.widget.EditNumberView;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.facilityone.wireless.workorder.R;
+import com.facilityone.wireless.workorder.WorkOrderNfcList;
 import com.facilityone.wireless.workorder.module.WorkorderConstant;
 import com.facilityone.wireless.workorder.module.WorkorderOptService;
 import com.facilityone.wireless.workorder.module.WorkorderService;
@@ -191,8 +194,11 @@ public class WorkorderSpaceAddFragment extends BaseFragment<WorkorderSpaceAddPre
         }
         Bundle bundle = new Bundle();
         bundle.putParcelable(WORKORDER_LOCATION, mLocationsBean);
-        setFragmentResult(RESULT_OK, bundle);
-        pop();
+        Intent intent = new Intent(getContext(), WorkOrderNfcList.class);
+        startActivity(intent,bundle);
+        getActivity().finish();
+//        setFragmentResult(RESULT_OK, bundle);
+//        pop();
     }
 
 
@@ -229,4 +235,5 @@ public class WorkorderSpaceAddFragment extends BaseFragment<WorkorderSpaceAddPre
         fragment.setArguments(bundle);
         return fragment;
     }
+
 }

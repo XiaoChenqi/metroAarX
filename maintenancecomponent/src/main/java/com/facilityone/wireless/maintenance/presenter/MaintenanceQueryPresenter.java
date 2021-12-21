@@ -75,7 +75,7 @@ public class MaintenanceQueryPresenter extends BaseMaintenancePresenter<Maintena
                             getV().noDataRefresh(data.contents);
                             return;
                         }
-                        getV().refreshSuccessUI(data.contents,page,refresh);
+                        getV().refreshSuccessUI(data.contents, data.page, refresh);
                     }
 
                     @Override

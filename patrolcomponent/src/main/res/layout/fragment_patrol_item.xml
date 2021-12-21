@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/root"
               xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/app_bg"
@@ -18,7 +19,9 @@
         android:layout_marginBottom="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_10"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,6 +30,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/device_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_13"
@@ -37,7 +41,9 @@
                 android:textColor="@color/grey_47"
                 android:textSize="@dimen/sp_15"/>
 
+
             <Switch
+                android:visibility="gone"
                 android:id="@+id/device_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,6 +55,35 @@
                 android:paddingTop="@dimen/dp_4"
                 android:thumb="@drawable/switch_ios_thumb"
                 android:track="@drawable/switch_ios_track_selector"/>
+
+            <RadioGroup
+                android:id="@+id/rb_patrol_item_rg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="@dimen/dp_13"
+                android:paddingBottom="@dimen/dp_4"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_4"
+                >
+
+                <RadioButton
+                    android:id="@+id/rb_patrol_item_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="通风"
+                    />
+                <RadioButton
+                    android:id="@+id/rb_patrol_item_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="空调"
+                    />
+
+
+            </RadioGroup>
         </LinearLayout>
 
         <View style="@style/secant_line_style"/>

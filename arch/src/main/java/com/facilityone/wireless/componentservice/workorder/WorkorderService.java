@@ -40,6 +40,9 @@ public interface WorkorderService extends IService {
 
     BaseFragment getWorkorderCreateFragment(int fromType, long equipmentId);
 
+    //综合巡检入口
+    BaseFragment getWorkorderCreateFragment(int fromType, long equipmentId,String desc,LocationBean locationBean,String locationName,Long patrolDetailId);
+
     //巡检需求报障
     BaseFragment getWorkorderCreateFragment(int fromType,
                                             long equipmentId,

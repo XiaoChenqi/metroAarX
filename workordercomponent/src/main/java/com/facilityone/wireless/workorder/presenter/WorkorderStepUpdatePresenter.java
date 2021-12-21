@@ -26,7 +26,7 @@ public class WorkorderStepUpdatePresenter extends CommonBasePresenter<WorkorderS
     public void uploadFileSuccess(List<String> ids, int type) {
         WorkorderService.WorkorderStepUpdateReq request = getV().getRequest();
         getV().setPhoto(ids);
-        request.photos = ids;
+//        request.photos = ids;
     }
 
     @Override

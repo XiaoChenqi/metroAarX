@@ -6,7 +6,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dp_16"
@@ -16,7 +18,9 @@
             android:id="@+id/tv_title"
             style="@style/h3_text_style"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            />
 
         <TextView
             android:id="@+id/tv_red"
@@ -31,10 +35,10 @@
             android:id="@+id/tv_tip"
             style="@style/h3_text_style"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right|center_vertical"
-            android:paddingLeft="@dimen/dp_3"
+            android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_3"
             android:singleLine="true"
             android:ellipsize="end"

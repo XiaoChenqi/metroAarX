@@ -66,6 +66,13 @@ public class WorkorderServiceImpl implements WorkorderService {
     }
 
     @Override
+    public BaseFragment getWorkorderCreateFragment(int fromType, long equipmentId, String desc, LocationBean locationBean, String locationName,Long patrolDetailId) {
+        return WorkorderCreateFragment.getInstance(fromType, equipmentId, desc, locationBean,locationName,patrolDetailId);
+    }
+
+
+
+    @Override
     public BaseFragment getWorkorderCreateFragment(int fromType, long equipmentId
             , String locationName, LocationBean locationBean
             , List<LocalMedia> localMedias, Long itemId

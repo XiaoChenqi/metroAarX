@@ -3,8 +3,10 @@ package com.facilityone.wireless.a.arch.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +67,7 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
         boolean showLine = array.getBoolean(R.styleable.CommonContentItemView_fm_content_item_show_line, false);
         boolean showRed = array.getBoolean(R.styleable.CommonContentItemView_fm_content_item_show_red, false);
         boolean showIcon = array.getBoolean(R.styleable.CommonContentItemView_fm_content_item_show_tip_icon, false);
-        boolean hideLines=array.getBoolean(R.styleable.CommonContentItemView_fm_content_item_hide_lines, false);
+        boolean hideLines = array.getBoolean(R.styleable.CommonContentItemView_fm_content_item_hide_lines, false);
 
         String title = array.getString(R.styleable.CommonContentItemView_fm_content_item_title);
         String tip = array.getString(R.styleable.CommonContentItemView_fm_content_item_tip);
@@ -76,10 +78,10 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
         mRedTv.setVisibility(showRed ? VISIBLE : GONE);
         mDashLine.setVisibility(!showLine ? VISIBLE : GONE);
         mLine.setVisibility(showLine ? VISIBLE : GONE);
-        if (hideLines){
+        if (hideLines) {
             mDashLine.setVisibility(INVISIBLE);
             mLine.setVisibility(INVISIBLE);
-        }else {
+        } else {
             mDashLine.setVisibility(!showLine ? VISIBLE : GONE);
             mLine.setVisibility(showLine ? VISIBLE : GONE);
         }
@@ -90,7 +92,7 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
         mIconIv.setVisibility(showIcon ? VISIBLE : INVISIBLE);
         mTitleTv.setText(title);
         mTipTv.setText(tip);
-        if(drawable != null) {
+        if (drawable != null) {
             mIconIv.setBackground(drawable);
         }
         if (hint != null) {
@@ -103,10 +105,10 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
         mClearIconIv.setOnClickListener(this);
     }
 
-    public void canInput(boolean can){
-        if (!can){
+    public void canInput(boolean can) {
+        if (!can) {
             mInputEt.setFocusable(false);
-        }else {
+        } else {
             mInputEt.setFocusable(true);
         }
     }
@@ -144,6 +146,20 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
         return "";
     }
 
+    public void setTextSigleLine(boolean single) {
+        if (single) {
+            mTipTv.setSingleLine(true);
+        } else {
+            mTipTv.setSingleLine(false);
+        }
+    }
+    public void setTextGravity(int gravity){
+        mTipTv.setGravity(gravity);
+    }
+
+
+
+
     public void setTipText(String tip) {
         if (mTipTv != null && tip != null) {
             mTipTv.setText(tip);
@@ -162,35 +178,39 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
         }
     }
 
+    public void setHint(String hint){
+        mInputEt.setHint(hint);
+    }
+
     public void showDashLine(boolean show) {
         mLine.setVisibility(show ? GONE : VISIBLE);
         mDashLine.setVisibility(show ? VISIBLE : GONE);
     }
 
-    public void showRed(boolean show){
-        if(mRedTv != null) {
+    public void showRed(boolean show) {
+        if (mRedTv != null) {
             mRedTv.setVisibility(show ? VISIBLE : GONE);
         }
     }
 
-    public void showClearIocn(boolean showClear){
-        if(mClearIconIv != null) {
+    public void showClearIocn(boolean showClear) {
+        if (mClearIconIv != null) {
             mClearIconIv.setVisibility(showClear ? VISIBLE : GONE);
         }
-        if(mIconIv != null) {
+        if (mIconIv != null) {
             mIconIv.setVisibility(showClear ? GONE : VISIBLE);
         }
     }
 
-    public void showIcon(boolean showIcon){
-        if(mIconIv != null) {
+    public void showIcon(boolean showIcon) {
+        if (mIconIv != null) {
             mIconIv.setVisibility(showIcon ? VISIBLE : INVISIBLE);
         }
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.clear_icon_iv) {
+        if (v.getId() == R.id.clear_icon_iv) {
             mTipTv.setText("");
             showClearIocn(false);
         }

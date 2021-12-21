@@ -61,9 +61,8 @@
 
         </LinearLayout>
 
-
         <LinearLayout
-            android:id="@+id/patrol_task_item_detail_ll"
+            android:id="@+id/patrol_task_item_taskName_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_top"
@@ -79,13 +78,43 @@
                     style="@style/h5_13_9_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/patrol_spot_comprehensive_tip"/>
+                    android:text="@string/patrol_task_type_patrol_taskName" />
+
+                <TextView
+                    android:id="@+id/patrol_task_item_taskName_tv"
+                    style="@style/h5_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/patrol_task_item_detail_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/patrol_task_item_taskName_ll"
+            android:layout_marginTop="@dimen/dp_12"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/h5_13_9_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/patrol_spot_comprehensive_tip" />
 
                 <TextView
                     android:id="@+id/patrol_task_item_point_tv"
                     style="@style/h5_text_style"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -99,13 +128,13 @@
                     style="@style/h5_13_9_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/patrol_spot_device_tip"/>
+                    android:text="@string/patrol_spot_device_tip" />
 
                 <TextView
                     android:id="@+id/patrol_task_item_device_tv"
                     style="@style/h5_text_style"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
 

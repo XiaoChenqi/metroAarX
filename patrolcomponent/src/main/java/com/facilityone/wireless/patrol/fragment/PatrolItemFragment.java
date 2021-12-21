@@ -10,33 +10,48 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.a.arch.ec.module.LocationBean;
+import com.facilityone.wireless.a.arch.ec.module.OrdersBean;
+import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
+import com.facilityone.wireless.a.arch.offline.dao.PatrolSpotDao;
+import com.facilityone.wireless.a.arch.offline.dao.PatrolTaskDao;
 import com.facilityone.wireless.a.arch.offline.model.entity.DBPatrolConstant;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolEquEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolItemEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolPicEntity;
+import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
+import com.facilityone.wireless.a.arch.offline.model.entity.PatrolTaskEntity;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
+import com.facilityone.wireless.a.arch.offline.util.FMDBHelper;
 import com.facilityone.wireless.a.arch.utils.NoDoubleClickListener;
 import com.facilityone.wireless.a.arch.utils.PictureSelectorManager;
 import com.facilityone.wireless.a.arch.widget.BottomTextListSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
+import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.basiclib.utils.DateUtils;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
+import com.facilityone.wireless.componentservice.workorder.WorkorderService;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.adapter.PatrolItemAdapter;
+import com.facilityone.wireless.patrol.module.PatrolConstant;
 import com.facilityone.wireless.patrol.module.PatrolTransmitService;
 import com.facilityone.wireless.patrol.presenter.PatrolItemPresenter;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luojilab.component.componentlib.router.Router;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
@@ -61,12 +76,18 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     private Switch mSwitch;
     private TextView mTvPre;
     private TextView mTvNext;
+    private RadioGroup mRgChoice;//车站工况选择项
+    private RadioButton mRbLeft; //通风
+    private RadioButton mRbRight; //空调
+    private TextView mChoiceTitle; //选项标题
 
     private static final String PATROL_EQU_LIST = "patrol_equ_list";
     private static final String PATROL_SPOT_ID = "patrol_spot_id";
     private static final String PATROL_SPOT_NAME = "patrol_spot_name";
     private static final String CLICK_POSITION = "click_position";
     private static final String PATROL_TIME = "patrol_spot_time";
+    private static final String PATROL_LOCATION = "patrol_spot_location";
+    private static final String PATROL_SPOT = "patrol_spot";
     private static final int REQUEST_EXCEPTION = 50001;
     private static final int MAX_PHOTO = 2000;
 
@@ -75,15 +96,22 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     private int mDevicePosition;
     private List<PatrolEquEntity> mEntities;
     private List<PatrolItemEntity> mItemEntities;
+    private List<PatrolItemEntity> mItemChoiceList; //选择后的数据源
     private PatrolItemAdapter mAdapter;
     private int mItemClickPosition;
     private boolean mChange;//是否改变了item内容
     private boolean mClickLastOne;
     private int mTempPosition;
+    private LocationBean mLocation;
+    private PatrolSpotEntity mPatrolSpotEntity;
     private boolean mBack;
     private String mWaterMark;
     private String mNeedTime;
     private boolean canComplete=false;
+    private String attention ;
+    private String name = "";
+    private Integer itemChoice = -1;
+
 
     @Override
     public PatrolItemPresenter createPresenter() {
@@ -112,14 +140,34 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
             mSpotId = arguments.getLong(PATROL_SPOT_ID);
             mDevicePosition = arguments.getInt(CLICK_POSITION, 0);
             mEntities = arguments.getParcelableArrayList(PATROL_EQU_LIST);
+            mLocation=arguments.getParcelable(PATROL_LOCATION);
             mSpotName = arguments.getString(PATROL_SPOT_NAME,"");
             mNeedTime=arguments.getString(PATROL_TIME,"");
+            mPatrolSpotEntity=arguments.getParcelable(PATROL_SPOT);
         }
         if (mEntities == null || mEntities.size() <= mDevicePosition) {
             pop();
             return;
         }
+
+
         initView();
+        initOnClick();
+    }
+
+    private void initOnClick() {
+        for (int i = 0; i < mRgChoice.getChildCount(); i++) {
+            mRgChoice.getChildAt(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (view.getId()== R.id.rb_patrol_item_left){
+                        checkRadioFun(view,"normal");
+                    }else if (view.getId()== R.id.rb_patrol_item_right){
+                        checkRadioFun(view,"abnormal");
+                    }
+                }
+            });
+        }
     }
 
     private void initView() {
@@ -129,6 +177,12 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
         mSwitch = findViewById(R.id.device_switch);
         mTvPre = findViewById(R.id.pre_btn);
         mTvNext = findViewById(R.id.next_btn);
+
+        //2021-12-9
+        mRgChoice = findViewById(R.id.rb_patrol_item_rg);
+        mRbLeft = findViewById(R.id.rb_patrol_item_left);
+        mRbRight = findViewById(R.id.rb_patrol_item_right);
+        mChoiceTitle = findViewById(R.id.device_title);
 
         mTvPre.setOnClickListener(this);
         mTvNext.setOnClickListener(this);
@@ -150,6 +204,13 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
 
         showTitleMenu();
         getItemList();
+        setRightImageButton(R.drawable.icon_attention,R.id.patrol_attention_id);
+        PatrolTaskDao db = new PatrolTaskDao();
+        if (mPatrolSpotEntity !=null && mPatrolSpotEntity.getTaskId() != null){
+            PatrolTaskEntity ptData = db.getTask(mPatrolSpotEntity.getTaskId());
+            attention = ptData.getPrecautions()+"";
+        }
+
     }
 
     public void getItemList() {
@@ -178,6 +239,17 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
         mRecyclerView.scrollToPosition(0);
         mAdapter.notifyDataSetChanged();
         dismissLoading();
+
+        if (mItemEntities.get(0).getContent().equals("车站工况") && !TextUtils.isEmpty(mItemEntities.get(0).getSelect())){
+            String itemChoice= mItemEntities.get(0).getSelect()+"";
+           if (itemChoice.equals("空调")){
+               mRbRight.setChecked(true);
+           }else {
+               mRbLeft.setChecked(true);
+           }
+            mAdapter.setNewData(extracted());
+        }
+
     }
 
     private void showTitleMenu() {
@@ -187,7 +259,14 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
             setTitle(R.string.patrol_task_spot_content);
             String projectName = SPUtils.getInstance(SPKey.SP_MODEL).getString(SPKey.PROJECT_NAME,"");
             mWaterMark = projectName + "\r\n" + mSpotName + "-" + getString(R.string.patrol_task_spot_content) + "\r\n" + time;
-            mLlDeviceSwitch.setVisibility(View.GONE);
+            PatrolSpotDao db = new PatrolSpotDao();
+            String taskName = db.getSpot(mSpotId).getTaskName().trim()+"";
+            if (taskName.equals("空调设备状况")){
+                mLlDeviceSwitch.setVisibility(View.VISIBLE);
+                mChoiceTitle.setText("车站工况");
+            }else {
+                mLlDeviceSwitch.setVisibility(View.GONE);
+            }
         } else {
             String projectName = SPUtils.getInstance(SPKey.SP_MODEL).getString(SPKey.PROJECT_NAME,"");
             String title = StringUtils.formatString(equEntity.getName()) + (TextUtils.isEmpty(equEntity.getCode()) ? "" : "(" + equEntity.getCode() + ")");
@@ -195,6 +274,67 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
             setTitle(title);
             mLlDeviceSwitch.setVisibility(View.VISIBLE);
             mSwitch.setChecked(!equEntity.isDeviceStatus());
+        }
+    }
+
+    /**
+     * 处理radioButtom 在radioGroup中不可取消选中的问题
+     * */
+    private void checkRadioFun(View view, String a) {
+        if (name.equals(a)) {
+            mRgChoice.clearCheck();
+            name = "";
+        } else {
+            name = a;
+            mRgChoice.check(view.getId());
+        }
+        mAdapter.setNewData(extracted());
+    }
+
+    // 选项改变数据源重组
+    private List<PatrolItemEntity> extracted() {
+        mItemChoiceList = new ArrayList<>();
+        if (mRbLeft.isChecked()){
+            for (PatrolItemEntity item : mItemEntities) {
+                if (item.getValidStatus() != null &&
+                        (item.getValidStatus()==  PatrolConstant.EQU_STOP
+                                || item.getValidStatus() == PatrolConstant.EQU_ALL)){
+                    mItemChoiceList.add(item);
+                }
+            }
+            itemChoice = 1;
+            mItemEntities.get(0).setSelect("通风");
+        }else if (mRbRight.isChecked()){
+            for (PatrolItemEntity item : mItemEntities) {
+                if (item.getValidStatus() != null &&
+                        (item.getValidStatus()==  PatrolConstant.EQU_USE
+                                || item.getValidStatus() == PatrolConstant.EQU_ALL)){
+                    mItemChoiceList.add(item);
+                }
+            }
+            itemChoice = 2;
+            mItemEntities.get(0).setSelect("空调");
+        }else {
+            mItemChoiceList = mItemEntities;
+            itemChoice = 1; //初始化
+            mItemEntities.get(0).setSelect("");
+        }
+
+        return mItemChoiceList;
+    }
+
+    @Override
+    public void onRightImageMenuClick(View view) {
+        super.onRightImageMenuClick(view);
+        /**
+         * 注意事项
+         * */
+        if (view.getId() == R.id.patrol_attention_id){
+            if (TextUtils.isEmpty(attention)){
+                ToastUtils.showShort("无注意事项");
+                return;
+            }
+            startForResult(PatrolPrecautionsFragment.getInstance(attention+""),-1);
         }
     }
 
@@ -245,7 +385,7 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
 
 
     private void saveDataBefore() {
-        final int position = getPresenter().haveMiss(mItemEntities);
+        final int position = getPresenter().haveMiss(mItemEntities,itemChoice);
         if (position == -1) {
             getPresenter().saveData2Db(mItemEntities, mEntities, mTempPosition, false, mClickLastOne, mChange, mBack);
         } else {
@@ -321,6 +461,16 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
                     .setOnSheetItemClickListener(PatrolItemFragment.this)
                     .build()
                     .show();
+        }else if (id == R.id.question_report_iv){
+            Router router = Router.getInstance();
+            WorkorderService workorderService = (WorkorderService) router.getService(WorkorderService.class.getSimpleName());
+            if (workorderService != null) {
+                PatrolItemEntity patrolItemEntity = mItemEntities.get(position);
+                String desc=StringUtils.formatString(patrolItemEntity.getContent()) + (TextUtils.isEmpty(patrolItemEntity.getUnit()) ? "" : "(" + patrolItemEntity.getUnit() + ")");
+                Long eqId=patrolItemEntity.getEqId();
+                BaseFragment workorderCreateFragment = workorderService.getWorkorderCreateFragment(-1,eqId,desc,mPatrolSpotEntity.getLocation(),mPatrolSpotEntity.getLocationName(),patrolItemEntity.getContentResultId());
+                start(workorderCreateFragment);
+            }
         }
     }
 
@@ -442,6 +592,18 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
         bundle.putLong(PATROL_SPOT_ID, spotId);
         bundle.putInt(CLICK_POSITION, position);
         bundle.putString(PATROL_SPOT_NAME, spotName);
+        PatrolItemFragment instance = new PatrolItemFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+    public static PatrolItemFragment getInstance(Long spotId, ArrayList<PatrolEquEntity> entities, int position, String spotName, LocationBean locationBean, PatrolSpotEntity entity) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(PATROL_EQU_LIST, entities);
+        bundle.putLong(PATROL_SPOT_ID, spotId);
+        bundle.putInt(CLICK_POSITION, position);
+        bundle.putString(PATROL_SPOT_NAME, spotName);
+        bundle.putParcelable(PATROL_LOCATION,locationBean);
+        bundle.putParcelable(PATROL_SPOT,entity);
         PatrolItemFragment instance = new PatrolItemFragment();
         instance.setArguments(bundle);
         return instance;

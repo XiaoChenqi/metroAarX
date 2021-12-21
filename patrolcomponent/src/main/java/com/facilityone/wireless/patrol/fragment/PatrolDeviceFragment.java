@@ -4,6 +4,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +17,7 @@ import com.facilityone.wireless.a.arch.ec.collect.CollectUtils;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolEquEntity;
+import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.adapter.PatrolDeviceAdapter;
@@ -40,13 +43,16 @@ public class PatrolDeviceFragment extends BaseFragment<PatrolDevicePresenter> im
 
     private static final String PATROL_SPOT_NAME = "patrol_spot_name";
     private static final String PATROL_SPOT_ID = "patrol_spot_id";
+    private static final String PATROL_SPOT = "patrol_spot";
     private static final int REQUEST_ITEM = 40001;
 
     private Long mSpotId;
     private String mSpotName;
+    private PatrolSpotEntity mPatrolSpot;
     private PatrolDeviceAdapter mAdapter;
     private List<PatrolEquEntity> mEntities;
     private boolean mChange;
+    private boolean fromIcon;//判断是不是巡检项过来的
 
     @Override
     public PatrolDevicePresenter createPresenter() {
@@ -74,6 +80,7 @@ public class PatrolDeviceFragment extends BaseFragment<PatrolDevicePresenter> im
         Bundle arguments = getArguments();
         if (arguments != null) {
             mSpotName = arguments.getString(PATROL_SPOT_NAME, getString(R.string.patrol_device));
+            mPatrolSpot = arguments.getParcelable(PATROL_SPOT);
             title = mSpotName;
             mSpotId = arguments.getLong(PATROL_SPOT_ID);
         }
@@ -108,7 +115,10 @@ public class PatrolDeviceFragment extends BaseFragment<PatrolDevicePresenter> im
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         Long spotId=mAdapter.getData().get(position).getSpotId();
         //检查项页面
-        startForResult(PatrolItemFragment.getInstance(spotId, (ArrayList<PatrolEquEntity>) mEntities, position, mSpotName), REQUEST_ITEM);
+
+            startForResult(PatrolItemFragment.getInstance(spotId, (ArrayList<PatrolEquEntity>) mEntities, position, mSpotName,mEntities.get(position).getLocation(),mPatrolSpot), REQUEST_ITEM);
+
+
 
     }
 
@@ -240,6 +250,16 @@ public class PatrolDeviceFragment extends BaseFragment<PatrolDevicePresenter> im
         Bundle bundle = new Bundle();
         bundle.putLong(PATROL_SPOT_ID, spotId);
         bundle.putString(PATROL_SPOT_NAME, spotName);
+        PatrolDeviceFragment instance = new PatrolDeviceFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+
+    public static PatrolDeviceFragment getInstance(String spotName, Long spotId, PatrolSpotEntity entity) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(PATROL_SPOT_ID, spotId);
+        bundle.putString(PATROL_SPOT_NAME, spotName);
+        bundle.putParcelable(PATROL_SPOT, entity);
         PatrolDeviceFragment instance = new PatrolDeviceFragment();
         instance.setArguments(bundle);
         return instance;

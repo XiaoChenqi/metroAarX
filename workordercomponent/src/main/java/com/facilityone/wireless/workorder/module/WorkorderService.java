@@ -6,7 +6,9 @@ import android.os.Parcelable;
 import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.Page;
+import com.google.gson.annotations.SerializedName;
 
+import java.security.PublicKey;
 import java.util.Comparator;
 import java.util.List;
 
@@ -33,11 +35,13 @@ public class WorkorderService {
 
     //计划性维护步骤编辑
     public static class WorkorderStepUpdateReq {
-        public Long woId;
-        public Long stepId;
-        public Boolean finished;
-        public String comment;
-        public List<String> photos;
+        public Long woId; //工单ID
+        public Long stepId; //步骤ID
+        public Boolean finished; //是否完成
+        public String comment;  //工作描述
+        public List<String> photos;  //图片ID数组
+        public Integer eqNumber; //设备数量
+        public String enterText; //输入文本
     }
 
     //工单执行人执行时间保存
@@ -135,7 +139,16 @@ public class WorkorderService {
         public List<WorkOrderEquipmentsBean> equipmentSystemName; //故障设备名称
         public List<RelatedOrder> relatedOrder; //关联工单
         public String failueDescription;//故障描述
+        public List<PmSpaceBean> pmPositions; //空间位置信息
+        //11.30
+        //TODO 故障对象名称 ID 故障原因ID 具体故障原因输入
+        public Long componentId; //故障对象Id
+        public String componentName; //故障名称
+        public Long causeId; //故障原因
+        public String causeOther; //故障原因ID——其他原因时显示具体原因
 
+        //2021-12-8
+        public Boolean needSample;   //是否需要抽检
     }
 
     public static class RelatedOrder {
@@ -148,6 +161,8 @@ public class WorkorderService {
         public String name; // 计划性维护名称
         public String influence; // 计划性维护影响
         public Long priority; // 优先级
+        public Boolean eqCountAccord; //是否需求输入设备数量
+        public String mattersNeedingAttention; //注意事项
     }
 
     public static class HistoriesBean implements Parcelable {
@@ -325,6 +340,60 @@ public class WorkorderService {
         };
     }
 
+    public static class PmSpaceBean implements Parcelable{
+        public Long spotId;
+        public String blName; //点位名称
+        public String name; //名称
+        public Long woId;
+        public Long updateDate;
+        public String nfcTag; //点位信息
+        public Long emId; //匹配人员ID
+        public String emName; //执行人
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeValue(this.spotId);
+            parcel.writeString(this.blName);
+            parcel.writeString(this.name);
+            parcel.writeValue(this.woId);
+            parcel.writeValue(this.updateDate);
+            parcel.writeString(this.nfcTag);
+            parcel.writeValue(this.emId);
+            parcel.writeString(this.emName);
+        }
+
+        public PmSpaceBean() {
+        }
+
+        protected PmSpaceBean(Parcel in) {
+            this.spotId = (Long) in.readValue(Long.class.getClassLoader());
+            this.blName = in.readString();
+            this.name = in.readString();
+            this.woId = (Long) in.readValue(Long.class.getClassLoader());
+            this.updateDate = (Long) in.readValue(Long.class.getClassLoader());
+            this.nfcTag = in.readString();
+            this.emId = (Long) in.readValue(Long.class.getClassLoader());
+            this.emName = in.readString();
+        }
+
+        public static final Creator<PmSpaceBean> CREATOR = new Creator<PmSpaceBean>() {
+            @Override
+            public PmSpaceBean createFromParcel(Parcel source) {
+                return new PmSpaceBean(source);
+            }
+
+            @Override
+            public PmSpaceBean[] newArray(int size) {
+                return new PmSpaceBean[size];
+            }
+        };
+    }
+
     public static class WorkOrderToolsBean implements Parcelable {
         public Long toolId; // 物料或工具ID
         public String name; // 物料或工具名称
@@ -390,6 +459,10 @@ public class WorkorderService {
         public String workTeamName;//工作组名称
         public boolean isOperator;//是否为执行人，用于item是否可编辑
         public List<String> photos;// 步骤图片
+        public Boolean accordText; //是否需要输入框
+        public Boolean stepStatus; //判断步骤是否完成
+        public Integer eqNumber ;//设备数量
+        public String enterText; //输入内容
 
         public boolean isOperator() {
             return isOperator;
@@ -424,6 +497,10 @@ public class WorkorderService {
             dest.writeString(this.workTeamName);
             dest.writeByte(this.isOperator ? (byte) 1 : (byte) 0);
             dest.writeStringList(this.photos);
+            dest.writeBoolean(this.accordText);
+            dest.writeBoolean(this.stepStatus);
+            dest.writeValue(this.eqNumber);
+            dest.writeString(this.enterText);
         }
 
         protected StepsBean(Parcel in) {
@@ -436,6 +513,10 @@ public class WorkorderService {
             this.workTeamName = in.readString();
             this.isOperator = in.readByte() != 0;
             this.photos = in.createStringArrayList();
+            this.accordText = in.readBoolean();
+            this.stepStatus = in.readBoolean();
+            this.eqNumber = (Integer) in.readValue(Integer.class.getClassLoader());
+            this.enterText = in.readString();
         }
 
         public static final Creator<StepsBean> CREATOR = new Creator<StepsBean>() {
@@ -818,6 +899,8 @@ public class WorkorderService {
         public Integer countdown; //设置租店完成时间
         public Integer status; //当前设备任务状态
     }
+
+
     
 
 }

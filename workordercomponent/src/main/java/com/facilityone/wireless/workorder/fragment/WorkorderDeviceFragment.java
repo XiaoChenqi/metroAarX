@@ -1,10 +1,16 @@
 package com.facilityone.wireless.workorder.fragment;
 
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.a.arch.base.BaseScanFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.workorder.R;
@@ -20,17 +26,13 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 /**
  * Author：gary
  * Email: xuhaozv@163.com
  * description:工单关联设备
  * Date: 2018/9/20 下午5:02
  */
-public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresenter> implements BaseQuickAdapter.OnItemChildClickListener {
+public class WorkorderDeviceFragment extends BaseScanFragment<WorkorderDevicePresenter> implements BaseQuickAdapter.OnItemChildClickListener {
 
     private RecyclerView mRecyclerView;
     private SmartRefreshLayout mRefreshLayout;
@@ -41,6 +43,7 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
     private static final String OPT_DEVICE = "opt_device";
     private static final String NEED_SCAN = "need_scan";
     private static final String IS_MAIN = "is_main";
+    private static final String IS_FROMQUERY = "is_fromquery";
     private static final int EDITOR_ADD_DEVICE_CODE = 5000;
 
     private Long mWoId;
@@ -57,6 +60,8 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
     private boolean taskStatus; //任务状态
 
     private final static int REFRESH = 500001; // 界面刷新
+    private WorkorderService.WorkOrderEquipmentsBean deviceInfor = null;
+    private Boolean fromQuery; //是否是从查询点进来的
 
     @Override
     public WorkorderDevicePresenter createPresenter() {
@@ -86,9 +91,10 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
             mWoId = arguments.getLong(WORKORDER_ID);
             mOptDevice = arguments.getBoolean(OPT_DEVICE, false);
             mNeedScan = arguments.getBoolean(NEED_SCAN, false);
-            mTitle=arguments.getString(WORKORDER_TITLE,getString(R.string.workorder_associated_equipment));
-            isMaintenanceOrder = arguments.getBoolean(IS_MAIN,false);
-            if(WorkorderDataHolder.hasDeviceData()) {
+            mTitle = arguments.getString(WORKORDER_TITLE, getString(R.string.workorder_associated_equipment));
+            isMaintenanceOrder = arguments.getBoolean(IS_MAIN, false);
+            fromQuery = arguments.getBoolean(IS_FROMQUERY,false);
+            if (WorkorderDataHolder.hasDeviceData()) {
                 mEquipmentsBeanList = (List<WorkorderService.WorkOrderEquipmentsBean>) WorkorderDataHolder.getDeviceData();
             }
 //            mEquipmentsBeanList = arguments.getParcelableArrayList(WORKORDER_DEVICES);
@@ -99,21 +105,16 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
     }
 
     private void initView() {
-
         setTitle(mTitle);
-//        if (mOptDevice && !isMaintenanceOrder) {
-//            setRightTextButton(R.string.workorder_add_menu, R.id.workorder_device_add_menu_id);
-//        }
         mRefreshLayout = findViewById(R.id.refreshLayout);
         mRecyclerView = findViewById(R.id.recyclerView);
 
-        mDeviceAdapter = new WorkorderDeviceAdapter(mEquipmentsBeanList, mOptDevice, mNeedScan,isMaintenanceOrder);
+        mDeviceAdapter = new WorkorderDeviceAdapter(mEquipmentsBeanList, mOptDevice, mNeedScan, isMaintenanceOrder);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mDeviceAdapter);
-
-
-
-        mDeviceAdapter.setOnItemChildClickListener(this);
+        if (!fromQuery){
+            mDeviceAdapter.setOnItemChildClickListener(this);
+        }
         mDeviceAdapter.setOnItemClick(new WorkorderDeviceAdapter.OnItemClick() {
             @Override
             public void onBtnDelete(final WorkorderService.WorkOrderEquipmentsBean device, final int position) {
@@ -153,7 +154,7 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
     @Override
     public void onRightTextMenuClick(View view) {
         addDevice = true;
-        startForResult(WorkorderDeviceEditorFragment.getInstance(null, mWoId, addDevice), EDITOR_ADD_DEVICE_CODE);
+        startForResult(WorkorderDeviceEditorFragment.getInstance(null, mWoId, addDevice,isMaintenanceOrder), EDITOR_ADD_DEVICE_CODE);
     }
 
     private void onRefresh() {
@@ -182,7 +183,7 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
     public void refreshEquipmentUI(WorkorderService.WorkorderInfoBean data) {
         List<WorkorderService.WorkOrderEquipmentsBean> workOrderEquipments = data.workOrderEquipments;
         mEquipmentsBeanList.clear();
-        if(workOrderEquipments !=null){
+        if (workOrderEquipments != null) {
             mEquipmentsBeanList.addAll(workOrderEquipments);
         }
         mDeviceAdapter.notifyDataSetChanged();
@@ -191,16 +192,16 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
     @Override
     public void leftBackListener() {
         Bundle bundle = new Bundle();
-        bundle.putLong(WORKORDER_ID,mWoId);
-        setFragmentResult(RESULT_OK,bundle);
+        bundle.putLong(WORKORDER_ID, mWoId);
+        setFragmentResult(RESULT_OK, bundle);
         pop();
     }
 
     @Override
     public boolean onBackPressedSupport() {
         Bundle bundle = new Bundle();
-        bundle.putLong(WORKORDER_ID,mWoId);
-        setFragmentResult(RESULT_OK,bundle);
+        bundle.putLong(WORKORDER_ID, mWoId);
+        setFragmentResult(RESULT_OK, bundle);
         pop();
         return true;
 
@@ -223,40 +224,58 @@ public class WorkorderDeviceFragment extends BaseFragment<WorkorderDevicePresent
              * @Date: 2021/8/24
              * @Infor: 未加判断，需要根据needScan参数判断是否可以扫码
              */
-
-                if (mNeedScan) {
-                    //判断是否存在倒计时
-                    getPresenter().isDoneDevice(mWoId,workOrderEquipmentsBean.equipmentCode,workOrderEquipmentsBean);
-                } else {
-                    result(workOrderEquipmentsBean);
-                }
+            if (mNeedScan && isMaintenanceOrder) {
+                //判断是否存在倒计时
+                getPresenter().isDoneDevice(mWoId, workOrderEquipmentsBean.equipmentCode, workOrderEquipmentsBean);
+            } else {
+                result(workOrderEquipmentsBean);
+            }
         }
     }
 
-    public void setCando(Boolean cando,WorkorderService.WorkOrderEquipmentsBean workOrderEquipmentsBean){
+    public void setCando(Boolean cando, WorkorderService.WorkOrderEquipmentsBean workOrderEquipmentsBean) {
         taskStatus = cando;
-        if (workOrderEquipmentsBean.finished == 0 && taskStatus){
-            ToastUtils.showShort("已有进行中的计划性维护，无法开启其他维护计划");
+        if (workOrderEquipmentsBean.finished == 0 && taskStatus) {
+            ToastUtils.showShort("您还有进行中的维护设备，请先完成。");
             return;
         }
-        getPresenter().scan(workOrderEquipmentsBean);
+        deviceInfor = new WorkorderService.WorkOrderEquipmentsBean();
+        deviceInfor = workOrderEquipmentsBean;
+        FMScan(getContext(),getActivity(),this);
     }
 
     public void result(WorkorderService.WorkOrderEquipmentsBean workOrderEquipmentsBean) {
         addDevice = false;
-        startForResult(WorkorderDeviceEditorFragment.getInstance(workOrderEquipmentsBean, mWoId, addDevice), EDITOR_ADD_DEVICE_CODE);
+        startForResult(WorkorderDeviceEditorFragment.getInstance(workOrderEquipmentsBean, mWoId, addDevice,isMaintenanceOrder), EDITOR_ADD_DEVICE_CODE);
     }
 
-    public static WorkorderDeviceFragment getInstance(Long woId, boolean optDevice, boolean needScan,String title,boolean isMaintenanceOrder) {
+    public static WorkorderDeviceFragment getInstance(boolean fromQuery,Long woId, boolean optDevice, boolean needScan, String title, boolean isMaintenanceOrder) {
         Bundle bundle = new Bundle();
 //        bundle.putParcelableArrayList(WORKORDER_DEVICES, devices);
         bundle.putLong(WORKORDER_ID, woId);
         bundle.putBoolean(OPT_DEVICE, optDevice);
+        bundle.putBoolean(IS_FROMQUERY, fromQuery);
         bundle.putBoolean(NEED_SCAN, needScan);
-        bundle.putString(WORKORDER_TITLE,title);
-        bundle.putBoolean(IS_MAIN,isMaintenanceOrder);
+        bundle.putString(WORKORDER_TITLE, title);
+        bundle.putBoolean(IS_MAIN, isMaintenanceOrder);
         WorkorderDeviceFragment fragment = new WorkorderDeviceFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void returnCode(String code) {
+        String[] qrcdoeList = code.split(",");
+        if (deviceInfor.equipmentCode.equals(qrcdoeList[0])) {
+            result(deviceInfor);
+        } else {
+            ToastUtils.showShort("设备二维码识别错误。请确认后再试。");
+        }
+    }
+
+    @Override
+    public void codeError() {
+        ToastUtils.showShort("设备二维码识别错误。请确认后再试。");
+        return;
     }
 }

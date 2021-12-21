@@ -37,9 +37,10 @@ public class PatrolSaveReq {
 
     public static class PatrolItemReq {
         public Long patrolTaskSpotResultId;
-        public String resultSelect;
-        public Double resultInput;
-        public String comment;
+        public String resultSelect; //选择值
+        public Double resultInput; //输入值（数字）
+        public String comment; //巡检项描述
+        public String resultText; //输入文本
         public List<String> photoIds;
     }
 }

@@ -34,6 +34,10 @@ public class PatrolSpotAdapter extends BaseQuickAdapter<PatrolSpotEntity, BaseVi
         helper.setText(R.id.patrol_task_item_point_tv, item.getCompNumber() + mContext.getString(R.string.patrol_task_zonghe_xiang));
         helper.setText(R.id.patrol_task_item_device_tv, item.getEquNumber() + mContext.getString(R.string.patrol_task_diawei_ge));
 
+        if (item.getTaskName() != null){
+            helper.setText(R.id.patrol_task_item_taskName_tv,item.getSpotTaskName()+"");
+        }
+
         if (item.getNeedSync() == DBPatrolConstant.DEFAULT_VALUE) {
             helper.setGone(R.id.no_sync_tv, false);
         } else if (item.getNeedSync() == DBPatrolConstant.TRUE_VALUE) {

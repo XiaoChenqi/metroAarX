@@ -32,8 +32,16 @@ public class PatrolTaskEntity {
     private int exception;
     private int needSync;
     private int completed;
+    private String precautions; //注意事项
 
 
+
+    public String getPrecautions(){
+        return precautions;
+    }
+    public void setPrecautions(String attention){
+        this.precautions = attention;
+    }
 
     private Integer ptype;
     private List<PatrolSpotEntity> spots;

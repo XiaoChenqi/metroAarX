@@ -165,6 +165,25 @@ public interface WorkorderConstant {
     int WORK_NEW_STATUS_ARCHIVED = 4;                   // 已存档
     int WORK_NEW_STATUS_DESTORY = 5;                    // 已作废
 
+    //故障原因
+    int OTHER_REASON = 29; //其他原因回传Id
+
+    int CAUSE_REASON_OTHER = 1; //故障原因为其他原因 后台写死
+
+    int PRINT= 1;//进入输入界面
+    int SIGNON= 2;//签子界面
+    int DEPATMENT = 3;//关联设备
+    int MATERIAL = 4; //物料
+    int PLAN_STEP = 5; //维护步骤
+    int SPACE = 6; //空间位置
+
+    int ORDER_COMPLETE = 7;//处理完成
+    int ORDER_STOP = 8; //暂停
+    int ORDER_DONE = 9;//终止
+    int ORDER_CHARGE_BACK = 10;//退单
+    int ORDER_APPROVAL = 11; //审批申请
+
+
 
 
 

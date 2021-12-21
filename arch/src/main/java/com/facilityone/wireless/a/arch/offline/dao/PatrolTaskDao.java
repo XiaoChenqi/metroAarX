@@ -48,6 +48,7 @@ public class PatrolTaskDao {
                 "USER_ID INTEGER," + // 15: userId
                 "PROJECT_ID INTEGER," + // 16: projectId
                 "PTYPE INTEGER," + // 17: ptype
+                "PRECAUTIONS TEXT," + // 18: precautions //注意事项
                 "PRIMARY KEY (ID,USER_ID,PROJECT_ID));");
     }
 
@@ -85,7 +86,7 @@ public class PatrolTaskDao {
         boolean result = false;
         try {
             mDbManager.beginTransaction();
-            String sql = "INSERT OR REPLACE INTO DBPATROLTASK VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT OR REPLACE INTO DBPATROLTASK VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             for (PatrolTaskEntity entity : taskEntities) {
                 Object[] args = {
@@ -106,6 +107,8 @@ public class PatrolTaskDao {
                         , entity.getDeleted()
                         , userId
                         , projectId
+                        , null
+                        ,entity.getPrecautions()
                         };
                 mDbManager.insert(args, sql);
             }
@@ -156,6 +159,7 @@ public class PatrolTaskDao {
                 bean.setCompleted(cursor.getInt(cursor.getColumnIndex("COMPLETED")));
                 bean.setNeedSync(cursor.getInt(cursor.getColumnIndex("NEED_SYNC")));
                 bean.setpType(cursor.getInt(cursor.getColumnIndex("PTYPE")));
+                bean.setPrecautions(cursor.getString(cursor.getColumnIndex("PRECAUTIONS")));
                 temp.add(bean);
             }
             cursor.close();
@@ -194,6 +198,7 @@ public class PatrolTaskDao {
                 bean.setCompleted(cursor.getInt(cursor.getColumnIndex("COMPLETED")));
                 bean.setNeedSync(cursor.getInt(cursor.getColumnIndex("NEED_SYNC")));
                 bean.setpType(cursor.getInt(cursor.getColumnIndex("PTYPE")));
+                bean.setPrecautions(cursor.getString(cursor.getColumnIndex("PRECAUTIONS")));
                 temp.put(bean.getTaskId(),bean);
             }
             cursor.close();
@@ -344,6 +349,7 @@ public class PatrolTaskDao {
                 bean.setCompleted(cursor.getInt(cursor.getColumnIndex("COMPLETED")));
                 bean.setNeedSync(cursor.getInt(cursor.getColumnIndex("NEED_SYNC")));
                 bean.setpType(cursor.getInt(cursor.getColumnIndex("PTYPE")));
+                bean.setPrecautions(cursor.getString(cursor.getColumnIndex("PRECAUTIONS")));
             }
             cursor.close();
         }

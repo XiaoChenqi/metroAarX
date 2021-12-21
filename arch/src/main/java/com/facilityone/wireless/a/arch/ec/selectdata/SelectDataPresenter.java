@@ -878,7 +878,9 @@ public class SelectDataPresenter extends CommonBasePresenter<SelectDataFragment>
                 });
     }
 
-
+    /**
+     * 暂停，作废，故障原因
+     * */
     public void queryReason(int type){
         getV().showLoading();
         ReasonQueryRequestBean requestBean=new ReasonQueryRequestBean();
@@ -919,6 +921,44 @@ public class SelectDataPresenter extends CommonBasePresenter<SelectDataFragment>
 
                     @Override
                     public void onError(Response<BaseResponse<ReasonResponseBean>> response) {
+                        super.onError(response);
+                        getV().refreshHaveData(null, false);
+                        getV().dismissLoading();
+                    }
+                });
+    }
+
+    /**
+     * 获取专业全部数据
+     * */
+    public void getProfessional(){
+        getV().showLoading();
+        OkGo.<BaseResponse<List<SelectDataBean.ProfessionalList>>>post(FM.getApiHost() + CommonUrl.PROFESSIONAL_LIST)
+                .isSpliceUrl(true)
+                .tag(getV())
+                .execute(new FMJsonCallback<BaseResponse<List<SelectDataBean.ProfessionalList>>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<List<SelectDataBean.ProfessionalList>>> response) {
+//                        //转换
+                        List<SelectDataBean.ProfessionalList> data = response.body().data;
+                        if (data == null || data.size() == 0) {
+                            getV().refreshHaveData(null, false);
+                        } else {
+                            List<SelectDataBean> selectDataBeans = new ArrayList<>();
+                            for (SelectDataBean.ProfessionalList datum : data) {
+                                SelectDataBean s = new SelectDataBean();
+                                s.setId(datum.id);
+                                s.setName(datum.configName);
+                                selectDataBeans.add(s);
+                            }
+                            getV().setTotal(selectDataBeans);
+                            getV().getReasonAll(selectDataBeans);
+                        }
+                        getV().dismissLoading();
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<List<SelectDataBean.ProfessionalList>>> response) {
                         super.onError(response);
                         getV().refreshHaveData(null, false);
                         getV().dismissLoading();

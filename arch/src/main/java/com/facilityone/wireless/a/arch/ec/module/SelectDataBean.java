@@ -254,4 +254,9 @@ public class SelectDataBean implements Parcelable {
             return new SelectDataBean[size];
         }
     };
+
+    public static class ProfessionalList{
+        public Long id; //专业Id
+        public String configName; //专业名称
+    }
 }

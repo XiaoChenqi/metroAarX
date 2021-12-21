@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.objectbox'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -91,6 +92,11 @@ dependencies {
 
     api "com.tencent:mmkv-static:1.2.10"
     api "com.github.liangjingkanji:Serialize:1.2.2"
+
+    /*objectbox*/
+    debugImplementation("io.objectbox:objectbox-android-objectbrowser:$objectboxVersion")
+    releaseImplementation("io.objectbox:objectbox-android:$objectboxVersion")
+    kapt("io.objectbox:objectbox-processor:$objectboxVersion")
 
 }
 

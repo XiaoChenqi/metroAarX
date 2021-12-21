@@ -81,7 +81,6 @@ public class Facility {
 
     public static void init(Context context, String appServer, boolean debug) {
         //TODO
-
         saveChannelParam();
         FM.init(context.getApplicationContext())
                 .withIcon(new FontResModule())      //初始化字体图标

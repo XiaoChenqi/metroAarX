@@ -55,6 +55,7 @@ public class MaintenanceEnity {
           public Integer type; //列表类型
           public Page page; //分页
           public MaintenanceService.ConditionBean searchCondition;//筛选
+          public MaintenanceService.ConditionBean searchCondit;//筛选
       }
 
       public static class ElectronicLedgerEntity{
@@ -70,6 +71,13 @@ public class MaintenanceEnity {
               this.parent=-1;
           }
 
+          public ElectronicLedgerEntity(Long taskId,Long contentId,int type, Object content) {
+              this.taskId=taskId;
+              this.type = type;
+              this.content = content;
+              this.contentId=contentId;
+          }
+
           public ElectronicLedgerEntity(int type) {
               this.type = type;
           }
@@ -79,6 +87,8 @@ public class MaintenanceEnity {
           public Object content;
           public String value;
           public String subValue;
+          public Long contentId;
+          public Long taskId;
           public static final int TYPE_HEADER = 1;
           public static final int TYPE_SUB_HEADER = 5;
           public static final int TYPE_RADIO = 2;

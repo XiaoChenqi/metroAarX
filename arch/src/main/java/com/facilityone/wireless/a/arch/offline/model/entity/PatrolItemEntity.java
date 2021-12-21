@@ -39,6 +39,25 @@ public class PatrolItemEntity {
     private List<LocalMedia> medias;
     private List<Long> picIds;
 
+    private String lastReading; //最后一次记录
+    private Long checkTime; //检查时间
+
+    public String getLastReading() {
+        return lastReading;
+    }
+
+    public void setLastReading(String lastReading) {
+        this.lastReading = lastReading;
+    }
+
+    public Long getCheckTime() {
+        return checkTime;
+    }
+
+    public void setCheckTime(Long checkTime) {
+        this.checkTime = checkTime;
+    }
+
     public List<LocalMedia> getMedias() {
         if (medias == null) {
             medias = new ArrayList<>();

@@ -37,14 +37,21 @@ public class MaintenanceListPresenter extends CommonBasePresenter<MaintenanceLis
      public void getMaintenanceList(Integer type, Page page,MaintenanceService.ConditionBean conditionBean,boolean refresh){
          getV().showLoading();
          final MaintenanceEnity.MaintenanceListReq request = new MaintenanceEnity.MaintenanceListReq();
-         request.type=type;
-         request.searchCondition=conditionBean;
+         if (type == MaintenanceConstant.FIVE){
+             request.searchCondit = conditionBean;
+         }else {
+             request.searchCondition = conditionBean;
+         }
+
+
          String url = "";
          switch (type) {
-             case MaintenanceConstant.ZERO: //待处理维护工单
-             case MaintenanceConstant.ONE: //接单维护工单
+             case MaintenanceConstant.ZERO:
+                 break;
+             case MaintenanceConstant.ONE: //待处理维护工单
                  url = MaintenanceUrl.MAINTENANCE_UNDO_URL;
                  page.setPageSize(99999); //不分页
+                 request.type = 0;
                  request.page=page;
                  break;
              case MaintenanceConstant.TWO: //待派工维护工单

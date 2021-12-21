@@ -54,4 +54,17 @@ public class PatrolQrcodeUtils {
         }
         return result;
     }
+
+    public static String getPicturePath(String path){
+        String result = "";
+        if (TextUtils.isEmpty(path)) {
+            return result;
+        }
+        String tmp = path.replace(" ", "");
+        String[] data = tmp.split("/");
+        if (data.length > 6) {
+            result = data[6];
+        }
+        return result;
+    }
 }

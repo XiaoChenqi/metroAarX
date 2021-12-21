@@ -105,5 +105,17 @@
     <string name="maintenance_tool">Tool</string>
     <!--附件-->
     <string name="maintenance_attachment">Attachment</string>
+    <!--存在漏检项，请确认是否提交-->
+    <string name="maintenance_task_submit_missing">There are missing items, please confirm whether to submit</string>
+    <!--请确认本次抽检结果-->
+    <string name="maintenance_task_submit_check">Please confirm the results of this sampling</string>
+
+    <!--确认取消-->
+    <string name="maintenance_submit_ok">Confirm</string>
+    <string name="maintenance_submit_cancel">Cancel</string>
+
+    <!--通过不通过-->
+    <string name="maintenance_submit_pass">Pass</string>
+    <string name="maintenance_submit_unpass">Fail</string>
 
 </resources>

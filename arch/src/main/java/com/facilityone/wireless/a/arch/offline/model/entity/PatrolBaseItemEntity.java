@@ -23,6 +23,7 @@ public class PatrolBaseItemEntity {
     private Integer validStatus;
     private Integer deleted;
 
+
     public Long getContentId() {
         return contentId;
     }

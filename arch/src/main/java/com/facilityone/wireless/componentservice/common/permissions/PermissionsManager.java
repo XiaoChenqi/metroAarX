@@ -123,15 +123,15 @@ public class PermissionsManager {
             mFbs.clear();
             mIndex = 0;
 
-            opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
-                    "\"m-requirement-approval\",\"m-requirement-query\"," +
-                    "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
-                    "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
-                    "\"m-ppm\",\"m-inventory-create\",\"m-inventory-create\"," +
-                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
-                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
-                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-one\",\"m-ppm-two\"," +
-                    "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\",]";
+//            opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
+//                    "\"m-requirement-approval\",\"m-requirement-query\"," +
+//                    "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
+//                    "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
+//                    "\"m-ppm\",\"m-inventory-create\",\"m-inventory-create\"," +
+//                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
+//                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
+//                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-one\",\"m-ppm-two\"," +
+//                    "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\",]";
 
             // 扫一扫
             scanFunction(opensJson);
@@ -573,7 +573,7 @@ public class PermissionsManager {
                     R.drawable.home_function_service_create,
                     R.drawable.home_function_service_unfinish,
                     R.drawable.home_function_service_finish,
-                    R.drawable.home_function_service_uncheck,
+//                    R.drawable.home_function_service_uncheck,
                     R.drawable.home_function_service_query,
             };
             String[] per = getStringArray(R.array.home_service_menu_child_permissions);

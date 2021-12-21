@@ -82,6 +82,7 @@
     <!--app背景色-->
     <color name="app_bg">@color/grey_f2</color>
 
+
     <!--消息侧滑菜单颜色-->
     <color name="msg_grey">#d9dee4</color>
     <color name="msg_yellow">#ecd50a</color>

@@ -3,6 +3,7 @@
     <string name="icon_scan" translatable="false">{icon-scan}</string>
     <string name="icon_nfc" translatable="false">{icon-nfc}</string>
     <string name="icon_camera" translatable="false">{icon-camera}</string>
+    <string name="icon_repair" translatable="false">{icon-repair}</string>
     <string name="icon_back" translatable="false">{icon-back}</string>
     <string name="icon_more" translatable="false">{icon-more}</string>
     <string name="icon_add" translatable="false">{icon-add}</string>

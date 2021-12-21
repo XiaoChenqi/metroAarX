@@ -1,9 +1,13 @@
 package com.facilityone.wireless.workorder.presenter;
 
 import android.content.Intent;
+import android.text.TextUtils;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
+import com.facilityone.wireless.a.arch.base.ScanInterface;
+import com.facilityone.wireless.a.arch.ec.ui.FzScanActivity;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.workorder.R;
 import com.facilityone.wireless.workorder.fragment.WorkorderDeviceFragment;
@@ -11,8 +15,10 @@ import com.facilityone.wireless.workorder.module.WorkorderService;
 import com.facilityone.wireless.workorder.module.WorkorderUrl;
 import com.fm.tool.network.model.BaseResponse;
 import com.fm.tool.scan.ScanActivity;
+import com.huawei.hms.ml.scan.HmsScan;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.zdf.activitylauncher.ActivityLauncher;
 
 /**
  * Author：gary
@@ -20,7 +26,7 @@ import com.lzy.okgo.model.Response;
  * description:
  * Date: 2018/9/20 下午5:02
  */
-public class WorkorderDevicePresenter extends WorkorderBasePresenter<WorkorderDeviceFragment> {
+public class WorkorderDevicePresenter extends WorkorderScanPresenter<WorkorderDeviceFragment> {
     private boolean taskStatus = false;
     @Override
     public void onEditorWorkorderDeviceSuccess() {
@@ -28,31 +34,7 @@ public class WorkorderDevicePresenter extends WorkorderBasePresenter<WorkorderDe
     }
 
     public void scan(final WorkorderService.WorkOrderEquipmentsBean equipmentCode) {
-        Intent intent = new Intent(getV().getContext(), ScanActivity.class);
-        getV().startActivity(intent);
-
-        ScanActivity.setOnScanResultListener(new ScanActivity.OnScanResultListener() {
-            @Override
-            public void success(String QRCode) {
-//                LogUtils.d("TAG", "扫描结果==" + QRCode);
-//                if (equipmentCode == null || TextUtils.isEmpty(QRCode) || TextUtils.isEmpty(equipmentCode.equipmentCode)) {
-//                    ToastUtils.showShort(R.string.workorder_qrcode_no_match);
-//                    return;
-//                }
-//                String[] split = QRCode.split("\\|");
-//                if (split.length >= 2 && split[1] != null && split[1].equals(equipmentCode.equipmentCode)) {
-//                    getV().result(equipmentCode);
-//                } else {
-//                    ToastUtils.showShort(R.string.workorder_qrcode_no_match);
-//                }
-                String[] qrcdoeList = QRCode.split(",");
-                if (equipmentCode.equipmentCode.equals(qrcdoeList[0])){
-                    getV().result(equipmentCode);
-                }else {
-                    ToastUtils.showShort("请确认扫码是否匹配当前设备");
-                }
-            }
-        });
+        getV().FMScan(getV().getContext(),getV().getActivity(),getV());
     }
 
     public void getWorkorderInfo(final Long woId) {

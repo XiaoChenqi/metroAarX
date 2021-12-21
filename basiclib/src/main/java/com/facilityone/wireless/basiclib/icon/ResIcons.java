@@ -24,6 +24,7 @@ public enum ResIcons implements Icon {
     icon_share('\ue61d'),
     icon_add('\ue634'),
     icon_input('\ue647'),
+    icon_repair('\ue7a6'),
     icon_call('\ue668'),
     icon_more('\ue6a7');
 

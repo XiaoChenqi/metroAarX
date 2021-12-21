@@ -37,6 +37,8 @@ public class WorkorderOptService {
         public Integer operateType;
         public String operateDescription;
         public Long operateReasonId; //操作原因Id
+        public Long componentId;//故障对象
+        public String causeOther ; //具体故障原因
     }
 
     //暂停工单

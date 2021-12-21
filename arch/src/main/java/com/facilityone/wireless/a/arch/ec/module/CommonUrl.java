@@ -26,8 +26,10 @@ public interface CommonUrl {
     //获取员工列表（附带部门和位置信息）
     String USER_LIST = "/m/v1/user/detaillist/";
 
-    //原因列表
+    //暂停，作废，故障原因
     String REASON_LIST="/m/v1/workorder/reason/list";
+    //专业
+    String PROFESSIONAL_LIST = "/m/v1/common/professional";
 
 
 

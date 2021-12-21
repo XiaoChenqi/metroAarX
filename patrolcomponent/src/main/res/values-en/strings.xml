@@ -230,4 +230,8 @@
     <!-- 类型——巡视-->
     <string name="patrol_task_type_inspection">inspection</string>
     <string name="patrol_task_type_patrol">patrol</string>
+    <!--工作任务-->
+    <string name="patrol_task_type_patrol_taskName">Task Name：</string>
+    <!--注意事项-->
+    <string name="patrol_task_type_patrol_precautions">Precautions</string>
 </resources>

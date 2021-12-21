@@ -58,7 +58,7 @@
             style="@style/content_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/workorder_work_describe"/>
+            android:text="@string/workorder_step_remark"/>
 
         <TextView
             android:id="@+id/steps_describe_tv"

@@ -6,6 +6,7 @@ import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.TimeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
@@ -21,6 +23,8 @@ import com.facilityone.wireless.a.arch.offline.model.entity.PatrolItemEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolPicEntity;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
+import com.facilityone.wireless.basiclib.utils.DataUtils;
+import com.facilityone.wireless.basiclib.utils.DateUtils;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.facilityone.wireless.basiclib.widget.FullyGridLayoutManager;
 import com.facilityone.wireless.patrol.R;
@@ -51,7 +55,36 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
             return;
         }
 
+        if (item.getContent().equals("车站工况")){
+            helper.setGone(R.id.ll_patrol_item_all,false);
+        }else {
+            helper.setGone(R.id.ll_patrol_item_all,true);
+        }
+        EditText et = helper.getView(R.id.question_input_et);
+        if (item.getResultType() == PatrolDbService.QUESTION_TYPE_TEXT){
+            et.setInputType(InputType.TYPE_CLASS_TEXT);
+        }else {
+            et.setInputType(InputType.TYPE_CLASS_NUMBER);
+        }
+
         final int position = helper.getLayoutPosition();
+
+        if (item.getContent().equals("地面生活总进水水表读数")){
+            helper.setGone(R.id.question_record_last,true);
+            if (!TextUtils.isEmpty(item.getLastReading())){
+                helper.setText(R.id.question_lastReading,"上次读数为："+item.getLastReading()+"");
+            }else {
+                helper.setText(R.id.question_lastReading,"上次读数为："+"");
+            }
+
+            if (item.getCheckTime() != -1){
+                helper.setText(R.id.question_checkTime,"检查时间："+ TimeUtils.millis2String(item.getCheckTime(), DateUtils.SIMPLE_DATE_FORMAT_ALL)+"");
+            }else {
+                helper.setText(R.id.question_checkTime,"检查时间："+ "");
+            }
+        }else {
+            helper.setGone(R.id.question_record_last,false);
+        }
 
         helper.setGone(R.id.question_comment_tv, false);
         helper.setGone(R.id.question_comment_dv, false);
@@ -103,14 +136,18 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
                             }
                             if (exception) {
                                 helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.red_ff6666));
+                                helper.setGone(R.id.question_report_iv,true);//下次开启
                             } else {
                                 helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.grey_6));
+                                helper.setGone(R.id.question_report_iv,false);
                             }
                         } else {
                             if (!rightValue.equals(resultSelect)) {
                                 helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.red_ff6666));
+                                helper.setGone(R.id.question_report_iv,true);//下次开启
                             } else {
                                 helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.grey_6));
+                                helper.setGone(R.id.question_report_iv,false);
                             }
                         }
                     }
@@ -128,6 +165,7 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
 
         helper.addOnClickListener(R.id.question_edit_iv);
         helper.addOnClickListener(R.id.question_take_photo_iv);
+        helper.addOnClickListener(R.id.question_report_iv);
 
         //设置检查项内容标题
         helper.setText(R.id.question_title_tv, StringUtils.formatString(item.getContent()) + (TextUtils.isEmpty(item.getUnit()) ? "" : "(" + item.getUnit() + ")"));
@@ -135,7 +173,9 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
         switch (item.getResultType()) {
             //输入
             case PatrolDbService.QUESTION_TYPE_INPUT:
+                helper.setGone(R.id.question_report_iv,false);
                 final String input = item.getInput();
+
                 inputEt.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -179,15 +219,18 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
 
                         try {
                             PatrolItemEntity patrolItemEntity = getData().get(position);
-                            if (!TextUtils.isEmpty(patrolItemEntity.getInput())) {
+                            if (!TextUtils.isEmpty(patrolItemEntity.getInput()) && patrolItemEntity.getResultType() !=PatrolDbService.QUESTION_TYPE_TEXT) {
                                 double input = Double.parseDouble(patrolItemEntity.getInput());
                                 if (input > patrolItemEntity.getInputUpper() || input < patrolItemEntity.getInputFloor()) {
                                     helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.red_ff6666));
+                                    helper.setGone(R.id.question_report_iv,true);//下次开启
                                 } else {
                                     helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.grey_6));
+                                    helper.setGone(R.id.question_report_iv,false);
                                 }
                             } else {
                                 helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.orange_ff9900));
+                                helper.setGone(R.id.question_report_iv,false);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -219,7 +262,7 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
                 helper.setGone(R.id.question_input_ll, true);
                 // 如果结果不正确，问题显示为红色
                 if (item.getInputFloor() != null
-                        && item.getInputUpper() != null && !TextUtils.isEmpty(input)) {
+                        && item.getInputUpper() != null && !TextUtils.isEmpty(input) && item.getContentType() != PatrolDbService.QUESTION_TYPE_TEXT) {
                     Double d = 0D;
                     try {
                         d = Double.parseDouble(input);
@@ -273,7 +316,7 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
                         }
                     }
                     String resultSelect = item.getSelect();
-                    if (resultSelect != null) {
+                    if (resultSelect != null && item.getResultType() != PatrolDbService.QUESTION_TYPE_TEXT) {
                         // 如果结果不正确，问题显示为红色
                         if (!TextUtils.isEmpty(rightValue)) {
                             if (rightValue.contains(",")) {
@@ -287,17 +330,56 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
                                 }
                                 if (exception) {
                                     helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.red_ff6666));
+                                    helper.setGone(R.id.question_report_iv,true);//下次开启
                                 }
                             } else {
                                 if (!rightValue.equals(resultSelect)) {
                                     helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.red_ff6666));
+                                    helper.setGone(R.id.question_report_iv,true);//下次开启
                                 }
                             }
+                        }else {
+                            helper.setGone(R.id.question_report_iv,false);
                         }
                     }
-
-
                 }
+                break;
+
+            case PatrolDbService.QUESTION_TYPE_TEXT:
+                final String input_text = item.getInput();
+                helper.setGone(R.id.question_report_iv,false);
+                helper.setGone(R.id.question_input_ll, true);
+                inputEt.setHint("在此输入信息");
+                inputEt.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        final int position = (int) inputEt.getTag();
+                        getData().get(position).setInput(s.toString());
+                    }
+                });
+                if (!TextUtils.isEmpty(input_text)) {
+                    if (!TextUtils.isEmpty(input_text)) {
+                        inputEt.setText(input_text);
+                        inputEt.setSelection(input_text.length());
+                    } else {
+                        inputEt.setText("");
+                        helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.orange_ff9900));
+                    }
+                } else {
+                    inputEt.setText("");
+                    helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.orange_ff9900));
+                }
+
                 break;
             default:
                 break;

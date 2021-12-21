@@ -14,7 +14,6 @@ import com.facilityone.wireless.a.arch.presenter.UserBehaviorPresenter;
 import com.facilityone.wireless.a.arch.xcq.Constants.Constant;
 import com.facilityone.wireless.a.arch.xcq.core.mvp.MvpView;
 
-import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.PASSWORD;
 
 /**
  * Author：gary
@@ -55,7 +54,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
         //xcqPresenter.attachView(this);
 
         showLoading();
-        getPresenter().logon(Constant.USERNAME, PASSWORD);
+//        getPresenter().logon(Constant.USERNAME, PASSWORD);
 //        getPresenter().logon("4", "111111");
         showLogonButton();
         mBtn.setOnClickListener(new View.OnClickListener() {

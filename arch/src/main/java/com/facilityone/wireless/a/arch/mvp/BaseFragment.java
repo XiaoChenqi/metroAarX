@@ -1,9 +1,13 @@
 package com.facilityone.wireless.a.arch.mvp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentActivity;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +16,18 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.R;
 import com.facilityone.wireless.a.arch.base.FMFragment;
+import com.facilityone.wireless.a.arch.base.ScanInterface;
+import com.facilityone.wireless.a.arch.ec.ui.FzScanActivity;
 import com.facilityone.wireless.a.arch.utils.NoDoubleClickListener;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
+import com.huawei.hms.ml.scan.HmsScan;
 import com.lzy.okgo.OkGo;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
+import com.zdf.activitylauncher.ActivityLauncher;
 
 /**
  * Author：gary
@@ -31,6 +40,7 @@ public abstract class BaseFragment<P extends IPresent> extends FMFragment implem
     private P p;
     private QMUITipDialog mDialog;
     private TextView mTip;
+    private ScanInterface scanUtil;
 
 
     private void initDialog() {
@@ -219,6 +229,8 @@ public abstract class BaseFragment<P extends IPresent> extends FMFragment implem
 //        RefWatcher refWatcher = BaseApplication.getRefWatcher(getActivity());
 //        refWatcher.watch(this);
     }
+
+
 
 
 }

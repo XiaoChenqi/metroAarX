@@ -87,4 +87,13 @@ public interface WorkorderUrl {
     //执行最短完成时间
     String DO_SHORTEST_TASK = "/m/v1/workorder/ppm/addCountdown";
 
+    //NFC添加操作记录
+    String SIGNIN_NFC_ADD = "/m/v1/workorder/signIn/nfc";
+    //判断NFC是否能执行
+    String NFC_CAN_DO = "/m/v1/workorder/validation/nfc";
+    //判断维护工单处理完成NFC是否全部匹配
+    String COMPLETE_PREMISSION = "/m/v1/workorder/completeSubmission";
+
+
+
 }

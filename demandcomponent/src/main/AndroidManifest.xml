@@ -11,12 +11,6 @@
                   android:configChanges="keyboardHidden|orientation|screenSize"
                   android:theme="@style/AppTheme.NoActionBar.NoTranslucent"/>
 
-        <activity android:name=".DemandCreateActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:exported="true"
-            android:theme="@style/AppTheme.NoActionBar.NoTranslucent"
-            ></activity>
     </application>
 
 </manifest>

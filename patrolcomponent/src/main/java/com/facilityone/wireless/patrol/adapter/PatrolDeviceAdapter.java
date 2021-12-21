@@ -38,7 +38,6 @@ public class PatrolDeviceAdapter extends BaseQuickAdapter<PatrolEquEntity, BaseV
             } else {
                 helper.setText(R.id.item_tv, item.getItemStopNumber() + mContext.getString(R.string.patrol_task_diawei_ge));
             }
-
         } else {
             helper.setText(R.id.name_tv, mContext.getString(R.string.patrol_task_spot_content));
             helper.setText(R.id.item_tv, item.getItemUseNumber() + mContext.getString(R.string.patrol_task_diawei_ge));

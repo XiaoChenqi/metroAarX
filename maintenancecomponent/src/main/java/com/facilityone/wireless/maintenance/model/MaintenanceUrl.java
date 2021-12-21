@@ -32,8 +32,13 @@ public interface MaintenanceUrl {
     String MAINTENANCE_UNDO_URL = "/m/v1/workorder/ppm/undo";
     //批量接单
     String MAINTENANCE_ORDER_RECEIVE = "/m/v1/workorder/operate/receive/batch";
-    //抽奖提交
+    //抽检提交
     String MAINTENANCE_ACCOUNT_CHECK="/m/v1/account/check";
+
+    //抽检获取
+    String MAINTENANCE_FETCH_CHECK="/m/v1/sample/contents";
+    //抽检保存
+    String MAINTENANCE_SAVE_CHECK="/m/v1/sample/save";
 
 
 }

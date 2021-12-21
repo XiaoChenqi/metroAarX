@@ -360,6 +360,8 @@
     <string name="workorder_send_work_content_hint">Please enter dispatch content...</string>
     <!--请输入工作内容-->
     <string name="workorder_send_work_content_hint_t">Please enter working content...</string>
+    <!--请输入故障原因-->
+    <string name="workorder_send_wrongreason_content_hint_t">Please enter the reason for the failure...</string>
     <!--实际到场时间-->
     <string name="workorder_person_arrive_time">Actual Time of Arrival</string>
     <!--日期选择-->
@@ -477,4 +479,22 @@
 
     <!--签到失败-->
     <string name="workorder_sign_error">Sign-in abnormal, Please check the sign-in information</string>
+    <!--设备数量-->
+    <string name="workorder_step_department_number">Equipment Quantity</string>
+    <!--维护结果-->
+    <string name="workorder_step_maintenance_result">Maintenance results</string>
+    <!--注意事项-->
+    <string name="workorder_step_warning">Precautions</string>
+    <!--正常-->
+    <string name="workorder_step_nomal">Normal</string>
+    <!--异常-->
+    <string name="workorder_step_abnomal">abNormal</string>
+    <!--请输入备注-->
+    <string name="workorder_step_not_input">Please enter a note</string>
+    <!--结果正常-->
+    <string name="workorder_step_normal">Result Normal</string>
+    <!--结果异常-->
+    <string name="workorder_step_abnormal">Result AbNormal</string>
+    <!--备注:-->
+    <string name="workorder_step_remark">Remark：</string>
 </resources>

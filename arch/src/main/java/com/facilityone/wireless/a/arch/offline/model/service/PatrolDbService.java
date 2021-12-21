@@ -36,6 +36,7 @@ public class PatrolDbService {
     // 0-输入 1-选择
     public static final int QUESTION_TYPE_INPUT = 0;
     public static final int QUESTION_TYPE_SINGLE = 1;
+    public static final int QUESTION_TYPE_TEXT = 2;
 
     /**
      * 创建表

@@ -48,15 +48,27 @@ public class WorkorderStepAdapter extends BaseQuickAdapter<WorkorderService.Step
         helper.setGone(R.id.view_dash, layoutPosition != getData().size() - 1);
 
         helper.setText(R.id.steps_sort_tv, mContext.getString(R.string.workorder_step) + item.sort);
-        helper.setText(R.id.steps_name_tv, StringUtils.formatString(item.step));
+        helper.setText(R.id.steps_name_tv, StringUtils.formatString(item.step).replaceAll("-","\n"));
         helper.setText(R.id.steps_team_name_tv, StringUtils.formatString(item.workTeamName));
         helper.setText(R.id.steps_describe_tv, StringUtils.formatString(item.comment));
-        if (item.finished == null || !item.finished) {
+        if (item.stepStatus == null || !item.stepStatus) {
             helper.setText(R.id.steps_status_tv, R.string.workorder_unfinish);
             helper.setTextColor(R.id.steps_status_tv, mContext.getResources().getColor(R.color.workorder_red));
         } else {
-            helper.setText(R.id.steps_status_tv, R.string.workorder_finished);
-            helper.setTextColor(R.id.steps_status_tv, mContext.getResources().getColor(R.color.workorder_green));
+            if (item.accordText){
+                helper.setText(R.id.steps_status_tv, R.string.workorder_step_normal);
+                helper.setTextColor(R.id.steps_status_tv, mContext.getResources().getColor(R.color.workorder_green));
+            }else {
+                if (item.finished != null && item.finished){
+                    helper.setText(R.id.steps_status_tv, R.string.workorder_step_normal);
+                    helper.setTextColor(R.id.steps_status_tv, mContext.getResources().getColor(R.color.workorder_green));
+                }else {
+                    helper.setText(R.id.steps_status_tv, R.string.workorder_step_abnormal);
+                    helper.setTextColor(R.id.steps_status_tv, mContext.getResources().getColor(R.color.workorder_red));
+                }
+            }
+
+
         }
 
         helper.addOnClickListener(R.id.ll_content);

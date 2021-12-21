@@ -71,5 +71,20 @@
       <option name="name" value="BintrayJCenter" />
       <option name="url" value="https://jcenter.bintray.com/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="D:\AndroidSDK\extras\m2repository" />
+      <option name="name" value="D:\AndroidSDK\extras\m2repository" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../AndroidSDK/extras/m2repository/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="D:\AndroidSDK\extras\android\m2repository" />
+      <option name="name" value="D:\AndroidSDK\extras\android\m2repository" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../AndroidSDK/extras/android/m2repository/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="D:\AndroidSDK\extras\google\m2repository" />
+      <option name="name" value="D:\AndroidSDK\extras\google\m2repository" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../AndroidSDK/extras/google/m2repository/" />
+    </remote-repository>
   </component>
 </project>

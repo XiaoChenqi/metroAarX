@@ -1,6 +1,7 @@
 package com.facilityone.wireless.maintenance.adapter;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.MultipleItemRvAdapter;
@@ -18,6 +19,8 @@ public class ElectronicLedgerAdapter extends MultipleItemRvAdapter<MaintenanceEn
     public static final int TYPE_RADIO = 200;
     public static final int TYPE_RADIO_SUB = 210;
     public static final int TYPE_EDIT = 300;
+    public static final int ITEM_0_PAYLOAD = 901;
+    public RecyclerView tempRecycleView;
 
     public ElectronicLedgerAdapter(@Nullable  List<MaintenanceEnity.ElectronicLedgerEntity> data) {
         super(data);
@@ -45,6 +48,7 @@ public class ElectronicLedgerAdapter extends MultipleItemRvAdapter<MaintenanceEn
             return TYPE_EDIT;
         }
         return 0;
+
     }
 
     @Override

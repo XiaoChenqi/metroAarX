@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!--工单号-->
+            <!--计划名称-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +97,86 @@
                     android:visibility="gone"/>
             </LinearLayout>
 
-            <!--工单号-->
+            <!--专业-->
+            <LinearLayout
+                android:id="@+id/ll_maintenance_specialty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_17"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_13"
+                android:paddingRight="@dimen/dp_13"
+                android:visibility="gone"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/h3_text_style"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="专业"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/dp_16"
+                        android:paddingRight="@dimen/dp_16"
+                        android:textColor="@color/content_text_blue"
+                        android:textSize="@dimen/sp_12"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_6"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@color/red"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_11">
+
+                    <EditText
+                        android:id="@+id/work_order_specialty"
+                        style="@style/h5_text_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_33"
+                        android:layout_weight="1"
+                        android:background="@drawable/query_input_background"
+                        android:gravity="center_vertical"
+                        android:hint="请选择专业"
+                        android:focusable="false"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/dp_16"
+                        android:paddingRight="@dimen/dp_16"
+                        android:textColorHint="@color/grey_b2" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_16"
+                        android:layout_height="@dimen/dp_16"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/dp_8"
+                        android:background="@drawable/icon_delete_et_selector"
+                        android:scaleType="center"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <View
+                    style="@style/secant_line_style"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!--站点-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -174,42 +253,50 @@
                     android:visibility="gone"/>
             </LinearLayout>
 
+            <!--维护周期-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_4"
-                android:layout_marginTop="@dimen/dp_20"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/dp_13"
-                android:paddingRight="@dimen/dp_13">
-
-                <TextView
-                    style="@style/h3_text_style"
-                    android:layout_width="0dp"
+                android:orientation="vertical"
+                android:id="@+id/ll_maintenance_cycle"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="维护周期"/>
+                    android:layout_marginBottom="@dimen/dp_4"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dp_13"
+                    android:paddingRight="@dimen/dp_13">
 
-                <com.joanzapata.iconify.widget.IconTextView
-                    android:id="@+id/work_order_query_label_more"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        style="@style/h3_text_style"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="维护周期"/>
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/work_order_query_label_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dp_16"
+                        android:text="@string/icon_down"
+                        android:textColor="@color/grey_9"
+                        android:textSize="@dimen/sp_18"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/work_order_query_menu_filter_cycle_fl"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dp_16"
-                    android:text="@string/icon_down"
-                    android:textColor="@color/grey_9"
-                    android:textSize="@dimen/sp_18"
-                    android:visibility="gone"/>
+                    android:background="@color/white"
+                    android:paddingLeft="@dimen/dp_13"
+                    android:scrollbars="none"/>
             </LinearLayout>
 
-            <!--标签-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/work_order_query_menu_filter_cycle_fl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:paddingLeft="@dimen/dp_13"
-                android:scrollbars="none"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

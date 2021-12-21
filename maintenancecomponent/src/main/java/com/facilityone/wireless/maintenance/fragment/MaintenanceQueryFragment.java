@@ -494,7 +494,7 @@ public class MaintenanceQueryFragment extends BaseFragment<MaintenanceQueryPrese
         Router router = Router.getInstance();
         WorkorderService workorderService = (WorkorderService) router.getService(WorkorderService.class.getSimpleName());
         if (workorderService != null) {
-            BaseFragment fragment = workorderService.getWorkorderInfoFragment(status,code,woId);
+            BaseFragment fragment = workorderService.getWorkorderInfoFragment(MaintenanceConstant.WORKORDER_STATUS_NONE,code,woId,true);
             startForResult(fragment,MAINTENANCE_INFO);
         }
 
@@ -507,7 +507,7 @@ public class MaintenanceQueryFragment extends BaseFragment<MaintenanceQueryPrese
             ToastUtils.showShort(R.string.workorer_no_more_data);
             return;
         }
-//        getPresenter().getConditionWorkorderList(mPage.nextPage(), mConditionBean, false, mFromMyRepair);
+        getPresenter().getMaintenanceList(MaintenanceConstant.SIX,mPage.nextPage(),mConditionBean,false);
     }
 
     @Override

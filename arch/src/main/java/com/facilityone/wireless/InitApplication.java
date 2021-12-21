@@ -46,6 +46,8 @@ public class InitApplication extends BaseApplication {
         //MobSDK.init(this);
         Facility.init(this, BuildConfig.SERVER_URL, BuildConfig.DEBUG);
         DBManager.getInstance();
+
+//        ObjectBox.init(this);
         //阿里云注册
         //initCloudChannel();
     }

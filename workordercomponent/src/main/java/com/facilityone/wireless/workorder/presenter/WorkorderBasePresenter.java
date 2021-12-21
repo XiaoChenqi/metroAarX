@@ -1,6 +1,7 @@
 package com.facilityone.wireless.workorder.presenter;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.facilityone.wireless.a.arch.base.BaseScanFragment;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.mvp.BasePresenter;

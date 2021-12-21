@@ -8,10 +8,15 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/rim"
+        android:id="@+id/scanContainter"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
+
+    <include layout="@layout/wx_top_bar"/>
+    <com.huawei.hms.scankit.ViewfinderView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

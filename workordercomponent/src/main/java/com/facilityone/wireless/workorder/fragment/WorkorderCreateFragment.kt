@@ -38,6 +38,8 @@ import com.facilityone.wireless.workorder.databinding.FragmentWorkorderCreateBin
 import com.facilityone.wireless.workorder.module.WorkorderCreateService
 import com.facilityone.wireless.workorder.module.WorkorderCreateService.WorkorderCreateReq
 import com.facilityone.wireless.workorder.presenter.WorkorderCreatePresenter
+import com.github.mikephil.charting.formatter.IFillFormatter
+import com.gyf.barlibrary.ImmersionBar
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.entity.LocalMedia
@@ -53,6 +55,7 @@ import kotlin.collections.ArrayList
  * description:创建工单
  * Date: 2018/7/4 上午9:20
  */
+
 class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.OnClickListener,
     BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
     BottomTextListSheetBuilder.OnSheetItemClickListener {
@@ -63,7 +66,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
     //图片
     private var mSelectList: MutableList<LocalMedia>? = null
     private var mGridImageAdapter: GridImageAdapter? = null
-    var request: WorkorderCreateReq? = null
+    public var request: WorkorderCreateReq? = null
     var newrequest: WorkorderCreateService.newOrderCreate? = null
 
 
@@ -95,6 +98,8 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
     private var mWaterMark = false
     private var newOrder = false
     private var reqId : Long? = null
+    private var mOtherDepartmentId:Long?=null
+    private var patrolDetailId:Long?=null
     lateinit var deviceList: List<com.facilityone.wireless.workorder.module.WorkorderService.WorkOrderEquipmentsBean>
     override fun createPresenter(): WorkorderCreatePresenter {
         return WorkorderCreatePresenter()
@@ -140,8 +145,10 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
 
     }
 
+
+
     private fun initView() {
-        var title: String = getString(R.string.workorder_create)
+        var title = "创建工单"
         val bundle = arguments
         deviceList = ArrayList()
         newrequest = WorkorderCreateService.newOrderCreate()
@@ -160,7 +167,15 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
             mPeople = bundle.getString(ORDER_PEOPLE, "")
             mPhone = bundle.getString(ORDER_PHONE, "")
             mDesc = bundle.getString(ORDER_DESC, "")
+            mOtherDepartmentId = bundle.getLong(DEPARTMENT_ID,-1L)
             mOtherMedia = bundle.getParcelableArrayList(PIC_INFO)
+            if (bundle.getLong(PATROL_DETAIL_ID) != null ){
+                if (bundle.getLong(PATROL_DETAIL_ID) != 0L){
+                    patrolDetailId = bundle.getLong(PATROL_DETAIL_ID)
+                }
+            }
+
+
             if ((mFromType == WorkorderService.CREATE_ORDER_BY_OTHER
                         || mFromType == WorkorderService.CREATE_ORDER_BY_PATROL_QUERY_REPAIR)
             ) {
@@ -188,6 +203,8 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
                     binding.civDep.tipText = " "
                 }else{
                     binding.civDep.tipText = bundle.getString(DEPARTMENT_NAME)
+
+
                 }
 
                 if(bundle.getString(LOCATION_NAME)==null||bundle.getString(LOCATION_NAME).equals("")){
@@ -195,7 +212,6 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
                 }else{
                     binding.civLocation.tipText = bundle.getString(LOCATION_NAME)
                 }
-
 
                 mDevicesOnline = ArrayList()
                 list = ArrayList()
@@ -267,12 +283,6 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         }
 
         setRightTextButton(R.string.workorder_submit, R.id.workorder_upload_menu_id)
-
-
-
-
-
-
 
     }
 
@@ -347,6 +357,9 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
             binding.civLocation.tipText = mOtherLocationName
             request!!.location = mOtherLocationBean
         }
+        if (mOtherDepartmentId!=null && mOtherDepartmentId != -1L){
+            request!!.organizationId=mOtherDepartmentId
+        }
     }
 
     fun getUserInfoSuccess(userInfo: String?) {
@@ -415,6 +428,9 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         request!!.name = binding.civContact.inputText
         request!!.phone = binding.civTel.inputText
         request!!.scDescription = binding.envDesc.desc
+        if (patrolDetailId != null){
+            request!!.patrolItemDetailId = patrolDetailId
+        }
         val temp: MutableList<LocalMedia> = ArrayList()
         for (localMedia: LocalMedia in mSelectList!!) {
             if (TextUtils.isEmpty(localMedia.src)) {
@@ -754,6 +770,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         private val REQUEST_EQU = 20006
         private val IS_NEWORDER = "isNewOrder"
         private val DEPARTMENT_NAME = "departname"
+        private val DEPARTMENT_ID="departId"
         private val ORDERTYPE = "ordertype"
         private val SERVICETYPE = "servicetype"
         private val PRIORITY = "priority"
@@ -763,6 +780,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         private val ORDER_FLOWID = "flowId"
         private val ORDER_PRIORITYID = "priorityId"
         private val DEVICE_LIST = "device_list"
+        private val PATROL_DETAIL_ID = "partail_detail_id"
 
         @JvmStatic
         val instance: WorkorderCreateFragment
@@ -785,15 +803,33 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
             return fragment
         }
         @JvmStatic
-        fun getInstance(fromType: Int, equipmentId: String): WorkorderCreateFragment {
+        fun getInstance(fromType: Int, equipmentId: Long,desc: String,locationBean: LocationBean,locationName: String,patrolDetailId : Long): WorkorderCreateFragment {
             val fragment = WorkorderCreateFragment()
             val bundle = Bundle()
             bundle.putInt(FROM_TYPE, fromType)
-            bundle.putString(EQUIPMENT_STR_ID, equipmentId)
+            bundle.putLong(EQUIPMENT_ID, equipmentId)
             bundle.putBoolean(WATER_MARK, true)
+            bundle.putString(ORDER_DESC, StringUtils.formatString(desc))
+            bundle.putParcelable(LOCATION_INFO, locationBean)
+            bundle.putString(LOCATION_NAME,locationName)
+            val userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO)
+            val infoBean = com.blankj.utilcode.util.GsonUtils.fromJson(
+                userInfo,
+                UserInfoBean::class.java
+            )
+            if (infoBean.organizationName!=null&&infoBean.organizationId!=null){
+                bundle.putString(DEPARTMENT_ID, infoBean.organizationId)
+                bundle.putString(DEPARTMENT_NAME, infoBean.organizationName)
+            }
+            if (patrolDetailId != null){
+                bundle.putLong(PATROL_DETAIL_ID,patrolDetailId)
+            }
+
             fragment.arguments = bundle
             return fragment
         }
+
+
         @JvmStatic
         fun getInstance(
             fromType: Int, equipmentId: Long, locationName: String?,
@@ -845,6 +881,16 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
             bundle.putString(ORDER_PEOPLE, StringUtils.formatString(people))
             bundle.putParcelable(LOCATION_INFO, locationBean)
             bundle.putParcelableArrayList(PIC_INFO, localMedias as ArrayList<out Parcelable?>?)
+            fragment.arguments = bundle
+            return fragment
+        }
+        @JvmStatic
+        fun getInstance(fromType: Int, equipmentId: String): WorkorderCreateFragment {
+            val fragment = WorkorderCreateFragment()
+            val bundle = Bundle()
+            bundle.putInt(FROM_TYPE, fromType)
+            bundle.putString(EQUIPMENT_STR_ID, equipmentId)
+            bundle.putBoolean(WATER_MARK, true)
             fragment.arguments = bundle
             return fragment
         }

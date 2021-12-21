@@ -3,6 +3,7 @@ package com.facilityone.wireless.a.arch.offline.dao;
 import android.text.TextUtils;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.facilityone.wireless.a.arch.offline.model.entity.PatrolBaseItemEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolItemEntity;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
 import com.facilityone.wireless.a.arch.offline.util.DBManager;
@@ -11,6 +12,7 @@ import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.tencent.wcdb.Cursor;
 import com.tencent.wcdb.database.SQLiteDatabase;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,8 @@ public class PatrolItemDao {
                 "USER_ID INTEGER," + // 10: userId
                 "DELETED INTEGER," + // 11: deleted
                 "PROJECT_ID INTEGER ," + // 12: projectId
+                "LAST_READING TEXT ,"+ // 13: lastReading
+                "CHECK_TIME INTEGER ,"+ // 14: checkTime
                 "PRIMARY KEY (ID,USER_ID,PROJECT_ID));");
     }
 
@@ -80,7 +84,7 @@ public class PatrolItemDao {
         boolean result = false;
         try {
             mDbManager.beginTransaction();
-            String sql = "INSERT OR REPLACE INTO DBPATROLITEM VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT OR REPLACE INTO DBPATROLITEM VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             for (PatrolItemEntity entity : itemEntities) {
                 Object[] args = {
@@ -96,7 +100,10 @@ public class PatrolItemDao {
                         , entity.getCompleted()
                         , userId
                         , entity.getDeleted()
-                        , projectId };
+                        , projectId
+                        , entity.getLastReading() == null? -1:entity.getLastReading()
+                        , entity.getCheckTime() == null? -1:entity.getCheckTime()
+                };
                 mDbManager.insert(args, sql);
             }
 
@@ -113,6 +120,14 @@ public class PatrolItemDao {
             mDbManager.endTransaction();
         }
         return result;
+    }
+
+    public String getSelect(PatrolItemEntity entity){
+        if (entity.getContent().equals("车站工况")){
+            return "";
+        }else {
+            return entity.getSelect();
+        }
     }
 
     public void deleteTaskItem(List<Long> deletedId) {
@@ -145,10 +160,10 @@ public class PatrolItemDao {
             deviceStatus = null;
         }
         if (deviceStatus == null) {
-            sql = "SELECT C.ID,C.CONTENT_ID,C.EQU,C.SPOT_ID,C.TASK_ID,C.SELECT_VALUE,C.INPUT_VALUE,C.COMMENT,C.COMPLETED,B.CONTENT,B.SELECT_ENUMS,B.CONTENT_TYPE,B.RESULT_TYPE,B.INPUT_UPPER,B.INPUT_FLOOR,B.DEFAULT_INPUT_VALUE,B.DEFAULT_SELECT_VALUE,B.EXCEPTIONS,B.UNIT,B.SELECT_RIGHT_VALUE,B.VALID_STATUS FROM DBPATROLITEM AS C LEFT JOIN DBPATROLBASEITEM AS B ON C.CONTENT_ID = B.ID  AND C.PROJECT_ID = C.PROJECT_ID WHERE C.EQU = ? AND C.SPOT_ID = ? AND C.PROJECT_ID = ? AND C.USER_ID = ? ORDER BY C.SORT;";
+            sql = "SELECT C.ID,C.CONTENT_ID,C.EQU,C.SPOT_ID,C.TASK_ID,C.SELECT_VALUE,C.INPUT_VALUE,C.COMMENT,C.COMPLETED,C.LAST_READING,C.CHECK_TIME,B.CONTENT,B.SELECT_ENUMS,B.CONTENT_TYPE,B.RESULT_TYPE,B.INPUT_UPPER,B.INPUT_FLOOR,B.DEFAULT_INPUT_VALUE,B.DEFAULT_SELECT_VALUE,B.EXCEPTIONS,B.UNIT,B.SELECT_RIGHT_VALUE,B.VALID_STATUS FROM DBPATROLITEM AS C LEFT JOIN DBPATROLBASEITEM AS B ON C.CONTENT_ID = B.ID  AND C.PROJECT_ID = C.PROJECT_ID WHERE C.EQU = ? AND C.SPOT_ID = ? AND C.PROJECT_ID = ? AND C.USER_ID = ? ORDER BY C.SORT;";
             args = new String[]{ eqId + "", spotId + "", projectId + "", userId + "" };
         } else {
-            sql = "SELECT C.ID,C.CONTENT_ID,C.EQU,C.SPOT_ID,C.TASK_ID,C.SELECT_VALUE,C.INPUT_VALUE,C.COMMENT,C.COMPLETED,B.CONTENT,B.SELECT_ENUMS,B.CONTENT_TYPE,B.RESULT_TYPE,B.INPUT_UPPER,B.INPUT_FLOOR,B.DEFAULT_INPUT_VALUE,B.DEFAULT_SELECT_VALUE,B.EXCEPTIONS,B.UNIT,B.SELECT_RIGHT_VALUE,B.VALID_STATUS FROM DBPATROLITEM AS C LEFT JOIN DBPATROLBASEITEM AS B ON C.CONTENT_ID = B.ID  AND C.PROJECT_ID = C.PROJECT_ID WHERE C.EQU = ? AND C.SPOT_ID = ? AND C.PROJECT_ID = ? AND C.USER_ID = ? AND (B.VALID_STATUS = ?  OR B.VALID_STATUS = ? )  ORDER BY C.SORT;";
+            sql = "SELECT C.ID,C.CONTENT_ID,C.EQU,C.SPOT_ID,C.TASK_ID,C.SELECT_VALUE,C.INPUT_VALUE,C.COMMENT,C.COMPLETED,C.LAST_READING,C.CHECK_TIME,B.CONTENT,B.SELECT_ENUMS,B.CONTENT_TYPE,B.RESULT_TYPE,B.INPUT_UPPER,B.INPUT_FLOOR,B.DEFAULT_INPUT_VALUE,B.DEFAULT_SELECT_VALUE,B.EXCEPTIONS,B.UNIT,B.SELECT_RIGHT_VALUE,B.VALID_STATUS FROM DBPATROLITEM AS C LEFT JOIN DBPATROLBASEITEM AS B ON C.CONTENT_ID = B.ID  AND C.PROJECT_ID = C.PROJECT_ID WHERE C.EQU = ? AND C.SPOT_ID = ? AND C.PROJECT_ID = ? AND C.USER_ID = ? AND (B.VALID_STATUS = ?  OR B.VALID_STATUS = ? )  ORDER BY C.SORT;";
             args = new String[]{ eqId + "", spotId + "", projectId + "", userId + "", PatrolDbService.PATROL_ITEM_NONE + "", deviceStatus ? PatrolDbService.PATROL_ITEM_USE + "" : PatrolDbService.PATROL_ITEM_STOP + "" };
         }
 
@@ -183,6 +198,8 @@ public class PatrolItemDao {
                 bean.setExceptions(cursor.getString(cursor.getColumnIndex("EXCEPTIONS")));
                 bean.setUnit(cursor.getString(cursor.getColumnIndex("UNIT")));
                 bean.setValidStatus(cursor.getInt(cursor.getColumnIndex("VALID_STATUS")));
+                bean.setLastReading(cursor.getString(cursor.getColumnIndex("LAST_READING")));
+                bean.setCheckTime(cursor.getLong(cursor.getColumnIndex("CHECK_TIME")));
                 temp.add(bean);
             }
             cursor.close();

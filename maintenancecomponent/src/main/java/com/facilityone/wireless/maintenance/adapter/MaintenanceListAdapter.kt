@@ -63,26 +63,41 @@ class MaintenanceListAdapter : BaseQuickAdapter<MaintenanceListEnity?, BaseViewH
                 var resId = R.drawable.maintenacne_fill_grey_background
                 helper.setText(R.id.status_tv, MaintenanceHelper.getMaintenanceWorkorderStatusMap(mContext)[item.newStatus])
                 when (item.newStatus) {
-                    MaintenanceConstant.WORKORDER_STATUS_CREATED -> resId =
-                            R.drawable.fm_workorder_tag_fill_created_bg
-                    MaintenanceConstant.WORKORDER_STATUS_PUBLISHED -> resId =
-                            R.drawable.fm_workorder_tag_fill_published_bg
-                    MaintenanceConstant.WORKORDER_STATUS_PROCESS -> resId =
-                            R.drawable.fm_workorder_tag_fill_process_bg
-                    MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_GO -> resId =
-                            R.drawable.fm_workorder_tag_fill_suspended_go_bg
-                    MaintenanceConstant.WORKORDER_STATUS_TERMINATED -> resId =
-                            R.drawable.fm_workorder_tag_fill_terminated_bg
-                    MaintenanceConstant.WORKORDER_STATUS_COMPLETED -> resId =
-                            R.drawable.fm_workorder_tag_fill_completed_bg
-                    MaintenanceConstant.WORKORDER_STATUS_VERIFIED -> resId =
-                            R.drawable.fm_workorder_tag_fill_verified_bg
-                    MaintenanceConstant.WORKORDER_STATUS_ARCHIVED -> resId =
-                            R.drawable.fm_workorder_tag_fill_archived_bg
-                    MaintenanceConstant.WORKORDER_STATUS_APPROVAL -> resId =
-                            R.drawable.fm_workorder_tag_fill_approval_bg
-                    MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_NO -> resId =
-                            R.drawable.fm_workorder_tag_fill_suspended_no_bg
+//                    MaintenanceConstant.WORKORDER_STATUS_CREATED -> resId =
+//                            R.drawable.fm_workorder_tag_fill_created_bg
+//                    MaintenanceConstant.WORKORDER_STATUS_PUBLISHED -> resId =
+//                            R.drawable.fm_workorder_tag_fill_published_bg
+//                    MaintenanceConstant.WORKORDER_STATUS_PROCESS -> resId =
+//                            R.drawable.fm_workorder_tag_fill_process_bg
+//                    MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_GO -> resId =
+//                            R.drawable.fm_workorder_tag_fill_suspended_go_bg
+//                    MaintenanceConstant.WORKORDER_STATUS_TERMINATED -> resId =
+//                            R.drawable.fm_workorder_tag_fill_terminated_bg
+//                    MaintenanceConstant.WORKORDER_STATUS_COMPLETED -> resId =
+//                            R.drawable.fm_workorder_tag_fill_completed_bg
+//                    MaintenanceConstant.WORKORDER_STATUS_VERIFIED -> resId =
+//                            R.drawable.fm_workorder_tag_fill_verified_bg
+//                    MaintenanceConstant.WORKORDER_STATUS_ARCHIVED -> resId =
+//                            R.drawable.fm_workorder_tag_fill_archived_bg
+//                    MaintenanceConstant.WORKORDER_STATUS_APPROVAL -> resId =
+//                            R.drawable.fm_workorder_tag_fill_approval_bg
+//                    MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_NO -> resId =
+//                            R.drawable.fm_workorder_tag_fill_suspended_no_bg
+
+                    MaintenanceConstant.WORK_NEW_STATUS_DISPATCHING -> resId = //待派工
+                        R.drawable.fm_workorder_tag_fill_created_bg
+                    MaintenanceConstant.WORK_NEW_STATUS_PROCESS -> resId =     //处理中
+                        R.drawable.fm_workorder_tag_fill_process_bg
+                    MaintenanceConstant.WORK_NEW_STATUS_ARCHIVED_WAIT -> resId =  //待存档
+                        R.drawable.fm_workorder_tag_fill_published_bg
+                    MaintenanceConstant.WORK_NEW_STATUS_APPROVAL_WAIT -> resId =  //待审核
+                        R.drawable.fm_workorder_tag_fill_approval_bg
+//                        R.drawable.fm_workorder_tag_fill_archived_bg
+                    MaintenanceConstant.WORK_NEW_STATUS_ARCHIVED -> resId =   //已存档
+                        R.drawable.fm_workorder_tag_fill_archived_bg
+//                        R.drawable.fm_workorder_tag_fill_approval_bg
+                    MaintenanceConstant.WORK_NEW_STATUS_DESTORY -> resId =     //已作废
+                        R.drawable.fm_workorder_tag_fill_suspended_go_bg
                 }
                 helper.setBackgroundRes(R.id.status_tv, resId)
             } else {
@@ -93,7 +108,18 @@ class MaintenanceListAdapter : BaseQuickAdapter<MaintenanceListEnity?, BaseViewH
                 helper.setVisible(R.id.tag_tv, true)
                 var resId = R.drawable.maintenacne_fill_grey_background
                 helper.setText(R.id.tag_tv, MaintenanceHelper.getMaintenanceTagStatusMap(mContext)[item.tag])
-                R.drawable.fm_workorder_tag_fill_created_bg
+                when(item.tag){
+                    MaintenanceConstant.APPLICATION_FOR_SUSPENSION -> resId = //暂停申请中
+                        R.drawable.fm_workorder_tag_fill_created_bg
+                    MaintenanceConstant.PAUSE_STILL_WORKING -> resId =     //暂停(继续工作)
+                        R.drawable.fm_workorder_tag_fill_created_bg
+                    MaintenanceConstant.PAUSE_NOT_WORKING -> resId =  //暂停(不继续工作)
+                        R.drawable.fm_workorder_tag_fill_process_bg
+                    MaintenanceConstant.APPLICATION_VOID -> resId =  //作废申请中
+                        R.drawable.fm_workorder_tag_fill_process_bg
+                    MaintenanceConstant.STOP -> resId =  //终止
+                        R.drawable.fm_workorder_tag_fill_suspended_go_bg
+                }
                 helper.setBackgroundRes(R.id.tag_tv, resId)
             } else {
                 helper.setVisible(R.id.tag_tv, false)

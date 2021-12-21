@@ -44,6 +44,14 @@ public interface MaintenanceConstant {
     int WORKORDER_STATUS_APPROVAL = 8;                   // 已待审批
     int WORKORDER_STATUS_SUSPENDED_NO = 9;               // 已暂停(不继续工作)
 
+    //新工单状态
+    int WORK_NEW_STATUS_DISPATCHING = 0;                // 待派工
+    int WORK_NEW_STATUS_PROCESS = 1;                    // 处理中
+    int WORK_NEW_STATUS_ARCHIVED_WAIT = 2;               // 待存档
+    int WORK_NEW_STATUS_APPROVAL_WAIT = 3;              // 待审核
+    int WORK_NEW_STATUS_ARCHIVED = 4;                   // 已存档
+    int WORK_NEW_STATUS_DESTORY = 5;                    // 已作废
+
     //日历切换状态
     int CALENDAR_STATUS_SELECT_DAY = 0;//选中某一天
     int CALENDAR_STATUS_SWITCH_MONTH = 1;//切换月份

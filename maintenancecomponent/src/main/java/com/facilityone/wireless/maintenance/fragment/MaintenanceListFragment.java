@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -35,7 +36,6 @@ import com.facilityone.wireless.basiclib.utils.SystemDateUtils;
 import com.facilityone.wireless.componentservice.demand.DemandService;
 import com.facilityone.wireless.componentservice.workorder.WorkorderService;
 import com.facilityone.wireless.maintenance.R;
-//import com.facilityone.wireless.maintenance.adapter.MaintenanceListAdapter;
 import com.facilityone.wireless.maintenance.adapter.MaintenanceListAdapter;
 import com.facilityone.wireless.maintenance.model.MaintenanceConstant;
 import com.facilityone.wireless.maintenance.model.MaintenanceEnity;
@@ -72,6 +72,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
     public static final int PAYMENT = 4012;
     private final static int REQUEST_REASON = 20007;
     private final static int REQUEST_INVALID = 20008;
+    private final static int REQUEST_SPECIALTY = 20009;
 
     private Integer mType;
     private ImageView mQueryMenuIv;
@@ -90,8 +91,13 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
     private LinearLayout mBottomMenuLl; //底部按钮布局
     private TextView mTvChooseAll; //全选按钮
     private TextView mTvComplete; //完成按钮
-    private LinearLayout mMenuLlAll;
-    ; //底部整体布局
+    private LinearLayout mMenuLlAll;//底部整体布局
+
+    /*****************2021-11-18*****************/
+    private LinearLayout mllCycle; //周期列表选项
+    private LinearLayout mllSpecialty; //专业选项
+    private EditText mSpecialty; //专业
+    /***************************************/
 
     private GridTagAdapter mCycleTagAdapter;
     private MaintenanceService.ConditionBean mConditionBean;
@@ -142,11 +148,14 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
                 changeRightMenu(mType);
                 mAdapter.replaceData(mList);
                 mAdapter.notifyDataSetChanged();
-                mQueryMenuIv.setVisibility(View.VISIBLE);
+                if (mType == MaintenanceConstant.TWO){
+                    mQueryMenuIv.setVisibility(View.VISIBLE);
+                }
                 isChooseOn = false; //当前是批量选择状态
                 mTvChooseAll.setText("全选");
                 localWoId = null;
                 workTeamId = null;
+                onRefresh();
             }
         });
 
@@ -222,6 +231,8 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
             case MaintenanceConstant.TWO:
                 title = "待派工维护工单";
                 mQueryMenuIv.setVisibility(View.VISIBLE);
+                mllSpecialty.setVisibility(View.GONE);
+                mllCycle.setVisibility(View.VISIBLE);
                 setRightTextButton("批量派工", R.id.maintenance_batch_dispatch);
                 break;
             case MaintenanceConstant.THREE:
@@ -232,6 +243,10 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
                 break;
             case MaintenanceConstant.FIVE:
                 title = "待存档维护工单";
+                //TODO 30号之前不发
+                mQueryMenuIv.setVisibility(View.VISIBLE);
+                mllSpecialty.setVisibility(View.VISIBLE);
+                mllCycle.setVisibility(View.GONE);
                 break;
             case MaintenanceConstant.SIX:
                 title = "维护工单查询列表";
@@ -263,6 +278,9 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
 
         if (refresh) {
             mList = new ArrayList<>();
+            for (MaintenanceEnity.MaintenanceListEnity data : ms) {
+                data.choice = 0; //全部打开状态
+            }
             mList.addAll(ms);
             mAdapter.setNewData(ms);
             mRefreshLayout.finishRefresh();
@@ -284,6 +302,8 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
             mPage = new Page();
         }
         mPage.reset();
+        mBottomMenuLl.setVisibility(View.GONE);
+        changeRightMenu(mType);
         getPresenter().getMaintenanceList(mType, mPage, mConditionBean, true);
     }
 
@@ -303,6 +323,11 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
         mTvComplete = findViewById(R.id.ll_maintenance_bottom_menu_complete);
         mCodeEt = findViewById(R.id.work_order_code);
         mSiteEt = findViewById(R.id.work_order_site);
+        mllCycle = findViewById(R.id.ll_maintenance_cycle);
+        mllSpecialty = findViewById(R.id.ll_maintenance_specialty);
+        mSpecialty = findViewById(R.id.work_order_specialty);
+        mCycleRv = findViewById(R.id.work_order_query_menu_filter_cycle_fl);
+
         mSiteEt.setOnClickListener(this);
         mMenuLL = findViewById(R.id.ll_menu);
         mDrawerLayout.addDrawerListener(this);
@@ -329,7 +354,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
         bb.check = true;
         mCycleAs.add(bb);
 
-        mCycleRv = findViewById(R.id.work_order_query_menu_filter_cycle_fl);
+
 
 
         //优先级、状态、标签列表适配器
@@ -337,6 +362,8 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
         mCycleTagAdapter = new GridTagAdapter(getContext(), mCycleAs);
         mCycleRv.setLayoutManager(new GridLayoutManager(getContext(), MAX_NUMBER));
         mCycleRv.setAdapter(mCycleTagAdapter);
+
+        mSpecialty.setOnClickListener(this);
 
         findViewById(R.id.reset_btn).setOnClickListener(this);
         findViewById(R.id.sure_btn).setOnClickListener(this);
@@ -369,6 +396,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
             workTeamId = workorderItemBean.workTeamId;
             localWoId = workorderItemBean.pmId;
         }
+
         if (workorderItemBean.choice == MaintenanceConstant.CHOICE_NO) {
             Integer status = workorderItemBean.status;
             Long woId = workorderItemBean.woId;
@@ -378,6 +406,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
             if (workorderService != null) {
                 BaseFragment fragment;
                 if (mType == MaintenanceConstant.FIVE) {
+                    LogUtils.d("当前woId",woId);
                     fragment = workorderService.getWorkorderInfoFragment(status, code, woId, true, true);
                 } else if (mType == MaintenanceConstant.ONE){
                     fragment = workorderService.getWorkorderInfoPendingFragment(status, code, woId, 1,true);
@@ -438,11 +467,10 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
         }
         int viewId = view.getId();
         if (viewId == R.id.maintenance_bulk_orders) {
-
             Iterator<MaintenanceEnity.MaintenanceListEnity> it_b = mList.iterator();
             while(it_b.hasNext()){
                 MaintenanceEnity.MaintenanceListEnity a=it_b.next();
-                if (a.newStatus != MaintenanceConstant.WORKORDER_STATUS_PUBLISHED) {
+                if (a.status != MaintenanceConstant.WORKORDER_STATUS_PUBLISHED) {
 //                if (a.applicantName.equals("车站管理人员")) {
                     it_b.remove();
                 }else {
@@ -539,7 +567,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
             ToastUtils.showShort("无更多数据");
             return;
         }
-        getPresenter().getMaintenanceList(mType, mPage, null, false);
+        getPresenter().getMaintenanceList(mType, mPage.nextPage(), mConditionBean, false);
     }
 
     @Override
@@ -563,6 +591,19 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
                 } else {
                     mSiteEt.setText(StringUtils.formatString(bean.getFullName()));
                     mConditionBean.location = bean.getLocation();
+                    if (bean.getLocation().buildingId != null){
+                        mConditionBean.locationId = bean.getLocation().buildingId;
+                    }
+                }
+                break;
+            case REQUEST_SPECIALTY:
+                if (bean == null){
+                    mSpecialty.setText("");
+                }else {
+                    mSpecialty.setText(bean.getName()+"");
+                    if (bean.getId() != null){
+                        mConditionBean.specialty = bean.getId();
+                    }
                 }
                 break;
             default:
@@ -610,7 +651,9 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
         int viewId = v.getId();
         if (viewId == R.id.work_order_site) {
             startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_LOCATION), REQUEST_LOCATION);
-        } else if (viewId == R.id.reset_btn) {//重置
+        } else if(viewId == R.id.work_order_specialty){
+            startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_SPECIALTY), REQUEST_SPECIALTY);
+        }else if (viewId == R.id.reset_btn) {//重置
             resetCondition();
         } else if (viewId == R.id.sure_btn) {//确定
             String code = mCodeEt.getText().toString();
@@ -634,6 +677,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
     private void resetCondition() {
         mCodeEt.setText("");
         mSiteEt.setText("");
+        mSpecialty.setText("");
 
         mConditionBean.planName = null;
 //        showConditionTime();
@@ -642,6 +686,8 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
         mConditionBean.typeId = null;
         mConditionBean.newStatus = null;
         mConditionBean.location = null;
+        mConditionBean.locationId = null;
+        mConditionBean.specialty = null;
         for (AttachmentBean priorityA : mCycleAs) {
             priorityA.check = false;
             if (priorityA.value == -1L) {
