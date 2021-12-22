@@ -148,7 +148,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
     private void initView() {
 //        setSwipeBackEnable(false);
         mRecyclerView = findViewById(R.id.recyclerView);
-        mSearchBox = findViewById(R.id.search_box);
+        mSearchBox = findViewById(R.id.search_box2);
         mSearchBox.setOnSearchBox(new SearchBox.OnSearchBox() {
             @Override
             public void onSearchTextChanged(String curCharacter) {

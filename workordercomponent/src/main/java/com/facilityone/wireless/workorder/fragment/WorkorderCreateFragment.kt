@@ -834,14 +834,23 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
             bundle.putParcelable(LOCATION_INFO, locationBean)
             bundle.putString(LOCATION_NAME,locationName)
             val userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO)
-            val infoBean = com.blankj.utilcode.util.GsonUtils.fromJson(
-                userInfo,
-                UserInfoBean::class.java
-            )
-            if (infoBean.organizationName!=null&&infoBean.organizationId!=null){
-                bundle.putString(DEPARTMENT_ID, infoBean.organizationId)
-                bundle.putString(DEPARTMENT_NAME, infoBean.organizationName)
+
+            if(userInfo!=null){
+                val infoBean = com.blankj.utilcode.util.GsonUtils.fromJson(
+                    userInfo,
+                    UserInfoBean::class.java
+                )
+                if (infoBean!=null){
+                    if (infoBean.organizationName!=null&&infoBean.organizationId!=null){
+                        bundle.putString(DEPARTMENT_ID, infoBean.organizationId)
+                        bundle.putString(DEPARTMENT_NAME, infoBean.organizationName)
+                    }
+                }
             }
+
+
+
+
             if (patrolDetailId != null){
                 bundle.putLong(PATROL_DETAIL_ID,patrolDetailId)
             }

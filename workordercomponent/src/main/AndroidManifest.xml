@@ -24,6 +24,14 @@
             android:launchMode="singleTask">
         </activity>
 
+        <activity
+            android:name=".WorkorderCreateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent" />
+
     </application>
 
 </manifest>

@@ -564,7 +564,11 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
      * @Description: 进入设备列表
      */
     public void enterDeviceList(PatrolSpotEntity entity){
-        startForResult(PatrolDeviceFragment.getInstance(entity.getName(), entity.getPatrolSpotId()), REQUEST_DEVICE);
+        entity.getLocation().roomId=null;
+        entity.getLocation().floorId=null;
+        entity.getLocation().cityId=null;
+
+        startForResult(PatrolDeviceFragment.getInstance(entity.getName(), entity.getPatrolSpotId(),entity), REQUEST_DEVICE);
     }
 
     /**

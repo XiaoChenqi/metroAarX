@@ -92,7 +92,7 @@ dependencies {
 
     api "com.tencent:mmkv-static:1.2.10"
     api "com.github.liangjingkanji:Serialize:1.2.2"
-
+    kapt "com.android.databinding:compiler:3.4.0"
     /*objectbox*/
     debugImplementation("io.objectbox:objectbox-android-objectbrowser:$objectboxVersion")
     releaseImplementation("io.objectbox:objectbox-android:$objectboxVersion")
