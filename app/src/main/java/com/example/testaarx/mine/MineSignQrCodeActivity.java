@@ -1,20 +1,14 @@
 package com.example.testaarx.mine;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.example.testaarx.MetroUtils;
-import com.example.testaarx.R;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
+import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
-import com.facilityone.wireless.workorder.fragment.WorkorderMenuFragment;
 import com.kongzue.dialogx.DialogX;
-
-import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.THEME_COLOR;
 
 public class MineSignQrCodeActivity extends BaseFragmentActivity implements EmptyFragment.OnGoFragmentListener  {
 

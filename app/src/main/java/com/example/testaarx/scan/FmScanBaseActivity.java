@@ -1,35 +1,25 @@
 package com.example.testaarx.scan;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.example.testaarx.MetroUtils;
 import com.example.testaarx.R;
 import com.example.testaarx.download.APPUrl;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
-import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
+import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.basiclib.utils.GsonUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
-import com.facilityone.wireless.componentservice.patrol.PatrolService;
-import com.facilityone.wireless.workorder.fragment.WorkorderCreateFragment;
 import com.fm.tool.network.model.BaseResponse;
 import com.fm.tool.scan.ScanActivity;
-import com.luojilab.component.componentlib.router.Router;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-
-import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.PASSWORD;
-import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.THEME_COLOR;
-import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.USERNAME;
 
 public class FmScanBaseActivity extends BaseFragmentActivity
         implements EmptyFragment.OnGoFragmentListener {

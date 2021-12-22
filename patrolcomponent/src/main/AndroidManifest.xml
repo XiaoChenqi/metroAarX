@@ -28,7 +28,7 @@
             android:theme="@style/AppTheme.Transparent"
             android:screenOrientation="portrait">
 
-             Handle notes detected from outside our application
+
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
 

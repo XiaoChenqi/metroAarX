@@ -1,6 +1,7 @@
 package com.facilityone.wireless.componentservice.common.empty;
 
 import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.PASSWORD;
+import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.USERNAME;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -51,13 +52,15 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
         }
         mBtn = findViewById(R.id.btn);
 
-        //TODO xcq
+
         //xcqPresenter = new UserBehaviorPresenter();
         //xcqPresenter.attachView(this);
 
         showLoading();
+//        USERNAME = "cylz";//todo xcq测试数据
+//        PASSWORD = "111111";//todo xcq测试数据
         getPresenter().logon(Constant.USERNAME, PASSWORD);
-//        getPresenter().logon("cylz", "111111");
+//        getPresenter().logon("01050002406", "111111");
         showLogonButton();
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override

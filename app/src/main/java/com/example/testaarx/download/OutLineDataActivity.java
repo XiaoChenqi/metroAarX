@@ -3,13 +3,11 @@ package com.example.testaarx.download;
 
 import android.os.Bundle;
 
-import com.example.testaarx.MetroUtils;
-import com.example.testaarx.R;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
+import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
-import com.facilityone.wireless.patrol.fragment.PatrolMenuFragment;
 
 public class OutLineDataActivity extends BaseFragmentActivity implements EmptyFragment.OnGoFragmentListener{
 

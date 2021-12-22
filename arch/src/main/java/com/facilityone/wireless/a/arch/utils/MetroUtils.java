@@ -7,11 +7,17 @@ import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.PASSWORD;
 import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.THEME_COLOR;
 import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.USERNAME;
 
+import com.blankj.utilcode.util.LogUtils;
+
 public class MetroUtils {
     /**
      * 获取从博坤传递过来的参数
      */
     public static void getParamFromMetro(Activity activity) {
+
+        LogUtils.d(activity.getIntent().getStringExtra("USERNAME"));
+        LogUtils.d(activity.getIntent().getStringExtra("PASSWORD"));
+
         if(0 != activity.getIntent().getIntExtra("COLOR",0)){
             THEME_COLOR = activity.getIntent().getIntExtra("COLOR",0);
             //themeColor = (Color.parseColor("#ff6666"));;

@@ -1118,16 +1118,16 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         getV().dismissLoading();
                         PatrolQueryService.AttendanceResp data = response.body().data;
-                        UserInfor user = new UserInfor();
-                        box.removeAll();
-                        user.setId(0L);
-                        user.setUserKey(PatrolConstant.USERLOGIN_ID);
-                        if (data.location != null) {
-                            user.setLocationBean(data.location);
-                            user.setBuidlings(data.buildingIds);
-                        }
-                        box.put(user);
-                        Log.e("LAST_ATTENDANCE", "===============***=============" + user.toString());
+//                        UserInfor user = new UserInfor();
+//                        box.removeAll();
+//                        user.setId(0L);
+//                        user.setUserKey(PatrolConstant.USERLOGIN_ID);
+//                        if (data.location != null) {
+//                            user.setLocationBean(data.location);
+//                            user.setBuidlings(data.buildingIds);
+//                        }
+//                        box.put(user);
+//                        Log.e("LAST_ATTENDANCE", "===============***=============" + user.toString());
                         if (data != null) {
                             getV().hasAttentanceData(true);
                             getV().saveAttentanceLocation(data);

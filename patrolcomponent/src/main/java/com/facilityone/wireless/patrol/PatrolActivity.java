@@ -23,6 +23,7 @@ import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.patrol.fragment.PatrolMenuFragment;
+import com.facilityone.wireless.patrol.fragment.PatrolScanFragment;
 import com.luojilab.router.facade.annotation.RouteNode;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
@@ -63,7 +64,7 @@ public class PatrolActivity extends BaseFragmentActivity implements EmptyFragmen
         super.onCreate(savedInstanceState);
         setSwipeBackEnable(false);
         MetroUtils.getParamFromMetro(this);
-        initNfc();
+//        initNfc();
     }
 
     private void initNfc() {
