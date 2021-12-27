@@ -413,9 +413,13 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
 
     private void saveDataBefore() {
 
-        if (choice.equals("") && mItemEntities.get(0).getContent().equals("车站工况")){
-            mItemEntities.get(0).setSelect("");
+        if (mItemEntities.size()>0){
+            if (choice.equals("") && mItemEntities.get(0).getContent().equals("车站工况")){
+                mItemEntities.get(0).setSelect("");
+            }
         }
+
+
 
         final int position = getPresenter().haveMiss(mItemEntities,itemChoice);
         if (position == -1) {
