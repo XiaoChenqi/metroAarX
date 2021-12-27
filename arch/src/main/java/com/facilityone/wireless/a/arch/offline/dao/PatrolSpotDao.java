@@ -107,6 +107,7 @@ public class PatrolSpotDao {
                         , projectId
                         , entity.getSpotTaskName()
                         , entity.getTaskTime()*60
+                        ,DBPatrolConstant.DEFAULT_VALUE
 
                 };
                 mDbManager.insert(args, sql);
@@ -280,7 +281,7 @@ public class PatrolSpotDao {
             }
         }
         if (!result.isEmpty()){
-           return result.get(0);
+            return result.get(0);
         }else {
             return "";
         }
@@ -293,7 +294,7 @@ public class PatrolSpotDao {
         Long userId = FM.getEmId();
         List<PatrolSpotEntity> temp = new ArrayList<>();
 
-        String sql = "SELECT S.REMOTE_COMPLETED,S.EXCEPTION,S.COMPLETED,S.SYNCED,S.COMP_NUMBER,S.EQ_NUMBER,S.ID,S.HANDLER,B.NAME,B.CODE,B.SPOT_LOCATION ,T.TASK_NAME ,T.DUE_START_DATE_TIME ,T.DUE_END_DATE_TIME,S.TASK_ID,T.PLAN_ID , B.CITY_ID,B.SITE_ID,B.BUILDING_ID,B.FLOOR_ID,B.ROOM_ID FROM DBPATROLSPOT AS S LEFT JOIN DBPATROLBASESPOT AS B ON S.SPOT_ID = B.ID  AND S.PROJECT_ID = B.PROJECT_ID LEFT JOIN DBPATROLTASK AS T ON  S.TASK_ID = T.ID AND S.PROJECT_ID = T.PROJECT_ID AND S.USER_ID = T.USER_ID WHERE B.CODE = ? AND S.PROJECT_ID = ? AND S.USER_ID = ?  ORDER BY T.STATUS DESC,T.DUE_START_DATE_TIME ASC ,T.DUE_END_DATE_TIME ASC,S.SORT ASC,S.SPOT_ID ASC;";
+        String sql = "SELECT S.REMOTE_COMPLETED,S.EXCEPTION,S.COMPLETED,S.SYNCED,S.COMP_NUMBER,S.EQ_NUMBER,S.ID,S.HANDLER,S.TASK_TIME,S.TASK_STATUS,B.NAME,B.CODE,B.SPOT_LOCATION ,T.TASK_NAME ,T.DUE_START_DATE_TIME ,T.DUE_END_DATE_TIME,S.TASK_ID,T.PLAN_ID,B.CITY_ID,B.SITE_ID,B.BUILDING_ID,B.FLOOR_ID,B.ROOM_ID FROM DBPATROLSPOT AS S LEFT JOIN DBPATROLBASESPOT AS B ON S.SPOT_ID = B.ID  AND S.PROJECT_ID = B.PROJECT_ID LEFT JOIN DBPATROLTASK AS T ON  S.TASK_ID = T.ID AND S.PROJECT_ID = T.PROJECT_ID AND S.USER_ID = T.USER_ID WHERE B.CODE = ? AND S.PROJECT_ID = ? AND S.USER_ID = ?  ORDER BY T.STATUS DESC,T.DUE_START_DATE_TIME ASC ,T.DUE_END_DATE_TIME ASC,S.SORT ASC,S.SPOT_ID ASC;";
         String[] args = { code, projectId + "", userId + "" };
 
         LogUtils.d(sql);
@@ -323,6 +324,8 @@ public class PatrolSpotDao {
                 tempLocation.buildingId=cursor.getLong(cursor.getColumnIndex("BUILDING_ID"));
                 tempLocation.floorId=cursor.getLong(cursor.getColumnIndex("FLOOR_ID"));
                 tempLocation.roomId=cursor.getLong(cursor.getColumnIndex("ROOM_ID"));
+                bean.setTaskTime(cursor.getInt(cursor.getColumnIndex("TASK_TIME")));
+                bean.setTaskStatus(cursor.getLong(cursor.getColumnIndex("TASK_STATUS")));
                 bean.setLocation(tempLocation);
                 temp.add(bean);
             }

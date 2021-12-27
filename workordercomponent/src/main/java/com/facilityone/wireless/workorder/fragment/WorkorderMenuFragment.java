@@ -54,6 +54,11 @@ public class WorkorderMenuFragment extends BaseFragment<WorkorderMenuPresenter> 
         initView();
     }
 
+    @Override
+    public void leftBackListener() {
+        getActivity().finish();
+    }
+
     private void initData() {
         mFunctionBeanList = new ArrayList<>();
         Bundle arguments = getArguments();

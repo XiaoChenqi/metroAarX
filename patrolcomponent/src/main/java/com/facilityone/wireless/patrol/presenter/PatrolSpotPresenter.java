@@ -2,13 +2,18 @@ package com.facilityone.wireless.patrol.presenter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.ImageUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.SPUtils;
@@ -35,16 +40,19 @@ import com.facilityone.wireless.a.arch.offline.model.entity.PatrolItemEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolPicEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolTaskEntity;
+import com.facilityone.wireless.a.arch.offline.model.service.OfflineService;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
 import com.facilityone.wireless.a.arch.offline.objectbox.patrol.CompleteTime;
 import com.facilityone.wireless.a.arch.offline.objectbox.patrol.CompleteTime_;
 import com.facilityone.wireless.a.arch.offline.objectbox.user.UserInfor;
 import com.facilityone.wireless.a.arch.offline.objectbox.user.UserInfor_;
 import com.facilityone.wireless.a.arch.offline.util.PatrolQrcodeUtils;
+import com.facilityone.wireless.a.arch.utils.FMFileUtils;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.basiclib.utils.DataUtils;
 import com.facilityone.wireless.basiclib.utils.DebounceAction;
+import com.facilityone.wireless.basiclib.utils.ImageLoadUtils;
 import com.facilityone.wireless.basiclib.utils.SystemDateUtils;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.fragment.PatrolSpotFragment;
@@ -57,6 +65,7 @@ import com.fm.tool.network.model.BaseResponse;
 import com.fm.tool.scan.ScanActivity;
 
 import com.huawei.hms.ml.scan.HmsScan;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.PostRequest;
@@ -82,10 +91,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DefaultObserver;
 import io.reactivex.schedulers.Schedulers;
-import kotlin.coroutines.CoroutineContext;
-import kotlin.jvm.internal.markers.KMutableMap;
-import kotlinx.coroutines.CoroutineScope;
-import kotlinx.coroutines.Dispatchers;
+import kotlin.collections.CollectionsKt;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 /**
  * Author：gary
@@ -637,53 +645,101 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
         PostRequest<BaseResponse<List<String>>> request = OkGo.<BaseResponse<List<String>>>post(FM.getApiHost() + CommonUrl.UPLOAD_IMAGE_URL)
                 .tag(getV())
                 .isSpliceUrl(true);
-
-        for (PatrolPicEntity pic : paths) {
-            String path = pic.getPath();
-            if (!TextUtils.isEmpty(path)) {
-                File file = new File(path);
-                if (file.exists()) {
-                    request.params("file-" + file.getName(), file);
-                }
-            }
-
-        }
-
-        request.execute(new FMJsonCallback<BaseResponse<List<String>>>() {
+        Observable.create(new ObservableOnSubscribe<List<PatrolSaveReq.PicList>>() {
             @Override
-            public void onSuccess(Response<BaseResponse<List<String>>> response) {
-                picTotal++;
-                List<String> data = response.body().data;
-                if (data != null && data.size() > 0) {
-                    itemReq.photoIds.addAll(data);
-                    for (int i = 0; i < data.size(); i++) {
-                        String aLong = data.get(i);
-                        if (i < paths.size()) {
-                            paths.get(i).setSrc(aLong);
+            public void subscribe(@NonNull ObservableEmitter<List<PatrolSaveReq.PicList>> emitter) throws Exception {
+                List<PatrolSaveReq.PicList> temp = new ArrayList<>();
+                for (PatrolPicEntity pic : paths) {
+                    PatrolSaveReq.PicList picData = new PatrolSaveReq.PicList();
+                    String picture = pic.getPath();
+                    File p = new File(picture);
+                    File file = Luban.with(getV().getContext()).load(p).setTargetDir(getPath()).get().get(0);
+                    picData.name = "file-" + file.getName();
+                    picData.file = file;
+                    temp.add(picData);
+                }
+                emitter.onNext(temp);
+                emitter.onComplete();
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DefaultObserver<List<PatrolSaveReq.PicList>>() {
+                    @Override
+                    public void onNext(@NonNull List<PatrolSaveReq.PicList> b) {
+                        for (PatrolSaveReq.PicList picList : b) {
+                            request.params(picList.name,picList.file);
                         }
+                        request.execute(new FMJsonCallback<BaseResponse<List<String>>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponse<List<String>>> response) {
+                                picTotal++;
+                                List<String> data = response.body().data;
+                                if (data != null && data.size() > 0) {
+                                    itemReq.photoIds.addAll(data);
+                                    for (int i = 0; i < data.size(); i++) {
+                                        String aLong = data.get(i);
+                                        if (i < paths.size()) {
+                                            paths.get(i).setSrc(aLong);
+                                        }
+                                    }
+
+                                    PatrolPicDao picDao = new PatrolPicDao();
+                                    picDao.update(paths);
+                                }
+                                if (picTotal == total) {
+                                    data2Server(getV().getPatrolSaveReq());
+                                }
+                            }
+
+                            @Override
+                            public void onError(Response<BaseResponse<List<String>>> response) {
+                                super.onError(response);
+                                picTotal++;
+                                if (picTotal == total) {
+                                    data2Server(getV().getPatrolSaveReq());
+                                }
+                            }
+
+                            @Override
+                            public void onFinish() {
+                            }
+                        });
                     }
 
-                    PatrolPicDao picDao = new PatrolPicDao();
-                    picDao.update(paths);
-                }
-                if (picTotal == total) {
-                    data2Server(getV().getPatrolSaveReq());
-                }
-            }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        cancel();
+                    }
 
-            @Override
-            public void onError(Response<BaseResponse<List<String>>> response) {
-                super.onError(response);
-                picTotal++;
-                if (picTotal == total) {
-                    data2Server(getV().getPatrolSaveReq());
-                }
-            }
+                    @Override
+                    public void onComplete() {
 
-            @Override
-            public void onFinish() {
-            }
-        });
+                    }
+                });
+
+        //TODO 问题所在
+//        for (PatrolPicEntity pic : paths) {
+//            String path = pic.getPath();
+//            if (!TextUtils.isEmpty(path)) {
+//                File file = new File(path);
+//                if (file.exists()) {
+//                    request.params("file-" + file.getName(), file);
+//                }
+//            }
+//
+//        }
+
+
+    }
+
+    private String getPath() {
+        String path = Environment.getExternalStorageDirectory() + "/Luban/image/";
+        File file = new File(path);
+        if (file.mkdirs()) {
+            return path;
+        }
+        return path;
     }
 
     private List<PatrolSpotEntity> haveData2Sync(List<PatrolSpotEntity> totalEntities, boolean sync) {
@@ -716,7 +772,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
      */
     private void data2Server(final PatrolSaveReq req) {
         if (!NetworkUtils.isConnected()){
-            ToastUtils.showShort("请联网后提交");
+            ToastUtils.showShort("请检查网络配置!");
             getV().dismissLoading();
             return;
         }
@@ -887,79 +943,29 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
 
 
     /**
-     * @Created by: kuuga
-     * @Date: on 2021/8/27 16:27
-     * @Description: 判断巡检任务点位可继续性
-     */
+     * @Creator:Karelie
+     * @Data: 2021/12/22
+     * @TIME: 15:39
+     * @Introduce: 判断巡检任务点位可继续性(离线形式)
+     **/
     public void judgeTask(PatrolSpotEntity entity,boolean needScan){
-        //联网的形式
-        PatrolQueryService.PatrolJudgeReq req=new PatrolQueryService.PatrolJudgeReq();
-        req.patrolTaskId=entity.getTaskId();
-        req.patrolTaskSpotId=entity.getPatrolSpotId();
-//        jsonObject.put("patrolTaskSpotId", entity.getPatrolSpotId());
-//        jsonObject.put("patrolTaskId", entity.getTaskId());
-        OkGo.<BaseResponse<PatrolQueryService.PatrolJudgeBean>>post(FM.getApiHost() + PatrolUrl.PATROL_JUDGE_TASK)
-                .isSpliceUrl(true)
-                .upJson(toJson(req))
-                .tag(getV())
-                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.PatrolJudgeBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponse<PatrolQueryService.PatrolJudgeBean>> response) {
-                        getV().dismissLoading();
-                        PatrolQueryService.PatrolJudgeBean data = response.body().data;
-                        if (data != null) {
-                            //是否可以开启新任务
-                            if (data.executable){
-                                if (data.time!=0){
-                                    //判断是否需要扫码,不需要则直接进去
-                                    if (!needScan){
-                                        getV().showOrderTimeDialog(data.time,entity);
-                                    }else {
-                                        getV().needScanQrcode(entity,data.time);
-                                    }
-                                }else {
-                                    //判断是否需要扫码,不需要则直接进去
-                                    if (!needScan){
-                                        getV().enterDeviceList(entity);
-                                    }else {
-                                        getV().needScanQrcode(entity,data.time);
-                                    }
-                                }
-                            }else {
-                                //当前有任务是进入,判断是否同一个任务及点位
-                                if (data.patrolTaskId.equals(entity.getTaskId())&&data.patrolTaskSpotId.equals(entity.getPatrolSpotId())){
-                                    if (!needScan){
-                                        getV().enterDeviceList(entity);
-                                    }else {
-                                        getV().needWorkingScanQrcode(entity,0L);
-                                    }
-                                    //非同一个任务及点位时,提示当前有任务进行以及剩余时间
-                                }else {
-                                    getV().showOrderTimeDialog(data.time);
-                                }
-                            }
-                        }
-                    }
-                });
+        /**
+         * 离线操作
+         * */
+        PatrolQueryService.PatrolJudgeBean bean = new PatrolQueryService.PatrolJudgeBean();
+        boxTask = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
+        Query<CompleteTime> query = boxTask.query().equal(CompleteTime_.taskTip, PatrolConstant.PATROL_TASK_OUTLINE).build();
+        CompleteTime queryData = query.findFirst();
+        bean.executable = getExecutable(entity);
+        bean.time = getLastTime(entity);
+        if (queryData != null) {
+            bean.patrolTaskId = queryData.getTaskId();
+            bean.patrolTaskSpotId = queryData.getPatrolSpotId();
+        }
 
 
-//        /**
-//         * 离线操作
-//         * */
-//        PatrolQueryService.PatrolJudgeBean bean = new PatrolQueryService.PatrolJudgeBean();
-//        boxTask = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
-//        Query<CompleteTime> query = boxTask.query().equal(CompleteTime_.taskTip, PatrolConstant.PATROL_TASK_OUTLINE).build();
-//        CompleteTime queryData = query.findFirst();
-//        bean.executable = getExecutable(entity);
-//        bean.time = getLastTime(entity);
-//        if (queryData != null) {
-//            bean.patrolTaskId = queryData.getTaskId();
-//            bean.patrolTaskSpotId = queryData.getPatrolSpotId();
-//        }
-//
-//
-//        //执行任务
-//        doWork(bean, entity, needScan);
+        //执行任务
+        doWork(bean, entity, needScan);
     }
 
     /**
@@ -998,36 +1004,50 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
 
             } else { //当前任务不可开启-- 任务已开启过 当前有处理中的任务
                 //当前有任务是进入,判断是否同一个任务及点位
-                if (data.patrolTaskId.equals(entity.getTaskId()) && data.patrolTaskSpotId.equals(entity.getPatrolSpotId())) {
-                    if (!needScan) {
-                        getV().enterDeviceList(entity);
-                    } else {
-                        if (entity.getCompleted() == DBPatrolConstant.TRUE_VALUE || entity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE){
+                if (data.patrolTaskId == null || data.patrolTaskSpotId == null){
+                    canNotDo(data, entity);
+                }else {
+                    if (data.patrolTaskId.equals(entity.getTaskId()) && data.patrolTaskSpotId.equals(entity.getPatrolSpotId())) {
+                        if (!needScan) {
                             getV().enterDeviceList(entity);
-                        }else {
-                            getV().needWorkingScanQrcode(entity, data.time);
-                        }
-                    }
-                    //非同一个任务及点位时,提示当前有任务进行以及剩余时间
-                } else {
-                    if (data.time > 0){
-                        getV().showOrderTimeDialog(data.time);
-                    }else {
-                        if (entity.getCompleted() == DBPatrolConstant.TRUE_VALUE || entity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE){
-                            getV().enterDeviceList(entity);
-                        }else {
-                            PatrolSpotDao db = new PatrolSpotDao();
-                            PatrolSpotEntity item = db.getSpot(entity.getPatrolSpotId());
-                            if (item.getTaskStatus() > 0){
-                                getV().needScanQrcode(entity, 0L); //开启了任务但是没有保存
+                        } else {
+                            if (entity.getCompleted() == DBPatrolConstant.TRUE_VALUE || entity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE){
+                                getV().enterDeviceList(entity);
                             }else {
-                                getV().showOrderTimeDialog(data.time);
+                                getV().needWorkingScanQrcode(entity, data.time);
                             }
-
                         }
+                        //非同一个任务及点位时,提示当前有任务进行以及剩余时间
+                    } else {
+                        canNotDo(data, entity);
                     }
-
                 }
+
+            }
+        }
+    }
+
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/12/22
+     * @TIME: 15:09
+     * @Introduce: 当前任务不可开启
+     **/
+    private void canNotDo(PatrolQueryService.PatrolJudgeBean data, PatrolSpotEntity entity) {
+        if (data.time > 0){
+            getV().showOrderTimeDialog(data.time);
+        }else {
+            if (entity.getCompleted() == DBPatrolConstant.TRUE_VALUE || entity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE){
+                getV().enterDeviceList(entity);
+            }else {
+                PatrolSpotDao db = new PatrolSpotDao();
+                PatrolSpotEntity item = db.getSpot(entity.getPatrolSpotId());
+                if (item.getTaskStatus() > 0){
+                    getV().needScanQrcode(entity, 0L); //开启了任务但是没有保存
+                }else {
+                    getV().showOrderTimeDialog(data.time);
+                }
+
             }
         }
     }
@@ -1101,7 +1121,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                 return (startTime - timeForNow) / 1000L; //当前有任务在执行
             }
         } else {
-            if (enity.getTaskStatus() > 0) {
+            if (enity.getTaskStatus() > 0 || enity.getCompleted() == DBPatrolConstant.TRUE_VALUE || enity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE) {
                 return 0L; //当前没有执行中的任务 且任务已开启
             } else {
                 return Long.parseLong(enity.getTaskTime()+""); //当前五任务开启 且任务未开启过
@@ -1116,43 +1136,21 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
      * @Description: 提交任务时判断
      */
     public void submitTask(Long taskId,int type){
-        //联网操作实现
-        Map<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("patrolTaskId", taskId);
-        OkGo.<BaseResponse<PatrolQueryService.PatrolJudgeBean>>post(FM.getApiHost() + PatrolUrl.PATROL_JUDGE_TASK)
-                .tag(getV())
-                .upJson(toJson(jsonObject))
-                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.PatrolJudgeBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponse<PatrolQueryService.PatrolJudgeBean>> response) {
-                        getV().dismissLoading();
-                        PatrolQueryService.PatrolJudgeBean data = response.body().data;
-                        if (data != null) {
-                            if (data.executable) {
-                                getV().syncDta(type);
-                            } else {
-                                getV().showOrderTimeDialog(data.time);
-                            }
-                        }
-                    }
-                });
-
-
         //离线状态
-//        boxTask = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
-//        Query<CompleteTime> query = boxTask.query().equal(CompleteTime_.taskTip, PatrolConstant.PATROL_TASK_OUTLINE).build();
-//        CompleteTime queryData = query.findFirst();
-//        Long timeForNow = SystemDateUtils.getCurrentTimeMillis();
-//        if (queryData != null){
-//            Long startTime = queryData.getStarTime() + 1000L * queryData.getCheckTime();
-//            if (timeForNow >= startTime) {
-//                getV().syncDta(type);
-//            } else {
-//                getV().showOrderTimeDialog((startTime - timeForNow) / 1000L);
-//            }
-//        }else {
-//            getV().syncDta(type);
-//        }
+        boxTask = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
+        Query<CompleteTime> query = boxTask.query().equal(CompleteTime_.taskTip, PatrolConstant.PATROL_TASK_OUTLINE).build();
+        CompleteTime queryData = query.findFirst();
+        Long timeForNow = SystemDateUtils.getCurrentTimeMillis();
+        if (queryData != null){
+            Long startTime = queryData.getStarTime() + 1000L * queryData.getCheckTime();
+            if (timeForNow >= startTime) {
+                getV().syncDta(type);
+            } else {
+                getV().showOrderTimeDialog((startTime - timeForNow) / 1000L);
+            }
+        }else {
+            getV().syncDta(type);
+        }
 
     }
 
@@ -1245,14 +1243,19 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
         PatrolQueryService.AttendanceResp data = new PatrolQueryService.AttendanceResp();
         Query<UserInfor> query = box.query().equal(UserInfor_.userKey, PatrolConstant.USERLOGIN_ID).build();
         List<UserInfor> user = query.find();
-        LocationBean locationData = new LocationBean();
-        locationData = user.get(0).getLocationBean();
-        data.location = locationData;
-        data.buildingIds = user.get(0).getBuidlings();
-        getV().hasAttentanceData(true);
-        getV().saveAttentanceLocation(data);
+        if (user.size()>0){
+            LocationBean locationData = new LocationBean();
+            locationData = user.get(0).getLocationBean();
+            data.location = locationData;
+            data.buildingIds = user.get(0).getBuidlings();
+            getV().hasAttentanceData(true);
+            getV().saveAttentanceLocation(data);
+        }
+
 
     }
+
+
 
 
 }

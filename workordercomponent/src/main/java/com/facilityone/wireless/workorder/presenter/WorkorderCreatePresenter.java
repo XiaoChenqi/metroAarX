@@ -71,7 +71,8 @@ public class WorkorderCreatePresenter extends CommonBasePresenter<WorkorderCreat
                                 || type == WorkorderService.CREATE_ORDER_BY_PATROL_QUERY_REPAIR) {
                             getV().setFragmentResult(ISupportFragment.RESULT_OK, null);
                         }
-                        getV().getActivity().finish();
+//                        getV().getActivity().finish();
+                        getV().pop();
                     }
 
                     @Override

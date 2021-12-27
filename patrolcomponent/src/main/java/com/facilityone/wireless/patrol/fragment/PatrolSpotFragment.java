@@ -128,14 +128,8 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
             mFromScan = arguments.getString(PATROL_SCAN, "");
             mNeedCheck = arguments.getBoolean(PATROL_NEED_CHECK, false);
             if (mNeedCheck) {
-                getPresenter().getLastAttendance();
-                //TODO 12.30开启
-//                if (NetworkUtils.isConnected()) {
-//
-//                } else {
-//                    //离线状态下查询数据库
-//                    getPresenter().getLastAttendanceOutLine();
-//                }
+                //离线数据存储在数据库中
+                getPresenter().getLastAttendanceOutLine();
 
             }
         }
@@ -194,13 +188,13 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
         //判断是否需要验证签到状态
         if (mNeedCheck) {
             if (mHasAttentance) {
-                getPresenter().submitTask(mTaskId,PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
+                getPresenter().submitTask(mTaskId, PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
 //                syncDta(PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
             } else {
                 ToastUtils.showLong("请先签到");
             }
         } else {
-            getPresenter().submitTask(mTaskId,PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
+            getPresenter().submitTask(mTaskId, PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
 //            syncDta(PatrolConstant.PATROL_OPT_TYPE_UPLOAD);
         }
 
@@ -272,9 +266,9 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
                                 || patrolSpotEntity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE) {
 //                startForResult(PatrolDeviceFragment.getInstance(patrolSpotEntity.getName(), patrolSpotEntity.getPatrolSpotId()), REQUEST_DEVICE);
 
-                            getPresenter().judgeTask(patrolSpotEntity,false);
+                            getPresenter().judgeTask(patrolSpotEntity, false);
                         } else {
-                            getPresenter().judgeTask(patrolSpotEntity,true);
+                            getPresenter().judgeTask(patrolSpotEntity, true);
                             //需要扫描二维码
                             //getPresenter().scan(patrolSpotEntity);
                         }
@@ -317,14 +311,6 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
      */
     public void scanResult(PatrolSpotEntity patrolSpotEntity, Long time) {
 
-//        if (time!=0){
-//            showOrderTimeDialog(time,patrolSpotEntity);
-//        }else {
-//            enterDeviceList(patrolSpotEntity);
-//        }
-
-
-//         TODO 12.30 在开启
         if (time != 0) {
             PatrolSpotDao dao = new PatrolSpotDao();
             PatrolSpotEntity item = dao.getSpot(patrolSpotEntity.getPatrolSpotId());
@@ -336,13 +322,6 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
         } else {
             enterDeviceList(patrolSpotEntity);
         }
-
-
-
-
-
-//        executeTask(patrolSpotEntity);
-//        startForResult(PatrolDeviceFragment.getInstance(patrolSpotEntity.getName(), patrolSpotEntity.getPatrolSpotId()), REQUEST_DEVICE);
     }
 
     /**
@@ -451,7 +430,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     @Override
     public boolean onBackPressedSupport() {
         popResult();
-        ActivityUtils.finishActivity(NfcRedTagActivity.class);
+//        ActivityUtils.finishActivity(NfcRedTagActivity.class);
         return true;
 
     }
@@ -459,7 +438,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     @Override
     public void leftBackListener() {
         popResult();
-        ActivityUtils.finishActivity(NfcRedTagActivity.class);
+//        ActivityUtils.finishActivity(NfcRedTagActivity.class);
     }
 
     public void popResult() {
@@ -605,22 +584,22 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
                 /**
                  * 做成离线的形式处理
                  * */
-//                Long timeForNow = SystemDateUtils.getCurrentTimeMillis();
-//                PatrolSpotDao spotDao = new PatrolSpotDao();
-//                spotDao.upDateTaskTime(entity.getPatrolSpotId(), timeForNow);
-//                taskBox = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
-//                taskBox.removeAll();
-//                CompleteTime da = new CompleteTime();
-//                da.setStarTime(timeForNow);
-//                da.setTaskId(entity.getTaskId());
-//                da.setCheckTime(entity.getTaskTime());
-//                da.setPatrolSpotId(entity.getPatrolSpotId());
-//                da.setTaskTip(PatrolConstant.PATROL_TASK_OUTLINE);
-//                taskBox.put(da);
-//                Log.i("任务开启", "onClick: " + da + "");
-//                enterDeviceList(entity);
+                Long timeForNow = SystemDateUtils.getCurrentTimeMillis();
+                PatrolSpotDao spotDao = new PatrolSpotDao();
+                spotDao.upDateTaskTime(entity.getPatrolSpotId(), timeForNow);
+                taskBox = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
+                taskBox.removeAll();
+                CompleteTime da = new CompleteTime();
+                da.setStarTime(timeForNow);
+                da.setTaskId(entity.getTaskId());
+                da.setCheckTime(entity.getTaskTime());
+                da.setPatrolSpotId(entity.getPatrolSpotId());
+                da.setTaskTip(PatrolConstant.PATROL_TASK_OUTLINE);
+                taskBox.put(da);
+                Log.i("任务开启", "onClick: " + da + "");
+                enterDeviceList(entity);
 
-                executeTask(entity);
+//                executeTask(entity);
 
 //                startForResult(PatrolItemFragment.getInstance(mSpotId, (ArrayList<PatrolEquEntity>) mEntities, position, mSpotName,time), REQUEST_ITEM);
                 dialog.dismiss();
@@ -645,7 +624,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
         UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
         if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
             return true;
-        }else {
+        } else {
             if (remoteBean != null && localBean != null) {
                 if (remoteBean.siteId != null && localBean.siteId != null) {
                     return remoteBean.buildingId != null && localBean.buildingId != null;

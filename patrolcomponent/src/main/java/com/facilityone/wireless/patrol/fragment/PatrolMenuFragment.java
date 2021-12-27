@@ -83,6 +83,12 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         return R.id.ui_topbar;
     }
 
+
+    @Override
+    public void leftBackListener() {
+        getActivity().finish();
+    }
+
     private void initData() {
         mFunctionBeanList = new ArrayList<>();
         Bundle arguments = getArguments();

@@ -3,7 +3,12 @@ package com.facilityone.wireless.a.arch.offline.objectbox.patrol
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.annotation.Index
-
+/**
+ * @Creator:Karelie
+ * @Data: 2021/12/23
+ * @TIME: 18:10
+ * @Introduce: 巡检模块离线模块 若开启任务则存储在当前数据库中 只存一条
+ **/
 @Entity
 data class CompleteTime(
     @Id

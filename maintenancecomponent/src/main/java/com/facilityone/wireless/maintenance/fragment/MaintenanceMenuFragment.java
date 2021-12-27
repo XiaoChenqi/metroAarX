@@ -56,6 +56,10 @@ public class MaintenanceMenuFragment extends BaseFragment<MaintenanceMenuPresent
         initView();
     }
 
+    @Override
+    public void leftBackListener() {
+        getActivity().finish();
+    }
     private void initData() {
         mFunctionBeanList = new ArrayList<>();
         Bundle arguments = getArguments();

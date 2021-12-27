@@ -11,6 +11,14 @@ import io.objectbox.converter.PropertyConverter
 import java.lang.Exception
 import java.lang.reflect.Type
 
+/**
+ * @Creator:Karelie
+ * @Data: 2021/12/23
+ * @TIME: 16:27
+ * @Introduce: 用户签到信息存储 只存储这一条
+ *
+ * PropertyConverter : 非基础类型状况下需要设置转换器 将数据以Json的形式保存
+ **/
 @Entity
 data class UserInfor(
     @Id
@@ -24,7 +32,7 @@ data class UserInfor(
     var userKey:String? = null //用户身份认证
 )
 
-  class LocationConverter :PropertyConverter<LocationBean?,String?>{
+class LocationConverter :PropertyConverter<LocationBean?,String?>{
     override fun convertToEntityProperty(locationDate: String?): LocationBean? {
         if (locationDate == null){
             return null
@@ -39,7 +47,7 @@ data class UserInfor(
     }
 
     override fun convertToDatabaseValue(location : LocationBean?): String? {
-       return GsonUtils.toJson(location)
+        return GsonUtils.toJson(location)
     }
 }
 

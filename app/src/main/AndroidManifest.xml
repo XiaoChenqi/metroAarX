@@ -15,19 +15,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:label, android:theme">
+        tools:replace="android:label, android:theme"
+        android:sharedUserId="android.uid.system"
+        android:requestLegacyExternalStorage="true"
+        >
         <activity android:name=".mine.MineSignQrCodeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar.NoTranslucent"
-            ></activity>
+            />
         <activity
             android:name=".scan.FmScanBaseActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.NoTranslucent"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent"/>
         <activity
             android:name=".download.OutLineDataActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

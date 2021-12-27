@@ -1,6 +1,8 @@
 package com.facilityone.wireless.a.arch.utils;
 
 import android.content.Intent;
+import android.os.Environment;
+
 import androidx.fragment.app.Fragment;
 
 import com.cktim.camera2library.Camera2Config;
@@ -44,7 +46,7 @@ public class PictureSelectorManager {
                 .compress(enableCrop)
                 .cropCompressQuality(70)
                 .waterMark(waterMark)
-                .minimumCompressSize(500)// 小于500kb的图片不压缩 
+                .minimumCompressSize(500)// 小于500kb的图片不压缩
                 .theme(R.style.picture_fm_style)
                 .compressSavePath(FMFileUtils.getPicPath())
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
@@ -58,6 +60,8 @@ public class PictureSelectorManager {
                 .scaleEnabled(false)//裁剪是否可放大缩小图片
                 .forResult(requestCode);
     }
+
+
 
     //录制视频
     public static void cameraVideo(Fragment fragment, int requestCode) {
@@ -137,6 +141,21 @@ public class PictureSelectorManager {
         PictureSelector.create(fragment)
                 .openGallery(PictureMimeType.ofImage())
                 .compress(true)
+                .isCamera(false)
+                .minimumCompressSize(500)// 小于500kb的图片不压缩
+                .theme(R.style.picture_fm_style)
+                .compressSavePath(FMFileUtils.getPicPath())
+                .maxSelectNum(max)
+                .waterMark(waterMark)
+                .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+                .selectionMode(PictureConfig.MULTIPLE)
+                .forResult(requestCode);
+    }
+
+    public static void MultipleChoose(Fragment fragment, int max, int requestCode, String waterMark,boolean enableCrop) {
+        PictureSelector.create(fragment)
+                .openGallery(PictureMimeType.ofImage())
+                .compress(enableCrop)
                 .isCamera(false)
                 .minimumCompressSize(500)// 小于500kb的图片不压缩
                 .theme(R.style.picture_fm_style)

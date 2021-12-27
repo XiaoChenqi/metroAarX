@@ -103,7 +103,7 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
     private static final int REQUEST_DEMAND_LOCATION = 5010;
     private static final int REQUEST_DEMAND_DEVICE = 5011;
     //图片
-    private List<LocalMedia> mSelectList=new ArrayList<>();
+    private List<LocalMedia> mSelectList;
     private GridImageAdapter mGridImageAdapter;
     //视频
     private List<LocalMedia> mVideoSelectList;
@@ -169,6 +169,7 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         initData();
         initAudioPlayService();
         initOnClick();
+        setSwipeBackEnable(false);
     }
 
     private void initOnClick() {
@@ -189,11 +190,11 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
             protected void onNoDoubleClick(View view) {
                 if (!mCivLocation.getTipText().equals("")){
                     mLocationForDevice = new LocationBean();
-                     /**
-                      * @Auther: karelie
-                      * @Date: 2021/8/30
-                      * 只需要这些数据选择位置即可
-                      */
+                    /**
+                     * @Auther: karelie
+                     * @Date: 2021/8/30
+                     * 只需要这些数据选择位置即可
+                     */
                     mLocationForDevice.buildingId = mLocationData.buildingId;
                     mLocationForDevice.siteId = mLocationData.siteId;
                     startForResult(SelectDataFragment.getInstance(ISelectDataService.DATA_TYPE_EQU,mLocationForDevice,mLocationName), REQUEST_DEMAND_DEVICE);
@@ -274,6 +275,7 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
     }
 
     private void initRecyclerView() {
+        mSelectList=new ArrayList<>();
         mGridImageAdapter = new GridImageAdapter(mSelectList, false);
         FullyGridLayoutManager manager = new FullyGridLayoutManager(getContext(),
                 FullyGridLayoutManager.SPAN_COUNT,
@@ -500,10 +502,7 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         return requestComplete;
     }
 
-
-
     private void showBottomMenu() {
-
         final int TAG_MENU_CHOOSE_PIC = 0;
         final int TAG_MENU_CAMERA_PIC = 1;
         final int TAG_MENU_VIDEO = 2;

@@ -188,6 +188,8 @@ dependencies {
     //替代官方Result
     //api 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.0'
     api 'com.github.bbssyyuui:ActivityLauncher:1.0.2'
+
+    api 'top.zibin:Luban:1.1.8'
 }
 
 //uploadArchives {

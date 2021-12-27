@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +99,8 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
     private static final String PATROL_SPOT = "patrol_spot";
     private static final int REQUEST_EXCEPTION = 50001;
     private static final int MAX_PHOTO = 2000;
+
+    private static final int REQUEST_CREATE_ORDER = 3003;
 
     private Long mSpotId;
     private String mSpotName;
@@ -356,6 +360,7 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
                 ToastUtils.showShort("无注意事项");
                 return;
             }
+            saveDataBefore();
             startForResult(PatrolPrecautionsFragment.getInstance(attention+""),-1);
         }
     }
@@ -440,6 +445,22 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
         }
     }
 
+    private void saveDataToWrong(){
+
+
+        if (choice.equals("") && mItemEntities.get(0).getContent().equals("车站工况")){
+            mItemEntities.get(0).setSelect("");
+        }
+
+        final int position = getPresenter().haveMiss(mItemEntities,itemChoice);
+        if (position == -1) {
+            getPresenter().saveData2Db(mItemEntities, mEntities, mTempPosition, false, mClickLastOne, mChange, mBack);
+        } else {
+            getPresenter().saveData2Db(mItemEntities, mEntities, mTempPosition, true, mClickLastOne, mChange, mBack);
+        }
+
+    }
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         getItemList();
@@ -521,13 +542,13 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
         List<PatrolPicEntity> picEntities = mItemEntities.get(mItemClickPosition).getPicEntities();
         if (position == 0) {
             if (picEntities.size() < MAX_PHOTO) {
-                PictureSelectorManager.camera(PatrolItemFragment.this, PictureConfig.REQUEST_CAMERA, mWaterMark);
+                PictureSelectorManager.camera(PatrolItemFragment.this, PictureConfig.REQUEST_CAMERA, mWaterMark,false);
             } else {
                 ToastUtils.showShort(String.format(Locale.getDefault(), getString(R.string.patrol_select_photo_at_most), MAX_PHOTO));
             }
         } else if (position == 1) {
             String mater = mWaterMark + getString(R.string.patrol_check_item_upload_pic);
-            PictureSelectorManager.MultipleChoose(PatrolItemFragment.this, MAX_PHOTO, PictureConfig.CHOOSE_REQUEST, mater);
+            PictureSelectorManager.MultipleChoose(PatrolItemFragment.this, MAX_PHOTO, PictureConfig.CHOOSE_REQUEST, mater,false);
         }
         dialog.dismiss();
     }
@@ -592,8 +613,9 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
                             if (media.isCut() && !media.isCompressed()) {
                                 path = media.getCutPath();
                             } else if (media.isCompressed() || (media.isCut() && media.isCompressed())) {
-                                path = media.getCompressPath();
+                                path = media.getPath();
                             } else {
+                                //绝对路径
                                 path = media.getPath();
                             }
                             picEntity.setPath(path);

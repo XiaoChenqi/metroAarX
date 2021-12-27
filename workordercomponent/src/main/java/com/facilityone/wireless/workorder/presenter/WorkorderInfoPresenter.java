@@ -23,6 +23,7 @@ import com.facilityone.wireless.workorder.module.WorkorderOptService;
 import com.facilityone.wireless.workorder.module.WorkorderService;
 import com.facilityone.wireless.workorder.module.WorkorderUrl;
 import com.fm.tool.network.model.BaseResponse;
+import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.luojilab.component.componentlib.router.Router;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -103,10 +104,6 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         getV().dismissLoading();
                         WorkorderService.WorkorderAttendanceResp data = response.body().data;
                         if (data != null) {
-//                            String userInfo= SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
-//                            UserService.UserInfoBean infoBean= GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
-//                            System.out.println(GsonUtils.toJson(infoBean.location));
-//                            System.out.println(GsonUtils.toJson(data.location));
                             //判空
                             if (isLocationNull(data.location, workInfoLocation)) {
                                 if (data.location.siteId != null && workInfoLocation.siteId != null) {
@@ -316,13 +313,6 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 
         }
 
-//        if (tag == 1){
-//            menu.clear();
-//            menu.add("新派工单");
-//            menu.add(getV().getString(R.string.workorder_verify_tip));
-//            menu.add("作废申请");
-//        }
-
         if (menu.size() == 0) {
             return;
         }
@@ -492,7 +482,12 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                     }
 
                     if (isMaintenanceOrder) {
-                        cpPremisson(woId, WorkorderConstant.ORDER_COMPLETE, null, defaultObject, defaultReason);
+                        if (getV().getNewStatus() == WorkorderConstant.WORK_STATUS_PROCESS){
+                            cpPremisson(woId, WorkorderConstant.ORDER_COMPLETE, null, defaultObject, defaultReason);
+                        }else {
+                            doSomeThing(true, WorkorderConstant.ORDER_COMPLETE, woId, approvalId, defaultObject, defaultReason);
+                        }
+
                     } else {
                         if (getV().isAllStart()) {
                             int allDeviceFinished = getV().isAllDeviceFinished();
@@ -1099,30 +1094,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 
                     }
                 });
-//        getV().NFCPression(true,doWhat);
     }
-
-//    public void NFCPremissionP(Long  woId,Integer way,Long approvalId,Long defaultObject,String defaultReason){
-//        Map<Object, Object> json = new HashMap<>();
-//        json.put("woId", woId);
-//        OkGo.<BaseResponse<Boolean>>post(FM.getApiHost() + WorkorderUrl.NFC_CAN_DO)
-//                .tag(getV())
-//                .isSpliceUrl(true)
-//                .upJson(toJson(json))
-//                .execute(new FMJsonCallback<BaseResponse<Boolean>>() {
-//                    @Override
-//                    public void onSuccess(Response<BaseResponse<Boolean>> response) {
-//                        getV().dismissLoading();
-//                        doSomeThing(response.body().data,way,woId,approvalId,defaultObject,defaultReason);
-//                    }
-//
-//                    @Override
-//                    public void onError(Response<BaseResponse<Boolean>> response) {
-//                        ToastUtils.showShort(R.string.workorder_operate_fail);
-//                        super.onError(response);
-//                    }
-//                });
-//    }
 
     /**
      * 单独判断处理完成是否需要匹配完所有NFC标签

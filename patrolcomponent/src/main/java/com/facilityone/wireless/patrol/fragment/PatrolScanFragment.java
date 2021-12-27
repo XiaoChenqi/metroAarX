@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,20 +18,24 @@ import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.ObjectBox;
 import com.facilityone.wireless.a.arch.ec.module.FunctionService;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.offline.dao.OfflineTimeDao;
+import com.facilityone.wireless.a.arch.offline.dao.PatrolSpotDao;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolTaskEntity;
 import com.facilityone.wireless.a.arch.offline.model.service.OfflineService;
 import com.facilityone.wireless.a.arch.offline.model.service.OnDownloadListener;
 import com.facilityone.wireless.a.arch.offline.model.service.OnPatrolListener;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
+import com.facilityone.wireless.a.arch.offline.objectbox.patrol.CompleteTime;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
+import com.facilityone.wireless.basiclib.utils.SystemDateUtils;
 import com.facilityone.wireless.patrol.NfcRedTagActivity;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.adapter.PatrolScanAdapter;
@@ -46,6 +51,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.objectbox.Box;
 import me.yokeyword.fragmentation.SwipeBackLayout;
 
 /**
@@ -82,8 +88,9 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
     private float mTempPatrol;
     private static final int TASK_COUNT = 4;
     private Boolean needRefresh = false;
-    private boolean mHasAttentance=false;
+    private boolean mHasAttentance=true;
     ArrayMap<Long, PatrolTaskEntity> mCurrentTask;
+    private Box<CompleteTime> taskBox; //任务开启
 
     @Override
     public PatrolScanPresenter createPresenter() {
@@ -122,7 +129,7 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
         mDialog = initProgressBarLoading();
         mDialog.setCancelable(false);
 
-        if (needRefresh){
+        if (needRefresh && NetworkUtils.isConnected()){
             requestData();
         }
         initView();
@@ -174,7 +181,12 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
         mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishRefresh();
         //获取最后一次签到记录用于判断
-        getPresenter().getLastAttendance();
+        if (NetworkUtils.isConnected()){
+            getPresenter().getLastAttendance();
+        }else {
+            getPresenter().getLastAttendanceOutLine();
+        }
+
 
     }
 
@@ -364,54 +376,21 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
         if (id == R.id.item_rl) {
             //判断点位类型
             if (mCurrentTask.get(patrolSpotEntity.getTaskId()).getpType().equals(PatrolTaskEntity.TASK_TYPE_INSPECTION)) {
-                //是否已签到
-                if (mHasAttentance) {
-                    if (isLocationNull(mLocation.location, patrolSpotEntity.getLocation())) {
-                        //签到比较前先判空,防止程序崩溃
-//                        mLocation.buildingId.equals(patrolSpotEntity.getLocation().buildingId)
-                        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
-                        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
-                        if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
-                            mTaskId = patrolSpotEntity.getTaskId();
-                            boolean canGo = getPresenter().canGo(patrolSpotEntity, mSpotEntityList);
-                            if (canGo) {
-                                getPresenter().judgeTask(patrolSpotEntity);
 
-                            } else {
-                                ToastUtils.showShort(R.string.patrol_overdue_task_tip);
-                            }
-                        } else {
-                            if (mLocation.location.siteId.equals(patrolSpotEntity.getLocation().siteId) &&
-                                    isInLocationList(patrolSpotEntity.getLocation().buildingId,mLocation)) {
+                mTaskId = patrolSpotEntity.getTaskId();
+                boolean canGo = getPresenter().canGo(patrolSpotEntity, mSpotEntityList);
+                if (canGo) {
+                    getPresenter().judgeTask(patrolSpotEntity,false);
 
-                                mTaskId = patrolSpotEntity.getTaskId();
-                                boolean canGo = getPresenter().canGo(patrolSpotEntity, mSpotEntityList);
-                                if (canGo) {
-                                    getPresenter().judgeTask(patrolSpotEntity);
-
-                                } else {
-                                    ToastUtils.showShort(R.string.patrol_overdue_task_tip);
-                                }
-                            } else {
-                                ToastUtils.showLong("您的签到位置与当前位置不符，请确认！");
-                            }
-                        }
-
-                    } else {
-                        ToastUtils.showLong("您的签到位置与当前位置不符，请确认！");
-                    }
-
-
-                }
-                else{
-                    ToastUtils.showLong("请先签到");
+                } else {
+                    ToastUtils.showShort(R.string.patrol_overdue_task_tip);
                 }
 
             }else {
                 mTaskId = patrolSpotEntity.getTaskId();
                 boolean canGo = getPresenter().canGo(patrolSpotEntity, mSpotEntityList);
                 if (canGo) {
-                    getPresenter().judgeTask(patrolSpotEntity);
+                    getPresenter().judgeTask(patrolSpotEntity,false);
 
                 } else {
                     ToastUtils.showShort(R.string.patrol_overdue_task_tip);
@@ -460,7 +439,7 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
     @Override
     public boolean onBackPressedSupport() {
         ActivityUtils.finishActivity(NfcRedTagActivity.class);
-        return false;
+        return super.onBackPressedSupport();
 
     }
 
@@ -523,7 +502,26 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
         builder.addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
             @Override
             public void onClick(QMUIDialog dialog, View view) {
-                executeTask(entity);
+
+                /**
+                 * 做成离线的形式处理
+                 * */
+                Long timeForNow = SystemDateUtils.getCurrentTimeMillis();
+                PatrolSpotDao spotDao = new PatrolSpotDao();
+                spotDao.upDateTaskTime(entity.getPatrolSpotId(), timeForNow);
+                taskBox = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
+                taskBox.removeAll();
+                CompleteTime da = new CompleteTime();
+                da.setStarTime(timeForNow);
+                da.setTaskId(entity.getTaskId());
+                da.setCheckTime(entity.getTaskTime());
+                da.setPatrolSpotId(entity.getPatrolSpotId());
+                da.setTaskTip(PatrolConstant.PATROL_TASK_OUTLINE);
+                da.setTaskName(entity.getTaskName()+"");
+                taskBox.put(da);
+                Log.i("任务开启", "onClick: " + da + "");
+
+                enterDeviceList(entity);
                 dialog.dismiss();
             }
         });
@@ -577,6 +575,28 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
 
 
     /**
+     * @Creator:Karelie
+     * @Data: 2021/12/22
+     * @TIME: 15:45
+     * @Introduce: 匹配后直接进入
+     **/
+    public void scanResult(PatrolSpotEntity patrolSpotEntity, Long time) {
+        if (time != 0) {
+            PatrolSpotDao dao = new PatrolSpotDao();
+            PatrolSpotEntity item = dao.getSpot(patrolSpotEntity.getPatrolSpotId());
+            if (item.getTaskStatus() > 0) {
+                enterDeviceList(patrolSpotEntity);
+            } else {
+                showOrderTimeDialog(time, patrolSpotEntity);
+            }
+        } else {
+            enterDeviceList(patrolSpotEntity);
+        }
+    }
+
+
+
+    /**
      * @Created by: kuuga
      * @Date: on 2021/8/27 16:26
      * @Description: 进入设备列表
@@ -614,7 +634,7 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
     }
 
     public void hasAttentanceData(boolean mHasData){
-        this.mHasAttentance=mHasData;
+        this.mHasAttentance=true;
     }
 
 

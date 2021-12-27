@@ -590,6 +590,10 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         startForResult(WorkorderCreateFragment.getInstance(newOrderBunder),NEW_ORDER);
     }
 
+    public Integer getNewStatus(){
+        return mRealStatus;
+    }
+
     /**
      * @Auther: karelie
      * @Date: 2021/8/16
@@ -1435,6 +1439,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         }
     }
 
+    //判断权限问题后再根据 状态值操作
     public void NFCPression(boolean cando, Integer dowhat) {
         if (!cando) {
             ToastUtils.showShort("请先触碰房间NFC标签。");
@@ -1474,8 +1479,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
      * NFCConnect 判断当前工单是否可以进行操作--NFC标签是否进行过对接
      */
     public void WorkOrderCanDo(Integer doWhat) {
-        //待存档工单以及查询工单不做NFC校验
-        if (refreshStatus == WorkorderConstant.WORK_STATUS_NONE || mRealStatus == WorkorderConstant.WORK_NEW_STATUS_ARCHIVED_WAIT){
+        //除待处理工单不做NFC校验
+        if (mRealStatus != WorkorderConstant.WORK_NEW_STATUS_PROCESS ){
             NFCPression(true,doWhat);
         }else {
             getPresenter().NFCPremission(mWoId, doWhat);
@@ -2230,7 +2235,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public void checkRole(LocationBean bean) {
         String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
         UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
-        if (infoBean.type.equals(1)) {
+        if (infoBean.type.equals(1) && mRealStatus == WorkorderConstant.WORK_STATUS_PROCESS) {
             getPresenter().getLastAttendance(bean);
         } else {
             canOpt(true, true);

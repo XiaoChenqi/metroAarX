@@ -29,4 +29,9 @@ public interface PatrolUrl {
 
     //最后一次签到记录
     String ATTENDANCE_LAST = "/m/v1/user/attendance/last";
+
+    //创建工单
+    String WORKORDER_CREATE_URL = "/m/v2/servicecenter/submit";
+    //新派工单
+    String NEW_ORDER_CREATE = "/m/v1/workorder/redispatch";
 }

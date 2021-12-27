@@ -43,6 +43,8 @@ public class EmptyPresenter extends CommonBasePresenter<EmptyFragment> {
         SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.HAVE_LOGON, true);
 
         getPermissions();
+
+        getUserInfo();
     }
 
     @Override

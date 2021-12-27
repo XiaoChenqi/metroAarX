@@ -1,5 +1,6 @@
 package com.facilityone.wireless.patrol.module;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -42,5 +43,10 @@ public class PatrolSaveReq {
         public String comment; //巡检项描述
         public String resultText; //输入文本
         public List<String> photoIds;
+    }
+
+    public static class PicList{
+        public String name;
+        public File file;
     }
 }

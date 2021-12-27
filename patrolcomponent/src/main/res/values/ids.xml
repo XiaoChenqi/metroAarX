@@ -5,4 +5,5 @@
     <item name="patrol_spot_upload_id" type="id"/>
     <item name="patrol_exception_sure_id" type="id"/>
     <item name="patrol_attention_id" type="id"/>
+    <item name="workorder_upload_menu_id" type="id"/>
 </resources>
