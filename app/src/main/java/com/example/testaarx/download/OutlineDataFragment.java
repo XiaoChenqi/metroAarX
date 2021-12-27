@@ -74,6 +74,7 @@ public class OutlineDataFragment extends BaseFragment<OutlineDataPresenter> {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setSwipeBackEnable(false);
         initData();
         initView();
         initListener();

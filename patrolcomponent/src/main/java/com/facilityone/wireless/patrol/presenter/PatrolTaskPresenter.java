@@ -3,6 +3,7 @@ package com.facilityone.wireless.patrol.presenter;
 import android.util.Log;
 
 import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.facilityone.wireless.ObjectBox;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
