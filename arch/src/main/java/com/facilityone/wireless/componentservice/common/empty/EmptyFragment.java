@@ -3,13 +3,19 @@ package com.facilityone.wireless.componentservice.common.empty;
 import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.PASSWORD;
 import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.USERNAME;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.facilityone.wireless.AppConfig;
+import com.facilityone.wireless.a.arch.BuildConfig;
 import com.facilityone.wireless.a.arch.R;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.net.FmNetApi;
@@ -59,8 +65,21 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
         showLoading();
 //        USERNAME = "cylz";//todo xcq测试数据
 //        PASSWORD = "111111";//todo xcq测试数据
-        getPresenter().logon(Constant.USERNAME, PASSWORD);
-//        getPresenter().logon("01050002406", "111111");
+//        getPresenter().logon(Constant.USERNAME, PASSWORD);
+//        getPresenter().logon(Constant.USERNAME, PASSWORD);
+        if (BuildConfig.DEBUG){
+//            String uname=AppConfig.INSTANCE.getUname();
+//            String upwd=AppConfig.INSTANCE.getUpwd();
+//            if (!TextUtils.isEmpty(uname)&&!TextUtils.isEmpty(upwd)){
+//                getPresenter().logon(uname, upwd);
+//
+//            }else {
+//                ToastUtils.showShort("请先到临时页面设置临时账户登录,正在前往");
+//            }
+
+        }else {
+            getPresenter().logon(Constant.USERNAME, PASSWORD);
+        }
         showLogonButton();
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +98,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
         if (mOnGoFragmentListener != null) {
             mOnGoFragmentListener.goFragment(bundle);
         }
+
     }
 
     public void showLogonButton() {

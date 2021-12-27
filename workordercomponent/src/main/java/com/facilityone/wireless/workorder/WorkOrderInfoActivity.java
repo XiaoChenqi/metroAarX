@@ -45,7 +45,7 @@ public class WorkOrderInfoActivity extends
         if (getIntent().getStringExtra("woId") != null) {
             woId = Long.parseLong(getIntent().getStringExtra("woId"));
         }
-        woId=22;
+
     }
 
     @Override

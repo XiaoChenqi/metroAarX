@@ -422,6 +422,8 @@ public class MaintenanceService {
         public String workContent;//工作内容
         public String serviceTypeName;//服务类型名称
         public Integer currentLaborerStatus;//当前执行人的状态
+        public Integer newStatus; //新的工单状态
+        public Integer tag ; //工单标签
 
         protected MaintenanceWorkOrder(Parcel in) {
             woId = (Long) in.readValue(Long.class.getClassLoader());
@@ -437,6 +439,8 @@ public class MaintenanceService {
             workContent = in.readString();
             serviceTypeName = in.readString();
             currentLaborerStatus = (Integer) in.readValue(Integer.class.getClassLoader());
+            newStatus = (Integer) in.readValue(Integer.class.getClassLoader());
+            tag = (Integer) in.readValue(Integer.class.getClassLoader());
         }
 
 
@@ -460,6 +464,8 @@ public class MaintenanceService {
             dest.writeString(workContent);
             dest.writeString(serviceTypeName);
             dest.writeValue(currentLaborerStatus);
+            dest.writeValue(newStatus);
+            dest.writeValue(tag);
         }
 
         public static final Creator<MaintenanceWorkOrder> CREATOR = new Creator<MaintenanceWorkOrder>() {

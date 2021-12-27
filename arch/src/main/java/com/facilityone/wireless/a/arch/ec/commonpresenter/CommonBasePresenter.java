@@ -95,6 +95,7 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
                     SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PASSWORD, password);
                     ToastUtils.showShort(R.string.arch_login_success);
                     onLogonSuccess();
+
                 }
             }
 

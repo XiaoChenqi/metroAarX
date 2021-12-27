@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mOutBtn;
     private Button mLoginBtn;
     private Button mServerBtn;
+    private Button mProfileBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,5 +182,6 @@ public class MainActivity extends AppCompatActivity {
         mOutBtn = (Button) findViewById(R.id.outBtn);
         mLoginBtn = (Button) findViewById(R.id.loginBtn);
         mServerBtn = (Button) findViewById(R.id.serverBtn);
+        mProfileBtn=(Button) findViewById(R.id.profileBtn);
     }
 }

@@ -4,6 +4,7 @@ import android.app.Application;
 
 
 import com.facilityone.wireless.AppConfig;
+import com.facilityone.wireless.ObjectBox;
 import com.facilityone.wireless.a.arch.Facility;
 import com.facilityone.wireless.a.arch.offline.util.DBManager;
 import com.facilityone.wireless.basiclib.app.FM;
@@ -26,10 +27,17 @@ public class MainApp extends Application {
 //        DBManager.getInstance();
         MMKV.initialize(this);
         saveChannelParam();
-        Router.registerComponent("com.facilityone.wireless.workorder.applike.WorkorderApplike");
         Facility.init(this, AppConfig.INSTANCE.getServerHost(), BuildConfig.DEBUG);
-//        Facility.init(this, "http://192.168.1.89:23456/fz_iframe", BuildConfig.DEBUG);
         DBManager.getInstance();
+        ObjectBox.init(this);
+        Router.registerComponent("com.facilityone.wireless.demand.applike.DemandApplike");
+        Router.registerComponent("com.facilityone.wireless.workorder.applike.WorkorderApplike");
+        Router.registerComponent("com.facilityone.wireless.maintenance.applike.MaintenanceApplike");
+        Router.registerComponent("com.facilityone.wireless.patrol.applike.PatrolApplike");
+        Router.registerComponent("com.facilityone.wireless.inventory.applike.InventoryApplike");
+        Router.registerComponent("com.facilityone.wireless.inspection.applike.InspectionApplike");
+
+//        Facility.init(this, "http://192.168.1.89:23456/fz_iframe", BuildConfig.DEBUG);
 
     }
 

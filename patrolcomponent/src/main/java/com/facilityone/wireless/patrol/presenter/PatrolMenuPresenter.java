@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.facilityone.wireless.ObjectBox;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.ec.commonpresenter.CommonBasePresenter;
 import com.facilityone.wireless.a.arch.ec.module.FunctionService;
+import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.ui.FzScanActivity;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.offline.dao.PatrolDeviceDao;
@@ -17,12 +20,14 @@ import com.facilityone.wireless.a.arch.offline.dao.PatrolSpotDao;
 import com.facilityone.wireless.a.arch.offline.dao.PatrolTaskDao;
 import com.facilityone.wireless.a.arch.offline.model.entity.DBPatrolConstant;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolTaskEntity;
+import com.facilityone.wireless.a.arch.offline.objectbox.user.UserInfor;
 import com.facilityone.wireless.a.arch.offline.util.PatrolQrcodeUtils;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.componentservice.common.permissions.PermissionsManager;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.fragment.PatrolMenuFragment;
 import com.facilityone.wireless.patrol.module.PatrolConstant;
+import com.facilityone.wireless.patrol.module.PatrolQueryService;
 import com.facilityone.wireless.patrol.module.PatrolStatusEntity;
 import com.facilityone.wireless.patrol.module.PatrolStatusReq;
 import com.facilityone.wireless.patrol.module.PatrolUrl;
@@ -41,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.objectbox.Box;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -56,6 +62,7 @@ import io.reactivex.schedulers.Schedulers;
  * Date: 2018/10/30 3:01 PM
  */
 public class PatrolMenuPresenter extends CommonBasePresenter<PatrolMenuFragment> {
+    private Box<UserInfor> box; //用户信息
     @Override
     public void getUndoNumberSuccess(JSONObject data) {
         List<FunctionService.FunctionBean> functionBeanList = getV().getFunctionBeanList();
@@ -333,5 +340,50 @@ public class PatrolMenuPresenter extends CommonBasePresenter<PatrolMenuFragment>
 
                     }
                 });
+    }
+
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/12/22
+     * @TIME: 11:21
+     * @Introduce:获取离线数据
+     **/
+    public void getLastAttendance() {
+        getV().showLoading();
+        box = ObjectBox.INSTANCE.getBoxStore().boxFor(UserInfor.class);
+        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+        String json = "{}";
+        OkGo.<BaseResponse<PatrolQueryService.AttendanceResp>>post(FM.getApiHost() + PatrolUrl.ATTENDANCE_LAST)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(json)
+                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.AttendanceResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
+                        getV().dismissLoading();
+                        PatrolQueryService.AttendanceResp data = response.body().data;
+                        if (data != null) {
+                            UserInfor user = new UserInfor();
+                            box.removeAll();
+                            user.setId(0L);
+                            user.setUserKey(PatrolConstant.USERLOGIN_ID);
+                            if (data.location != null) {
+                                user.setLocationBean(data.location);
+                                user.setBuidlings(data.buildingIds);
+                            }
+                            box.put(user);
+                            Log.e("LAST_ATTENDANCE", "===============***=============" + user.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
+
+
     }
 }

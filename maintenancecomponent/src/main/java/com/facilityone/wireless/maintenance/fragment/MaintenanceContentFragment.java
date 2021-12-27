@@ -550,6 +550,7 @@ public class MaintenanceContentFragment extends BaseFragment<MaintenanceContentP
                 getPresenter().openAttachment(attachmentBean.url, attachmentBean.name, getContext());
             }
         }else if(adapter == mWorkorderAdapter) {
+            //维护工单
             Router router = Router.getInstance();
             WorkorderService workorderService = (WorkorderService) router.getService(WorkorderService.class.getSimpleName());
             if(workorderService != null) {
@@ -558,7 +559,7 @@ public class MaintenanceContentFragment extends BaseFragment<MaintenanceContentP
                     int workorderStatus = maintenanceWorkOrder.status;
                     String code = maintenanceWorkOrder.code;
                     Long woId = maintenanceWorkOrder.woId;
-                    BaseFragment workorderInfoFragment = workorderService.getWorkorderInfoFragment(MaintenanceConstant.WORKORDER_STATUS_NONE, code, woId);
+                    BaseFragment workorderInfoFragment = workorderService.getWorkorderInfoFragment(MaintenanceConstant.WORKORDER_STATUS_NONE, code, woId,true);
                     start(workorderInfoFragment);
                 }
 

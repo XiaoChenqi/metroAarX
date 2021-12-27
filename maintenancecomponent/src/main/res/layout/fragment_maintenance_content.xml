@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.qmuiteam.qmui.widget.QMUITopBarLayout
         android:id="@+id/ui_topbar"
@@ -75,6 +75,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:visibility="gone"
                         style="@style/maintenanceInfoStyle">
 
                         <TextView
@@ -193,6 +194,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:visibility="gone"
                         style="@style/maintenanceInfoStyle">
 
                         <TextView
@@ -462,7 +464,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dp_14"
                             android:layout_weight="1"
-                            android:text="@string/maintenance_location"/>
+                            android:text="车站"/>
 
                         <com.joanzapata.iconify.widget.IconTextView
                             android:id="@+id/maintenance_space_expand_itv"
@@ -582,15 +584,15 @@
 
         </androidx.core.widget.NestedScrollView>
 
-<!--        <ImageView-->
-<!--            android:id="@+id/more_menu_iv"-->
-<!--            android:layout_width="@dimen/dp_55"-->
-<!--            android:layout_height="@dimen/dp_55"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:layout_alignParentRight="true"-->
-<!--            android:layout_marginBottom="@dimen/dp_20"-->
-<!--            android:layout_marginRight="@dimen/dp_16"-->
-<!--            android:background="@drawable/more_menu_selector"/>-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/more_menu_iv"-->
+        <!--            android:layout_width="@dimen/dp_55"-->
+        <!--            android:layout_height="@dimen/dp_55"-->
+        <!--            android:layout_alignParentBottom="true"-->
+        <!--            android:layout_alignParentRight="true"-->
+        <!--            android:layout_marginBottom="@dimen/dp_20"-->
+        <!--            android:layout_marginRight="@dimen/dp_16"-->
+        <!--            android:background="@drawable/more_menu_selector"/>-->
 
     </RelativeLayout>
 

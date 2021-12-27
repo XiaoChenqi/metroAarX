@@ -46,11 +46,11 @@ public class PermissionsManager {
     public static final String UNARRANGEORDERNUMBER = "unArrangeOrderNumber";                //待派工工单数量
     public static final String UNAPPROVALORDERNUMBER = "unApprovalOrderNumber";              //待审核工单数量
     public static final String UNARCHIVEDORDERNUMBER = "unArchivedOrderNumber";              //待存档工单数量
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/10
-      * @Infor: 新加
-      */
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/10
+     * @Infor: 新加
+     */
     public static final String ABNORMALORDERNUMBER = "abnormalOrderNumber";              //异常工单数量
     public static final String PATROLTASKNUMBER = "patrolTaskNumber";                        //巡检任务数量
 
@@ -67,16 +67,16 @@ public class PermissionsManager {
     public static final String UNDOINSPECTIONNUMBER = "undoInspectionNumber";                 //查验任务数量
     public static final String UNARCHIVEDINSPECTIONNUMBER = "unArchivedInspectionNumber";      //待验证查验任务数量
 
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/24
-      * @Infor: 维护工单模块
-      */
-     public static final String UNDOPPMORDERNUMBER = "undoPPMOrderNumber"; //待处理维护工单数量
-     public static final String UNARRANGEPPMORDERNUMBER = "unArrangePPMOrderNumber"; //待派工维护工单数量
-     public static final String UNAPPROVALPMORDERNUMBER = "unApprovalPPMOrderNumber"; //待审核维护工单数量
-     public static final String ABNORMALPPMORDERNUMBER = "abnormalPPMOrderNumber"; //异常维护工单数量
-     public static final String UNARCHIVEDPPMORDERNUMBER = "unArchivedPPMOrderNumber"; //待存档维护工单数量
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/24
+     * @Infor: 维护工单模块
+     */
+    public static final String UNDOPPMORDERNUMBER = "undoPPMOrderNumber"; //待处理维护工单数量
+    public static final String UNARRANGEPPMORDERNUMBER = "unArrangePPMOrderNumber"; //待派工维护工单数量
+    public static final String UNAPPROVALPMORDERNUMBER = "unApprovalPPMOrderNumber"; //待审核维护工单数量
+    public static final String ABNORMALPPMORDERNUMBER = "abnormalPPMOrderNumber"; //异常维护工单数量
+    public static final String UNARCHIVEDPPMORDERNUMBER = "unArchivedPPMOrderNumber"; //待存档维护工单数量
 
     public static class HomeFunction {
 
@@ -784,7 +784,7 @@ public class PermissionsManager {
     }
 
     public static boolean hasPermission(Context context, Integer type) {
-        HomeFunction instance = HomeFunction.getInstance();
+        PermissionsManager.HomeFunction instance = PermissionsManager.HomeFunction.getInstance();
         boolean has = false;
         if (type == null) {
             return false;

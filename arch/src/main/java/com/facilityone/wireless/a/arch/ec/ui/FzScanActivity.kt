@@ -63,10 +63,12 @@ class FzScanActivity: FragmentActivity() {
         StatusBarUtils.setNoTitle(this)
         setContentView(R.layout.activity_fz_scan)
         //        StatusBarUtils.setTransparentStatusBar(this);
-        ImmersionBar.with(this).statusBarColorTransform(R.color.wx_topbar_bg_color)
+       val title = findViewById<View>(R.id.topbar)
+        ImmersionBar.with(this).fitsSystemWindows(true,R.color.wx_topbar_bg_color)
         AppUtils.syncIsDebug(this.applicationContext)
         initPermission()
         initView(savedInstanceState)
+
     }
 
     private fun initPermission() {

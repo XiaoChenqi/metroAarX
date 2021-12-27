@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.a.arch.utils.MetroUtils;
@@ -82,7 +83,14 @@ public class WorkorderCreateActivity extends BaseFragmentActivity
 
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             pop();
-        } else {
+
+
+        } else  if (getSupportFragmentManager().getBackStackEntryCount()==1){
+
+            if (getSupportFragmentManager().getFragments().get(0) instanceof  EmptyFragment){
+                finish();
+            }
+        }else {
             this.finish();
 //            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
 //                this.finish();
@@ -92,4 +100,8 @@ public class WorkorderCreateActivity extends BaseFragmentActivity
 //            }
         }
     }
+
+
+
+
 }

@@ -55,6 +55,7 @@ import com.facilityone.wireless.patrol.module.PatrolUrl;
 import com.fm.tool.network.callback.JsonCallback;
 import com.fm.tool.network.model.BaseResponse;
 import com.fm.tool.scan.ScanActivity;
+
 import com.huawei.hms.ml.scan.HmsScan;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -714,6 +715,12 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
      * @param req
      */
     private void data2Server(final PatrolSaveReq req) {
+        if (!NetworkUtils.isConnected()){
+            ToastUtils.showShort("请联网后提交");
+            getV().dismissLoading();
+            return;
+        }
+
         if (req.operateType == PatrolConstant.PATROL_OPT_TYPE_UPLOAD) {
             if (req.patrolTask.startDateTime == 0) {
                 req.patrolTask.startDateTime = System.currentTimeMillis();
@@ -885,56 +892,60 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
      * @Description: 判断巡检任务点位可继续性
      */
     public void judgeTask(PatrolSpotEntity entity,boolean needScan){
+        //联网的形式
         PatrolQueryService.PatrolJudgeReq req=new PatrolQueryService.PatrolJudgeReq();
         req.patrolTaskId=entity.getTaskId();
         req.patrolTaskSpotId=entity.getPatrolSpotId();
 //        jsonObject.put("patrolTaskSpotId", entity.getPatrolSpotId());
 //        jsonObject.put("patrolTaskId", entity.getTaskId());
-            OkGo.<BaseResponse<PatrolQueryService.PatrolJudgeBean>>post(FM.getApiHost() + PatrolUrl.PATROL_JUDGE_TASK)
-                    .isSpliceUrl(true)
-                    .upJson(toJson(req))
-                    .tag(getV())
-                    .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.PatrolJudgeBean>>() {
-                        @Override
-                        public void onSuccess(Response<BaseResponse<PatrolQueryService.PatrolJudgeBean>> response) {
-                            getV().dismissLoading();
-                            PatrolQueryService.PatrolJudgeBean data = response.body().data;
-                            if (data != null) {
-                                //是否可以开启新任务
-                                if (data.executable){
-                                    if (data.time!=0){
-                                        //判断是否需要扫码,不需要则直接进去
-                                        if (!needScan){
-                                            getV().showOrderTimeDialog(data.time,entity);
-                                        }else {
-                                            getV().needScanQrcode(entity,data.time);
-                                        }
+        OkGo.<BaseResponse<PatrolQueryService.PatrolJudgeBean>>post(FM.getApiHost() + PatrolUrl.PATROL_JUDGE_TASK)
+                .isSpliceUrl(true)
+                .upJson(toJson(req))
+                .tag(getV())
+                .execute(new FMJsonCallback<BaseResponse<PatrolQueryService.PatrolJudgeBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<PatrolQueryService.PatrolJudgeBean>> response) {
+                        getV().dismissLoading();
+                        PatrolQueryService.PatrolJudgeBean data = response.body().data;
+                        if (data != null) {
+                            //是否可以开启新任务
+                            if (data.executable){
+                                if (data.time!=0){
+                                    //判断是否需要扫码,不需要则直接进去
+                                    if (!needScan){
+                                        getV().showOrderTimeDialog(data.time,entity);
                                     }else {
-                                        //判断是否需要扫码,不需要则直接进去
-                                        if (!needScan){
-                                            getV().enterDeviceList(entity);
-                                        }else {
-                                            getV().needScanQrcode(entity,data.time);
-                                        }
+                                        getV().needScanQrcode(entity,data.time);
                                     }
                                 }else {
-                                    //当前有任务是进入,判断是否同一个任务及点位
-                                    if (data.patrolTaskId.equals(entity.getTaskId())&&data.patrolTaskSpotId.equals(entity.getPatrolSpotId())){
-                                        if (!needScan){
-                                            getV().enterDeviceList(entity);
-                                        }else {
-                                            getV().needWorkingScanQrcode(entity,0L);
-                                        }
-                                        //非同一个任务及点位时,提示当前有任务进行以及剩余时间
+                                    //判断是否需要扫码,不需要则直接进去
+                                    if (!needScan){
+                                        getV().enterDeviceList(entity);
                                     }else {
-                                        getV().showOrderTimeDialog(data.time);
+                                        getV().needScanQrcode(entity,data.time);
                                     }
+                                }
+                            }else {
+                                //当前有任务是进入,判断是否同一个任务及点位
+                                if (data.patrolTaskId.equals(entity.getTaskId())&&data.patrolTaskSpotId.equals(entity.getPatrolSpotId())){
+                                    if (!needScan){
+                                        getV().enterDeviceList(entity);
+                                    }else {
+                                        getV().needWorkingScanQrcode(entity,0L);
+                                    }
+                                    //非同一个任务及点位时,提示当前有任务进行以及剩余时间
+                                }else {
+                                    getV().showOrderTimeDialog(data.time);
                                 }
                             }
                         }
-                    });
+                    }
+                });
 
 
+//        /**
+//         * 离线操作
+//         * */
 //        PatrolQueryService.PatrolJudgeBean bean = new PatrolQueryService.PatrolJudgeBean();
 //        boxTask = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
 //        Query<CompleteTime> query = boxTask.query().equal(CompleteTime_.taskTip, PatrolConstant.PATROL_TASK_OUTLINE).build();
@@ -949,7 +960,76 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
 //
 //        //执行任务
 //        doWork(bean, entity, needScan);
+    }
 
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/12/21
+     * @TIME: 9:30
+     * @Introduce: 根据当前任务数据装填以及任务实体数据已经 needScan判断下一步操作
+     **/
+    public void doWork(PatrolQueryService.PatrolJudgeBean data, PatrolSpotEntity entity, boolean needScan) {
+        if (data != null) {
+            /**
+             *  executable == true
+             *  此时当前任务列表中无数据 或者 任务已超过最短完成时间
+             *  当前点击的任务可以开启任务
+             * */
+            if (data.executable) { //可以开启任务 当前点击
+                /**
+                 * 此时任务列表中有任务 或者当前点击的任务可以开启
+                 * */
+                if (data.time != 0) {
+                    //判断是否需要扫码,不需要则直接开启
+                    if (!needScan) {
+                        getV().showOrderTimeDialog(data.time, entity);
+                    } else {
+                        getV().needScanQrcode(entity, data.time);
+                    }
+                } else {
+                    //判断是否需要扫码,不需要则直接进去
+                    if (!needScan) {
+                        getV().enterDeviceList(entity);
+                    } else {
+                        getV().needScanQrcode(entity, data.time);
+
+                    }
+                }
+
+            } else { //当前任务不可开启-- 任务已开启过 当前有处理中的任务
+                //当前有任务是进入,判断是否同一个任务及点位
+                if (data.patrolTaskId.equals(entity.getTaskId()) && data.patrolTaskSpotId.equals(entity.getPatrolSpotId())) {
+                    if (!needScan) {
+                        getV().enterDeviceList(entity);
+                    } else {
+                        if (entity.getCompleted() == DBPatrolConstant.TRUE_VALUE || entity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE){
+                            getV().enterDeviceList(entity);
+                        }else {
+                            getV().needWorkingScanQrcode(entity, data.time);
+                        }
+                    }
+                    //非同一个任务及点位时,提示当前有任务进行以及剩余时间
+                } else {
+                    if (data.time > 0){
+                        getV().showOrderTimeDialog(data.time);
+                    }else {
+                        if (entity.getCompleted() == DBPatrolConstant.TRUE_VALUE || entity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE){
+                            getV().enterDeviceList(entity);
+                        }else {
+                            PatrolSpotDao db = new PatrolSpotDao();
+                            PatrolSpotEntity item = db.getSpot(entity.getPatrolSpotId());
+                            if (item.getTaskStatus() > 0){
+                                getV().needScanQrcode(entity, 0L); //开启了任务但是没有保存
+                            }else {
+                                getV().showOrderTimeDialog(data.time);
+                            }
+
+                        }
+                    }
+
+                }
+            }
+        }
     }
 
     /**
@@ -962,7 +1042,6 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
         PatrolSpotDao db = new PatrolSpotDao();
         PatrolSpotEntity data = db.getSpot(entity.getPatrolSpotId());
         Long systemTime = SystemDateUtils.getCurrentTimeMillis(); //获取当前时间
-        Long taskTime = queryData.getStarTime() + queryData.getCheckTime() * 1000L;
 
         if (queryData == null) {
             if (data.getTaskStatus() >0){
@@ -976,6 +1055,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
 
             }
         } else {
+            Long taskTime = queryData.getStarTime() + queryData.getCheckTime() * 1000L;
             if (data.getTaskStatus() > 0) { //说明开启过任务 不可再次开启该任务
                 return false;
             } else { //任务未开启
@@ -1005,8 +1085,8 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
         boxTask = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
         Query<CompleteTime> query = boxTask.query().equal(CompleteTime_.taskTip, PatrolConstant.PATROL_TASK_OUTLINE).build();
         CompleteTime db = query.findFirst();
-        Long startTime = db.getStarTime() + 1000L * db.getCheckTime();
         if (db != null) {
+            Long startTime = db.getStarTime() + 1000L * db.getCheckTime();
             if (timeForNow >= startTime) {
                 if (enity.getTaskStatus() > 0){
                     return 0L; // 过了最短完成时间且任务开启过
@@ -1024,18 +1104,19 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
             if (enity.getTaskStatus() > 0) {
                 return 0L; //当前没有执行中的任务 且任务已开启
             } else {
-                return enity.getTaskStatus(); //当前五任务开启 且任务未开启过
+                return Long.parseLong(enity.getTaskTime()+""); //当前五任务开启 且任务未开启过
             }
         }
     }
 
-    
+
     /**
      * @Created by: kuuga
      * @Date: on 2021/8/30 10:25
      * @Description: 提交任务时判断
      */
     public void submitTask(Long taskId,int type){
+        //联网操作实现
         Map<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("patrolTaskId", taskId);
         OkGo.<BaseResponse<PatrolQueryService.PatrolJudgeBean>>post(FM.getApiHost() + PatrolUrl.PATROL_JUDGE_TASK)
@@ -1057,13 +1138,13 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                 });
 
 
-        //TODO 12.30再开启
+        //离线状态
 //        boxTask = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
 //        Query<CompleteTime> query = boxTask.query().equal(CompleteTime_.taskTip, PatrolConstant.PATROL_TASK_OUTLINE).build();
 //        CompleteTime queryData = query.findFirst();
 //        Long timeForNow = SystemDateUtils.getCurrentTimeMillis();
-//        Long startTime = queryData.getStarTime() + 1000L * queryData.getCheckTime();
 //        if (queryData != null){
+//            Long startTime = queryData.getStarTime() + 1000L * queryData.getCheckTime();
 //            if (timeForNow >= startTime) {
 //                getV().syncDta(type);
 //            } else {
@@ -1118,17 +1199,17 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         getV().dismissLoading();
                         PatrolQueryService.AttendanceResp data = response.body().data;
-//                        UserInfor user = new UserInfor();
-//                        box.removeAll();
-//                        user.setId(0L);
-//                        user.setUserKey(PatrolConstant.USERLOGIN_ID);
-//                        if (data.location != null) {
-//                            user.setLocationBean(data.location);
-//                            user.setBuidlings(data.buildingIds);
-//                        }
-//                        box.put(user);
-//                        Log.e("LAST_ATTENDANCE", "===============***=============" + user.toString());
                         if (data != null) {
+                            UserInfor user = new UserInfor();
+                            box.removeAll();
+                            user.setId(0L);
+                            user.setUserKey(PatrolConstant.USERLOGIN_ID);
+                            if (data.location != null) {
+                                user.setLocationBean(data.location);
+                                user.setBuidlings(data.buildingIds);
+                            }
+                            box.put(user);
+                            Log.e("LAST_ATTENDANCE", "===============***=============" + user.toString());
                             getV().hasAttentanceData(true);
                             getV().saveAttentanceLocation(data);
                         } else {

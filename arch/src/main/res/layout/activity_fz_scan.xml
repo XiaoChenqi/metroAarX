@@ -13,7 +13,9 @@
         android:layout_height="match_parent">
     </FrameLayout>
 
-    <include layout="@layout/wx_top_bar"/>
+    <include
+        android:id="@+id/topbar"
+        layout="@layout/wx_top_bar"/>
     <com.huawei.hms.scankit.ViewfinderView
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

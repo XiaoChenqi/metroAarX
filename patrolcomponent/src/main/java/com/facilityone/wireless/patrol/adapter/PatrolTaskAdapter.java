@@ -34,8 +34,10 @@ public class PatrolTaskAdapter extends BaseQuickAdapter<PatrolTaskEntity, BaseVi
         if (item.getpType() != null) {
             helper.setVisible(R.id.type_tv, true);
             if (item.getpType().equals(PatrolTaskEntity.TASK_TYPE_INSPECTION)) {
+                helper.setBackgroundRes(R.id.type_tv, R.drawable.fm_workorder_tag_fill_process_bg);
                 helper.setText(R.id.type_tv, R.string.patrol_task_type_inspection);
             } else if (item.getpType().equals(PatrolTaskEntity.TASK_TYPE_PATROL)) {
+                helper.setBackgroundRes(R.id.type_tv, R.drawable.fm_workorder_tag_fill_published_bg);
                 helper.setText(R.id.type_tv, R.string.patrol_task_type_patrol);
             } else {
                 helper.setGone(R.id.type_tv, false);

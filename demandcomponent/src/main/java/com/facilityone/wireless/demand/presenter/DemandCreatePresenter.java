@@ -1,5 +1,6 @@
 package com.facilityone.wireless.demand.presenter;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.facilityone.wireless.a.arch.base.FMJsonCallback;
 import com.facilityone.wireless.a.arch.ec.commonpresenter.CommonBasePresenter;
@@ -89,7 +90,9 @@ public class DemandCreatePresenter extends CommonBasePresenter<DemandCreateFragm
                     public void onSuccess(Response<BaseResponse<Object>> response) {
                         getV().dismissLoading();
                         ToastUtils.showShort(R.string.demand_create_success);
-                        getV().pop();
+//                        getV().pop();
+                        getV().getActivity().finish();
+
                     }
 
                     @Override

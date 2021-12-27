@@ -14,10 +14,13 @@ import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.NetworkUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.ec.module.FunctionService;
 import com.facilityone.wireless.a.arch.ec.module.LocationBean;
+import com.facilityone.wireless.a.arch.ec.module.UserService;
+import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.offline.dao.OfflineTimeDao;
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolSpotEntity;
@@ -31,6 +34,7 @@ import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.patrol.NfcRedTagActivity;
 import com.facilityone.wireless.patrol.R;
 import com.facilityone.wireless.patrol.adapter.PatrolScanAdapter;
+import com.facilityone.wireless.patrol.module.PatrolConstant;
 import com.facilityone.wireless.patrol.module.PatrolQueryService;
 import com.facilityone.wireless.patrol.presenter.PatrolScanPresenter;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
@@ -365,9 +369,9 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
                     if (isLocationNull(mLocation.location, patrolSpotEntity.getLocation())) {
                         //签到比较前先判空,防止程序崩溃
 //                        mLocation.buildingId.equals(patrolSpotEntity.getLocation().buildingId)
-                        if (mLocation.location.siteId.equals(patrolSpotEntity.getLocation().siteId) &&
-                                isInLocationList(patrolSpotEntity.getLocation().buildingId,mLocation)) {
-
+                        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+                        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+                        if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
                             mTaskId = patrolSpotEntity.getTaskId();
                             boolean canGo = getPresenter().canGo(patrolSpotEntity, mSpotEntityList);
                             if (canGo) {
@@ -377,14 +381,28 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
                                 ToastUtils.showShort(R.string.patrol_overdue_task_tip);
                             }
                         } else {
-                            ToastUtils.showLong("您的签到位置与当前位置不符，请确认！");
+                            if (mLocation.location.siteId.equals(patrolSpotEntity.getLocation().siteId) &&
+                                    isInLocationList(patrolSpotEntity.getLocation().buildingId,mLocation)) {
+
+                                mTaskId = patrolSpotEntity.getTaskId();
+                                boolean canGo = getPresenter().canGo(patrolSpotEntity, mSpotEntityList);
+                                if (canGo) {
+                                    getPresenter().judgeTask(patrolSpotEntity);
+
+                                } else {
+                                    ToastUtils.showShort(R.string.patrol_overdue_task_tip);
+                                }
+                            } else {
+                                ToastUtils.showLong("您的签到位置与当前位置不符，请确认！");
+                            }
                         }
+
                     } else {
-                    ToastUtils.showLong("您的签到位置与当前位置不符，请确认！");
+                        ToastUtils.showLong("您的签到位置与当前位置不符，请确认！");
                     }
 
 
-            }
+                }
                 else{
                     ToastUtils.showLong("请先签到");
                 }
@@ -400,15 +418,15 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
                 }
             }
         } else if (id == R.id.ll_look_all) {
-                Long taskId = patrolSpotEntity.getTaskId();
-                String taskName = patrolSpotEntity.getTaskName();
-                String code = patrolSpotEntity.getCode();
-                if (mCurrentTask.get(patrolSpotEntity.getTaskId()).getpType().equals(PatrolTaskEntity.TASK_TYPE_INSPECTION)) {
-                    startForResult(PatrolSpotFragment.getInstance(taskId, taskName, code, true), REQUEST_SPOT);
-                } else {
-                    startForResult(PatrolSpotFragment.getInstance(taskId, taskName, code, false), REQUEST_SPOT);
-                }
+            Long taskId = patrolSpotEntity.getTaskId();
+            String taskName = patrolSpotEntity.getTaskName();
+            String code = patrolSpotEntity.getCode();
+            if (mCurrentTask.get(patrolSpotEntity.getTaskId()).getpType().equals(PatrolTaskEntity.TASK_TYPE_INSPECTION)) {
+                startForResult(PatrolSpotFragment.getInstance(taskId, taskName, code, true), REQUEST_SPOT);
+            } else {
+                startForResult(PatrolSpotFragment.getInstance(taskId, taskName, code, false), REQUEST_SPOT);
             }
+        }
 
 
 
@@ -442,7 +460,7 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
     @Override
     public boolean onBackPressedSupport() {
         ActivityUtils.finishActivity(NfcRedTagActivity.class);
-        return super.onBackPressedSupport();
+        return false;
 
     }
 
@@ -564,10 +582,9 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
      * @Description: 进入设备列表
      */
     public void enterDeviceList(PatrolSpotEntity entity){
-        entity.getLocation().roomId=null;
-        entity.getLocation().floorId=null;
-        entity.getLocation().cityId=null;
-
+        entity.getLocation().floorId = null;
+        entity.getLocation().cityId = null;
+        entity.getLocation().roomId = null;
         startForResult(PatrolDeviceFragment.getInstance(entity.getName(), entity.getPatrolSpotId(),entity), REQUEST_DEVICE);
     }
 
@@ -578,14 +595,21 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
      * @return
      */
     private static boolean isLocationNull(LocationBean remoteBean, LocationBean localBean){
-        if (remoteBean!=null&&localBean!=null){
-            if (remoteBean.siteId!=null&&localBean.siteId!=null){
-                return remoteBean.buildingId != null && localBean.buildingId != null;
-            }else {
-                return false;
-            }
+        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+        if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
+            return true;
+        }else {
+            if (remoteBean!=null&&localBean!=null){
+                if (remoteBean.siteId!=null&&localBean.siteId!=null){
+                    return remoteBean.buildingId != null && localBean.buildingId != null;
+                }else {
+                    return false;
+                }
 
+            }
         }
+
         return false;
     }
 
@@ -606,11 +630,18 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
      * @Description: 工单位置是否处于签到区间
      */
     private static boolean isInLocationList(Long orderBuildingId, PatrolQueryService.AttendanceResp remoteData){
-        for (Long id: remoteData.buildingIds) {
-            if (id.equals(orderBuildingId)){
-                return true;
+        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+        if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
+            return true;
+        } else {
+            for (Long id: remoteData.buildingIds) {
+                if (id.equals(orderBuildingId)){
+                    return true;
+                }
             }
         }
+
         return false;
 
     }

@@ -2,7 +2,7 @@
     <string name="app_name">maintenancecomponent</string>
 
     <!--计划性维护详情-->
-    <string name="maintenance_detail_title">计划性维护详情</string>
+    <string name="maintenance_detail_title">维保详情</string>
     <!--月到-->
     <string name="maintenance_task_month_to">月~</string>
     <!--次年-->

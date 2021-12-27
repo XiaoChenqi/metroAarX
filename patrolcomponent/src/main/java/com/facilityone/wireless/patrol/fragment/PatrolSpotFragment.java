@@ -317,25 +317,25 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
      */
     public void scanResult(PatrolSpotEntity patrolSpotEntity, Long time) {
 
-        if (time!=0){
-            showOrderTimeDialog(time,patrolSpotEntity);
-        }else {
-            enterDeviceList(patrolSpotEntity);
-        }
-
-
-        // TODO 12.30 在开启
-//        if (time != 0) {
-//            PatrolSpotDao dao = new PatrolSpotDao();
-//            PatrolSpotEntity item = dao.getSpot(patrolSpotEntity.getPatrolSpotId());
-//            if (item.getTaskStatus() > 0) {
-//                enterDeviceList(patrolSpotEntity);
-//            } else {
-//                showOrderTimeDialog(time, patrolSpotEntity);
-//            }
-//        } else {
+//        if (time!=0){
+//            showOrderTimeDialog(time,patrolSpotEntity);
+//        }else {
 //            enterDeviceList(patrolSpotEntity);
 //        }
+
+
+//         TODO 12.30 在开启
+        if (time != 0) {
+            PatrolSpotDao dao = new PatrolSpotDao();
+            PatrolSpotEntity item = dao.getSpot(patrolSpotEntity.getPatrolSpotId());
+            if (item.getTaskStatus() > 0) {
+                enterDeviceList(patrolSpotEntity);
+            } else {
+                showOrderTimeDialog(time, patrolSpotEntity);
+            }
+        } else {
+            enterDeviceList(patrolSpotEntity);
+        }
 
 
 
@@ -601,6 +601,10 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
         builder.addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
             @Override
             public void onClick(QMUIDialog dialog, View view) {
+
+                /**
+                 * 做成离线的形式处理
+                 * */
 //                Long timeForNow = SystemDateUtils.getCurrentTimeMillis();
 //                PatrolSpotDao spotDao = new PatrolSpotDao();
 //                spotDao.upDateTaskTime(entity.getPatrolSpotId(), timeForNow);
@@ -615,6 +619,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
 //                taskBox.put(da);
 //                Log.i("任务开启", "onClick: " + da + "");
 //                enterDeviceList(entity);
+
                 executeTask(entity);
 
 //                startForResult(PatrolItemFragment.getInstance(mSpotId, (ArrayList<PatrolEquEntity>) mEntities, position, mSpotName,time), REQUEST_ITEM);
@@ -636,14 +641,21 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
      * @Description: 位置信息判空
      */
     private static boolean isLocationNull(LocationBean remoteBean, LocationBean localBean) {
-        if (remoteBean != null && localBean != null) {
-            if (remoteBean.siteId != null && localBean.siteId != null) {
-                return remoteBean.buildingId != null && localBean.buildingId != null;
-            } else {
-                return false;
-            }
+        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+        if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
+            return true;
+        }else {
+            if (remoteBean != null && localBean != null) {
+                if (remoteBean.siteId != null && localBean.siteId != null) {
+                    return remoteBean.buildingId != null && localBean.buildingId != null;
+                } else {
+                    return false;
+                }
 
+            }
         }
+
         return false;
     }
 
@@ -661,7 +673,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     private static boolean isInLocationList(Long orderBuildingId, PatrolQueryService.AttendanceResp remoteData) {
         String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
         UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
-        if (!infoBean.type.equals(1)) {
+        if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
             return true;
         } else {
             for (Long id : remoteData.buildingIds) {

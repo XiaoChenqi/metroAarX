@@ -103,7 +103,7 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
     private static final int REQUEST_DEMAND_LOCATION = 5010;
     private static final int REQUEST_DEMAND_DEVICE = 5011;
     //图片
-    private List<LocalMedia> mSelectList;
+    private List<LocalMedia> mSelectList=new ArrayList<>();
     private GridImageAdapter mGridImageAdapter;
     //视频
     private List<LocalMedia> mVideoSelectList;
@@ -500,7 +500,10 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         return requestComplete;
     }
 
+
+
     private void showBottomMenu() {
+
         final int TAG_MENU_CHOOSE_PIC = 0;
         final int TAG_MENU_CAMERA_PIC = 1;
         final int TAG_MENU_VIDEO = 2;

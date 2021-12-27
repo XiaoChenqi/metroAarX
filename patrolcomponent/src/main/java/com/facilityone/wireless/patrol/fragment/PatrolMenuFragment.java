@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.ec.adapter.FunctionAdapter;
@@ -130,6 +131,10 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         mTvScanTip.setVisibility(View.VISIBLE);
         mItvNfc.setVisibility(View.VISIBLE);
         mTvScanTip.setVisibility(View.VISIBLE);
+        if (NetworkUtils.isConnected()){
+            getPresenter().getLastAttendance();
+        }
+
     }
 
     private void requestProjectNeedNfc() {
@@ -304,7 +309,7 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         super.onSupportVisible();
         //获取角标
         getUndoNumber();
-        if (needDownLoad){
+        if (needDownLoad && NetworkUtils.isConnected()){
             requestData();
         }
         requestProjectNeedNfc();

@@ -14,6 +14,7 @@ public interface DemandConstant {
     int DEMAND_QUERY = 3;   //待评价
 //    int DEMAND_QUERY = 4;    //查询
 
+    //人员身份
     Integer HEADQUARTERS_CODE = 0; //总部二维码
     Integer OUT_SOURCING_CODE = 1; //委外二维码
     Integer LINE_CODE = 2; //线路二维码
@@ -76,8 +77,8 @@ public interface DemandConstant {
     int WORK_STATUS_ARCHIVED = 7;                   // 已存档
     int WORK_STATUS_APPROVAL = 8;                   // 已待审批
     int WORK_STATUS_SUSPENDED_NO = 9;               // 已暂停(不继续工作)
-    
-    
+
+
     int DEMAND_RULES_DEL = 1;               // 1—处理权限
     int DEMAND_RULES_SP = 2;                // 2—审批权限
     int DEMAND_RULES_PJ = 3;                // 3—评价权限

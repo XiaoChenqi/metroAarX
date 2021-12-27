@@ -34,7 +34,7 @@ import java.util.ArrayList
  * @Infor: 维护工单通用列表
  */
 class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?>(),
-        BaseQuickAdapter.OnItemClickListener, OnRefreshLoadMoreListener {
+    BaseQuickAdapter.OnItemClickListener, OnRefreshLoadMoreListener {
     private var mType: Int? = null
     private var mRecyclerView: RecyclerView? = null
     private var mRefreshLayout: SmartRefreshLayout? = null
@@ -326,17 +326,17 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
                         //判断item类型
                         if (tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO){
                             val uploadTaskContent=UploadTaskContent(
-                                    tempItem.contentId,
-                                    (tempItem.content as SelectorModel).name!!,
-                                    inputValue = null,
-                                    selectValue = tempItem.value)
+                                tempItem.contentId,
+                                (tempItem.content as SelectorModel).name!!,
+                                inputValue = null,
+                                selectValue = tempItem.value)
                             tempTaskContents.add(uploadTaskContent)
                         }else if (tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_EDIT){
                             val uploadTaskContent=UploadTaskContent(
-                                    tempItem.contentId,
-                                    tempItem.content as String,
-                                    inputValue = tempItem.value,
-                                    selectValue = null)
+                                tempItem.contentId,
+                                tempItem.content as String,
+                                inputValue = tempItem.value,
+                                selectValue = null)
                             tempTaskContents.add(uploadTaskContent)
                         }
                         canUpload=true
@@ -344,18 +344,18 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
                         //判断item类型
                         if (tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO){
                             val uploadTaskContent=UploadTaskContent(
-                                    tempItem.contentId,
-                                    (tempItem.content as SelectorModel).name!!,
-                                    inputValue = null,
-                                    selectValue = null)
+                                tempItem.contentId,
+                                (tempItem.content as SelectorModel).name!!,
+                                inputValue = null,
+                                selectValue = null)
                             tempTaskContents.add(uploadTaskContent)
                         }
                         else if( tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_EDIT){
                             val uploadTaskContent=UploadTaskContent(
-                                    tempItem.contentId,
-                                    tempItem.content as String,
-                                    inputValue = null,
-                                    selectValue = null)
+                                tempItem.contentId,
+                                tempItem.content as String,
+                                inputValue = null,
+                                selectValue = null)
                             tempTaskContents.add(uploadTaskContent)
                         }
                     }
@@ -379,8 +379,8 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
             for (tempItem in dataList){
                 //获取需要填充item的数量
                 if (tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO
-                        ||
-                        tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_EDIT){
+                    ||
+                    tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_EDIT){
                     needfillSize++
                 }
             }

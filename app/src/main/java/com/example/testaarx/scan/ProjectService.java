@@ -1,5 +1,6 @@
 package com.example.testaarx.scan;
 
+import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.Page;
 
 import java.util.ArrayList;
@@ -129,5 +130,38 @@ public class ProjectService {
                     ", msgCount=" + msgCount +
                     '}';
         }
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:55
+     * @Description: 扫一扫签到 请求体
+     */
+    public static class AttendanceReq {
+        //被签的委外人员ID
+        public Long personId;
+        //值班人员ID
+        public Long contactId;
+        //值班人员名字
+        public String contactName;
+        //签到时间
+        public Long createTime;
+        //签到位置
+        public LocationBean location;
+
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2021/8/25 10:55
+     * @Description: 签到记录响应体
+     */
+    public static class AttendanceResp {
+        public Long contactId;
+        public String contactName;
+        public String locationName;
+        public Boolean signStatus;
+        public LocationBean location;
+        public Long createTime;
     }
 }

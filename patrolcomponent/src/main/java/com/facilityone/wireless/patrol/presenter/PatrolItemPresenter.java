@@ -386,7 +386,7 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                     }
                 });
     }
-    
+
 
     public int haveMiss(List<PatrolItemEntity> itemEntities,Integer choice) {
         if (choice == -1){
