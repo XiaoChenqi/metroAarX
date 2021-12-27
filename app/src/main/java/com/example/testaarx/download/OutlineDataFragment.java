@@ -237,6 +237,11 @@ public class OutlineDataFragment extends BaseFragment<OutlineDataPresenter> {
         //mDownloadBtn.setEnabled(mEnable);
     }
 
+    @Override
+    public void leftBackListener() {
+        getActivity().finish();
+    }
+
     private void initListener() {
         mDownloadBtn.setOnClickListener(new View.OnClickListener() {
             @Override

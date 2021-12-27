@@ -90,6 +90,11 @@ public class DemandFragment extends BaseFragment<DemandPresenter> implements Bas
         getUndoNumber();
     }
 
+    @Override
+    public void leftBackListener() {
+        getActivity().finish();
+    }
+
     private void getUndoNumber() {
         getPresenter().getUndoNumber(FunctionService.UNDO_TYPE_DEMAND);
     }

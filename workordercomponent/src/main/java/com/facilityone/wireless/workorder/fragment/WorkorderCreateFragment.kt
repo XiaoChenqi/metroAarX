@@ -104,6 +104,8 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
     private var mOtherDepartmentId:Long?=null
     private var patrolDetailId:Long?=null
     lateinit var deviceList: List<com.facilityone.wireless.workorder.module.WorkorderService.WorkOrderEquipmentsBean>
+
+    private var fromAct:Boolean=false
     override fun createPresenter(): WorkorderCreatePresenter {
         return WorkorderCreatePresenter()
     }
@@ -149,6 +151,13 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
 
     }
 
+    override fun leftBackListener() {
+        if (fromAct){
+            activity?.finish()
+        }else{
+            pop();
+        }
+    }
 
 
     private fun initView() {
@@ -160,6 +169,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         binding.civContact.inputText =SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.EM_NAME)
         binding.civContact.canInput(true)
         if (bundle != null) {
+            fromAct=bundle.getBoolean("fromAct",false)
             mFromType = bundle.getInt(FROM_TYPE, -1)
             mWaterMark = bundle.getBoolean(WATER_MARK, false)
             mEquipmentId = bundle.getLong(EQUIPMENT_ID, -1L)
@@ -345,6 +355,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
     }
 
     private fun initData() {
+
         if (mEquipmentId != -1L && mEquipmentId != 0L) {
             presenter!!.getEquipmentFromDB(mEquipmentId)
         }

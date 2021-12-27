@@ -49,7 +49,12 @@ public class DemandCreateActivity extends BaseFragmentActivity
 
     @Override
     public void goFragment(Bundle bundle) {
-        mInstance.startWithPop(DemandCreateFragment.getInstance());
+
+        Bundle bundle1=new Bundle();
+        bundle1.putBoolean("from",true);
+        DemandCreateFragment demandCreateFragment= DemandCreateFragment.getInstance();
+        demandCreateFragment.setArguments(bundle1);
+        mInstance.startWithPop(demandCreateFragment);
     }
 
     @Override

@@ -143,6 +143,7 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
     private String deviceName;
     private String deviceCode;
     private Boolean hasDevice = false; //判断快速报障是否带设备
+    private Boolean fromType=false;
 
 
     @Override
@@ -170,6 +171,16 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
         initAudioPlayService();
         initOnClick();
         setSwipeBackEnable(false);
+    }
+
+    @Override
+    public void leftBackListener() {
+        if (fromType){
+            this.getActivity().finish();
+        }else {
+            pop();
+        }
+
     }
 
     private void initOnClick() {
@@ -313,6 +324,7 @@ public class DemandCreateFragment extends BaseFragment<DemandCreatePresenter> im
     private void initData() {
         Bundle bundle = getArguments();
         setTitle(bundle.getString("title")+"");
+        fromType=bundle.getBoolean("from",false);
         request = new DemandCreateService.DemandCreateReq();
         requestComplete = new DemandCreateService.CompleteDeviceReq();
         isCompeteDemand = bundle.getBoolean("IsComplete",false);
