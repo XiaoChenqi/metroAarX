@@ -842,7 +842,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     //显示或隐藏审批内容
     private void updateApprovalContent(WorkorderService.WorkorderInfoBean data) {
         mLlApprovalContent.setVisibility(View.GONE);
-        if (refreshStatus == WorkorderConstant.WORK_STATUS_APPROVAL || mRealStatus == WorkorderConstant.WORK_STATUS_APPROVAL) {
+        if (refreshStatus == WorkorderConstant.WORK_STATUS_APPROVAL || mRealStatus == WorkorderConstant.WORK_NEW_STATUS_APPROVAL_WAIT) {
             mLlApprovalContent.setVisibility(View.VISIBLE);
             List<WorkorderService.ApprovalsBean> approvals = data.approvals;
 
@@ -2235,7 +2235,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public void checkRole(LocationBean bean) {
         String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
         UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
-        if (infoBean.type.equals(1) && mRealStatus == WorkorderConstant.WORK_STATUS_PROCESS) {
+        if (infoBean.type == 1 && mRealStatus == WorkorderConstant.WORK_NEW_STATUS_PROCESS) {
             getPresenter().getLastAttendance(bean);
         } else {
             canOpt(true, true);
