@@ -482,7 +482,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                     }
 
                     if (isMaintenanceOrder) {
-                        if (getV().getNewStatus() == WorkorderConstant.WORK_STATUS_PROCESS){
+                        if (getV().getNewStatus() == WorkorderConstant.WORKORER_PROCESS){
                             cpPremisson(woId, WorkorderConstant.ORDER_COMPLETE, null, defaultObject, defaultReason);
                         }else {
                             doSomeThing(true, WorkorderConstant.ORDER_COMPLETE, woId, approvalId, defaultObject, defaultReason);

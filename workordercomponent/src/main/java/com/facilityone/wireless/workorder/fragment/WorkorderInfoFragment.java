@@ -304,6 +304,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     private boolean countAccord; //是否需要输入设备数量
     private String attention; //注意事项
 
+    private boolean fromAct=false;
+
     @Override
     public WorkorderInfoPresenter createPresenter() {
         return new WorkorderInfoPresenter();
@@ -322,6 +324,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setSwipeBackEnable(false);
         getPresenter().queryPriority();
         initData();
         initView();
@@ -349,6 +352,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             isMaintenanceOrder = bundle.getBoolean(IS_MAINTENANCE, false);
             isFinish = bundle.getBoolean(IS_FINISH, false);
             isPending = bundle.getInt(IS_PENDING, -1);
+            fromAct=bundle.getBoolean("fromAct",false);
         }
         refreshStatus = mStatus;
         if (refreshStatus == WorkorderConstant.WORK_STATUS_NONE){
@@ -558,6 +562,15 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
         }
 
+    }
+
+    @Override
+    public void leftBackListener() {
+        if (fromAct){
+            requireActivity().finish();
+        }else {
+            pop();
+        }
     }
 
     /**

@@ -68,9 +68,7 @@ public class WorkorderCreateActivity extends BaseFragmentActivity
     public void goFragment(Bundle bundle) {
         Log.d(TAG, "goFragment: ");
         WorkorderCreateFragment workorderCreateFragment=WorkorderCreateFragment.getInstance(CREATE_ORDER_BY_OTHER,equipId);
-        Bundle bundle1=new Bundle();
-        bundle1.putBoolean("fromAct",true);
-        workorderCreateFragment.setArguments(bundle1);
+        workorderCreateFragment.getArguments().putBoolean("fromAct",true);
        mInstance.startWithPop(workorderCreateFragment);
     }
 

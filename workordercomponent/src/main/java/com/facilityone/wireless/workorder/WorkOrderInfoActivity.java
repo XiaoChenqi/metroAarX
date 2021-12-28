@@ -55,7 +55,12 @@ public class WorkOrderInfoActivity extends
 
     @Override
     public void goFragment(Bundle bundle) {
-        mInstance.startWithPop(WorkorderInfoFragment.getInstance(woId));
+        WorkorderInfoFragment fragment=WorkorderInfoFragment.getInstance(woId);
+        Bundle bundle1=new Bundle();
+        bundle1.putBoolean("fromAct",true);
+        bundle1.putLong("workorder_id",woId);
+        fragment.setArguments(bundle1);
+        mInstance.startWithPop(fragment);
 
     }
 

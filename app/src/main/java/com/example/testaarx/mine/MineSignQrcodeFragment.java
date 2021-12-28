@@ -37,6 +37,7 @@ public class MineSignQrcodeFragment extends BaseFragment<MineSignQrcodePresenter
         super.onViewCreated(view, savedInstanceState);
         initView();
         initData();
+        setSwipeBackEnable(false);
     }
 
     private void initData() {
@@ -44,6 +45,11 @@ public class MineSignQrcodeFragment extends BaseFragment<MineSignQrcodePresenter
         getPresenter().getInfor(); // 获取数据
 //        mpresenter.attachView(this);
 //        mpresenter.userInfor(1);
+    }
+
+    @Override
+    public void leftBackListener() {
+       requireActivity().finish();
     }
 
     private void initView() {

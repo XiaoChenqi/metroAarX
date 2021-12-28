@@ -51,6 +51,11 @@ android {
 
         buildConfigField "String", "ALIYUN_PUSH_APP_KEY", "\"${ALIYUN_PUSH_APP_KEY}\""
         buildConfigField "String", "ALIYUN_PUSH_APP_SECRET", "\"${ALIYUN_PUSH_APP_SECRET}\""
+
+//        ndk{
+//            abiFilters 'armeabi-v7a','arm64-v8a'
+//
+//        }
     }
 
     buildTypes {

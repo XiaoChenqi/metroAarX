@@ -108,6 +108,7 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
             public void onError(Response<BaseResponse<LogonResponse>> response) {
                 super.onError(response);
                 solveLogonError(response);
+                getV().dismissLoading();
                 onLogonError();
             }
         });
@@ -236,11 +237,11 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
                         break;
                 }
             }else {
-                ToastUtils.showShort("登录失败");
+                ToastUtils.showShort("登录失败,请稍后再试");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ToastUtils.showShort("登录失败");
+            ToastUtils.showShort("登录失败,请稍后再试");
         }
 
 

@@ -91,8 +91,9 @@ public class DemandCreatePresenter extends CommonBasePresenter<DemandCreateFragm
                         getV().dismissLoading();
                         ToastUtils.showShort(R.string.demand_create_success);
 //                        getV().pop();
-                        getV().getActivity().finish();
+//                        getV().getActivity().finish();
 
+                        getV().leftBackListener();
                     }
 
                     @Override

@@ -57,6 +57,7 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
             mType = arguments.getInt(MENU_TYPE, -1);
         }
         mBtn = findViewById(R.id.btn);
+        setSwipeBackEnable(false);
 
 
         //xcqPresenter = new UserBehaviorPresenter();
@@ -65,21 +66,21 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
         showLoading();
 //        USERNAME = "cylz";//todo xcq测试数据
 //        PASSWORD = "111111";//todo xcq测试数据
+        getPresenter().logon(Constant.USERNAME, PASSWORD);
 //        getPresenter().logon(Constant.USERNAME, PASSWORD);
-//        getPresenter().logon(Constant.USERNAME, PASSWORD);
-        if (BuildConfig.DEBUG){
-            String uname=AppConfig.INSTANCE.getUname();
-            String upwd=AppConfig.INSTANCE.getUpwd();
-            if (!TextUtils.isEmpty(uname)&&!TextUtils.isEmpty(upwd)){
-                getPresenter().logon(uname, upwd);
-
-            }else {
-                ToastUtils.showShort("请先到临时页面设置临时账户登录,正在前往");
-            }
-
-        }else {
-            getPresenter().logon(Constant.USERNAME, PASSWORD);
-        }
+//        if (BuildConfig.DEBUG){
+//            String uname=AppConfig.INSTANCE.getUname();
+//            String upwd=AppConfig.INSTANCE.getUpwd();
+//            if (!TextUtils.isEmpty(uname)&&!TextUtils.isEmpty(upwd)){
+//                getPresenter().logon(uname, upwd);
+//
+//            }else {
+//                ToastUtils.showShort("请先到临时页面设置临时账户登录,正在前往");
+//            }
+//
+//        }else {
+//            getPresenter().logon(Constant.USERNAME, PASSWORD);
+//        }
         showLogonButton();
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override

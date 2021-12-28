@@ -1,20 +1,19 @@
-package com.facilityone.wireless.componentservice.common.empty;
+package com.facilityone.wireless.componentservice.common.empty
 
-import android.os.Bundle;
-
-import com.blankj.utilcode.util.SPUtils;
-import com.facilityone.wireless.a.arch.ec.commonpresenter.CommonBasePresenter;
-import com.facilityone.wireless.a.arch.ec.module.FunctionService;
-import com.facilityone.wireless.a.arch.ec.module.IService;
-import com.facilityone.wireless.a.arch.ec.utils.SPKey;
-import com.facilityone.wireless.basiclib.app.FM;
-import com.facilityone.wireless.componentservice.common.permissions.PermissionsManager;
-import com.fm.tool.network.model.BaseResponse;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.HttpParams;
-import com.lzy.okgo.model.Response;
-
-import java.util.List;
+import com.facilityone.wireless.a.arch.ec.commonpresenter.CommonBasePresenter
+import com.facilityone.wireless.componentservice.common.empty.EmptyFragment
+import com.facilityone.wireless.basiclib.app.FM
+import com.blankj.utilcode.util.SPUtils
+import com.facilityone.wireless.a.arch.ec.utils.SPKey
+import com.lzy.okgo.OkGo
+import com.facilityone.wireless.a.arch.ec.module.FunctionService.FunctionBean
+import com.facilityone.wireless.componentservice.common.permissions.PermissionsManager
+import android.os.Bundle
+import com.blankj.utilcode.util.ToastUtils
+import com.facilityone.wireless.a.arch.ec.module.IService
+import com.fm.tool.network.model.BaseResponse
+import com.lzy.okgo.model.HttpParams
+import com.lzy.okgo.model.Response
 
 /**
  * Author：gary
@@ -22,56 +21,55 @@ import java.util.List;
  * description:
  * Date: 2018/10/15 5:24 PM
  */
-public class EmptyPresenter extends CommonBasePresenter<EmptyFragment> {
-
-    private final int type;
-
-    public EmptyPresenter(int type) {
-        this.type = type;
+class EmptyPresenter(private val type: Int) : CommonBasePresenter<EmptyFragment?>() {
+    override fun onLogonSuccess() {
+        val pId = 1L
+        FM.getConfigurator().withProjectId(pId)
+        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PROJECT_ID, pId)
+        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PROJECT_NAME, "移动测试", true)
+        val httpParams = HttpParams("current_project", pId.toString())
+        OkGo.getInstance().addCommonParams(httpParams)
+        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.HAVE_LOGON, true)
+        getPermissions()
+        getUserInfo()
     }
 
-    @Override
-    public void onLogonSuccess() {
-        Long pId = 1L;
-        FM.getConfigurator().withProjectId(pId);
-
-        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PROJECT_ID, pId);
-        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PROJECT_NAME, "移动测试", true);
-
-        HttpParams httpParams = new HttpParams("current_project", String.valueOf(pId));
-        OkGo.getInstance().addCommonParams(httpParams);
-        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.HAVE_LOGON, true);
-
-        getPermissions();
-
-        getUserInfo();
-    }
-
-    @Override
-    public void getPermissionsSuccess(String data) {
-        List<FunctionService.FunctionBean> list = PermissionsManager.HomeFunction.getInstance().show(data);
-
-        for (FunctionService.FunctionBean bean : list) {
+    override fun getPermissionsSuccess(data: String) {
+        val list = PermissionsManager.HomeFunction.getInstance().show(data)
+        var typeIndex:Int=-1
+        for ((index,bean) in list.withIndex()) {
             if (bean.type == type) {
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(IService.COMPONENT_RUNALONE, true);
-                if (bean.sortChildMenu != null) {
-                    bundle.putSerializable(IService.FRAGMENT_CHILD_KEY, bean.sortChildMenu);
-
-                }
-
-                getV().goFragment(bundle);
+                typeIndex=index
             }
         }
+        if (!list.isNullOrEmpty()){
+            val bundle = Bundle()
+            bundle.putBoolean(IService.COMPONENT_RUNALONE, true)
+            if (typeIndex!=-1){
+                if (list[typeIndex].sortChildMenu != null) {
+                    bundle.putSerializable(IService.FRAGMENT_CHILD_KEY,list[typeIndex].sortChildMenu)
+                }
+                v!!.goFragment(bundle)
+            }else{
+                ToastUtils.showShort("您当前模块没有权限")
+                v!!.requireActivity().finish()
+            }
+
+        }else{
+            ToastUtils.showShort("您当前没有任何权限")
+            v!!.requireActivity().finish()
+        }
+
     }
 
-    @Override
-    public void onLogonError() {
-        getV().showLogonButton();
+    override fun onLogonError() {
+        v!!.showLogonButton()
+        v!!.requireActivity().finish()
     }
 
-    @Override
-    public void getPermissionsError(Response<BaseResponse<List<String>>> response) {
-        getV().showLogonButton();
+    override fun getPermissionsError(response: Response<BaseResponse<List<String>>>) {
+        v!!.showLogonButton()
+        v!!.requireActivity().finish()
+
     }
 }

@@ -217,7 +217,7 @@ public class FmScanBaseActivity extends BaseFragmentActivity
         }
     }
     public void SignOnSuccess(){
-        ToastUtils.showShort("签到成功");
+        ToastUtils.showShort("解锁成功");
     }
 
 
