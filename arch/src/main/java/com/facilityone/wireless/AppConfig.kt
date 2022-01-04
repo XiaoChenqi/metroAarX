@@ -1,11 +1,14 @@
 package com.facilityone.wireless
 
+import com.drake.serialize.serialize.serial
 import com.drake.serialize.serialize.serialLazy
 
 object AppConfig {
 
     var serverHost: String? by serialLazy("http://222.66.139.92:9999/fz_iframe")
 
-    var uname:String? by serialLazy("")
-    var upwd:String? by serialLazy("")
+    @JvmStatic
+    var uname:String? by serial("")
+    @JvmStatic
+    var upwd:String? by serial("")
 }

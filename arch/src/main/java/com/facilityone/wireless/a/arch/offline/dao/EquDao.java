@@ -212,7 +212,9 @@ public class EquDao {
         SelectDataBean bean = null;
         if (!TextUtils.isEmpty(equipmentFullName)) {
             Long projectId = FM.getProjectId();
-            String sql = "SELECT * FROM DBEQU WHERE PROJECT_ID = ? AND CODE = ?;";
+
+            /*增加 AND DELETED = 0 过滤已经被删除的数据*/
+            String sql = "SELECT * FROM DBEQU WHERE PROJECT_ID = ? AND CODE = ? AND DELETED = 0;";
             String[] args = { projectId + "", equipmentFullName + "" };
 
             Cursor cursor = mDbManager.query(args, sql);
@@ -236,7 +238,7 @@ public class EquDao {
         SelectDataBean bean = null;
         if (equipmentId != null) {
             Long projectId = FM.getProjectId();
-            String sql = "SELECT * FROM DBEQU WHERE PROJECT_ID = ? AND ID = ?;";
+            String sql = "SELECT * FROM DBEQU WHERE PROJECT_ID = ? AND ID = ? AND DELETED = 0;";
             String[] args = { projectId + "", equipmentId + "" };
 
             Cursor cursor = mDbManager.query(args, sql);
