@@ -15,6 +15,6 @@ public class DownloadReq {
 
     public DownloadReq() {
         this.page = new Page();
-        this.page.setPageSize(100);
+        this.page.setPageSize(5000);
     }
 }

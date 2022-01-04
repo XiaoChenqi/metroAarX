@@ -399,7 +399,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             SelectDataBean beanOne = mShow.get(position);
             if (checkSecond(beanOne.getId(),secondList)){
                 for (SelectDataBean second : secondList) {
-                    if (second.getParentId()==beanOne.getId()){
+                    if (second.getParentId().equals(beanOne.getId())){
                         secondAllList.add(second);
                     }
                 }
@@ -439,7 +439,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
       */
      public boolean checkSecond(Long Id,List<SelectDataBean> list){
          for (SelectDataBean listChcek : list) {
-             if (listChcek.getParentId()==Id) {
+             if (listChcek.getParentId().equals(Id)) {
                  return true;
              }
          }
@@ -514,7 +514,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             }
         }else {
             for (SelectDataBean data : allList) {
-                if (data.getParentId()!=null && data.getId()== localId){
+                if (data.getParentId()!=null && data.getId().equals(localId)){
                     lastList.add(data);
                 }
             }
