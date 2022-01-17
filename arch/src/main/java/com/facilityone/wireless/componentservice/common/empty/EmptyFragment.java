@@ -66,11 +66,11 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
         showLoading();
 //        USERNAME = "cylz";//todo xcq测试数据
 //        PASSWORD = "111111";//todo xcq测试数据
-//        getPresenter().logon(Constant.USERNAME, PASSWORD);
         getPresenter().logon(Constant.USERNAME, PASSWORD);
+//        getPresenter().logon(Constant.USERNAME, PASSWORD);
 //        if (BuildConfig.DEBUG){
-//            String uname=AppConfig.INSTANCE.getUname();
-//            String upwd=AppConfig.INSTANCE.getUpwd();
+//            String uname=AppConfig.getUname();
+//            String upwd=AppConfig.getUpwd();
 //            if (!TextUtils.isEmpty(uname)&&!TextUtils.isEmpty(upwd)){
 //                getPresenter().logon(uname, upwd);
 //

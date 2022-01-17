@@ -64,7 +64,7 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
         if (item.getResultType() == PatrolDbService.QUESTION_TYPE_TEXT){
             et.setInputType(InputType.TYPE_CLASS_TEXT);
         }else {
-            et.setInputType(InputType.TYPE_CLASS_NUMBER);
+            et.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_SIGNED|InputType.TYPE_NUMBER_FLAG_DECIMAL);
         }
 
         final int position = helper.getLayoutPosition();
@@ -367,20 +367,33 @@ public class PatrolItemAdapter extends BaseQuickAdapter<PatrolItemEntity, BaseVi
                     public void afterTextChanged(Editable s) {
                         final int position = (int) inputEt.getTag();
                         getData().get(position).setInput(s.toString());
+                        if (!TextUtils.isEmpty(s)) {
+                            helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.grey_6));
+                        }else {
+                            helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.orange_ff9900));
+                        }
                     }
                 });
                 if (!TextUtils.isEmpty(input_text)) {
-                    if (!TextUtils.isEmpty(input_text)) {
-                        inputEt.setText(input_text);
-                        inputEt.setSelection(input_text.length());
-                    } else {
-                        inputEt.setText("");
-                        helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.orange_ff9900));
-                    }
+                    inputEt.setText(input_text);
+                    inputEt.setSelection(input_text.length());
+                    helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.grey_6));
                 } else {
                     inputEt.setText("");
                     helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.orange_ff9900));
                 }
+//                if (!TextUtils.isEmpty(input_text)) {
+//                    if (!TextUtils.isEmpty(input_text)) {
+//                        inputEt.setText(input_text);
+//                        inputEt.setSelection(input_text.length());
+//                    } else {
+//                        inputEt.setText("");
+//                        helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.orange_ff9900));
+//                    }
+//                } else {
+//                    inputEt.setText("");
+//                    helper.setTextColor(R.id.question_title_tv, mContext.getResources().getColor(R.color.orange_ff9900));
+//                }
 
                 break;
             default:
