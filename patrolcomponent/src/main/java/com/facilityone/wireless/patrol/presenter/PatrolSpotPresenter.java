@@ -1197,9 +1197,9 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         getV().dismissLoading();
                         PatrolQueryService.AttendanceResp data = response.body().data;
+                        box.removeAll();
                         if (data != null) {
                             UserInfor user = new UserInfor();
-                            box.removeAll();
                             user.setId(0L);
                             user.setUserKey(PatrolConstant.USERLOGIN_ID);
                             if (data.location != null) {
@@ -1225,6 +1225,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                     public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         super.onError(response);
                         getV().dismissLoading();
+                        box.removeAll();
                     }
                 });
 
@@ -1250,6 +1251,9 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
             data.buildingIds = user.get(0).getBuidlings();
             getV().hasAttentanceData(true);
             getV().saveAttentanceLocation(data);
+        }
+        else {
+            getV().hasAttentanceData(false);
         }
 
 

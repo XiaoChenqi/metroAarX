@@ -362,10 +362,10 @@ public class PatrolMenuPresenter extends CommonBasePresenter<PatrolMenuFragment>
                     @Override
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         getV().dismissLoading();
+                        box.removeAll();
                         PatrolQueryService.AttendanceResp data = response.body().data;
                         if (data != null) {
                             UserInfor user = new UserInfor();
-                            box.removeAll();
                             user.setId(0L);
                             user.setUserKey(PatrolConstant.USERLOGIN_ID);
                             if (data.location != null) {
@@ -381,6 +381,7 @@ public class PatrolMenuPresenter extends CommonBasePresenter<PatrolMenuFragment>
                     public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         super.onError(response);
                         getV().dismissLoading();
+                        box.removeAll();
                     }
                 });
 

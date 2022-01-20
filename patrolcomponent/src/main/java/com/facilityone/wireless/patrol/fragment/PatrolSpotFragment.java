@@ -251,7 +251,7 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
         if (mNeedCheck) {
             if (mHasAttentance) {
 //                patrolSpotEntity.getLocation().buildingId.equals(mLocation.buildingId)
-                if (isLocationNull(mLocation.location, patrolSpotEntity.getLocation()) &&
+                if (isLocationNull(mLocation, patrolSpotEntity.getLocation()) &&
                         //判断当前点位是否在签到区间中
                         isInLocationList(patrolSpotEntity.getLocation().buildingId, mLocation)) {
                     mHasAttentance = true;
@@ -619,15 +619,15 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
      * @Date: on 2021/8/31 14:16
      * @Description: 位置信息判空
      */
-    private static boolean isLocationNull(LocationBean remoteBean, LocationBean localBean) {
+    private static boolean isLocationNull(PatrolQueryService.AttendanceResp remoteBean, LocationBean localBean) {
         String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
         UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
         if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
             return true;
         } else {
             if (remoteBean != null && localBean != null) {
-                if (remoteBean.siteId != null && localBean.siteId != null) {
-                    return remoteBean.buildingId != null && localBean.buildingId != null;
+                if (remoteBean.location.siteId != null && localBean.siteId != null) {
+                    return remoteBean.location.buildingId != null && localBean.buildingId != null;
                 } else {
                     return false;
                 }
@@ -639,7 +639,13 @@ public class PatrolSpotFragment extends BaseFragment<PatrolSpotPresenter> implem
     }
 
     public void hasAttentanceData(boolean mHasData) {
-        this.mHasAttentance = mHasData;
+        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+        if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
+            this.mHasAttentance = true; //非委外不需要判断签到状态
+        } else {
+            this.mHasAttentance = mHasData;
+        }
     }
 
 

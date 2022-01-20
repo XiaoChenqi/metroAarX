@@ -64,10 +64,10 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
         //xcqPresenter.attachView(this);
 
         showLoading();
-//        USERNAME = "cylz";//todo xcq测试数据
-//        PASSWORD = "111111";//todo xcq测试数据
-        getPresenter().logon(Constant.USERNAME, PASSWORD);
-//        getPresenter().logon(Constant.USERNAME, PASSWORD);
+        // USERNAME = "cylz";
+        // PASSWORD = "111111";
+         getPresenter().logon(Constant.USERNAME, PASSWORD);
+        // getPresenter().logon(Constant.USERNAME, PASSWORD);
 //        if (BuildConfig.DEBUG){
 //            String uname=AppConfig.getUname();
 //            String upwd=AppConfig.getUpwd();
