@@ -75,9 +75,9 @@ tasks.withType(JavaCompile) {
 //}
 
 ext {
-    versionCode = 7
-    versionName_app = '1.0.7'
-    versionName_lib = '1.0.7'
+    versionCode = 8
+    versionName_app = '1.0.8'
+    versionName_lib = '1.0.8'
 
     libMinSdkVersion = 21
     appMinSdkVersion = 21
