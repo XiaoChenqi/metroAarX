@@ -52,7 +52,7 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
     private static final String WOID = "woid";
     private static final String WOCODE = "wocode";
     private static final String FROM_TYPE = "from_type";
-
+    private static final String WORK_ORDER_TYPE = "work_order_type";
 
     private CustomContentItemView mSelectStorageTv;//选择仓库
     private CustomContentItemView mSelectAdministratorTv;//选择仓库管理员
@@ -65,6 +65,7 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
     private LinearLayout mMaterialLl;//物料
     private RecyclerView mMaterialRv;//物料
     private TextView mTotalMoneyTv;//总计
+    private TextView mDescRequire;//必填项星号
     private Button mReserveBtn;//预定按钮
 
     private MaterialAdapter mMaterialAdapter;
@@ -80,6 +81,8 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
     private Long mWoId;//关联工单id
     private String mWoCode;//关联工单编码
     private int mFromtype;//请求类型
+
+    private int mWorkOrderType;//工单类型
     //是否为备件库
     private boolean mSpecialtyState=false;
     private List<Long> mSpecialtyIds;
@@ -116,6 +119,7 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
             mWoId = bundle.getLong(WOID,-1);
             mWoCode = bundle.getString(WOCODE,"");
             mFromtype = bundle.getInt(FROM_TYPE,-1);
+            mWorkOrderType = bundle.getInt(WORK_ORDER_TYPE,-1);
         }else {
             LogUtils.d("bundle为空");
         }
@@ -155,6 +159,7 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
         mTotalMoneyTv = findViewById(R.id.inventory_reserve_total_money_tv);
         mReserveBtn = findViewById(R.id.inventory_reserve_material_btn);
         mReserveDesc = findViewById(R.id.inventory_reserve_desc_tv);
+        mDescRequire = findViewById(R.id.tvRequire);
 
         mMaterialRv.setNestedScrollingEnabled(false);
         mMaterialRv.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -372,9 +377,9 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
                         mAdministratorList.clear();
                         mAdministratorList.addAll(storage.administrator);
                     }
-
+                    LogUtils.d("来自页面"+mWorkOrderType);
                     //判断是否从维修工单物料进入
-                    if (mWoId!=null&&!mWoId.equals(-1L)&&mFromtype==InventoryService.TYPE_FROM_WORKORDER){
+                    if (mWorkOrderType==InventoryService.TYPE_FROM_WORKORDER){
                         //显示专业
                         showSpecialty(selectDataBean.spareParts);
                         mSpecialtyState=selectDataBean.spareParts;
@@ -470,12 +475,15 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
      * 显示专业
      */
     public void showSpecialty(boolean showSpecialtyView){
+
         if (showSpecialtyView){
             mReserveSpecialtyTv.setVisibility(View.VISIBLE);
+            mDescRequire.setVisibility(View.VISIBLE);
             mReserveDesc.setText("更换原因");
             mDescEnv.setHint("请输入更换原因");
         }else {
             mReserveSpecialtyTv.setVisibility(View.GONE);
+            mDescRequire.setVisibility(View.GONE);
             mReserveDesc.setText(R.string.inventory_material_desc);
             mDescEnv.setHint(getString(R.string.inventory_input_desc));
         }
@@ -555,6 +563,17 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
     public static InventoryReserveFragment getInstance(int type,long woId,String woCode) {
         InventoryReserveFragment fragment = new InventoryReserveFragment();
         Bundle bundle = new Bundle();
+        bundle.putInt(FROM_TYPE,type);
+        bundle.putLong(WOID,woId);
+        bundle.putString(WOCODE,woCode);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public static InventoryReserveFragment getInstance(int type,int workOrderType,long woId,String woCode) {
+        InventoryReserveFragment fragment = new InventoryReserveFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(WORK_ORDER_TYPE,workOrderType);
         bundle.putInt(FROM_TYPE,type);
         bundle.putLong(WOID,woId);
         bundle.putString(WOCODE,woCode);

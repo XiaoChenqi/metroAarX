@@ -25,10 +25,10 @@ import kotlin.collections.ArrayList
 
 
 /**
- * Author：gary
- * Email: xuhaozv@163.com
- * description:
- * Date: 2018/7/17 下午3:00
+ *  @Author: Kuuga
+ *  @Method：InventoryProfessionalListFragment
+ *  @Date：2022/2/17 11:14
+ *  @Description：获取专业
  */
 class InventoryProfessionalListFragment : BaseFragment<InventoryProPresenter?>(),
     BaseQuickAdapter.OnItemClickListener, OnSearchBox {
@@ -106,13 +106,13 @@ class InventoryProfessionalListFragment : BaseFragment<InventoryProPresenter?>()
     }
 
     private fun initView() {
-        setTitle(mTitle)
+        setTitle("选择专业")
         setRightTextButton("确定", R.id.inventory_pro_confirm_id);
         mRecyclerView = findViewById(R.id.recyclerView)
         mSearchBox = findViewById(R.id.search_box)
         mLLTitle = findViewById(R.id.person_search_rl)
         mViewLine = findViewById(R.id.top_view_line)
-        mLLTitle?.setVisibility(if (showTitle) View.VISIBLE else View.GONE)
+//        mLLTitle?.setVisibility(if (showTitle) View.VISIBLE else View.GONE)
         mViewLine?.setVisibility(if (showTitle) View.VISIBLE else View.GONE)
         mRecyclerView?.setLayoutManager(LinearLayoutManager(context))
         mAdapter = InventoryProListAdapter(context, showTitle, mShowBeanList)

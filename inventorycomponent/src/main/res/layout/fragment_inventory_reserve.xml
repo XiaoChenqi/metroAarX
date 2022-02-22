@@ -326,6 +326,7 @@
                         android:text="@string/inventory_material_desc"/>
 
                     <TextView
+                        android:id="@+id/tvRequire"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dp_6"

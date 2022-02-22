@@ -8,7 +8,6 @@
                  android:theme="@style/AppTheme.NoActionBar">
 
         <activity android:name=".InventoryActivity"
-                  android:exported="true"
                   android:configChanges="keyboardHidden|orientation|screenSize"
                   android:screenOrientation="portrait"
                   android:theme="@style/AppTheme.NoActionBar.NoTranslucent"/>

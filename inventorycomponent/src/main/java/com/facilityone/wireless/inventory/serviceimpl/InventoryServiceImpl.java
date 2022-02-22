@@ -38,6 +38,11 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public BaseFragment getInventoryReserveFragment(int type, int workOrderType, long woId, String woCode) {
+        return InventoryReserveFragment.getInstance(type,workOrderType, woId, woCode);
+    }
+
+    @Override
     public BaseFragment getInventoryQueryFragment() {
         return InventoryQueryFragment.getInstance();
     }

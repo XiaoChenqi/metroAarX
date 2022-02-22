@@ -52,4 +52,12 @@ public class AttachmentBean implements Parcelable {
             return new AttachmentBean[size];
         }
     };
+
+
+
+
+
+
+
+
 }

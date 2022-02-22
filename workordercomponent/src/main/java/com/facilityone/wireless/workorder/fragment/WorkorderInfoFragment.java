@@ -61,6 +61,7 @@ import com.facilityone.wireless.basiclib.utils.StringUtils;
 import com.facilityone.wireless.basiclib.video.SimplePlayer;
 import com.facilityone.wireless.basiclib.widget.FullyGridLayoutManager;
 import com.facilityone.wireless.componentservice.common.permissions.PermissionsManager;
+import com.facilityone.wireless.componentservice.inventory.InventoryService;
 import com.facilityone.wireless.workorder.R;
 import com.facilityone.wireless.workorder.WorkOrderNfcList;
 import com.facilityone.wireless.workorder.adapter.WorkOrderLaborerAdapter;
@@ -555,21 +556,21 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             }
         } else {
             if (tagStatus != null && (tagStatus == WorkorderConstant.APPLICATION_FOR_SUSPENSION || tagStatus == WorkorderConstant.APPLICATION_VOID)) {
-                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_APPROVAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
+                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_APPROVAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
             } else if (isException) {
-                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
+                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
             } else if (isFinish) {
                 if (isMaintenanceOrder) {
                     if (tagStatus != null && tagStatus == WorkorderConstant.STOP) {
-                        getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_TERMINATED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
+                        getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_TERMINATED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
                     } else {
-                        getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_MAINTENCE, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
+                        getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_MAINTENCE, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
                     }
                 } else {
-                    getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_COMPLETED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
+                    getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_COMPLETED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
                 }
             } else {
-                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
+                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
             }
         }
     }
@@ -581,6 +582,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         }else {
             pop();
         }
+
     }
 
     /**
@@ -890,13 +892,17 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                 removeRightView();
             }
         }else if (status.equals(WorkorderConstant.WORK_STATUS_PROCESS)){
-            if (fromMessage && getTagStatus() != null && getTagStatus().equals(WorkorderConstant.APPLICATION_FOR_SUSPENSION)){
+            if ( getTagStatus() != null && getTagStatus().equals(WorkorderConstant.APPLICATION_FOR_SUSPENSION)){
                 if (!(getPresenter().hasPermission(true, isMaintenanceOrder, WorkorderConstant.VERIFIER_PERMISSION, currentRoles)
                         ||
                         isApprovalSupervisor())){
                     removeRightView();
                 }
 
+            }
+        }else if (status.equals(WorkorderConstant.WORK_STATUS_CREATED)||status.equals(WorkorderConstant.WORK_STATUS_PUBLISHED)){
+            if (!getPresenter().hasPermission(true, isMaintenanceOrder, WorkorderConstant.DISPATCH_STAFF_PERMISSION, currentRoles)){
+                removeRightView();
             }
         }
     }
@@ -1130,6 +1136,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             mLaborer = getPresenter().processingLaborer(data.workOrderLaborers, mStatus, data.status);
             if (!mLaborer && refreshStatus == WorkorderConstant.WORK_STATUS_PUBLISHED) {
                 pop();
+                hideShowMoreMenu(false);
                 return;
             }
             workOrderLaborers.addAll(data.workOrderLaborers);
@@ -1601,7 +1608,10 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                         , customerSignatureId);
                 break;
             case WorkorderConstant.MATERIAL:
-                start(WorkorderReserveRecordListFragment.getInstance(refreshStatus, mLaborer, mWoId, mCode));
+                // isMaintenanceOrder 维护工单
+                int workOrderType;
+                workOrderType= InventoryService.TYPE_FROM_WORKORDER_MAINTENANCE;
+                start(WorkorderReserveRecordListFragment.getInstance( workOrderType,refreshStatus, mLaborer, mWoId, mCode));
                 break;
             case WorkorderConstant.PLAN_STEP:
                 startForResult(WorkorderStepFragment.getInstance(mSteps, mWoId, mWoTeamId, mCanOpt,countAccord,attention), STEP);
@@ -1765,7 +1775,10 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                     if (isMaintenanceOrder) {
                         WorkOrderCanDo(WorkorderConstant.MATERIAL);
                     } else {
-                        start(WorkorderReserveRecordListFragment.getInstance(refreshStatus, mLaborer, mWoId, mCode));
+
+                        int workOrderType = InventoryService.TYPE_FROM_WORKORDER;
+                        LogUtils.d("当前页面"+workOrderType);
+                        start(WorkorderReserveRecordListFragment.getInstance( workOrderType,refreshStatus, mLaborer, mWoId, mCode));
                     }
 
 
@@ -1785,7 +1798,9 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                             if (isMaintenanceOrder) {
                                 WorkOrderCanDo(WorkorderConstant.MATERIAL);
                             } else {
-                                start(WorkorderReserveRecordListFragment.getInstance(refreshStatus, mLaborer, mWoId, mCode));
+                                int workOrderType = InventoryService.TYPE_FROM_WORKORDER;
+                                LogUtils.d("当前页面"+workOrderType);
+                                start(WorkorderReserveRecordListFragment.getInstance( workOrderType,refreshStatus, mLaborer, mWoId, mCode));
                             }
                         } else {
                             ToastUtils.showShort(R.string.workorder_no_permission);

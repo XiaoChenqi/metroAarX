@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.componentservice.inventory.InventoryService;
@@ -36,6 +37,7 @@ public class WorkorderReserveRecordListFragment extends BaseFragment<WorkorderRe
     private static final String WOCODE = "wocode";
     private static final String LABORER = "laborer";
     private static final String REFRESH_STATUS = "refresh_status";
+    private static final String FROM_MAINTENANCE="work_order_type";
     private static final int WORKORDER_MATERIAL_RESERVE_REQUEST_CODE = 1101;
     private static final int WORKORDER_MATERIAL_INFO_REQUEST_CODE = 1102;
 
@@ -45,6 +47,7 @@ public class WorkorderReserveRecordListFragment extends BaseFragment<WorkorderRe
     private int mRefreshStatus;//工单状态
     private String mWoCode;//工单编号
     private boolean mLaborer;//当前工单是否属于登录用户
+    private int mWorkOrderType=-1;
 
     @Override
     public WorkorderReserveRecordListPresenter createPresenter() {
@@ -75,6 +78,7 @@ public class WorkorderReserveRecordListFragment extends BaseFragment<WorkorderRe
             mWoId = bundle.getLong(WOID, -1);
             mRefreshStatus = bundle.getInt(REFRESH_STATUS, WorkorderConstant.WORK_STATUS_NONE);
             mWoCode = bundle.getString(WOCODE, "");
+            mWorkOrderType = bundle.getInt(FROM_MAINTENANCE,-1);
         }
     }
 
@@ -111,7 +115,9 @@ public class WorkorderReserveRecordListFragment extends BaseFragment<WorkorderRe
         Router router = Router.getInstance();
         InventoryService inventoryService = (InventoryService) router.getService(InventoryService.class.getSimpleName());
         if (inventoryService != null) {
-            BaseFragment inventoryReserveFragment = inventoryService.getInventoryReserveFragment(InventoryService.TYPE_FROM_WORKORDER, mWoId, mWoCode);
+            BaseFragment inventoryReserveFragment;
+            LogUtils.d("物料页面工单"+mWorkOrderType);
+        inventoryReserveFragment = inventoryService.getInventoryReserveFragment(InventoryService.TYPE_FROM_WORKORDER,mWorkOrderType, mWoId, mWoCode);
             startForResult(inventoryReserveFragment, WORKORDER_MATERIAL_RESERVE_REQUEST_CODE);
         }
     }
@@ -179,6 +185,20 @@ public class WorkorderReserveRecordListFragment extends BaseFragment<WorkorderRe
         WorkorderReserveRecordListFragment fragment = new WorkorderReserveRecordListFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(LABORER, laborer);
+        bundle.putLong(WOID, woId);
+        bundle.putInt(REFRESH_STATUS, refreshStatus);
+        bundle.putString(WOCODE, woCode);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+
+
+    public static WorkorderReserveRecordListFragment getInstance(int type,int refreshStatus, boolean laborer, long woId, String woCode) {
+        WorkorderReserveRecordListFragment fragment = new WorkorderReserveRecordListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(LABORER, laborer);
+        bundle.putInt(FROM_MAINTENANCE,type);
         bundle.putLong(WOID, woId);
         bundle.putInt(REFRESH_STATUS, refreshStatus);
         bundle.putString(WOCODE, woCode);

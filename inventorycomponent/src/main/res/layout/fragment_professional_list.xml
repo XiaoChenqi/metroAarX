@@ -24,6 +24,7 @@
         android:id="@+id/person_search_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:paddingBottom="@dimen/dp_10"
         android:paddingLeft="@dimen/dp_16"
         android:paddingRight="@dimen/dp_16"

@@ -71,17 +71,17 @@ class FzScanActivity: FragmentActivity() {
 
     private fun initPermission() {
         if (ContextCompat.checkSelfPermission(
-                        this,
-                        "android.permission.CAMERA"
-                ) != 0 && ContextCompat.checkSelfPermission(
-                        this,
-                        "android.permission.WRITE_EXTERNAL_STORAGE"
-                ) != 0
+                this,
+                "android.permission.CAMERA"
+            ) != 0 && ContextCompat.checkSelfPermission(
+                this,
+                "android.permission.WRITE_EXTERNAL_STORAGE"
+            ) != 0
         ) {
             ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"),
-                    1
+                this,
+                arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"),
+                1
             )
         }
     }
@@ -110,14 +110,14 @@ class FzScanActivity: FragmentActivity() {
 
         //构建扫码视图
         mRemoteView = RemoteView.Builder().setContext(this).setBoundingBox(rect)
-                .setFormat(HmsScan.ALL_SCAN_TYPE).build()
+            .setFormat(HmsScan.ALL_SCAN_TYPE).build()
 
 
         //直接扫码回调
         mRemoteView!!.setOnResultCallback(OnResultCallback { result -> //判断回调
             if (result != null && result.size > 0 && result[0] != null && !TextUtils.isEmpty(
-                            result[0].getOriginalValue()
-                    )
+                    result[0].getOriginalValue()
+                )
             ) {
                 val intent = Intent()
                 intent.putExtra(SCAN_RESULT, result[0])
@@ -130,8 +130,8 @@ class FzScanActivity: FragmentActivity() {
         mRemoteView!!.onCreate(savedInstanceState)
         //将扫码视图添加到扫码容器中
         val params = FrameLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
         )
         mScanContainer!!.addView(mRemoteView, params)
 
@@ -150,8 +150,8 @@ class FzScanActivity: FragmentActivity() {
         mPic!!.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val pickIntent = Intent(
-                        Intent.ACTION_PICK,
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 )
                 pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
                 this@FzScanActivity.startActivityForResult(pickIntent, REQUEST_CODE_PHOTO)
@@ -172,13 +172,13 @@ class FzScanActivity: FragmentActivity() {
                     mRemoteView!!.switchLight()
                     mFlashlight!!.setTextColor(this@FzScanActivity.resources.getColor(R.color.wx_topbar_font_color))
                     mFlashlight!!.text =
-                            this@FzScanActivity.resources.getString(R.string.wx_topbar_flashlight_off_icon)
+                        this@FzScanActivity.resources.getString(R.string.wx_topbar_flashlight_off_icon)
                     //                    flushBtn.setImageResource(img[1]);
                 } else {
                     mRemoteView!!.switchLight()
                     mFlashlight!!.setTextColor(this@FzScanActivity.resources.getColor(R.color.qrcv_cornerColor))
                     mFlashlight!!.text =
-                            this@FzScanActivity.resources.getString(R.string.wx_topbar_flashlight_on_icon)
+                        this@FzScanActivity.resources.getString(R.string.wx_topbar_flashlight_on_icon)
                 }
             }
         })
@@ -233,13 +233,13 @@ class FzScanActivity: FragmentActivity() {
             try {
                 val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, data!!.data)
                 val hmsScans = ScanUtil.decodeWithBitmap(
-                        this@FzScanActivity,
-                        bitmap,
-                        HmsScanAnalyzerOptions.Creator().setPhotoMode(true).create()
+                    this@FzScanActivity,
+                    bitmap,
+                    HmsScanAnalyzerOptions.Creator().setPhotoMode(true).create()
                 )
                 if (hmsScans != null && hmsScans.size > 0 && hmsScans[0] != null && !TextUtils.isEmpty(
-                                hmsScans[0]!!.getOriginalValue()
-                        )
+                        hmsScans[0]!!.getOriginalValue()
+                    )
                 ) {
                     val intent = Intent()
                     intent.putExtra(SCAN_RESULT, hmsScans[0])

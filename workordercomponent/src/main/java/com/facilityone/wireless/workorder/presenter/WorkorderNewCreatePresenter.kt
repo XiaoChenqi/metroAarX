@@ -23,18 +23,18 @@ class WorkorderNewCreatePresenter : BasePresenter<WorkorderNewCreateFragment>() 
      * */
     fun workOrderUpload(req: WorkorderService.newOrderReq){
         v.showLoading()
-        OkGo.post<BaseResponse<List<VisitUserBean>>>(FM.getApiHost() + WorkorderUrl.NEW_ORDER_CREATE)
+        OkGo.post<BaseResponse<List<Long>>>(FM.getApiHost() + WorkorderUrl.NEW_ORDER_CREATE)
             .isSpliceUrl(true)
             .tag(v)
             .upJson(toJson(req))
-            .execute(object :FMJsonCallback<BaseResponse<List<VisitUserBean>>>(){
-                override fun onSuccess(response: Response<BaseResponse<List<VisitUserBean>>>?) {
+            .execute(object :FMJsonCallback<BaseResponse<List<Long>>>(){
+                override fun onSuccess(response: Response<BaseResponse<List<Long>>>?) {
                     v.dismissLoading()
                     ToastUtils.showShort(R.string.workorder_submit_success)
                     v.popForResult()
                 }
 
-                override fun onError(response: Response<BaseResponse<List<VisitUserBean>>>?) {
+                override fun onError(response: Response<BaseResponse<List<Long>>>?) {
                     super.onError(response)
                     v.dismissLoading()
                     ToastUtils.showShort(R.string.workorder_submit_failed)

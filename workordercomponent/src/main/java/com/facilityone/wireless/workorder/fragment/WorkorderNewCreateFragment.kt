@@ -108,7 +108,7 @@ class WorkorderNewCreateFragment : BaseFragment<WorkorderNewCreatePresenter>(),
         binding.civDep.canInput(false)
         binding.civLocation.canInput(false)
         binding.envDesc.setInputDisp(false)
-        binding.envDesc.isFocusable = false
+        binding.envDesc.canInput(false)
 
 
 
@@ -127,7 +127,7 @@ class WorkorderNewCreateFragment : BaseFragment<WorkorderNewCreatePresenter>(),
 
     fun popForResult(){
         val bundle = Bundle()
-        setFragmentResult(REFRESH, bundle)
+        setFragmentResult(REFRESH_POP, bundle)
         pop()
     }
 
@@ -197,6 +197,7 @@ class WorkorderNewCreateFragment : BaseFragment<WorkorderNewCreatePresenter>(),
         private val REQUEST_WORKORDER_TYPE = 20004
         private val REQUEST_SERVICE_TYPE = 20003
         private val REFRESH = 500001 // 界面刷新
+        private val REFRESH_POP = 500009 // 跳回列表
         @JvmStatic
         fun getInstance(
             mServiceTypeSelectData:SelectDataBean, //服务类型

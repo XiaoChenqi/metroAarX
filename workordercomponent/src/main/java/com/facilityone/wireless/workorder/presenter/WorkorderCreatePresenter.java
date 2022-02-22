@@ -103,7 +103,7 @@ public class WorkorderCreatePresenter extends CommonBasePresenter<WorkorderCreat
                      public void onSuccess(Response<BaseResponse<Object>> response) {
                          getV().dismissLoading();
                          ToastUtils.showShort(R.string.workorder_submit_success);
-                         getV().pop();
+                         getV().popForResult();
                      }
 
                      @Override

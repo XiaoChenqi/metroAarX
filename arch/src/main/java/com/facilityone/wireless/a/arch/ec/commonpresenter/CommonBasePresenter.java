@@ -95,7 +95,6 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
                     SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PASSWORD, password);
                     ToastUtils.showShort(R.string.arch_login_success);
                     onLogonSuccess();
-
                 }
             }
 
@@ -237,11 +236,11 @@ public class CommonBasePresenter<V extends BaseFragment> extends BasePresenter<V
                         break;
                 }
             }else {
-                ToastUtils.showShort("登录失败,请稍后再试");
+                ToastUtils.showShort("登录失败");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ToastUtils.showShort("登录失败,请稍后再试");
+            ToastUtils.showShort("登录失败");
         }
 
 

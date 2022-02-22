@@ -1,6 +1,7 @@
 package com.facilityone.wireless.a.arch.offline.model.service;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.facilityone.wireless.a.arch.ec.module.OutLineReq;
 import com.facilityone.wireless.a.arch.offline.dao.BuildingDao;
 import com.facilityone.wireless.a.arch.offline.dao.CityDao;
 import com.facilityone.wireless.a.arch.offline.dao.DemandTypeDao;
@@ -28,6 +29,9 @@ import com.facilityone.wireless.a.arch.offline.net.PriorityNet;
 import com.facilityone.wireless.a.arch.offline.net.RoomNet;
 import com.facilityone.wireless.a.arch.offline.net.ServiceTypeNet;
 import com.tencent.wcdb.database.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;

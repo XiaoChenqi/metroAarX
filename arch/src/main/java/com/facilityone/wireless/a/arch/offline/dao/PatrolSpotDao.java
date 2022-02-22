@@ -281,7 +281,7 @@ public class PatrolSpotDao {
             }
         }
         if (!result.isEmpty()){
-            return result.get(0);
+           return result.get(0);
         }else {
             return "";
         }

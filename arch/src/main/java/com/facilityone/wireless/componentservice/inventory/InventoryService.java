@@ -9,6 +9,7 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 
 public interface InventoryService extends IService {
     int TYPE_FROM_WORKORDER = 3001;
+    int TYPE_FROM_WORKORDER_MAINTENANCE = 3002;
 
     /**
      * 获取物资预定详情页面
@@ -36,6 +37,8 @@ public interface InventoryService extends IService {
      * @return
      */
     BaseFragment getInventoryReserveFragment(int type, long woId, String woCode);
+
+    BaseFragment getInventoryReserveFragment(int type,int workOrderType, long woId, String woCode);
 
     /**
      * 库存查询
