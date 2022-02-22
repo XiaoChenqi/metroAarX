@@ -19,7 +19,7 @@ public class PatrolApplication extends InitApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        //LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG);
+        LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG);
         UIRouter.getInstance().registerUI("patrol");
         //Router.registerComponent("com.facilityone.wireless.workorder.applike.WorkorderApplike");
         //Facility.init(this);

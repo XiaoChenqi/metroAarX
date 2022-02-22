@@ -33,6 +33,12 @@ public class WorkorderServiceImpl implements WorkorderService {
     }
 
     @Override
+    public BaseFragment getWorkorderInfoFragment(Boolean fromMessage, int workorderStatus, String code, Long woId) {
+        return WorkorderInfoFragment.getInstance(fromMessage,workorderStatus, code, woId);
+    }
+
+
+    @Override
     public BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId, boolean isMaintenance) {
         return WorkorderInfoFragment.getInstance(workorderStatus, code, woId,isMaintenance);
     }

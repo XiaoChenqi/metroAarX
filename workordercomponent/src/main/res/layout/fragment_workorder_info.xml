@@ -826,7 +826,6 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
-                <!--关联设备-->
                 <LinearLayout
                     android:id="@+id/ll_order"
                     android:layout_width="match_parent"

@@ -233,11 +233,26 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/list_item_bg"
                 app:fm_content_item_et_hint="@string/inventory_reserve_person_a"
+
                 app:fm_content_item_show_line="true"
                 app:fm_content_item_show_red="true"
                 app:fm_content_item_show_tip="true"
                 app:fm_content_item_show_tip_icon="false"
                 app:fm_content_item_title="@string/inventory_reserve_person_a" />
+            <!--专业-->
+            <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+                android:id="@+id/inventory_reserve_specialty_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_bg"
+                app:fm_content_item_et_hint="专业"
+                app:fm_content_item_show_line="true"
+                app:fm_content_item_show_red="true"
+                android:visibility="gone"
+                app:fm_content_item_show_tip="true"
+                app:fm_content_item_show_tip_icon="true"
+                app:fm_content_item_title="专业" />
+
 
             <!--<LinearLayout-->
                 <!--android:layout_width="match_parent"-->
@@ -304,6 +319,7 @@
                     android:paddingRight="@dimen/dp_16">
 
                     <TextView
+                        android:id="@+id/inventory_reserve_desc_tv"
                         style="@style/h3_15_9_text_style"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -52,6 +52,7 @@ import com.facilityone.wireless.a.arch.utils.UrlUtils;
 import com.facilityone.wireless.a.arch.widget.EditNumberView;
 import com.facilityone.wireless.a.arch.widget.FMBottomChoiceSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.FMBottomPauseSelectSheetBuilder;
+import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.a.arch.widget.PhoneMenuBuilder;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.basiclib.utils.DateUtils;
@@ -79,6 +80,7 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.FalsifyFooter;
@@ -179,6 +181,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public static final String ARRIVAL_DATE_END_TIME = "arrival_date_end_time";
     public static final String WORKORDER_LOCATION = "workorder_location";
     public static final String CAN_OPT = "can_opt";
+    public static final String FROME_MESSAGE = "from_message";
     private static final int LABORER_REQUEST_CODE = 4002;
     public static final int DISPATCH_REQUEST_CODE = 4003;
     public static final int APPROVAL_REQUEST_CODE = 4004;
@@ -305,6 +308,10 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     private String attention; //注意事项
 
     private boolean fromAct=false;
+    private List<Integer> currentRoles; //当前人员对该工单所拥有的角色权限数组
+    private Boolean fromMessage = false; //从消息中获取工单详情
+    private List<Long> allApprovers; //当前工单审批人数组
+    public String completeMessage = null; //完成工单提醒文案
 
     @Override
     public WorkorderInfoPresenter createPresenter() {
@@ -333,6 +340,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         requestPermission();
     }
 
+
+
     private void requestPermission() {
         PermissionUtils.permission(PermissionConstants.STORAGE,
                 PermissionConstants.MICROPHONE,
@@ -353,6 +362,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             isFinish = bundle.getBoolean(IS_FINISH, false);
             isPending = bundle.getInt(IS_PENDING, -1);
             fromAct=bundle.getBoolean("fromAct",false);
+            fromMessage = bundle.getBoolean(FROME_MESSAGE,false);
         }
         refreshStatus = mStatus;
         if (refreshStatus == WorkorderConstant.WORK_STATUS_NONE){
@@ -471,6 +481,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mOrderLl.setOnClickListener(this);
         ll_object.setOnClickListener(this);
 //        mEui.showContent();
+
+        currentRoles = new ArrayList<>();
     }
 
     private void initMedia() {
@@ -517,51 +529,49 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         if (isPending != 1) {
             if (tagStatus != null && (tagStatus == WorkorderConstant.APPLICATION_FOR_SUSPENSION || tagStatus == WorkorderConstant.APPLICATION_VOID)) {
                 if (isException) {
-                    getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                    getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
                 } else {
-                    getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_APPROVAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                    getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_APPROVAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
                 }
             } else if (isException) {
-                getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
             } else if (isFinish) {
                 if (isMaintenanceOrder) {
                     if (tagStatus != null && tagStatus == WorkorderConstant.STOP) {
-                        getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_TERMINATED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                        getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_TERMINATED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
                     } else {
                         if (refreshStatus == WorkorderConstant.WORK_STATUS_VERIFIED) {
 
-                            getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_MAINTENCE_NOT, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                            getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_MAINTENCE_NOT, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
                         } else {
-                            getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_MAINTENCE, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                            getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_MAINTENCE, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
                         }
                     }
                 } else {
-                    getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_COMPLETED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                    getPresenter().onMoreMenuClick(getContext(), true, true, WorkorderConstant.WORK_STATUS_COMPLETED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
                 }
             } else {
-                getPresenter().onMoreMenuClick(getContext(), true, true, refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                getPresenter().onMoreMenuClick(getContext(), true, true, refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder,currentRoles,fromMessage);
             }
         } else {
             if (tagStatus != null && (tagStatus == WorkorderConstant.APPLICATION_FOR_SUSPENSION || tagStatus == WorkorderConstant.APPLICATION_VOID)) {
-                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_APPROVAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_APPROVAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
             } else if (isException) {
-                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_UBNORMAL, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
             } else if (isFinish) {
                 if (isMaintenanceOrder) {
                     if (tagStatus != null && tagStatus == WorkorderConstant.STOP) {
-                        getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_TERMINATED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                        getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_TERMINATED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
                     } else {
-                        getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_MAINTENCE, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                        getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_MAINTENCE, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
                     }
                 } else {
-                    getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_COMPLETED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                    getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, WorkorderConstant.WORK_STATUS_COMPLETED, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
                 }
             } else {
-                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder);
+                getPresenter().onMoreMenuClick(getContext(), hasAttendanceData, isAttendance, refreshStatus, mAcceptWorkOrder, mWoId, mApprovalId, mCode, mSendContent, mEstimateStartTime, mEstimateEndTime, mWorkOrderMaterials, isSignOn, isMaintenanceOrder, currentRoles, fromMessage);
             }
-
         }
-
     }
 
     @Override
@@ -579,32 +589,75 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
      * @Infor: 新派工单
      */
     public void newOrder() {
-        WorkorderCreateService.newOrderCreateReq newOrderBunder = new WorkorderCreateService.newOrderCreateReq();
-        WorkorderCreateService.newOrderCreateAllName nameAll = new WorkorderCreateService.newOrderCreateAllName();
-        newOrderBunder.userId = FM.getEmId(); //userId
-        newOrderBunder.name = data.applicantName+""; //操作人名字
-        newOrderBunder.phone = data.applicantPhone+""; //操作人电话
-        newOrderBunder.organizationId = data.orgId; //部门Id
-        newOrderBunder.serviceTypeId = data.serviceTypeId; //服务类型Id
-        newOrderBunder.scDescription = data.woDescription; //描述
-        newOrderBunder.priorityId = data.priorityId; //优先级Id
-        newOrderBunder.processId = data.flowId; //流程ID
-        newOrderBunder.woType = data.type; //工单类型
-        newOrderBunder.reqId = data.woId; //工单Id
-        //名称
-        nameAll.loactionName = data.location;//位置信息
-        nameAll.serviceType = data.serviceTypeName;//服务类型名称
-        nameAll.priority = data.priorityName; //优先级名称
-        nameAll.departmentName = data.organizationName;//部门名称
+//        WorkorderCreateService.newOrderCreateReq newOrderBunder = new WorkorderCreateService.newOrderCreateReq();
+//        WorkorderCreateService.newOrderCreateAllName nameAll = new WorkorderCreateService.newOrderCreateAllName();
+//        newOrderBunder.userId = FM.getEmId(); //userId
+//        newOrderBunder.name = data.applicantName+""; //操作人名字
+//        newOrderBunder.phone = data.applicantPhone+""; //操作人电话
+//        newOrderBunder.organizationId = data.orgId; //部门Id
+//        newOrderBunder.serviceTypeId = data.serviceTypeId; //服务类型Id
+//        newOrderBunder.scDescription = data.woDescription; //描述
+//        newOrderBunder.priorityId = data.priorityId; //优先级Id
+//        newOrderBunder.processId = data.flowId; //流程ID
+//        newOrderBunder.woType = data.type; //工单类型
+//        newOrderBunder.reqId = data.woId; //工单Id
+//        //名称
+//        nameAll.loactionName = data.location;//位置信息
+//        nameAll.serviceType = data.serviceTypeName;//服务类型名称
+//        nameAll.priority = data.priorityName; //优先级名称
+//        nameAll.departmentName = data.organizationName;//部门名称
+//
+//        newOrderBunder.equipmentSystemName = data.workOrderEquipments;
+//        newOrderBunder.location = data.locationId;
+//        newOrderBunder.nameAll = nameAll; //需要用到的名称
+        SelectDataBean mServiceTypeSelectData = new SelectDataBean();
+        mServiceTypeSelectData.setId( data.serviceTypeId );
+        mServiceTypeSelectData.setFullName( data.serviceTypeName );
+        SelectDataBean mDepSelectData = new SelectDataBean();
+        mDepSelectData.setId(data.orgId);
+        mDepSelectData.setFullName(data.organizationName);
+        startForResult(WorkorderNewCreateFragment.getInstance(mServiceTypeSelectData,data.woId,data.applicantName,data.applicantPhone,data.type,data.locationId,data.location,mDepSelectData,data.woDescription),NEW_ORDER);
+    }
 
-        newOrderBunder.equipmentSystemName = data.workOrderEquipments;
-        newOrderBunder.location = data.locationId;
-        newOrderBunder.nameAll = nameAll; //需要用到的名称
-        startForResult(WorkorderCreateFragment.getInstance(newOrderBunder),NEW_ORDER);
+    /**
+     * 弹出完成工作提醒 维修工单
+     * */
+    public void showCompleteDiaglog(Long woId, String input, Long operateReasonId, int type, Long componentId, String causeOther){
+        new FMWarnDialogBuilder(getContext()).setIconVisible(false)
+                .setSureBluBg(true)
+                .setIconVisible(true)
+                .showTitle(false)
+                .setCancelGone(true)
+                .setCanceledOnTouchOutside(false)
+                .setSure(R.string.workorder_confirm)
+                .setTip(completeMessage)
+                .addOnBtnCancelClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, View view) {
+                        dialog.dismiss();
+                    }
+                })
+                .addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, View view) {
+                        dialog.dismiss();
+                        showLoading();
+                        getPresenter().workorderOptCommon(woId, null, getOperateReasonId(), WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION, componentId, causeOther);
+                    }
+                }).create(R.style.fmDefaultWarnDialog).show();
+    }
+
+    //获取完成工作提醒内容
+    public String getWorkDoneReminder(){
+        return completeMessage;
     }
 
     public Integer getNewStatus(){
         return mRealStatus;
+    }
+
+    public Integer getTagStatus(){
+        return tagStatus;
     }
 
     /**
@@ -663,12 +716,19 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
     private void onRefresh() {
         getPresenter().getWorkorderInfo(mWoId);
+        //公共查询不需要传入单号
+
     }
 
     //刷新基础信息
     public void refreshBasicInfoUI(WorkorderService.WorkorderInfoBean data) {
         //工作组id
         mWoTeamId = data.workTeamId;
+
+        if (data.workDoneReminder != null){
+            completeMessage = data.workDoneReminder+"";
+        }
+
         if (data.pmInfo != null && data.pmInfo.eqCountAccord != null){
             countAccord = data.pmInfo.eqCountAccord;
         }
@@ -727,6 +787,9 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         if (refreshStatus != WorkorderConstant.WORK_STATUS_NONE) {
             refreshStatus = data.status == null ? refreshStatus : data.status;
         }
+        allApprovers = new ArrayList<>();
+        allApprovers = data.approvers;
+
 
         mCanOpt = false;
         if (refreshStatus == WorkorderConstant.WORK_STATUS_PROCESS) {
@@ -805,12 +868,71 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         updateApprovalContent(data);
         updateCategory(data);
         updateSpace(data);
-        //公共查询不需要传入单号
-        getPresenter().isDoneDevice(null, null);
+
+        currentRoles = data.currentRoles;// 当前人员对该工单所拥有的角色权限数组
+        showRightMenu(data.status,currentRoles);
 
         mRefreshLayout.finishRefresh(true);
 
     }
+
+    /**
+     * 判断是否需要展示右上角功能按钮
+     * */
+    private void showRightMenu(Integer status,List<Integer> roles){
+        if (status.equals(WorkorderConstant.WORK_STATUS_APPROVAL)){
+            if (!getPresenter().hasPermission(fromMessage,isMaintenanceOrder,WorkorderConstant.TRACK_PERMISSION,roles)){
+                removeRightView();
+            }
+        }else if (status.equals(WorkorderConstant.WORK_STATUS_COMPLETED)){ //待存档状态下 需要验证和存档的权限
+            if (!(getPresenter().hasPermission(fromMessage,isMaintenanceOrder,WorkorderConstant.ARCHIVE_PERMISSION,roles)
+                    || getPresenter().hasPermission(fromMessage,isMaintenanceOrder,WorkorderConstant.VERIFIER_PERMISSION,roles))){
+                removeRightView();
+            }
+        }else if (status.equals(WorkorderConstant.WORK_STATUS_PROCESS)){
+            if (fromMessage && getTagStatus() != null && getTagStatus().equals(WorkorderConstant.APPLICATION_FOR_SUSPENSION)){
+                if (!(getPresenter().hasPermission(true, isMaintenanceOrder, WorkorderConstant.VERIFIER_PERMISSION, currentRoles)
+                        ||
+                        isApprovalSupervisor())){
+                    removeRightView();
+                }
+
+            }
+        }
+    }
+
+
+    /**
+     * 判断当前
+     */
+    public boolean isApprovalSupervisor(){
+//        return approvalSupervisr;
+        return true;
+    }
+
+//    /**
+//     * 判断当前登录用户是否为当前工单的审批人
+//     * */
+//    public boolean isApproval(){
+//        if (!fromMessage){
+//            return true;
+//        }
+//        String json = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+//        UserService.UserInfoBean userInfoBean = com.facilityone.wireless.basiclib.utils.GsonUtils.fromJson(json, UserService.UserInfoBean.class);
+//        Long userEmId = userInfoBean.emId;
+//        if (allApprovers != null && userEmId != null){
+//            for (Long id : allApprovers) {
+//                if (id.equals(userEmId)){
+//                    return true;
+//                }
+//                return false;
+//            }
+//        }else {
+//            return false;
+//        }
+//        return false;
+//
+//    }
 
     //维护步骤
     private void updateCategory(WorkorderService.WorkorderInfoBean data) {
@@ -1001,6 +1123,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
     //刷新执行人
     public void refreshLaborerUI(WorkorderService.WorkorderInfoBean data) {
+
         mAllStart = false;
         if (data.workOrderLaborers != null && data.workOrderLaborers.size() > 0) {
             workOrderLaborers = new ArrayList<>();
@@ -1039,7 +1162,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mWorkOrderEquipments = (ArrayList<WorkorderService.WorkOrderEquipmentsBean>) data.workOrderEquipments;
         Integer equStatus = data.newStatus;
         if ((equStatus == WorkorderConstant.WORK_NEW_STATUS_ARCHIVED_WAIT ||
-                equStatus == WorkorderConstant.WORK_NEW_STATUS_PROCESS)) {
+                equStatus == WorkorderConstant.WORK_NEW_STATUS_PROCESS ||
+                equStatus == WorkorderConstant.WORK_NEW_STATUS_APPROVAL_WAIT)) {
             mLlEqu.setVisibility(View.VISIBLE);
         } else {
             mLlEqu.setVisibility(View.GONE);
@@ -1501,6 +1625,8 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
     }
 
+
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -1725,14 +1851,11 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         } else if (id == R.id.ll_plan_step) {//维护步骤
             if (hasAttendanceData) {
                 if (isAttendance) {
-                    if (hasUnFinshTask) {
-                        ToastUtils.showShort("请先完成进行中的维护设备。");
-                        return;
-                    } else {
+                    if (isMaintenanceOrder){
+                        getPresenter().isDoneDevice();
+                    }else {
                         WorkOrderCanDo(WorkorderConstant.PLAN_STEP);
-
                     }
-
                 } else {
                     ToastUtils.showShort(R.string.workorder_sign_error);
                 }
@@ -2072,6 +2195,17 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         return infoFragment;
     }
 
+    public static WorkorderInfoFragment getInstance(boolean fromMessage,int workorderStatus, String code, Long woId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(WORKORDER_STATUS, workorderStatus);
+        bundle.putString(WORKORDER_CODE, code);
+        bundle.putLong(WORKORDER_ID, woId);
+        bundle.putBoolean(FROME_MESSAGE, fromMessage);
+        WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
+        infoFragment.setArguments(bundle);
+        return infoFragment;
+    }
+
     public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Boolean isException, Long woId) {
         Bundle bundle = new Bundle();
         if (isException) {
@@ -2213,7 +2347,6 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public void canOpt(boolean canOpt, boolean hasData) {
         this.isAttendance = canOpt;
         this.hasAttendanceData = hasData;
-        //TODO 暂不开放
         refreshNeedSign(canOpt, hasData);
 
     }
@@ -2232,6 +2365,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                 (refreshStatus == WorkorderConstant.WORK_STATUS_PROCESS
                         || refreshStatus == WorkorderConstant.WORK_STATUS_COMPLETED
                         || refreshStatus == WorkorderConstant.WORK_STATUS_NONE
+                        || mRealStatus == WorkorderConstant.WORK_NEW_STATUS_APPROVAL_WAIT
                 )) {
             mLlSpace.setVisibility(View.VISIBLE);
         } else {
@@ -2248,7 +2382,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public void checkRole(LocationBean bean) {
         String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
         UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
-        if (infoBean.type == 1 && mRealStatus == WorkorderConstant.WORK_NEW_STATUS_PROCESS) {
+        if (infoBean.type == 1 && mRealStatus == WorkorderConstant.WORKORER_PROCESS) {
             getPresenter().getLastAttendance(bean);
         } else {
             canOpt(true, true);

@@ -20,6 +20,8 @@ public interface WorkorderService extends IService {
     int CREATE_ORDER_BY_PATROL_QUERY_REPAIR = 2002;//巡检查询报修
 
     BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId);
+
+    BaseFragment getWorkorderInfoFragment(Boolean fromMessage,int workorderStatus, String code, Long woId);
      /**
       * @Auther: karelie
       * @Date: 2021/8/19

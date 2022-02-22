@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.qmuiteam.qmui.widget.QMUITopBarLayout
+            android:id="@+id/ui_topbar"
+            style="@style/commonTopbarStyle" />
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F2F2F2"
+            android:fillViewport="true"
+            android:focusableInTouchMode="false"
+            android:overScrollMode="never">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        style="@style/contentTitleLayoutStyle">
+
+                        <View style="@style/demandWorkTitleIconStyle" />
+
+                        <TextView
+                            style="@style/h3_text_style"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/dp_15"
+                            android:text="@string/basic_infor" />
+
+                        <com.joanzapata.iconify.widget.IconTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/icon_arrow_down"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/sp_18"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <View
+                        style="@style/dash_line_style"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginRight="@dimen/dp_16" />
+
+                    <!--撰写人-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_creator"
+                            />
+                    </LinearLayout>
+
+                    <!--检查人-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="检查人："
+                            />
+                        <TextView
+                            android:id="@+id/tv_checker"
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
+
+                    <!--检查单位-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="检查单位："
+                            />
+                        <TextView
+                            android:id="@+id/check_unit"
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
+
+                    <!--检查线路区段-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="检查线路区段："
+                            />
+                        <TextView
+                            android:id="@+id/tvInterval"
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
+
+                    <!--检查方式-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="检查方式："
+                            />
+                        <TextView
+                            android:id="@+id/check_way"
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
+
+                    <!--添乘列车号-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="添乘列车号："
+                            />
+                        <TextView
+                            android:id="@+id/tv_carNumber"
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
+
+                    <!--值乘司机-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="值乘司机："
+                            />
+                        <TextView
+                            android:id="@+id/tv_driver"
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
+
+                    <!--添乘上车时间-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="添乘上车时间："
+                            />
+                        <TextView
+                            android:id="@+id/tv_boarding"
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
+
+                    <!--添乘下车时间-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="添乘下车时间："
+                            />
+                        <TextView
+                            android:id="@+id/tv_getoff"
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:id="@+id/ll_expend"
+                        style="@style/contentTitleLayoutStyle">
+
+                        <View style="@style/demandWorkTitleIconStyle" />
+
+                        <TextView
+                            style="@style/h3_text_style"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/dp_15"
+                            android:text="检查信息" />
+
+                        <com.joanzapata.iconify.widget.IconTextView
+                            android:id="@+id/itv_expand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/icon_arrow_down"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/sp_18"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <View
+                        style="@style/dash_line_style"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginRight="@dimen/dp_16" />
+
+                    <!--检查内容-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="检查内容："
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:id="@+id/tv_checkContent"
+                            />
+                    </LinearLayout>
+
+                    <!--检查情况-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="检查情况："
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:id="@+id/tv_checkCondition"
+                            />
+                    </LinearLayout>
+
+                    <!--解决情况-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="解决情况："
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:id="@+id/tv_solveCondition"
+                            />
+                    </LinearLayout>
+
+                    <!--需跟踪情况-->
+                    <LinearLayout
+                        style="@style/workorderInfoStyle"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text="需跟踪情况："
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/h3_text_style"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:id="@+id/tv_needTracked"
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
+
+
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+</layout>

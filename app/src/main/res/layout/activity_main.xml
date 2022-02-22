@@ -56,20 +56,19 @@
         android:id="@+id/button5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:text="快速报障"
-        app:layout_constraintStart_toStartOf="@+id/btn4"
-        app:layout_constraintTop_toBottomOf="@+id/btn4"
+        app:layout_constraintStart_toEndOf="@+id/btn4"
+        app:layout_constraintTop_toTopOf="@+id/btn4"
         tools:text="快速报障" />
 
     <Button
         android:id="@+id/btn6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:text="扫一扫"
-        app:layout_constraintStart_toStartOf="@+id/button5"
-        app:layout_constraintTop_toBottomOf="@+id/button5" />
+        app:layout_constraintStart_toStartOf="@+id/btn4"
+        app:layout_constraintTop_toBottomOf="@+id/btn4" />
 
     <Button
         android:id="@+id/downBtn"
@@ -137,6 +136,15 @@
         android:text="账户设置"
         app:layout_constraintStart_toEndOf="@id/serverBtn"
         app:layout_constraintTop_toBottomOf="@id/downBtn" />
+
+    <Button
+        android:id="@+id/boardBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="登乘巡检主页"
+        app:layout_constraintStart_toEndOf="@+id/profileBtn"
+        app:layout_constraintTop_toTopOf="@+id/serverBtn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -57,6 +57,8 @@
         <activity
             android:name="com.facilityone.wireless.patrol.PatrolActivity"
             android:exported="true" />
+        <activity android:name="com.facilityone.wireless.boardingpatrol.BoardingPatrolActivity"
+            android:exported="true" />
         <activity
             android:name="com.facilityone.wireless.inventory.InventoryActivity"
             android:exported="true" />

@@ -46,7 +46,7 @@ public class PictureSelectorManager {
                 .compress(enableCrop)
                 .cropCompressQuality(70)
                 .waterMark(waterMark)
-                .minimumCompressSize(500)// 小于500kb的图片不压缩
+                .minimumCompressSize(500)// 小于500kb的图片不压缩 
                 .theme(R.style.picture_fm_style)
                 .compressSavePath(FMFileUtils.getPicPath())
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)

@@ -88,7 +88,7 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
     private float mTempPatrol;
     private static final int TASK_COUNT = 4;
     private Boolean needRefresh = false;
-    private boolean mHasAttentance=true;
+    private boolean mHasAttentance=false;
     ArrayMap<Long, PatrolTaskEntity> mCurrentTask;
     private Box<CompleteTime> taskBox; //任务开启
 
@@ -376,14 +376,47 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
         if (id == R.id.item_rl) {
             //判断点位类型
             if (mCurrentTask.get(patrolSpotEntity.getTaskId()).getpType().equals(PatrolTaskEntity.TASK_TYPE_INSPECTION)) {
+                //是否已签到
+                if (mHasAttentance) {
+                    if (isLocationNull(mLocation.location, patrolSpotEntity.getLocation())) {
+                        //签到比较前先判空,防止程序崩溃
+//                        mLocation.buildingId.equals(patrolSpotEntity.getLocation().buildingId)
+                        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+                        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+                        if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
+                            mTaskId = patrolSpotEntity.getTaskId();
+                            boolean canGo = getPresenter().canGo(patrolSpotEntity, mSpotEntityList);
+                            if (canGo) {
+                                getPresenter().judgeTask(patrolSpotEntity,false);
 
-                mTaskId = patrolSpotEntity.getTaskId();
-                boolean canGo = getPresenter().canGo(patrolSpotEntity, mSpotEntityList);
-                if (canGo) {
-                    getPresenter().judgeTask(patrolSpotEntity,false);
+                            } else {
+                                ToastUtils.showShort(R.string.patrol_overdue_task_tip);
+                            }
+                        } else {
+                            if (mLocation.location.siteId.equals(patrolSpotEntity.getLocation().siteId) &&
+                                    isInLocationList(patrolSpotEntity.getLocation().buildingId,mLocation)) {
 
-                } else {
-                    ToastUtils.showShort(R.string.patrol_overdue_task_tip);
+                                mTaskId = patrolSpotEntity.getTaskId();
+                                boolean canGo = getPresenter().canGo(patrolSpotEntity, mSpotEntityList);
+                                if (canGo) {
+                                    getPresenter().judgeTask(patrolSpotEntity,false);
+
+                                } else {
+                                    ToastUtils.showShort(R.string.patrol_overdue_task_tip);
+                                }
+                            } else {
+                                ToastUtils.showLong("您的签到位置与当前位置不符，请确认！");
+                            }
+                        }
+
+                    } else {
+                    ToastUtils.showLong("您的签到位置与当前位置不符，请确认！");
+                    }
+
+
+            }
+                else{
+                    ToastUtils.showLong("请先签到");
                 }
 
             }else {
@@ -397,15 +430,15 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
                 }
             }
         } else if (id == R.id.ll_look_all) {
-            Long taskId = patrolSpotEntity.getTaskId();
-            String taskName = patrolSpotEntity.getTaskName();
-            String code = patrolSpotEntity.getCode();
-            if (mCurrentTask.get(patrolSpotEntity.getTaskId()).getpType().equals(PatrolTaskEntity.TASK_TYPE_INSPECTION)) {
-                startForResult(PatrolSpotFragment.getInstance(taskId, taskName, code, true), REQUEST_SPOT);
-            } else {
-                startForResult(PatrolSpotFragment.getInstance(taskId, taskName, code, false), REQUEST_SPOT);
+                Long taskId = patrolSpotEntity.getTaskId();
+                String taskName = patrolSpotEntity.getTaskName();
+                String code = patrolSpotEntity.getCode();
+                if (mCurrentTask.get(patrolSpotEntity.getTaskId()).getpType().equals(PatrolTaskEntity.TASK_TYPE_INSPECTION)) {
+                    startForResult(PatrolSpotFragment.getInstance(taskId, taskName, code, true), REQUEST_SPOT);
+                } else {
+                    startForResult(PatrolSpotFragment.getInstance(taskId, taskName, code, false), REQUEST_SPOT);
+                }
             }
-        }
 
 
 
@@ -579,7 +612,7 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
      * @Data: 2021/12/22
      * @TIME: 15:45
      * @Introduce: 匹配后直接进入
-     **/
+    **/
     public void scanResult(PatrolSpotEntity patrolSpotEntity, Long time) {
         if (time != 0) {
             PatrolSpotDao dao = new PatrolSpotDao();
@@ -634,12 +667,18 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
     }
 
     public void hasAttentanceData(boolean mHasData){
-        this.mHasAttentance=true;
+        String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
+        UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
+        if (!(infoBean.type == PatrolConstant.OUT_SOURCING_CODE)) {
+            this.mHasAttentance = true;
+        } else {
+            this.mHasAttentance=mHasData;
+        }
+
     }
 
 
     public void checkCurrentTaskEntity(ArrayMap<Long,PatrolTaskEntity> taskEntity){
-
         this.mCurrentTask=taskEntity;
     }
 

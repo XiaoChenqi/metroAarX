@@ -202,6 +202,47 @@ public class SelectDataPresenter extends CommonBasePresenter<SelectDataFragment>
                     }
                 });
     }
+    //获取站点数据
+    public void queryLocation(final Long parentId) {
+        Observable.create(new ObservableOnSubscribe<List<SelectDataBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<SelectDataBean>> emitter) throws Exception {
+                List<SelectDataBean> locationList = null;
+                BuildingDao buildingDao = new BuildingDao();
+                locationList = buildingDao.queryBuildings(parentId);
+                emitter.onNext(locationList);
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<SelectDataBean>>() {
+                    private Disposable mDisposable;
+
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        mDisposable = d;
+                        mCompositeDisposable.add(mDisposable);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<SelectDataBean> selectDataBeen) {
+                        if (!mDisposable.isDisposed()) {
+                            getV().setTotal(selectDataBeen);
+                            getV().refreshHaveData(selectDataBeen, true);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        getV().refreshHaveData(null, true);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
 
     public void queryDep(final int level, final Long parentId, List<Long> parentIds) {
         if (level == 1) {

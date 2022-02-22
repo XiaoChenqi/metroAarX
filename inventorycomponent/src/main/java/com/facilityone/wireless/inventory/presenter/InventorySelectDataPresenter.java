@@ -164,6 +164,7 @@ public class InventorySelectDataPresenter extends CommonBasePresenter<InventoryS
                                 selectDataBean.namePinyin = PinyinUtils.ccs2Pinyin(selectDataBean.name);
                                 selectDataBean.nameFirstLetters = PinyinUtils.getPinyinFirstLetters(selectDataBean.name);
                                 selectDataBean.target = storage;
+                                selectDataBean.spareParts=storage.spareParts;
                                 totalSelectDataList.add(selectDataBean);
                             }
                         }

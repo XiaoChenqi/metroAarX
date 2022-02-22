@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">ridepatrolcomponent</string>
+    <string name="basic_infor">基本信息</string>
+    <string name="checker">检查人</string>
+    <string name="check_place">检查单位</string>
+    <string name="check_place_hint">请输入检查单位</string>
+    <string name="check_wiring_segment_way">检查线路区段/方式</string>
+    <string name="start_site">开始站点</string>
+    <string name="start_site_hint">请选择开始站点</string>
+    <string name="end_site">结束站点</string>
+    <string name="end_site_hint">请选择结束站点</string>
+    <string name="up_down_interval">上/下行区间</string>
+    <string name="up_interval">上行</string>
+    <string name="down_interval">下行</string>
+    <string name="check_way">检查方式</string>
+    <string name="check_walk">步行检查</string>
+    <string name="check_multiply">添乘方式</string>
+    <string name="check_the_content">检查内容</string>
+    <string name="check_the_content_hint">请输入检查内容</string>
+    <string name="check_the_condition">检查情况</string>
+    <string name="check_the_condition_hint">请输入检查情况</string>
+    <string name="solve_the_condition">解决情况</string>
+    <string name="solve_the_condition_hint">请输入解决情况</string>
+    <string name="to_be_traked">需跟踪情况</string>
+    <string name="to_be_traked_hint">请输入需跟踪情况</string>
+
+    <string name="train_number">添乘列车号</string>
+    <string name="train_number_hint">请输入添乘列车号</string>
+    <string name="train_driver">值乘司机</string>
+    <string name="train_driver_hint">请输入值乘司机</string>
+    <string name="add_train_geton">添乘上车时间</string>
+    <string name="add_train_geton_hint">请选择添乘上车时间</string>
+    <string name="add_train_getoff">添乘下车时间</string>
+    <string name="add_train_getoff_hint">请选择添乘下车时间</string>
+    
+    <string name="check_title">巡查登记</string>
+    <string name="upload_menu">提交</string>
+    <string name="query_title">巡查记录</string>
+    <string name="check_road_name">检查线路区段：</string>
+    <string name="check_road_data">日期：</string>
+
+    <!--开始时间不能晚于结束时间-->
+    <string name="workorder_time_start_error">开始时间不能晚于结束时间</string>
+    <!--结束时间不能早于开始时间-->
+    <string name="workorder_time_end_error">结束时间不能早于开始时间</string>
+
+</resources>

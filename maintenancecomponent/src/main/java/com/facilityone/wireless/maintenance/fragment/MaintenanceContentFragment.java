@@ -79,6 +79,8 @@ public class MaintenanceContentFragment extends BaseFragment<MaintenanceContentP
     private IconTextView mSpaceExtendItv;//空间位置下拉图标
     private IconTextView mWorkOrderItv;//维护工单下拉图标
 
+    private LinearLayout mNoDataView;//空数据页面
+
     private static final String MAINTENANCE_INFO = "maintenance_info";
     private static final String MAINTENANCE_FROM = "maintenance_from";
     private static final String MAINTENANCE_PM_ID = "maintenance_pm_id";
@@ -188,6 +190,7 @@ public class MaintenanceContentFragment extends BaseFragment<MaintenanceContentP
         mEquipmentExtendItv = findViewById(R.id.maintenance_equipment_expand_itv);
         mSpaceExtendItv = findViewById(R.id.maintenance_space_expand_itv);
         mWorkOrderItv = findViewById(R.id.maintenance_work_order_expand_itv);
+        mNoDataView = findViewById(R.id.llNoData);
 
         mStepRv.setNestedScrollingEnabled(false);
         mMaterialRv.setNestedScrollingEnabled(false);
@@ -512,6 +515,12 @@ public class MaintenanceContentFragment extends BaseFragment<MaintenanceContentP
     }
 
 
+    /**显示空状态页*/
+    public void showNoData(boolean isShow){
+        mNoDataView.setVisibility(isShow?View.VISIBLE : View.INVISIBLE);
+    }
+
+
     /**
      * 显示底部dialog
      */
@@ -576,7 +585,8 @@ public class MaintenanceContentFragment extends BaseFragment<MaintenanceContentP
         return fragment;
     }
 
-    public static MaintenanceContentFragment getInstance(boolean fromHome, Long pmId, Long todoId) {
+    public static MaintenanceContentFragment
+    getInstance(boolean fromHome, Long pmId, Long todoId) {
         MaintenanceContentFragment fragment = new MaintenanceContentFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(MAINTENANCE_FROM, fromHome);

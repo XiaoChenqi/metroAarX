@@ -87,12 +87,12 @@ public class SearchBox extends LinearLayout {
 
 
     private void init(AttributeSet attrs) {
-        LayoutInflater.from(mContext).inflate(R.layout.view_search_box, this);
+        LayoutInflater.from(mContext).inflate(R.layout.search_box, this);
         mSearchBox = findViewById(R.id.search_box_ll);
 
         mSearchEt = (EditText) findViewById(R.id.search_edit_text);
         mDeleteIv = (ImageView) findViewById(R.id.delete_image_view);
-        mSearchMap = (LinearLayout) findViewById(R.id.ll_search_map2);
+        mSearchMap = (LinearLayout) findViewById(R.id.ll_search_map);
         mSearchImage = (LinearLayout) findViewById(R.id.ll_imv_search);
 
         if (attrs != null) {

@@ -73,7 +73,7 @@ import java.util.Locale;
  * @Data: 2021/12/21
  * @TIME: 9:19
  * @Introduce: 隧道院需求修改 -- 根据车站工况二次修改
- **/
+**/
 public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implements View.OnClickListener
         , CompoundButton.OnCheckedChangeListener
         , BaseQuickAdapter.OnItemChildClickListener
@@ -260,11 +260,11 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
 
         if (mItemEntities.get(0).getContent().equals("车站工况") && !TextUtils.isEmpty(mItemEntities.get(0).getSelect())){
             String itemChoice= mItemEntities.get(0).getSelect()+"";
-            if (itemChoice.equals("空调")){
-                mRbRight.setChecked(true);
-            }else {
-                mRbLeft.setChecked(true);
-            }
+           if (itemChoice.equals("空调")){
+               mRbRight.setChecked(true);
+           }else {
+               mRbLeft.setChecked(true);
+           }
             mAdapter.setNewData(extracted());
         }else {
             mItemChoiceList = mItemEntities;
@@ -413,13 +413,9 @@ public class PatrolItemFragment extends BaseFragment<PatrolItemPresenter> implem
 
     private void saveDataBefore() {
 
-        if (mItemEntities.size()>0){
-            if (choice.equals("") && mItemEntities.get(0).getContent().equals("车站工况")){
-                mItemEntities.get(0).setSelect("");
-            }
+        if (choice.equals("") && mItemEntities.get(0).getContent().equals("车站工况")){
+            mItemEntities.get(0).setSelect("");
         }
-
-
 
         final int position = getPresenter().haveMiss(mItemEntities,itemChoice);
         if (position == -1) {

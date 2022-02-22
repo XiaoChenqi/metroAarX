@@ -107,6 +107,7 @@ public class WorkorderDevicePresenter extends WorkorderScanPresenter<WorkorderDe
 
                     @Override
                     public void onError(Response<BaseResponse<WorkorderService.ShortestTimeResp>> response) {
+                        getV().dismissLoading();
                         ToastUtils.showShort(R.string.workorder_operate_fail);
                         super.onError(response);
                         ToastUtils.showShort("数据异常");

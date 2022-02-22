@@ -148,9 +148,7 @@ public abstract class FMFragment extends SwipeBackFragment {
     }
 
     public void leftBackListener() {
-        //左侧回退按钮
         pop();
-//        getActivity().finish();
     }
 
     public TextView setTitle(int resId) {

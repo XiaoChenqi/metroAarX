@@ -41,6 +41,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
     private val mList: List<MaintenanceListEnity>? = null
     private var localWoId: Long? = null //当前选中的Id
     private var mCode:String?=null
+    private var mTemplateId:Long?=null
     private var mPage: Page? = null
     var mElAdapter: ElectronicLedgerAdapter? = null
     //当前模板任务数据
@@ -57,7 +58,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
 //        getData();
     }
 
-    private fun getData(woId: Long?) {
+    private fun getData(woId: Long?,templateId: Long?) {
 //        showLoading();
 //        mAdapter.setEmptyView(getLoadingView(mRefreshLayout));
         if (mPage == null) {
@@ -66,7 +67,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
         mPage!!.reset()
         //        getPresenter().getMaintenanceList(mType,mPage,null);
         mStartTime=System.currentTimeMillis()
-        presenter!!.getTemplateData(woId)
+        presenter!!.getTemplateData(woId,templateId)
     }
 
     private fun initOnClick() {}
@@ -76,6 +77,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
             mType = bundle.getInt(LIST_TYPE, -1)
             localWoId = bundle.getLong(WOID, -1L)
             mCode=bundle.getString(WOCODE,"电子台账")
+            mTemplateId = bundle.getLong(TEMPLATE_ID)
         }
         setTitle(mCode)
     }
@@ -115,7 +117,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
         mElAdapter!!.tempRecycleView=mRecyclerView
         mRecyclerView!!.setItemViewCacheSize(200)
         mRecyclerView!!.adapter = mElAdapter
-        getData(localWoId)
+        getData(localWoId,mTemplateId)
     }
 
 
@@ -350,7 +352,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
                                 selectValue = null)
                             tempTaskContents.add(uploadTaskContent)
                         }
-                        else if( tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_EDIT){
+                           else if( tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_EDIT){
                             val uploadTaskContent=UploadTaskContent(
                                 tempItem.contentId,
                                 tempItem.content as String,
@@ -364,10 +366,10 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
                 }
 
 
-            }
+                }
             tempTask.contents=tempTaskContents
             tasks.add(tempTask)
-        }
+            }
         val uploadTemplateData=UploadTemplateData()
         uploadTemplateData.woId=localWoId
         uploadTemplateData.templateId= mTemplateModel!!.templateId
@@ -407,7 +409,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
             ToastUtils.showShort("请先完成抽检后进行提交")
         }
 
-    }
+        }
 
 
 
@@ -477,7 +479,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
 
 
             }
-            mElAdapter!!.setNewData(taskData);
+                    mElAdapter!!.setNewData(taskData);
 
         }
 
@@ -528,6 +530,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
         private const val LIST_TYPE = "list_type"
         private const val WOID = "woid"
         private const val WOCODE="wocode"
+        private const val TEMPLATE_ID="template_id"
         private const val MAINTENANCE_INFO = 4001
         private const val REQUEST_LOCATION = 20001
         const val FAULT_DEVICE = 4007
@@ -540,11 +543,12 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
         private const val REQUEST_INVALID = 20008
         private const val MAX_NUMBER = 3 //一行显示几个tag
         @JvmStatic
-        fun getInstance(type: Int?, woId: Long?,woCode:String): MaintenanceElectronicLedgerFragment {
+        fun getInstance(type: Int?, woId: Long?,woCode:String,templateId:Long): MaintenanceElectronicLedgerFragment {
             val bundle = Bundle()
             bundle.putInt(LIST_TYPE, type!!)
             bundle.putLong(WOID, woId!!)
             bundle.putString(WOCODE,woCode)
+            bundle.putLong(TEMPLATE_ID,templateId)
             val instance = MaintenanceElectronicLedgerFragment()
             instance.arguments = bundle
             return instance

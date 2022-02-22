@@ -24,7 +24,7 @@
             <com.qmuiteam.qmui.widget.QMUITopBarLayout
                 android:id="@+id/ui_topbar"
                 style="@style/commonTopbarStyle"
-                app:qmui_topbar_bg_color="@color/transparent"/>
+                app:qmui_topbar_bg_color="@color/transparent" />
         </RelativeLayout>
 
 

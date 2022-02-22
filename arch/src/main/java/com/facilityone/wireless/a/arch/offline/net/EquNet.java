@@ -7,9 +7,9 @@ import com.facilityone.wireless.a.arch.offline.model.entity.DownloadReq;
 import com.facilityone.wireless.a.arch.offline.model.entity.DownloadResp;
 import com.facilityone.wireless.a.arch.offline.model.entity.EquEntity;
 import com.facilityone.wireless.a.arch.offline.model.service.OnDownloadListener;
+import com.facilityone.wireless.a.arch.xcq.bean.BaseResponse;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.basiclib.utils.GsonUtils;
-import com.fm.tool.network.model.BaseResponse;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 

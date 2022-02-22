@@ -177,11 +177,25 @@ public interface WorkorderConstant {
     int PLAN_STEP = 5; //维护步骤
     int SPACE = 6; //空间位置
 
+    /**
+     * newStatus
+     * */
     int ORDER_COMPLETE = 7;//处理完成
     int ORDER_STOP = 8; //暂停
     int ORDER_DONE = 9;//终止
     int ORDER_CHARGE_BACK = 10;//退单
     int ORDER_APPROVAL = 11; //审批申请
+
+    /**
+     * 工单详情中字段 currentRoles -> 所对应的权限解释
+     * */
+    int DIRECTOR_PERMISSION = 1; //主管
+    int TRACK_PERMISSION = 2; //追踪(处理工单)
+    int VERIFIER_PERMISSION = 3; //验证人员(验证工单)
+    int DISPATCH_STAFF_PERMISSION = 4; //派工人员(派单)
+    int ARCHIVE_PERMISSION = 5; //归档人员(存档)
+    int TERMINATION_PERMISSION = 6; //终止申请审批
+    int PAUSE_PERMISSION = 7; //暂停申请审批
 
 
 

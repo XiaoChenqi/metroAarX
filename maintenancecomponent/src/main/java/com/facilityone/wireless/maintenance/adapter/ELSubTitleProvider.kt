@@ -31,7 +31,7 @@ class ELSubTitleProvider : BaseItemProvider<MaintenanceEnity.ElectronicLedgerEnt
         position: Int
     ) {
         val headerText=item!!.content as String
-        val binding=getBinding<ItemElSubHeaderBinding>(helper.itemView)!!
+        val binding=getBinding<ItemElSubHeaderBinding>(helper.itemView.rootView)!!
         binding.taskTitleTv.text=headerText
     }
 

@@ -1,6 +1,7 @@
 package com.facilityone.wireless.workorder.presenter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
@@ -13,7 +14,7 @@ import com.facilityone.wireless.a.arch.widget.FMBottomInputSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.workorder.R;
-
+import com.facilityone.wireless.workorder.fragment.WorkOrderUtils;
 import com.facilityone.wireless.workorder.fragment.WorkorderApprovalFragment;
 import com.facilityone.wireless.workorder.fragment.WorkorderDispatchFragment;
 import com.facilityone.wireless.workorder.fragment.WorkorderInfoFragment;
@@ -23,7 +24,6 @@ import com.facilityone.wireless.workorder.module.WorkorderOptService;
 import com.facilityone.wireless.workorder.module.WorkorderService;
 import com.facilityone.wireless.workorder.module.WorkorderUrl;
 import com.fm.tool.network.model.BaseResponse;
-import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.luojilab.component.componentlib.router.Router;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -62,7 +62,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 //                getV().setLaborer(laborer);
 
 //            }
-            if (data.needSample != null){
+            if (data.needSample != null) {
                 needSample = data.needSample;
             }
             getV().refreshBasicInfoUI(data);
@@ -239,7 +239,9 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                                 final Long estimateEndTime,
                                 final List<WorkorderService.WorkorderReserveRocordBean> workOrderMaterials,
                                 Boolean isSignOn,
-                                final boolean isMaintenanceOrder
+                                final boolean isMaintenanceOrder,
+                                final List<Integer> currentRoles,
+                                final boolean fromMessage
     ) {
         List<String> menu = new ArrayList<>();
         boolean finished = false;
@@ -247,22 +249,42 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             case WorkorderConstant.WORK_STATUS_CREATED:// 已创建
             case WorkorderConstant.WORK_STATUS_SUSPENDED_NO:// 已暂停(不继续工作)
                 menu.add(getV().getString(R.string.workorder_arrange_order));
-                menu.add(getV().getString(R.string.workorder_stop));
                 menu.add(getV().getString(R.string.workorder_approval_title));
+                menu.add(getV().getString(R.string.workorder_stop));
                 finished = true;
                 break;
             case WorkorderConstant.WORK_STATUS_PUBLISHED:// 已发布
-                menu.add(getV().getString(R.string.workorder_accept_order));
-                menu.add(getV().getString(R.string.workorder_back_order));
-                menu.add(getV().getString(R.string.workorder_approval_title));
+                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.DISPATCH_STAFF_PERMISSION, currentRoles)) {
+                    menu.add(getV().getString(R.string.workorder_accept_order));
+                    menu.add(getV().getString(R.string.workorder_back_order));
+                    menu.add(getV().getString(R.string.workorder_approval_title));
+                }
                 break;
             case WorkorderConstant.WORK_STATUS_PROCESS:// 处理中
                 if (acceptWorkOrder) {
-                    menu.add(getV().getString(R.string.workorder_finish));
-                    menu.add(getV().getString(R.string.workorder_stop_order));
-                    menu.add(getV().getString(R.string.workorder_stop));
-                    menu.add(getV().getString(R.string.workorder_back_order));
-                    menu.add(getV().getString(R.string.workorder_approval_title));
+                    if (!fromMessage) {
+                        menu.add(getV().getString(R.string.workorder_finish));
+                        menu.add(getV().getString(R.string.workorder_stop_order));
+                        menu.add(getV().getString(R.string.workorder_stop));
+                        menu.add(getV().getString(R.string.workorder_back_order));
+                        menu.add(getV().getString(R.string.workorder_approval_title));
+                    } else {
+                        if (getV().getTagStatus() != null && getV().getTagStatus().equals(WorkorderConstant.APPLICATION_FOR_SUSPENSION)) {
+                            if (hasPermission(true, isMaintenanceOrder, WorkorderConstant.VERIFIER_PERMISSION, currentRoles)
+                                    ||
+                                    hasPermission(true, isMaintenanceOrder, WorkorderConstant.PAUSE_PERMISSION, currentRoles)
+                            ) {
+                                menu.add("审批");
+                            }
+                        } else {
+                            menu.add(getV().getString(R.string.workorder_finish));
+                            menu.add(getV().getString(R.string.workorder_stop_order));
+                            menu.add(getV().getString(R.string.workorder_stop));
+                            menu.add(getV().getString(R.string.workorder_back_order));
+                            menu.add(getV().getString(R.string.workorder_approval_title));
+                        }
+                    }
+
                 } else {
                     menu.add(getV().getString(R.string.workorder_accept_order));
                     menu.add(getV().getString(R.string.workorder_back_order));
@@ -278,20 +300,35 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
              * @Infor: 四运独有 新派工单
              */
             case WorkorderConstant.WORK_STATUS_TERMINATED:// 已终止
-                menu.add("新派工单");
-                menu.add(getV().getString(R.string.workorder_verify_tip));
-                menu.add("作废申请");
+                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.VERIFIER_PERMISSION, currentRoles)) {
+                    menu.add("新派工单");
+                    menu.add(getV().getString(R.string.workorder_verify_tip));
+                    menu.add("作废申请");
+                }
                 break;
-            case WorkorderConstant.WORK_STATUS_COMPLETED:// 已完成
-                menu.add(getV().getString(R.string.workorder_verify_tip));
-                menu.add(getV().getString(R.string.workorder_archive));
+            case WorkorderConstant.WORK_STATUS_COMPLETED:// 已完成  待存档
+                if (getV().getTagStatus() != null && getV().getTagStatus().equals(WorkorderConstant.APPLICATION_VOID)) {
+                    if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.PAUSE_PERMISSION, currentRoles)) {
+                        menu.add(getV().getString(R.string.workorder_approval_order));
+                    }
+                } else {
+                    if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.VERIFIER_PERMISSION, currentRoles)) {
+                        menu.add(getV().getString(R.string.workorder_verify_tip));
+                    }
+                    if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
+                        menu.add(getV().getString(R.string.workorder_archive));
+                    }
+                }
                 break;
             case WorkorderConstant.WORK_STATUS_VERIFIED:// 已验证
-                menu.add(getV().getString(R.string.workorder_archive));
+                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
+                    menu.add(getV().getString(R.string.workorder_archive));
+                }
                 break;
             case WorkorderConstant.WORK_STATUS_ARCHIVED:// 已存档
                 break;
             case WorkorderConstant.WORK_STATUS_APPROVAL:// 待审批
+                menu.add(getV().getString(R.string.workorder_archive));
                 menu.add(getV().getString(R.string.workorder_approval_order));
                 break;
             case WorkorderConstant.WORK_STATUS_UBNORMAL:// 异常
@@ -302,13 +339,17 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                     menu.add("抽检");
                 }
                 menu.add("验证");
-                menu.add("存档");
+                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
+                    menu.add(getV().getString(R.string.workorder_archive));
+                }
                 break;
             case WorkorderConstant.WORK_STATUS_MAINTENCE_NOT:// 计划性维护
                 if (needSample) {
                     menu.add("抽检");
                 }
-                menu.add("存档");
+                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
+                    menu.add(getV().getString(R.string.workorder_archive));
+                }
                 break;
 
         }
@@ -442,77 +483,17 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         return;
                     }
 
-                    if (taskStatus) {
-                        ToastUtils.showShort("目前已经有维护任务在执行中，请先完成。");
-                        return;
-                    }
-
-
-                    //判断是否条件处理完成
-                    if (!getV().canDo()) {
-                        return;
-                    }
-
-                    if (isSignOn) {
-                        ToastUtils.showShort("车站值班人员未签字");
-                        return;
-                    }
-
-                    String defaultReason = null;
-                    Long defaultObject = null;
-                    if (!isMaintenanceOrder) {
-                        if (getV().getFaultObjectId() == null) {
-                            ToastUtils.showShort("请选择故障对象");
-                            return;
-                        } else {
-                            defaultObject = getV().getFaultObjectId();
-                        }
-                    }
-
-
-                    //其他原因
-                    if (!isMaintenanceOrder) {
-                        if (getV().getOperateReasonId() == 1) {
-                            defaultReason = getV().getOtherReason();
-                            if (defaultReason == null || defaultReason.equals("")) {
-                                ToastUtils.showShort("请输入具体故障原因");
-                                return;
-                            }
-                        }
-                    }
-
                     if (isMaintenanceOrder) {
-                        if (getV().getNewStatus() == WorkorderConstant.WORKORER_PROCESS){
-                            cpPremisson(woId, WorkorderConstant.ORDER_COMPLETE, null, defaultObject, defaultReason);
-                        }else {
-                            doSomeThing(true, WorkorderConstant.ORDER_COMPLETE, woId, approvalId, defaultObject, defaultReason);
-                        }
-
+                        //判断当前是否有设备任务还在处理 且为维护工单
+                        isDoneDevice(isSignOn, isMaintenanceOrder, woId, approvalId, context);
                     } else {
-                        if (getV().isAllStart()) {
-                            int allDeviceFinished = getV().isAllDeviceFinished();
-                            if (allDeviceFinished == 0) {
-                                workorderOptCommon(woId, null, getV().getOperateReasonId(), WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION, defaultObject, defaultReason);
-                            } else {
-                                Long finalDefaultObject = defaultObject;
-                                String finalDefaultReason = defaultReason;
-                                new FMWarnDialogBuilder(context).setIconVisible(false)
-                                        .setSureBluBg(true)
-                                        .setTitle(R.string.workorder_tip_title)
-                                        .setSure(R.string.workorder_confirm)
-                                        .setTip(String.format(getV().getString(R.string.workorder_device_un_completed_tip), allDeviceFinished))
-                                        .addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
-                                            @Override
-                                            public void onClick(QMUIDialog dialog, View view) {
-                                                dialog.dismiss();
-                                                workorderOptCommon(woId, null, getV().getOperateReasonId(), WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION, finalDefaultObject, finalDefaultReason);
-                                            }
-                                        }).create(R.style.fmDefaultWarnDialog).show();
-                            }
-                        } else {
-                            ToastUtils.showShort(R.string.workorder_finish_error);
-                        }
+                            //不是维护工单不需要判断设备完成任务
+                            complete(isSignOn, isMaintenanceOrder, woId, approvalId, context);
+
+
                     }
+
+
                 } else if (tag.equals(getV().getString(R.string.workorder_stop_order))) {
                     if (!isSign) {
                         ToastUtils.showShort("请先签到");
@@ -584,17 +565,120 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         ToastUtils.showShort(R.string.workorder_sign_error);
                         return;
                     }
-                    Router router = Router.getInstance();
-                    com.facilityone.wireless.componentservice.maintenance.MaintenanceService workorderService = (com.facilityone.wireless.componentservice.maintenance.MaintenanceService) router.getService(com.facilityone.wireless.componentservice.maintenance.MaintenanceService.class.getSimpleName());
-                    if (workorderService != null) {
-                        BaseFragment fragment = workorderService.getElectronicLedger(woId, code);
-                        getV().startForResult(fragment,CODE_FOR_LEDGER);
-                    }
+
+                    fetchSampleTemplateById(context,woId);
+
                 }
             }
         });
         builder.build().show();
 
+    }
+
+    /**
+     * @param permission   需要查询的权限
+     * @param currentRoles 详情中所有的权限
+     * @Author: Karelie
+     * @Method：hasPermission
+     * @Description：判断当前操作是否有权限在内部，只需要判断从消息中跳转的工单以及非维护工单
+     */
+    public boolean hasPermission(boolean fromMessage, boolean isMaintenceOrder, Integer permission, List<Integer> currentRoles) {
+        if (fromMessage) {
+            if (!isMaintenceOrder) {
+                if (currentRoles.size() > 0) {
+                    for (Integer role : currentRoles) {
+                        if (role.equals(permission)) {
+                            return true;
+                        }
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public void complete(boolean hasSignOn, boolean isMaintenanceOrder, Long woId, Long approvalId, Context context) {
+        //判断是否条件处理完成
+        if (!getV().canDo()) {
+            return;
+        }
+
+        if (hasSignOn) {
+            ToastUtils.showShort("车站值班人员未签字");
+            return;
+        }
+
+        String defaultReason = null;
+        Long defaultObject = null;
+        if (!isMaintenanceOrder) {
+            if (getV().getFaultObjectId() == null) {
+                ToastUtils.showShort("请选择故障对象");
+                return;
+            } else {
+                defaultObject = getV().getFaultObjectId();
+            }
+        }
+
+
+        //其他原因
+        if (!isMaintenanceOrder) {
+            if (getV().getOperateReasonId() == 1) {
+                defaultReason = getV().getOtherReason();
+                if (defaultReason == null || defaultReason.equals("")) {
+                    ToastUtils.showShort("请输入具体故障原因");
+                    return;
+                }
+            }
+        }
+
+        if (isMaintenanceOrder) {
+            if (getV().getNewStatus() == WorkorderConstant.WORKORER_PROCESS) {
+                cpPremisson(woId, WorkorderConstant.ORDER_COMPLETE, null, defaultObject, defaultReason);
+            } else {
+                doSomeThing(true, WorkorderConstant.ORDER_COMPLETE, woId, approvalId, defaultObject, defaultReason);
+            }
+
+        } else {
+            if (getV().isAllStart()) {
+                int allDeviceFinished = getV().isAllDeviceFinished();
+                if (allDeviceFinished == 0) {
+                    if (TextUtils.isEmpty(getV().getWorkDoneReminder())){
+                        workorderOptCommon(woId, null, getV().getOperateReasonId(), WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION, defaultObject, defaultReason);
+                    }else {
+                        getV().showCompleteDiaglog(woId, null, getV().getOperateReasonId(), WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION, defaultObject, defaultReason);
+                    }
+                } else {
+                    Long finalDefaultObject = defaultObject;
+                    String finalDefaultReason = defaultReason;
+                    new FMWarnDialogBuilder(context).setIconVisible(false)
+                            .setSureBluBg(true)
+                            .setTitle(R.string.workorder_tip_title)
+                            .setSure(R.string.workorder_confirm)
+                            .setTip(String.format(getV().getString(R.string.workorder_device_un_completed_tip), allDeviceFinished))
+                            .addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+                                @Override
+                                public void onClick(QMUIDialog dialog, View view) {
+                                    dialog.dismiss();
+                                    if (TextUtils.isEmpty(getV().getWorkDoneReminder())){
+                                        workorderOptCommon(woId, null, getV().getOperateReasonId(), WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION, finalDefaultObject, finalDefaultReason);
+                                    }else {
+                                        getV().showCompleteDiaglog(woId, null, getV().getOperateReasonId(), WorkorderConstant.WORKORDER_OPT_TYPE_COMPLETION, finalDefaultObject, finalDefaultReason);
+                                    }
+                                }
+                            }).create(R.style.fmDefaultWarnDialog).show();
+                }
+            } else {
+                ToastUtils.showShort(R.string.workorder_finish_error);
+            }
+        }
     }
 
 
@@ -927,7 +1011,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
     }
 
     //通用工单操作
-    private void workorderOptCommon(Long woId, String input, Long operateReasonId, int type, Long componentId, String causeOther) {
+    public void workorderOptCommon(Long woId, String input, Long operateReasonId, int type, Long componentId, String causeOther) {
         workorderOptCommon(woId, input, type, operateReasonId, true, componentId, causeOther);
     }
 
@@ -1021,17 +1105,54 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 
     }
 
+
+    public void isDoneDevice(boolean isSignOn, boolean isMaintenanceOrder, Long woId, Long approvalId, Context context) {
+        getV().showLoading();
+        WorkorderService.ShortestTimeReq request = new WorkorderService.ShortestTimeReq();
+        request.woId = null;
+        request.eqCode = null;
+        OkGo.<BaseResponse<WorkorderService.ShortestTimeResp>>post(FM.getApiHost() + WorkorderUrl.QUERY_SHORTEST_TIME)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<WorkorderService.ShortestTimeResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<WorkorderService.ShortestTimeResp>> response) {
+                        getV().dismissLoading();
+                        WorkorderService.ShortestTimeResp resp = response.body().data;
+                        if (resp.executable != null) {
+                            if (resp.executable) {
+                                ToastUtils.showShort("目前已经有维护任务在执行中，请先完成。");
+                                return;
+                            } else {
+                                complete(isSignOn, isMaintenanceOrder, woId, approvalId, context);
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<WorkorderService.ShortestTimeResp>> response) {
+                        ToastUtils.showShort(R.string.workorder_operate_fail);
+                        super.onError(response);
+                        ToastUtils.showShort("数据异常");
+                    }
+                });
+
+    }
+
     /**
      * @Creator:Karelie
      * @Data: 2021/10/11
      * @TIME: 16:09
      * @Introduce: 判断维护工单当前是否有进行中的倒计时
      **/
-    public void isDoneDevice(Long woId, String eqCode) {
+    public void isDoneDevice() {
+        getV().showLoading();
         final boolean[] cando = {false};
         WorkorderService.ShortestTimeReq request = new WorkorderService.ShortestTimeReq();
-        request.woId = woId;
-        request.eqCode = eqCode;
+        request.woId = null;
+        request.eqCode = null;
         OkGo.<BaseResponse<WorkorderService.ShortestTimeResp>>post(FM.getApiHost() + WorkorderUrl.QUERY_SHORTEST_TIME)
                 .tag(getV())
                 .isSpliceUrl(true)
@@ -1042,15 +1163,17 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         getV().dismissLoading();
                         WorkorderService.ShortestTimeResp resp = response.body().data;
                         if (resp != null) {
-                            if (resp.executable == true) {
-                                taskStatus = true;
+                            if (resp.executable) {
+                                ToastUtils.showShort("请先完成进行中的维护设备。");
+                                return;
                             } else {
-                                taskStatus = false;
+                                getV().WorkOrderCanDo(WorkorderConstant.PLAN_STEP);
+
                             }
                         } else {
-                            taskStatus = false;
+                            getV().WorkOrderCanDo(WorkorderConstant.PLAN_STEP);
                         }
-                        getV().setTaskStatus(taskStatus);
+
 
                     }
 
@@ -1165,6 +1288,91 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 approvalWorkOrder(getV().getContext(), woId, approvalId, false);
                 break;
         }
+
+    }
+
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2022/2/11 11:01
+     * @Description:抽检模板弹窗
+     */
+    public void showSampleTemplateDialog(Context context,List<WorkorderService.SampleTemplate> menuList,Long woId){
+        BottomTextListSheetBuilder builder = new BottomTextListSheetBuilder(context);
+        builder.addArrayItem(WorkOrderUtils.getValueList(menuList));
+        builder.setTitle("请先选择需要抽检的模板");
+        builder.setShowTitle(true);
+        builder.setOnSheetItemClickListener(new BottomTextListSheetBuilder.OnSheetItemClickListener() {
+            @Override
+            public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
+                dialog.dismiss();
+                if (!tag.contains("已抽检")){
+                    Long woCode= WorkOrderUtils.getKey(menuList,tag);
+                    Router router = Router.getInstance();
+                    com.facilityone.wireless.componentservice.maintenance.MaintenanceService workorderService = (com.facilityone.wireless.componentservice.maintenance.MaintenanceService) router.getService(com.facilityone.wireless.componentservice.maintenance.MaintenanceService.class.getSimpleName());
+
+                    if (workorderService != null) {
+                        BaseFragment fragment = workorderService.getElectronicLedger2(woId,tag,woCode);
+                        getV().startForResult(fragment, CODE_FOR_LEDGER);
+
+                    }
+                }
+            }
+        });
+        builder.build().show();
+    }
+
+    /**
+     * @Created by: kuuga
+     * @Date: on 2022/2/11 11:01
+     * @Description:获取抽检模板ID及状态
+     */
+    public void fetchSampleTemplateById(Context context,Long woId){
+        Map<Object, Object> json = new HashMap<>();
+        json.put("woId", woId);
+        OkGo.<BaseResponse<List<WorkorderService.SampleTemplate>>>
+                post(FM.getApiHost() + WorkorderUrl.SAMPLE_TEMPLATE)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(json))
+                .execute(new FMJsonCallback<BaseResponse<List<WorkorderService.SampleTemplate>>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<List<WorkorderService.SampleTemplate>>> response) {
+                        getV().dismissLoading();
+                        List<WorkorderService.SampleTemplate> data = response.body().data;
+                        if (data!=null&&!data.isEmpty()){
+                            if (data.size()>1){
+//                                Map<String,String> menuMap = new HashMap<>();
+//
+//                                for (WorkorderService.SampleTemplate item : data) {
+//                                    if (item.samplePass){
+//                                        menuMap.put(item.sampleId.toString(),item.sampleName+"(已抽检)");
+//                                    }else {
+//                                        menuMap.put(item.sampleId.toString(),item.sampleName);
+//                                    }
+//
+//                                }
+                                showSampleTemplateDialog(context, data,woId);
+                            }else {
+                                Router router = Router.getInstance();
+                                com.facilityone.wireless.componentservice.maintenance.MaintenanceService workorderService = (com.facilityone.wireless.componentservice.maintenance.MaintenanceService) router.getService(com.facilityone.wireless.componentservice.maintenance.MaintenanceService.class.getSimpleName());
+
+                                if (workorderService != null) {
+                                    BaseFragment fragment = workorderService.getElectronicLedger2(woId,data.get(0).sampleName,data.get(0).sampleId);
+                                    getV().startForResult(fragment, CODE_FOR_LEDGER);
+
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<List<WorkorderService.SampleTemplate>>> response) {
+                        ToastUtils.showShort(R.string.workorder_operate_fail);
+                        super.onError(response);
+                    }
+                });
+
 
     }
 

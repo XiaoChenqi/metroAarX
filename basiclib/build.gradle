@@ -172,7 +172,8 @@ dependencies {
     api 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
     api 'com.orhanobut:logger:1.3'//会打印一个框框一样的日志，可以打印线程信息，放类方法
 
-
+    //华为统一扫码服务增强版
+    api 'com.huawei.hms:scanplus:2.1.0.300'
     /**
      * 下面两行是rxjava1.0的引入
      * */
@@ -182,14 +183,19 @@ dependencies {
     //弹窗
     api 'com.github.kongzue.DialogX:DialogX:0.0.43.beta1'
 
-    //华为统一扫码服务增强版
-    api 'com.huawei.hms:scanplus:2.1.0.300'
+
+    //google官方库
+    api 'com.google.guava:guava:30.1.1-android'
+    api 'com.google.code.findbugs:jsr305:3.0.2'
 
     //替代官方Result
     //api 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.0'
     api 'com.github.bbssyyuui:ActivityLauncher:1.0.2'
 
     api 'top.zibin:Luban:1.1.8'
+
+    //轮子哥Toast
+    api 'com.github.getActivity:ToastUtils:10.3'
 }
 
 //uploadArchives {

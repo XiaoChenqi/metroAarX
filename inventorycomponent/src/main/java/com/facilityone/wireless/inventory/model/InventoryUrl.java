@@ -46,4 +46,7 @@ public interface InventoryUrl {
     String MATERIAL_RECORD_BY_CODE_URL = "/m/v1/stock/inventory/record/code";
     //修改预订单人员
     String EDIT_RESERVATION_PERSON = "/m/v1/stock/reservation/person";
+
+
+
 }

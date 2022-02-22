@@ -245,7 +245,6 @@ public class OfflineService {
             @Override
             public void onNext(@NonNull Long aLong) {
                 LogUtils.d("OfflineService onNext");
-
                 PriorityNet.requestPriority(aLong, priorityListener);
                 DepNet.requestDep(aLong, depListener);
                 ServiceTypeNet.requestServiceType(aLong, serviceTypeListener);
@@ -265,7 +264,7 @@ public class OfflineService {
                 EquNet.requestEqu(equReq, equListener, new OnDownloadListener() {
                     @Override
                     public void onDownload(int max, int progress) {
-                        
+
                     }
 
                     @Override

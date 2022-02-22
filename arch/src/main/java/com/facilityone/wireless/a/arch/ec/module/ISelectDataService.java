@@ -9,7 +9,20 @@ package com.facilityone.wireless.a.arch.ec.module;
 public interface ISelectDataService {
     
     String SELECT_OFFLINE_DATA_BACK = "select_offline_data_back";
-    
+
+    /****新派工单****/
+    String SELECT_NEWORDER_POSITION = "SELECT_NEWORDER_POSITION";
+    String NEWORDER_SERVICETYPE = "NEWORDER_SERVICETYPE";
+    String NEWORDER_ORDERTY = "NEWORDER_ORDERTY";
+    String NEWORDER_LOCATION = "NEWORDER_LOCATION";
+    String NEWORDER_DEPSELECT = "NEWORDER_DEPSELECT";
+    String NEWORDER_APPLICANTNAME = "NEWORDER_APPLICANTNAME";
+    String NEWORDER_APPLICANTPHONE = "NEWORDER_APPLICANTPHONE";
+    String NEWORDER_LOCATIONNAME = "NEWORDER_LOCATIONNAME";
+    String NEWORDER_WOID = "NEWORDER_WOID";
+    String NEWORDER_DESC = "NEWORDER_DESC";
+
+    /***********************************************************/
     int DATA_TYPE_LOCATION = 0;
     int DATA_TYPE_DEP = 1;
     int DATA_TYPE_FLOW_PRIORITY = 2;
@@ -28,6 +41,8 @@ public interface ISelectDataService {
     int DATA_TYPE_INVALIDD = 14;//作废原因
     int DATA_TYPE_FAULT_OBJECT = 15;//作废对象
     int DATA_TYPE_SPECIALTY = 16;//专业
+
+    int DATA_TYPE_LOCATION_BOARDING = 17; //登乘 只获取站点
 
 
     int LOCATION_CITY = 0;

@@ -6,7 +6,9 @@ import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.componentservice.maintenance.MaintenanceService;
 import com.facilityone.wireless.maintenance.fragment.MaintenanceContentFragment;
 import com.facilityone.wireless.maintenance.fragment.MaintenanceElectronicLedgerFragment;
+import com.facilityone.wireless.maintenance.fragment.MaintenanceFragment;
 import com.facilityone.wireless.maintenance.fragment.MaintenanceMenuFragment;
+import com.facilityone.wireless.maintenance.presenter.MaintenanceMenuPresenter;
 
 /**
  * Created by peter.peng on 2018/11/15.
@@ -25,7 +27,13 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Override
     public BaseFragment getElectronicLedger(Long woId,String woCode) {
-        return MaintenanceElectronicLedgerFragment.getInstance(1,woId,woCode);
+        return MaintenanceElectronicLedgerFragment.getInstance(1,woId,woCode,-1);
+    }
+
+    @Override
+    public BaseFragment getElectronicLedger2(Long woId, String woCode, Long tempLateId) {
+        return MaintenanceElectronicLedgerFragment.getInstance(1,woId,woCode,tempLateId);
+
     }
 
 

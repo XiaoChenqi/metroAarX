@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -63,6 +64,11 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
     private EditText mEtMaintenanceResult; //输入结果
     private EditText mEquipmentNumber; //设备数量
     private LinearLayout mEqNumber; //设备数量布局
+
+    private EditNumberView mEtStepWarning;
+    private TextView mTvStepWarning;
+
+
     private static final String WORKORDER_ID = "workorder_id";
     private static final String WORKORDER_STEP = "workorder_tool";
     private static final String COUNT_ACCORD = "count_accord";
@@ -185,6 +191,12 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         mEtStep.setTextGravity(Gravity.LEFT|Gravity.CENTER_VERTICAL);
         mEquipmentNumber = findViewById(R.id.et_step_eqNumber);
         mEqNumber = findViewById(R.id.ll_eq_number);
+
+        mEtStepWarning = findViewById(R.id.etStepWarning);
+        mEtStepWarning.canInput(false);
+        mEtStepWarning.setInputDisp(false);
+        mTvStepWarning = findViewById(R.id.tvStepWarning);
+
         if (mStepsBean != null) {
             mEtWorkTeam.setTipText(StringUtils.formatString(mStepsBean.workTeamName));
             mEtStep.setTipText(StringUtils.formatString(mStepsBean.step).replaceAll("-","\n"));
@@ -196,6 +208,16 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         }else {
             mRadioGroup.setVisibility(View.VISIBLE);
             mEtMaintenanceResult.setVisibility(View.GONE);
+        }
+
+        if (!TextUtils.isEmpty(attention)){
+            mEtStepWarning.setDesc(attention);
+            mEtStepWarning.setVisibility(View.VISIBLE);
+            mTvStepWarning.setVisibility(View.VISIBLE);
+        }else {
+            mEtStepWarning.setVisibility(View.GONE);
+            mTvStepWarning.setVisibility(View.GONE);
+            mEtStepWarning.setDesc("无");
         }
 
         if (needCountAccord){

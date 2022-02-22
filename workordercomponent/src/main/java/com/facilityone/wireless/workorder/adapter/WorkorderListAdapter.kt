@@ -23,9 +23,10 @@ class WorkorderListAdapter(private val type: Int) :
     private var mPriority: Map<Long, String>? = null
     override fun convert(helper: BaseViewHolder, item: WorkorderItemBean) {
         if(type!= null){
-            helper.setGone(R.id.ll_quick_show, type != WorkorderConstant.WORKORER_QUERY)
-            helper.setGone(R.id.bottom_line_view, type != WorkorderConstant.WORKORER_QUERY)
-            helper.setGone(R.id.view_placeholder, type != WorkorderConstant.WORKORER_QUERY)
+            val showView: Boolean = type!=WorkorderConstant.WORKORER_QUERY
+            helper.setGone(R.id.ll_quick_show, showView)
+            helper.setGone(R.id.bottom_line_view, showView)
+            helper.setGone(R.id.view_placeholder, showView)
         }
 
         helper.setGone(R.id.ll_desc, !TextUtils.isEmpty(item.woDescription))

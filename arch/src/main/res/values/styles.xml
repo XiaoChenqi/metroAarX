@@ -71,6 +71,24 @@
         <item name="qmui_topbar_subtitle_text_size">@dimen/topbar_subtitle_size</item>
     </style>
 
+    <style name="commonTopbarStyle_black" parent="@style/QMUI.TopBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/qmui_topbar_height</item>
+        <item name="qmui_topbar_bg_color">@color/colorPrimary</item>
+        <item name="qmui_topbar_title_color">@color/topbar_title_color_black</item>
+        <item name="qmui_topbar_title_text_size">@dimen/topbar_title_size</item>
+        <item name="qmui_topbar_need_separator">false</item>
+        <item name="android:paddingRight">@dimen/dp_16</item>
+        <item name="qmui_topbar_left_back_drawable_id">@drawable/fm_icon_pre_arrow</item>
+        <item name="qmui_topbar_title_container_padding_horizontal">@dimen/dp_6</item>
+        <item name="qmui_topbar_text_btn_padding_horizontal">@dimen/dp_4</item>
+        <item name="qmui_topbar_text_btn_text_size">@dimen/sp_14</item>
+        <item name="qmui_topbar_text_btn_color_state_list">@color/fm_topbar_text_color_selector
+        </item>
+        <item name="qmui_topbar_subtitle_color">@color/topbar_title_color</item>
+        <item name="qmui_topbar_subtitle_text_size">@dimen/topbar_subtitle_size</item>
+    </style>
+
     <!--登录topbar（标题居右时）-->
     <style name="commonTopbarStyle.logon" parent="commonTopbarStyle">
         <item name="qmui_topbar_title_gravity">left_center</item>

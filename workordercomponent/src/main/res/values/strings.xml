@@ -502,6 +502,10 @@
     <!--备注:-->
     <string name="workorder_step_remark">备注：</string>
 
+    <!--新派工单:-->
+    <string name="workorder_newcreatr_title">新派工单</string>
+    <string name="workorder_newcreatr_list_title">新派工单列表</string>
+
 
 
 </resources>

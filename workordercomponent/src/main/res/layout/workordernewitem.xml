@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/dp_15"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/dp_5"
+        >
+
+        <TextView
+            android:id="@+id/item_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/tv_neworder_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/workorder_delete"
+            ></TextView>
+
+    </LinearLayout>
+
+    <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+        android:id="@+id/civ_workorder_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_bg"
+        app:fm_content_item_show_line="false"
+        app:fm_content_item_show_red="true"
+        app:fm_content_item_show_tip="true"
+        app:fm_content_item_show_tip_icon="true"
+        app:fm_content_item_title="@string/workorder_type"
+        app:fm_content_item_et_hint="@string/workorder_type_hint" />
+
+    <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+        android:id="@+id/civ_service_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_bg"
+        app:fm_content_item_show_line="false"
+        app:fm_content_item_show_red="true"
+        app:fm_content_item_show_tip="true"
+        app:fm_content_item_show_tip_icon="true"
+        app:fm_content_item_title="@string/workorder_stype"
+        app:fm_content_item_et_hint="@string/workorder_stype_hint" />
+
+    <com.facilityone.wireless.a.arch.widget.CustomContentItemView
+        android:id="@+id/civ_priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_bg"
+        app:fm_content_item_show_line="true"
+        app:fm_content_item_show_red="true"
+        app:fm_content_item_show_tip="true"
+        app:fm_content_item_show_tip_icon="true"
+        app:fm_content_item_title="@string/workorder_priority"
+        app:fm_content_item_et_hint="@string/workorder_priority_hint" />
+
+    <LinearLayout
+        android:id="@+id/ll_add_menu"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:background="@color/white"
+        >
+
+        <ImageView
+            android:id="@+id/iv_add_menu"
+            android:layout_width="@dimen/dp_55"
+            android:layout_height="@dimen/dp_55"
+            android:background="@drawable/add_menu_selector"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

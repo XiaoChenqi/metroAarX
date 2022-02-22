@@ -52,6 +52,7 @@ public class WorkorderDeviceEditorPresenter extends WorkorderBasePresenter<Worko
 
     //判断是否有任务且该任务为当前处理中的任务
     public void isDoneDevice(Long woId,String eqCode){
+        getV().showLoading();
         WorkorderService.ShortestTimeReq request = new WorkorderService.ShortestTimeReq();
         request.woId = woId;
         request.eqCode = eqCode;
@@ -90,6 +91,7 @@ public class WorkorderDeviceEditorPresenter extends WorkorderBasePresenter<Worko
 
                     @Override
                     public void onError(Response<BaseResponse<WorkorderService.ShortestTimeResp>> response) {
+                        getV().dismissLoading();
                         ToastUtils.showShort(R.string.workorder_operate_fail);
                         super.onError(response);
                         ToastUtils.showShort("数据异常");

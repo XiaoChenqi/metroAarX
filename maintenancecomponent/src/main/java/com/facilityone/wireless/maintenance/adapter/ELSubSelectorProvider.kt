@@ -32,7 +32,7 @@ class ELSubSelectorProvider : BaseItemProvider<MaintenanceEnity.ElectronicLedger
         position: Int
     ) {
         val selectorModel = item!!.content as SelectorModel
-        val binding = getBinding<ItemElSubSelectorBinding>(helper.itemView)!!
+        val binding = getBinding<ItemElSubSelectorBinding>(helper.itemView.rootView)!!
         binding.taskTitleTv.text = selectorModel.name
         if (3==selectorModel.state){
             binding.rgSelect.clearCheck()

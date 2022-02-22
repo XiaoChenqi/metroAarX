@@ -80,6 +80,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
     private List<SelectDataBean> allList; //所有数据
     private Long localId; //当前点击后的Id
     private Integer localPostion;//当前选择的位置
+    private String newOrderIndex ; //新派工单点击的位置
     @Override
     public SelectDataPresenter createPresenter() {
         return new SelectDataPresenter();
@@ -115,7 +116,9 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             mWorkorderType = arguments.getLong(DATA_WORKORDER_TYPE_ID);
             mLocation = arguments.getParcelable(DATA_LOCATION);
             mLocationName = arguments.getString(DATA_LOCATION_NAME, "");
-
+            if (!TextUtils.isEmpty(arguments.getString(ISelectDataService.SELECT_NEWORDER_POSITION))){
+                newOrderIndex = arguments.getString(ISelectDataService.SELECT_NEWORDER_POSITION); // 新派工单点击的位置
+            }
 
         }
         mLocationBean = new LocationBean();
@@ -142,13 +145,26 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             getPresenter().queryReason(mReasonType);
         }else if (mFromType == ISelectDataService.DATA_TYPE_SPECIALTY){
             getPresenter().getProfessional();
+        } else if (mFromType == ISelectDataService.DATA_TYPE_LOCATION_BOARDING){
+            getPresenter().queryAllLocation(mShowSite);
+            if (mParentId == -1) {
+                SiteDao siteDao = new SiteDao();
+                List<SelectDataBean> locationSites = siteDao.queryLocationSites(true);
+                if (locationSites != null && locationSites.size() > 0) {
+                    mParentId = locationSites.get(0).getId();
+                    mLocationBean.siteId = mParentId;
+                    mLocationBean.buildingId = null;
+                    mLocationBean.floorId = null;
+                    mLocationBean.roomId = null;
+                }
+            }
         }
     }
 
     private void initView() {
 //        setSwipeBackEnable(false);
         mRecyclerView = findViewById(R.id.recyclerView);
-        mSearchBox = findViewById(R.id.search_box2);
+        mSearchBox = findViewById(R.id.search_box);
         mSearchBox.setOnSearchBox(new SearchBox.OnSearchBox() {
             @Override
             public void onSearchTextChanged(String curCharacter) {
@@ -342,6 +358,10 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
                     initTitle = getString(R.string.arch_visit_pay);
                     getPresenter().getVisitPay();
                     break;
+                case ISelectDataService.DATA_TYPE_LOCATION_BOARDING:
+                    initTitle = "选择站点";
+                    getPresenter().queryLocation( mParentId);
+                    break;
             }
         }
 
@@ -386,7 +406,6 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
 
             if (mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT
                     || mFromType == ISelectDataService.DATA_TYPE_REASON){
-                //TODO 层级需要修改
                 if (mLevel <1) {
                     removeRightView();
                 } else {
@@ -514,7 +533,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             }
         }else {
             for (SelectDataBean data : allList) {
-                if (data.getParentId()!=null && data.getId().equals(localId)){
+                if (data.getParentId()!=null && data.getId()== localId){
                     lastList.add(data);
                 }
             }
@@ -581,6 +600,9 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             back = false;
             SelectDataBean bean = getSelectData(localId,allList);
             mBackBean = bean;
+        }
+        if (newOrderIndex != null){
+            bundle.putString(ISelectDataService.SELECT_NEWORDER_POSITION,newOrderIndex);
         }
         bundle.putParcelable(ISelectDataService.SELECT_OFFLINE_DATA_BACK, mBackBean);
         setFragmentResult(RESULT_OK, bundle);
@@ -704,10 +726,42 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         return instance;
     }
 
+    public static SelectDataFragment getInstance(int type
+            , SelectDataBean depSelectData
+            , SelectDataBean serviceTypeSelectData
+            , Long workorderTypeId
+            , LocationBean locationBean,String index) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(DATA_TYPE, type);
+        if (depSelectData != null) {
+            bundle.putParcelable(DATA_DEP, depSelectData);
+        }
+        if (serviceTypeSelectData != null) {
+            bundle.putParcelable(DATA_SERVICE_TYPE, serviceTypeSelectData);
+        }
+        if (workorderTypeId != null) {
+            bundle.putLong(DATA_WORKORDER_TYPE_ID, workorderTypeId);
+        }
+        bundle.putParcelable(DATA_LOCATION, locationBean);
+        bundle.putString(ISelectDataService.SELECT_NEWORDER_POSITION,index);
+        SelectDataFragment instance = new SelectDataFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+
     public static SelectDataFragment getInstance(int type,int reasonType) {
         Bundle bundle = new Bundle();
         bundle.putInt(DATA_TYPE, type);
         bundle.putInt(REASON_TYPE,reasonType);
+        SelectDataFragment instance = new SelectDataFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+
+    public static SelectDataFragment getInstance(int type,String index) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(DATA_TYPE, type);
+        bundle.putString(ISelectDataService.SELECT_NEWORDER_POSITION,index);
         SelectDataFragment instance = new SelectDataFragment();
         instance.setArguments(bundle);
         return instance;

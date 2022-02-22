@@ -95,6 +95,7 @@ public class WorkorderService {
         public Long serviceTypeId; //服务类型Id
         public Long flowId; //流程Id
         public Integer tag; // 工单标签
+        public String workDoneReminder; //完成工作提醒
 
         /* 旧版字段 */
         public String laborer; // 执行人
@@ -898,6 +899,36 @@ public class WorkorderService {
         public String eqCode; //设备Code
         public Integer countdown; //设置租店完成时间
         public Integer status; //当前设备任务状态
+    }
+
+    public static class newOrderEnity{
+        public Long type; //工单类型
+        public String typeName;
+        public Long serviceTypeId; //服务类型
+        public String serviceName;
+        public Long priorityId; //优先级
+        public String priorityName;
+        public Long flowId; //流程Id
+    }
+
+    public static class newOrderItemEnity{
+        public Long orderType; //工单类型
+        public Long serviceTypeId; //服务类型
+        public Long priorityId; //优先级
+        public Long flowId; //流程Id
+    }
+
+    public static class newOrderReq{
+        public Long woId; //工单Id
+        public List<newOrderItemEnity> workOrderResult; //数组
+        public Integer orderType;//工单类型
+    }
+
+
+    public static class SampleTemplate{
+        public Long sampleId;
+        public String sampleName;
+        public Boolean samplePass;
     }
 
 

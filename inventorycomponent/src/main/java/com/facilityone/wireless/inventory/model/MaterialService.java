@@ -395,6 +395,7 @@ public class MaterialService {
         public Long warehouseId;//仓库id
         public Long administrator;//仓库管理员id
         public Long supervisor;//主管id
+        public List<Long> sysPareParts;//专业id数组
         public List<MaterialReserve> materials;//物料数组
     }
 

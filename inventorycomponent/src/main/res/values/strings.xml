@@ -493,4 +493,9 @@
     <!--操作内容-->
     <string name="inventory_record_history_content">操作内容：</string>
 
+    <string name="inventory_pro">专业：</string>
+    <string name="inventory_pro_remark">更换原因：</string>
+    <string name="inventory_pro_empty">请选择专业</string>
+    <string name="inventory_desc_empty">请输入更换原因..</string>
+
 </resources>

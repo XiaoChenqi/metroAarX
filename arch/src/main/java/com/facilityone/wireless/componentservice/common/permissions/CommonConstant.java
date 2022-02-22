@@ -33,6 +33,7 @@ public interface CommonConstant {
     int MESSAGE_KNOWLEDGE = 15;     //知识库
     int MESSAGE_SCAN = 16; //扫一扫
     int MESSAGE_QUICK_REPORT = 17; //快速报障
+    int MESSAGE_BOARDING_PATROL = 18; //登乘巡查
 
     int MESSAGE_UNREAD = 0;         //未读
     int MESSAGE_READED = 1;         //已读

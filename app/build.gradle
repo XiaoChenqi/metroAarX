@@ -122,6 +122,6 @@ dependencies {
     api project(':demandcomponent')
     api project(':inventorycomponent')
     api project(':scanzxing')
-
+    api project(':boardingpatrolcomponent')
 
 }

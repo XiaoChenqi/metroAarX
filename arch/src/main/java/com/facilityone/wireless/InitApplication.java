@@ -43,6 +43,7 @@ public class InitApplication extends BaseApplication {
         Router.registerComponent("com.facilityone.wireless.knowledge.applike.KnowledgeApplike");
         Router.registerComponent("com.facilityone.wireless.monitor.applike.MonitorApplike");
         Router.registerComponent("com.facilityone.wireless.inspection.applike.InspectionApplike");
+        Router.registerComponent("com.facilityone.wireless.boardingpatrol.applike.BoardingPatrolApplike");
         //MobSDK.init(this);
         Facility.init(this, BuildConfig.SERVER_URL, BuildConfig.DEBUG);
         DBManager.getInstance();

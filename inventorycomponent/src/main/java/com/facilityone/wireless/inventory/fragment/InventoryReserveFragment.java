@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
@@ -19,11 +20,13 @@ import com.facilityone.wireless.a.arch.widget.EditNumberView;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.basiclib.utils.StringUtils;
+import com.facilityone.wireless.componentservice.inventory.InventoryService;
 import com.facilityone.wireless.inventory.R;
 import com.facilityone.wireless.inventory.adapter.MaterialAdapter;
 import com.facilityone.wireless.inventory.model.InventoryConstant;
 import com.facilityone.wireless.inventory.model.InventorySelectDataBean;
 import com.facilityone.wireless.inventory.model.MaterialService;
+import com.facilityone.wireless.inventory.model.ProfessionalService;
 import com.facilityone.wireless.inventory.model.StorageService;
 import com.facilityone.wireless.inventory.model.SupervisorService;
 import com.facilityone.wireless.inventory.presenter.InventoryReservePresenter;
@@ -45,6 +48,7 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
     private static final int RESERVE_SELECT_STORAGE_REQUEST_CODE = 9003;
     private static final int RESERVE_SELECT_SUPERVISOR_REQUEST_CODE = 9004;
     private static final int RESERVE_SELECT_ADMINISTRATOR_REQUEST_CODE = 9005;
+    private static final int RESERVE_SELECT_SPECIAL_REQUEST_CODE = 9006;
     private static final String WOID = "woid";
     private static final String WOCODE = "wocode";
     private static final String FROM_TYPE = "from_type";
@@ -54,6 +58,9 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
     private CustomContentItemView mSelectAdministratorTv;//选择仓库管理员
     private CustomContentItemView mSelectSupervisorTv;//选择审批主管
     private CustomContentItemView mReservePersonTv;//预订人
+    private CustomContentItemView mReserveSpecialtyTv;//专业
+    private TextView mReserveDesc;//备注及更换原因标题
+
     private EditNumberView mDescEnv;//备注
     private LinearLayout mMaterialLl;//物料
     private RecyclerView mMaterialRv;//物料
@@ -70,10 +77,12 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
 
     private List<StorageService.Administrator> mAdministratorList;//仓库管理员列表
     private List<SupervisorService.Supervisor> mSupervisorList;//主管列表
-    private long mWoId;//关联工单id
+    private Long mWoId;//关联工单id
     private String mWoCode;//关联工单编码
     private int mFromtype;//请求类型
-
+    //是否为备件库
+    private boolean mSpecialtyState=false;
+    private List<Long> mSpecialtyIds;
 
     @Override
     public InventoryReservePresenter createPresenter() {
@@ -103,10 +112,14 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
 
         Bundle bundle = getArguments();
         if(bundle != null) {
+            LogUtils.d("bundle不为空");
             mWoId = bundle.getLong(WOID,-1);
             mWoCode = bundle.getString(WOCODE,"");
             mFromtype = bundle.getInt(FROM_TYPE,-1);
+        }else {
+            LogUtils.d("bundle为空");
         }
+
     }
 
     private void initView() {
@@ -133,12 +146,15 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
         mSelectStorageTv = findViewById(R.id.inventory_reserve_select_storage_tv);
         mSelectAdministratorTv = findViewById(R.id.inventory_reserve_select_administrator_tv);
         mSelectSupervisorTv = findViewById(R.id.inventory_reserve_select_supervisor_tv);
+
+        mReserveSpecialtyTv = findViewById(R.id.inventory_reserve_specialty_tv);
         mReservePersonTv = findViewById(R.id.inventory_reserve_person_tv);
         mDescEnv = findViewById(R.id.inventory_reserve_desc_env);
         mMaterialLl = findViewById(R.id.inventory_reserve_material_ll);
         mMaterialRv = findViewById(R.id.inventory_reserve_material_rv);
         mTotalMoneyTv = findViewById(R.id.inventory_reserve_total_money_tv);
         mReserveBtn = findViewById(R.id.inventory_reserve_material_btn);
+        mReserveDesc = findViewById(R.id.inventory_reserve_desc_tv);
 
         mMaterialRv.setNestedScrollingEnabled(false);
         mMaterialRv.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -151,6 +167,7 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
         mSelectStorageTv.setOnClickListener(this);
         mSelectAdministratorTv.setOnClickListener(this);
         mSelectSupervisorTv.setOnClickListener(this);
+        mReserveSpecialtyTv.setOnClickListener(this);
         mReserveBtn.setOnClickListener(this);
 
         Long emId = FM.getEmId();
@@ -174,7 +191,10 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
             selectSupervisor();
         }else if(v.getId() == R.id.inventory_reserve_material_btn) {//物资预定按钮
             //物资预定
+
             InventoryMaterialReserve();
+        }else if (v.getId()==R.id.inventory_reserve_specialty_tv){//选择专业
+            selectSpecialty();
         }
     }
 
@@ -190,6 +210,7 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
             request.administrator = mAdministratorId;
             request.supervisor = mSupervisorId;
             request.remarks = mDescEnv.getDesc().trim();
+            request.sysPareParts = mSpecialtyIds;
             if (mWoId != -1L) {
                 request.woId = mWoId;
             }
@@ -223,6 +244,22 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
             ToastUtils.showShort(R.string.inventory_material_describe_material_tip);
             return false;
         }
+
+
+
+        if (mSpecialtyState){
+            if (mSpecialtyIds==null){
+
+                ToastUtils.showShort(R.string.inventory_pro_empty);
+                return false;
+            }
+            String remarkStr= mDescEnv.getDesc().trim();
+            if (TextUtils.isEmpty(remarkStr)){
+                ToastUtils.showShort(R.string.inventory_desc_empty);
+                return false;
+            }
+        }
+
 
 
         List<MaterialService.MaterialReserve> materialReserveList = new ArrayList<>();
@@ -271,6 +308,17 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
     }
 
     /**
+     * 选择专业
+     */
+    private void selectSpecialty() {
+        Long emId = FM.getEmId();
+        if(emId != null) {
+            startForResult(InventoryProfessionalListFragment.getInstance(mSpecialtyIds, null,true),RESERVE_SELECT_SPECIAL_REQUEST_CODE);
+        }
+    }
+
+
+    /**
      * 刷新审批主管
      */
     public void refreshSupervisor() {
@@ -290,6 +338,9 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
 
         InventorySelectDataBean selectDataBean = data.getParcelable(InventorySelectDataFragment.SELECT_DATA);
         MaterialService.MaterialInfo materialInfo = data.getParcelable(MaterialAddFragment.MATERIAL_INFO);
+
+        List<ProfessionalService.InventoryProBean> mProList = data.getParcelableArrayList(InventoryProfessionalListFragment.PRO_LIST);
+
         switch (requestCode) {
             case INVENTORY_RESERVE_MATERIAL_ADD_REQUEST_CODE://添加物料
                 if (materialInfo != null && !checkMaterial(materialInfo)) {
@@ -321,6 +372,17 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
                         mAdministratorList.clear();
                         mAdministratorList.addAll(storage.administrator);
                     }
+
+                    //判断是否从维修工单物料进入
+                    if (mWoId!=null&&!mWoId.equals(-1L)&&mFromtype==InventoryService.TYPE_FROM_WORKORDER){
+                        //显示专业
+                        showSpecialty(selectDataBean.spareParts);
+                        mSpecialtyState=selectDataBean.spareParts;
+                    }else {
+                        mSpecialtyState=false;
+                        mSpecialtyIds=null;
+                    }
+
                     //显示仓库管理员
                     showAdministrator();
                 }
@@ -331,6 +393,25 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
                     mSupervisorId = selectDataBean.id;
                 }
                 break;
+            case RESERVE_SELECT_SPECIAL_REQUEST_CODE://选择专业
+                if (mProList!=null){
+                    StringBuilder sb =new StringBuilder();
+
+                    mSpecialtyIds =new ArrayList<>();
+                    for (int i = 0; i < mProList.size(); i++) {
+                        mSpecialtyIds.add(mProList.get(i).id);
+                        sb.append(mProList.get(i).configName);
+                        if (i!=mProList.size()-1){
+                            sb.append(",");
+                        }
+                    }
+
+
+                    LogUtils.d("专业",mProList.size());
+
+                    mReserveSpecialtyTv.setTipText(sb.toString());
+                }
+            break;
             case RESERVE_SELECT_ADMINISTRATOR_REQUEST_CODE://选择仓库管理员
                 if (selectDataBean != null) {
                     mSelectAdministratorTv.setTipText(StringUtils.formatString(selectDataBean.name));
@@ -375,11 +456,28 @@ public class InventoryReserveFragment extends BaseFragment<InventoryReservePrese
             mAdministratorId = mAdministratorList.get(0).administratorId;
             mSelectAdministratorTv.setClickable(mAdministratorList.size() > 1);
             mSelectAdministratorTv.showIcon(mAdministratorList.size() > 1);
+
         } else {
             mSelectAdministratorTv.setTipText("");
             mAdministratorId = -1;
             mSelectAdministratorTv.setClickable(false);
             mSelectAdministratorTv.showIcon(false);
+        }
+    }
+
+
+    /**
+     * 显示专业
+     */
+    public void showSpecialty(boolean showSpecialtyView){
+        if (showSpecialtyView){
+            mReserveSpecialtyTv.setVisibility(View.VISIBLE);
+            mReserveDesc.setText("更换原因");
+            mDescEnv.setHint("请输入更换原因");
+        }else {
+            mReserveSpecialtyTv.setVisibility(View.GONE);
+            mReserveDesc.setText(R.string.inventory_material_desc);
+            mDescEnv.setHint(getString(R.string.inventory_input_desc));
         }
     }
 

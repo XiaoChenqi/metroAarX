@@ -39,6 +39,7 @@ public class StorageService {
         public Long warehouseId;//仓库id
         public String name;//仓库名称
         public ArrayList<Administrator> administrator;//管理员数组
+        public boolean spareParts;
     }
 
     /**

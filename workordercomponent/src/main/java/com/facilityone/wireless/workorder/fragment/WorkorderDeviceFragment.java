@@ -226,6 +226,7 @@ public class WorkorderDeviceFragment extends BaseScanFragment<WorkorderDevicePre
              */
             if (mNeedScan && isMaintenanceOrder) {
                 //判断是否存在倒计时
+                showLoading();
                 getPresenter().isDoneDevice(mWoId, workOrderEquipmentsBean.equipmentCode, workOrderEquipmentsBean);
             } else {
                 result(workOrderEquipmentsBean);
@@ -235,7 +236,7 @@ public class WorkorderDeviceFragment extends BaseScanFragment<WorkorderDevicePre
 
     public void setCando(Boolean cando, WorkorderService.WorkOrderEquipmentsBean workOrderEquipmentsBean) {
         taskStatus = cando;
-        if (workOrderEquipmentsBean.finished == 0 && taskStatus) {
+        if (taskStatus) {
             ToastUtils.showShort("您还有进行中的维护设备，请先完成。");
             return;
         }

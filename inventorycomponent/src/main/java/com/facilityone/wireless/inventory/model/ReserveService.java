@@ -89,6 +89,7 @@ public class ReserveService {
         public String operateDesc;//操作说明（比如审批拒绝说明等）
         public List<MaterialService.ReserveMaterial> materials;
         public List<RecordHistory> histories;//操作记录
+        public String sysProfessional;//专业
     }
 
     /**

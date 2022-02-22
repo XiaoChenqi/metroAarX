@@ -9,6 +9,7 @@ import com.facilityone.wireless.a.arch.ec.module.FunctionService;
 import com.facilityone.wireless.a.arch.ec.module.IService;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.componentservice.asset.AssetService;
+import com.facilityone.wireless.componentservice.boardingpatrol.BoardingPatrolService;
 import com.facilityone.wireless.componentservice.bulletin.BulletinService;
 import com.facilityone.wireless.componentservice.chart.ChartService;
 import com.facilityone.wireless.componentservice.contract.ContractService;
@@ -46,11 +47,11 @@ public class PermissionsManager {
     public static final String UNARRANGEORDERNUMBER = "unArrangeOrderNumber";                //待派工工单数量
     public static final String UNAPPROVALORDERNUMBER = "unApprovalOrderNumber";              //待审核工单数量
     public static final String UNARCHIVEDORDERNUMBER = "unArchivedOrderNumber";              //待存档工单数量
-    /**
-     * @Auther: karelie
-     * @Date: 2021/8/10
-     * @Infor: 新加
-     */
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/10
+      * @Infor: 新加
+      */
     public static final String ABNORMALORDERNUMBER = "abnormalOrderNumber";              //异常工单数量
     public static final String PATROLTASKNUMBER = "patrolTaskNumber";                        //巡检任务数量
 
@@ -67,16 +68,17 @@ public class PermissionsManager {
     public static final String UNDOINSPECTIONNUMBER = "undoInspectionNumber";                 //查验任务数量
     public static final String UNARCHIVEDINSPECTIONNUMBER = "unArchivedInspectionNumber";      //待验证查验任务数量
 
-    /**
-     * @Auther: karelie
-     * @Date: 2021/8/24
-     * @Infor: 维护工单模块
-     */
-    public static final String UNDOPPMORDERNUMBER = "undoPPMOrderNumber"; //待处理维护工单数量
-    public static final String UNARRANGEPPMORDERNUMBER = "unArrangePPMOrderNumber"; //待派工维护工单数量
-    public static final String UNAPPROVALPMORDERNUMBER = "unApprovalPPMOrderNumber"; //待审核维护工单数量
-    public static final String ABNORMALPPMORDERNUMBER = "abnormalPPMOrderNumber"; //异常维护工单数量
-    public static final String UNARCHIVEDPPMORDERNUMBER = "unArchivedPPMOrderNumber"; //待存档维护工单数量
+     /**
+      * @Auther: karelie
+      * @Date: 2021/8/24
+      * @Infor: 维护工单模块
+      */
+     public static final String UNDOPPMORDERNUMBER = "undoPPMOrderNumber"; //待处理维护工单数量
+     public static final String UNARRANGEPPMORDERNUMBER = "unArrangePPMOrderNumber"; //待派工维护工单数量
+     public static final String UNAPPROVALPMORDERNUMBER = "unApprovalPPMOrderNumber"; //待审核维护工单数量
+     public static final String ABNORMALPPMORDERNUMBER = "abnormalPPMOrderNumber"; //异常维护工单数量
+     public static final String UNARCHIVEDPPMORDERNUMBER = "unArchivedPPMOrderNumber"; //待存档维护工单数量
+
 
     public static class HomeFunction {
 
@@ -131,7 +133,8 @@ public class PermissionsManager {
 //                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
 //                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
 //                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-one\",\"m-ppm-two\"," +
-//                    "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\",]";
+//                    "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\",\"m-boardingpatrol\",\"m-boardingpatrol-check\",\"m-boardingpatrol-query\"]";
+
 
             // 扫一扫
             scanFunction(opensJson);
@@ -170,6 +173,7 @@ public class PermissionsManager {
 
             monitoringFunction(opensJson);
 
+            boardingPatrolFunction(opensJson);
 
 
 
@@ -187,6 +191,35 @@ public class PermissionsManager {
             }
 
             return mFbs;
+        }
+
+        //登乘巡查
+        private void boardingPatrolFunction(String opensJson){
+
+            int icons[] = {
+                    R.drawable.boarding_fucntion_check,
+                    R.drawable.boarding_function_query,
+            };
+            String[] per = getStringArray(R.array.home_boardingpatrol_menu_child_permissions);
+            String[] titles = getStringArray(R.array.home_boardingpatrol_menu_child_title);
+            List<ChildMenu> childMenus = new ArrayList<>();
+            for (int i = 0; i < icons.length; i++) {
+                ChildMenu childMenu = new ChildMenu(per[i], CommonConstant.MESSAGE_BOARDING_PATROL,
+                        icons[i], titles[i], null, i);
+                childMenus.add(childMenu);
+            }
+
+            BoardingPatrolService impl = (BoardingPatrolService) mRouter.getService(BoardingPatrolService.class.getSimpleName());
+
+            homeMenu(opensJson,
+                    getString(R.string.home_boardingpatrol_permissions),
+                    impl,
+                    CommonConstant.MESSAGE_BOARDING_PATROL,
+                    R.drawable.boarding_function,
+                    "登乘巡查",
+                    null,
+                    childMenus);
+
         }
 
 
@@ -784,7 +817,7 @@ public class PermissionsManager {
     }
 
     public static boolean hasPermission(Context context, Integer type) {
-        PermissionsManager.HomeFunction instance = PermissionsManager.HomeFunction.getInstance();
+        HomeFunction instance = HomeFunction.getInstance();
         boolean has = false;
         if (type == null) {
             return false;
@@ -826,6 +859,9 @@ public class PermissionsManager {
                 break;
             case CommonConstant.MESSAGE_QUICK_REPORT:
                 has = instance.getFunctionPermission(context.getResources().getString(R.string.home_quickreport_permissions));
+                break;
+            case CommonConstant.MESSAGE_BOARDING_PATROL: //登乘巡查
+                has = instance.getFunctionPermission(context.getResources().getString(R.string.home_boardingpatrol_permissions));
                 break;
 
         }

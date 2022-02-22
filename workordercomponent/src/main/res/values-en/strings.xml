@@ -497,4 +497,8 @@
     <string name="workorder_step_abnormal">Result AbNormal</string>
     <!--备注:-->
     <string name="workorder_step_remark">Remark：</string>
+
+    <!--新派工单:-->
+    <string name="workorder_newcreatr_title">新派工单</string>
+    <string name="workorder_newcreatr_list_title">新派工单列表</string>
 </resources>

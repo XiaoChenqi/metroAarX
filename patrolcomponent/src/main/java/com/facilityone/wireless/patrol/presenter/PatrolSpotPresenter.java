@@ -63,7 +63,8 @@ import com.facilityone.wireless.patrol.module.PatrolUrl;
 import com.fm.tool.network.callback.JsonCallback;
 import com.fm.tool.network.model.BaseResponse;
 import com.fm.tool.scan.ScanActivity;
-
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.huawei.hms.ml.scan.HmsScan;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
@@ -947,7 +948,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
      * @Data: 2021/12/22
      * @TIME: 15:39
      * @Introduce: 判断巡检任务点位可继续性(离线形式)
-     **/
+    **/
     public void judgeTask(PatrolSpotEntity entity,boolean needScan){
         /**
          * 离线操作
@@ -973,7 +974,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
      * @Data: 2021/12/21
      * @TIME: 9:30
      * @Introduce: 根据当前任务数据装填以及任务实体数据已经 needScan判断下一步操作
-     **/
+    **/
     public void doWork(PatrolQueryService.PatrolJudgeBean data, PatrolSpotEntity entity, boolean needScan) {
         if (data != null) {
             /**
@@ -1022,7 +1023,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                         canNotDo(data, entity);
                     }
                 }
-
+                
             }
         }
     }
@@ -1032,7 +1033,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
      * @Data: 2021/12/22
      * @TIME: 15:09
      * @Introduce: 当前任务不可开启
-     **/
+    **/
     private void canNotDo(PatrolQueryService.PatrolJudgeBean data, PatrolSpotEntity entity) {
         if (data.time > 0){
             getV().showOrderTimeDialog(data.time);
@@ -1129,7 +1130,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
         }
     }
 
-
+    
     /**
      * @Created by: kuuga
      * @Date: on 2021/8/30 10:25
@@ -1197,9 +1198,9 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         getV().dismissLoading();
                         PatrolQueryService.AttendanceResp data = response.body().data;
-                        box.removeAll();
                         if (data != null) {
                             UserInfor user = new UserInfor();
+                            box.removeAll();
                             user.setId(0L);
                             user.setUserKey(PatrolConstant.USERLOGIN_ID);
                             if (data.location != null) {
@@ -1225,7 +1226,6 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                     public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         super.onError(response);
                         getV().dismissLoading();
-                        box.removeAll();
                     }
                 });
 
@@ -1244,15 +1244,14 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
         PatrolQueryService.AttendanceResp data = new PatrolQueryService.AttendanceResp();
         Query<UserInfor> query = box.query().equal(UserInfor_.userKey, PatrolConstant.USERLOGIN_ID).build();
         List<UserInfor> user = query.find();
-        if (user.size()>0){
-            LocationBean locationData = new LocationBean();
+        LocationBean locationData = new LocationBean();
+        if (user.size() > 0){
             locationData = user.get(0).getLocationBean();
             data.location = locationData;
             data.buildingIds = user.get(0).getBuidlings();
             getV().hasAttentanceData(true);
             getV().saveAttentanceLocation(data);
-        }
-        else {
+        }else {
             getV().hasAttentanceData(false);
         }
 

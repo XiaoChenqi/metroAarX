@@ -21,6 +21,7 @@ public class InventorySelectDataBean implements Parcelable {
     public transient int subStart;//搜索匹配的开始位置(subStr 中的位置顺序)
     public transient int subEnd;//搜索匹配的结束位置(subStr 中的位置顺序)
     public transient Object target;
+    public transient boolean spareParts;//是否为备件库
 
     public InventorySelectDataBean() {
     }
@@ -45,6 +46,9 @@ public class InventorySelectDataBean implements Parcelable {
         dest.writeInt(this.subStart);
         dest.writeInt(this.subEnd);
         dest.writeValue(this.target);
+        dest.writeByte((byte) (this.spareParts?1:0));
+
+
     }
 
     protected InventorySelectDataBean(Parcel in) {
@@ -60,6 +64,7 @@ public class InventorySelectDataBean implements Parcelable {
         this.subStart = in.readInt();
         this.subEnd = in.readInt();
         this.target = in.readValue(Object.class.getClassLoader());
+        this.spareParts= in.readByte()!=0;
     }
 
     public static final Creator<InventorySelectDataBean> CREATOR = new Creator<InventorySelectDataBean>() {

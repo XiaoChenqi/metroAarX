@@ -11,7 +11,7 @@
         style="@style/commonTopbarStyle"/>
 
     <com.facilityone.wireless.a.arch.widget.SearchBox
-        android:id="@+id/search_box2"
+        android:id="@+id/search_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/arch_enter_filter_conditions_hint"

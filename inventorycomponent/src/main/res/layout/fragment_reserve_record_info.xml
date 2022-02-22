@@ -158,11 +158,14 @@
 
                     </LinearLayout>
 
+
+
                     <LinearLayout
                         android:id="@+id/reserve_record_info_basic_desc_ll"
                         style="@style/inventoryInfoStyle">
 
                         <TextView
+                            android:id="@+id/reserve_record_info_desc_tip_tv"
                             style="@style/content_text_style"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -175,6 +178,27 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ellipsize="end"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/reserve_record_info_professional_ll"
+                        style="@style/inventoryInfoStyle">
+
+                        <TextView
+                            style="@style/content_text_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/inventory_pro"/>
+
+                        <TextView
+                            android:id="@+id/reserve_record_info_professional_tv"
+                            style="@style/h5_text_style"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            />
 
 
                     </LinearLayout>

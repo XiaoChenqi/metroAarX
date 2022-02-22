@@ -124,7 +124,6 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         initRecyclerView()
         presenter!!.getUserInfo()
         initData()
-        setSwipeBackEnable(false)
 
     }
 
@@ -355,7 +354,6 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
     }
 
     private fun initData() {
-
         if (mEquipmentId != -1L && mEquipmentId != 0L) {
             presenter!!.getEquipmentFromDB(mEquipmentId)
         }
@@ -584,7 +582,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
                             mLocalMedia!!.remove(localMedia)
                         }
                         tempAdapter.remove(position)
-                        //                            if (item != null && !TextUtils.isEmpty(item.getSrc())) {
+                        //                            if (item != null && !TextUt ils.isEmpty(item.getSrc())) {
 //                                //Src不为空，说明图片是从其他地方传过来的
 //                                tempAdapter.remove(position);
 //                            } else {
@@ -859,10 +857,6 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
                     }
                 }
             }
-
-
-
-
             if (patrolDetailId != null){
                 bundle.putLong(PATROL_DETAIL_ID,patrolDetailId)
             }

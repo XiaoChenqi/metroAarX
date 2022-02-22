@@ -147,4 +147,11 @@ public class EditNumberView extends LinearLayout implements TextWatcher {
             mDescEt.setHint("");
         }
     }
+
+
+    public void setHint(String text){
+        mDescEt.setHint(text);
+    }
+
+
 }

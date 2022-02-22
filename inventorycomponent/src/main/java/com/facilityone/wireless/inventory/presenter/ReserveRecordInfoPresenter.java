@@ -165,6 +165,8 @@ public class ReserveRecordInfoPresenter extends InventoryCommonPresenter<Reserve
                     public void onSuccess(Response<BaseResponse<ReserveService.ReserveRecordInfoBean>> response) {
                         getV().dismissLoading();
                         ReserveService.ReserveRecordInfoBean data = response.body().data;
+
+
                         if (data != null) {
                             getV().getReserveRecordInfoSuccess(data);
                         } else {

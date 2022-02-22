@@ -40,7 +40,7 @@ public class FMWarnDialogBuilder extends QMUIDialogBuilder<FMWarnDialogBuilder> 
     private OnBtnClickListener mOnBtnSureClickListener;
 
     private String title, tip, icon, btnCancel, btnSure;
-    private boolean showIcon, showSureBlueBg ,ancelVisiable;
+    private boolean showIcon, showSureBlueBg ,ancelVisiable,showTitle;
 
     public FMWarnDialogBuilder(Context context) {
         super(context);
@@ -48,6 +48,7 @@ public class FMWarnDialogBuilder extends QMUIDialogBuilder<FMWarnDialogBuilder> 
         showIcon = true;
         ancelVisiable = true;
         showSureBlueBg = false;
+        showTitle = true;
     }
 
     @Override
@@ -64,7 +65,8 @@ public class FMWarnDialogBuilder extends QMUIDialogBuilder<FMWarnDialogBuilder> 
         mBtnSure.setTextColor(mSureTextColor == 0 ? mContext.getResources().getColor(R.color.colorPrimary) : mContext.getResources().getColor(mSureTextColor));
 
         mTvTitle.setText(StringUtils.formatString(title, mContext.getString(R.string.arch_warning)));
-        mItvIcon.setVisibility(View.GONE);
+        mTvTitle.setVisibility(showTitle?View.VISIBLE:View.GONE);
+        mItvIcon.setVisibility(showIcon?View.VISIBLE:View.GONE);
         mItvIcon.setText(StringUtils.formatString(icon, mContext.getResources().getString(R.string.icon_warn)));
         if (TextUtils.isEmpty(tip)) {
             mTvTip.setVisibility(View.GONE);
@@ -110,6 +112,8 @@ public class FMWarnDialogBuilder extends QMUIDialogBuilder<FMWarnDialogBuilder> 
     public FMWarnDialogBuilder setTitle(@StringRes int title) {
         return setTitle(mContext.getResources().getString(title));
     }
+
+
 
     public FMWarnDialogBuilder setIcon(String icon) {
         this.icon = icon;
@@ -216,6 +220,13 @@ public class FMWarnDialogBuilder extends QMUIDialogBuilder<FMWarnDialogBuilder> 
         this.ancelVisiable = visiable;
         return this;
     }
+
+    public FMWarnDialogBuilder showTitle(boolean visiable) {
+        this.showTitle = visiable;
+        return this;
+    }
+
+
 
 
     public void setCancelTextColor(int mCancelTextColor) {

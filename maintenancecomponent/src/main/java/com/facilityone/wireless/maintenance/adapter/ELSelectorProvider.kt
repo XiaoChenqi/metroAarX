@@ -36,7 +36,7 @@ class ELSelectorProvider : BaseItemProvider<MaintenanceEnity.ElectronicLedgerEnt
     ) {
 
         val selectorModel=item!!.content as SelectorModel
-        val binding=getBinding<ItemElSelectorBinding>(helper.itemView)!!
+        val binding=getBinding<ItemElSelectorBinding>(helper.itemView.rootView)!!
 
         try {
 

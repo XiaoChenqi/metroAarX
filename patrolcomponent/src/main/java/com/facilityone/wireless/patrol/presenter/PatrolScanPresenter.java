@@ -32,6 +32,7 @@ import com.fm.tool.network.model.BaseResponse;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -421,10 +422,10 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
                     @Override
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         getV().dismissLoading();
-                        box.removeAll();
                         PatrolQueryService.AttendanceResp data = response.body().data;
                         if(data != null) {
                             UserInfor user = new UserInfor();
+                            box.removeAll();
                             user.setId(0L);
                             user.setUserKey(PatrolConstant.USERLOGIN_ID);
                             if (data.location != null) {
@@ -444,7 +445,6 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
                     public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         super.onError(response);
                         getV().dismissLoading();
-                        box.removeAll();
                     }
                 });
     }
@@ -569,12 +569,14 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
         Query<UserInfor> query = box.query().equal(UserInfor_.userKey, PatrolConstant.USERLOGIN_ID).build();
         List<UserInfor> user = query.find();
         LocationBean locationData = new LocationBean();
-        if (user.size()>0){
+        if (user.size() > 0){
             locationData = user.get(0).getLocationBean();
             data.location = locationData;
             data.buildingIds = user.get(0).getBuidlings();
             getV().hasAttentanceData(true);
             getV().saveAttentanceLocation(data);
+        }else {
+            getV().hasAttentanceData(false);
         }
 
 

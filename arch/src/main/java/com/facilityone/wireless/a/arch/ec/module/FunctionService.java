@@ -28,6 +28,7 @@ public class FunctionService {
     public static final int UNDO_TYPE_BULLETIN = 5;       //公告
     public static final int UNDO_TYPE_PAY = 6;            //获取缴费管理类型(待缴费单，已缴费单，退款管理单)
     public static final int UNDO_TYPE_INSPECTION = 7;     //承接查验类型(待处理，待验证)
+    public static final int UNDO_TYPE_RIDEPATROL = 8;     //登乘巡查
     /**
      * @Auther: karelie
      * @Date: 2021/8/24

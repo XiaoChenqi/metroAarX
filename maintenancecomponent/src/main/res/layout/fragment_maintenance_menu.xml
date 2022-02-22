@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_222"
                 android:background="@drawable/maintenance_center_banner"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY" />
 
             <com.qmuiteam.qmui.widget.QMUITopBarLayout
                 android:id="@+id/ui_topbar"

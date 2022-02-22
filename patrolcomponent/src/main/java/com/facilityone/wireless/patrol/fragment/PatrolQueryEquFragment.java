@@ -44,8 +44,7 @@ import java.util.List;
  * description:巡检查询设备页面
  * Date: 2018/11/22 11:20 AM
  */
-public class
-PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter> implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
+public class PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter> implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
 
     private LinearLayout mLLDeviceInfo;
     private LinearLayout mLLOrder;
@@ -252,13 +251,10 @@ PatrolQueryEquFragment extends BaseFragment<PatrolQueryEquPresenter> implements 
                     if (tag.equals(getString(R.string.patrol_task_query_handle_mark))) {
                         getPresenter().optTagDel(patrolQueryItemBean.patrolTaskSpotResultId);
                     } else if (tag.equals("快速报障")) {
-
                         DemandService demandService = (DemandService) Router.getInstance().getService(DemandService.class.getSimpleName());
                         if (demandService != null) {
                             startForResult(demandService.goToQuickReport(mEquId,mLocationName,mLocationBean,comment,localMedias,true,patrolQueryItemBean.patrolTaskSpotResultId,deviceName,mEquId,code),REQUEST_CREATE_ORDER);
-//                            startForResult(//                            startForResult(demandService.goToQuickReport(WorkorderService.CREATE_ORDER_BY_PATROL_QUERY_REPAIR, mEquId, mLocationName, mLocationBean, localMedias, patrolQueryItemBean.patrolTaskSpotResultId, comment, null, null, null, true), REQUEST_CREATE_ORDER);
-                        }else {
-//                            ToastUtils.showShort("快速报障");
+//                            startForResult(demandService.goToQuickReport(WorkorderService.CREATE_ORDER_BY_PATROL_QUERY_REPAIR, mEquId, mLocationName, mLocationBean, localMedias, patrolQueryItemBean.patrolTaskSpotResultId, comment, null, null, null, true), REQUEST_CREATE_ORDER);
                         }
                     }
                 }

@@ -94,6 +94,8 @@ public interface WorkorderUrl {
     //判断维护工单处理完成NFC是否全部匹配
     String COMPLETE_PREMISSION = "/m/v1/workorder/completeSubmission";
 
+    //根据工单ID获取抽检模板数据。
+    String SAMPLE_TEMPLATE = "/m/v1/sample/sampleByWoId";
 
 
 }

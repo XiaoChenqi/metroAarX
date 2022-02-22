@@ -17,7 +17,7 @@ object ObjectBox {
         boxStore = MyObjectBox.builder()
             .androidContext(context.applicationContext)
             .build()
-//        val started = AndroidObjectBrowser(boxStore).start(context.applicationContext)
+        val started = AndroidObjectBrowser(boxStore).start(context.applicationContext)
         if (BuildConfig.DEBUG) {
             Log.d(
                 "APP", String.format(
@@ -26,7 +26,7 @@ object ObjectBox {
                 )
             )
 //            val started = AndroidObjectBrowser(boxStore).start(context.applicationContext)
-//            Log.i("ObjectBrowser", "Started: $started")
+            Log.i("ObjectBrowser", "Started: $started")
         }
 
     }

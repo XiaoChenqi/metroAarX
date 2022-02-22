@@ -182,7 +182,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
                         mTvChooseAll.setText("取消");
                     } else {
                         for (MaintenanceEnity.MaintenanceListEnity data : mList) {
-                            if (data.pmId == localWoId && data.workTeamId == workTeamId) {
+                            if (data.pmId.equals(localWoId)&& data.workTeamId.equals(workTeamId)) {
                                 data.choice = 2; //选中状态
                             } else {
                                 data.choice = 4; //全选后其余不同工单置灰
@@ -419,7 +419,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
             }
         } else if (workorderItemBean.choice == MaintenanceConstant.CHOICE_All) {
             if (mType == MaintenanceConstant.TWO) {
-                if (mList.get(position).pmId == localWoId && mList.get(position).workTeamId == workTeamId) {
+                if (mList.get(position).pmId .equals(localWoId)&& mList.get(position).workTeamId.equals(workTeamId)) {
                     mList.get(position).choice = 2;
                 } else {
                     ToastUtils.showShort("非同批次工单");

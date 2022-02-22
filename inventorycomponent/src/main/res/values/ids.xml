@@ -22,4 +22,7 @@
     <!--预定详情保存-->
     <item name="inventory_reserve_save_id" type="id"/>
 
+    <!--预定专业选择确定-->
+    <item name="inventory_pro_confirm_id" type="id"/>
+
 </resources>

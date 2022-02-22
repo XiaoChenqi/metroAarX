@@ -70,6 +70,9 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
     private CustomContentItemView mReceivingPersonTv;//领用人
     private LinearLayout mDescLl;//备注
     private EditNumberView mDescEnv;//备注
+    private TextView mDescTipTv;//备注标签
+    private LinearLayout mProLl;//专业
+    private TextView mProTv;//专业
     private RecyclerView mMaterialRv;//物料
     private TextView mTotalMoneyTv;//总计
     private LinearLayout mRelatedWorkorderLl;//关联工单
@@ -153,7 +156,12 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
         mRelatedWorkorderCodeTv = findViewById(R.id.reserve_record_info_related_workorder_code_tv);
         mBasicDescLl = findViewById(R.id.reserve_record_info_basic_desc_ll);
         mDescTv = findViewById(R.id.reserve_record_info_desc_tv);
+        mDescTipTv = findViewById(R.id.reserve_record_info_desc_tip_tv);
         mStatusTv = findViewById(R.id.reserve_record_info_status_tv);
+
+        mProLl = findViewById(R.id.reserve_record_info_professional_ll);
+        mProTv = findViewById(R.id.reserve_record_info_professional_tv);
+
         mAdministratorTv = findViewById(R.id.reserve_record_info_administrator_tv);
         mReservationPersonTv = findViewById(R.id.reserve_record_info_reservation_person_tv);
         mSupervisorTv = findViewById(R.id.reserve_record_info_supervisor_tv);
@@ -420,6 +428,15 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
         } else {
             mReasonLl.setVisibility(View.GONE);
         }
+        if (!TextUtils.isEmpty(data.sysProfessional)){
+            mProLl.setVisibility(View.VISIBLE);
+            mProTv.setText(StringUtils.formatString(data.sysProfessional));
+            mDescTipTv.setText(R.string.inventory_pro_remark);
+
+        }else {
+            mProLl.setVisibility(View.GONE);
+        }
+
     }
 
     /**
