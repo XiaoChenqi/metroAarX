@@ -36,7 +36,8 @@ class ELSelectorProvider : BaseItemProvider<MaintenanceEnity.ElectronicLedgerEnt
     ) {
 
         val selectorModel=item!!.content as SelectorModel
-        val binding=getBinding<ItemElSelectorBinding>(helper.itemView.rootView)!!
+        //定制机不允许覆盖此文件
+        val binding=getBinding<ItemElSelectorBinding>(helper.itemView)!!
 
         try {
 

@@ -150,6 +150,8 @@ public class WorkorderService {
 
         //2021-12-8
         public Boolean needSample;   //是否需要抽检
+
+        public Boolean isBunchingOrder;//	是否为聚群工单
     }
 
     public static class RelatedOrder {

@@ -78,6 +78,10 @@ class BoardingPatrolMenuFragment : BaseFragment<BoardingMenuPresenter>(),
         CollectUtils.targetPageEnd(this, "ridepatrol")
     }
 
+    override fun leftBackListener() {
+        getActivity()!!.finish()
+    }
+
     private fun initData() {
         mFunctionBeanList = mutableListOf()
         val arguments = arguments

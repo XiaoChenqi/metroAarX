@@ -32,7 +32,8 @@ class ELSubSelectorProvider : BaseItemProvider<MaintenanceEnity.ElectronicLedger
         position: Int
     ) {
         val selectorModel = item!!.content as SelectorModel
-        val binding = getBinding<ItemElSubSelectorBinding>(helper.itemView.rootView)!!
+        //定制机不允许覆盖此文件
+        val binding = getBinding<ItemElSubSelectorBinding>(helper.itemView)!!
         binding.taskTitleTv.text = selectorModel.name
         if (3==selectorModel.state){
             binding.rgSelect.clearCheck()

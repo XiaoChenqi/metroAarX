@@ -13,6 +13,7 @@
     <string name="up_interval">上行</string>
     <string name="down_interval">下行</string>
     <string name="check_way">检查方式</string>
+    <string name="check_way_boarding">添乘检查</string>
     <string name="check_walk">步行检查</string>
     <string name="check_multiply">添乘方式</string>
     <string name="check_the_content">检查内容</string>
@@ -23,7 +24,7 @@
     <string name="solve_the_condition_hint">请输入解决情况</string>
     <string name="to_be_traked">需跟踪情况</string>
     <string name="to_be_traked_hint">请输入需跟踪情况</string>
-    
+
     <string name="train_number">添乘列车号</string>
     <string name="train_number_hint">请输入添乘列车号</string>
     <string name="train_driver">值乘司机</string>

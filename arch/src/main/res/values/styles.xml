@@ -52,6 +52,11 @@
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
+    <style name="AppTheme.NoActionBar.NoA" parent="AppTheme.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="colorPrimary">@color/black</item>
+    </style>
+
     <!--有返回按钮的topbar-->
     <style name="commonTopbarStyle" parent="@style/QMUI.TopBar">
         <item name="android:layout_width">match_parent</item>
@@ -88,6 +93,10 @@
         <item name="qmui_topbar_subtitle_color">@color/topbar_title_color</item>
         <item name="qmui_topbar_subtitle_text_size">@dimen/topbar_subtitle_size</item>
     </style>
+
+<!--    <style name="AppTheme.NoActionBar.NoNfs" parent="AppTheme.NoActionBar">-->
+<!--        <item name="android:windowIsTranslucent">false</item>-->
+<!--    </style>-->
 
     <!--登录topbar（标题居右时）-->
     <style name="commonTopbarStyle.logon" parent="commonTopbarStyle">

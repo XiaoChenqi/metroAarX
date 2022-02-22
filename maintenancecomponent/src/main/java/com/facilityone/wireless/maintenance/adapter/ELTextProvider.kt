@@ -36,7 +36,8 @@ class ELTextProvider: BaseItemProvider<MaintenanceEnity.ElectronicLedgerEntity, 
         item: MaintenanceEnity.ElectronicLedgerEntity?,
         position: Int
     ) {
-        val binding=getBinding<ItemElTextBinding>(helper.itemView.rootView)
+        //定制机不允许覆盖此文件
+        val binding=getBinding<ItemElTextBinding>(helper.itemView)
         binding!!.tvTitle.text=(item!!.content) as String
         binding.etInput.hint = "请输入"+((item.content) as String)
         binding.etInput.addTextChangedListener(object :TextWatcher{

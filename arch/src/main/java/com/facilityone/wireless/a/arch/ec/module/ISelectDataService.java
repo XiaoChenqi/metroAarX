@@ -7,7 +7,7 @@ package com.facilityone.wireless.a.arch.ec.module;
  * Date: 2018/10/25 11:53 AM
  */
 public interface ISelectDataService {
-    
+
     String SELECT_OFFLINE_DATA_BACK = "select_offline_data_back";
 
     /****新派工单****/
@@ -21,6 +21,7 @@ public interface ISelectDataService {
     String NEWORDER_LOCATIONNAME = "NEWORDER_LOCATIONNAME";
     String NEWORDER_WOID = "NEWORDER_WOID";
     String NEWORDER_DESC = "NEWORDER_DESC";
+    String NEW_ISBUNCHINGORDER ="new_isBunchingOrder";
 
     /***********************************************************/
     int DATA_TYPE_LOCATION = 0;

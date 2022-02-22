@@ -18,7 +18,7 @@ class BoardingQueryAdapter() : BaseQuickAdapter<BoardingService.BoardingQueryCon
         binding.executePendingBindings()
     }
 
-    inline fun <DB: ViewDataBinding>getBinding(view: View):DB?{
+    fun <DB: ViewDataBinding>getBinding(view: View):DB?{
         return DataBindingUtil.bind(view)
     }
 

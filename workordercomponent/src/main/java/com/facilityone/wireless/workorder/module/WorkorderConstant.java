@@ -147,7 +147,7 @@ public interface WorkorderConstant {
     int RESERVE_STATUS_DELIVERIED = 3;// 已出库
     int RESERVE_STATUS_CANCEL = 4;// 取消出库（仓库管理员取消）
     int RESERVE_STATUS_CANCEL_BOOK = 5;//取消预定（预定人取消）
-    
+
     //关联设备完成状态
     int WO_EQU_STAT_UNFINISH = 0; // 0 --- 未完成
     int WO_EQU_STAT_FINISHED = 1; // 1 --- 已完成
@@ -196,6 +196,7 @@ public interface WorkorderConstant {
     int ARCHIVE_PERMISSION = 5; //归档人员(存档)
     int TERMINATION_PERMISSION = 6; //终止申请审批
     int PAUSE_PERMISSION = 7; //暂停申请审批
+    int VOID_PERMISSION = 8; //作废申请
 
 
 

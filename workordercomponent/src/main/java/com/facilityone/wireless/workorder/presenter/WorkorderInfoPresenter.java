@@ -248,7 +248,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
         switch (status) {
             case WorkorderConstant.WORK_STATUS_CREATED:// 已创建
             case WorkorderConstant.WORK_STATUS_SUSPENDED_NO:// 已暂停(不继续工作)
-                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.DISPATCH_STAFF_PERMISSION, currentRoles)) {
+                if (hasPermission( WorkorderConstant.DISPATCH_STAFF_PERMISSION, currentRoles)) {
                     menu.add(getV().getString(R.string.workorder_arrange_order));
                     menu.add(getV().getString(R.string.workorder_approval_title));
                     menu.add(getV().getString(R.string.workorder_stop));
@@ -256,7 +256,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 finished = true;
                 break;
             case WorkorderConstant.WORK_STATUS_PUBLISHED:// 已发布
-                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.DISPATCH_STAFF_PERMISSION, currentRoles)) {
+                if (hasPermission(WorkorderConstant.DISPATCH_STAFF_PERMISSION, currentRoles)) {
                     menu.add(getV().getString(R.string.workorder_accept_order));
                     menu.add(getV().getString(R.string.workorder_back_order));
                     menu.add(getV().getString(R.string.workorder_approval_title));
@@ -265,13 +265,14 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
             case WorkorderConstant.WORK_STATUS_PROCESS:// 处理中
                 if (acceptWorkOrder) {
                     if (getV().getTagStatus() != null && getV().getTagStatus().equals(WorkorderConstant.APPLICATION_FOR_SUSPENSION)) {
-                        if (hasPermission(true, isMaintenanceOrder, WorkorderConstant.VERIFIER_PERMISSION, currentRoles)
-                                ||
-                                hasPermission(true, isMaintenanceOrder, WorkorderConstant.PAUSE_PERMISSION, currentRoles)
-                        ) {
+                        if (hasPermission(WorkorderConstant.PAUSE_PERMISSION, currentRoles)) {
                             menu.add("审批");
                         }
-                    } else {
+                    } else if (getV().getTagStatus() != null && getV().getTagStatus().equals(WorkorderConstant.APPLICATION_VOID)){
+                        if (hasPermission(WorkorderConstant.VOID_PERMISSION, currentRoles)) {
+                            menu.add("审批");
+                        }
+                    }else {
                         menu.add(getV().getString(R.string.workorder_finish));
                         menu.add(getV().getString(R.string.workorder_stop_order));
                         menu.add(getV().getString(R.string.workorder_stop));
@@ -293,7 +294,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
              * @Infor: 四运独有 新派工单
              */
             case WorkorderConstant.WORK_STATUS_TERMINATED:// 已终止
-                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.VERIFIER_PERMISSION, currentRoles)) {
+                if (hasPermission(WorkorderConstant.VERIFIER_PERMISSION, currentRoles)) {
                     if (!isMaintenanceOrder){
                         menu.add("新派工单");
                     }
@@ -303,20 +304,20 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 break;
             case WorkorderConstant.WORK_STATUS_COMPLETED:// 已完成  待存档
                 if (getV().getTagStatus() != null && getV().getTagStatus().equals(WorkorderConstant.APPLICATION_VOID)) {
-                    if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.PAUSE_PERMISSION, currentRoles)) {
+                    if (hasPermission( WorkorderConstant.VOID_PERMISSION, currentRoles)) {
                         menu.add(getV().getString(R.string.workorder_approval_order));
                     }
                 } else {
-                    if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.VERIFIER_PERMISSION, currentRoles)) {
+                    if (hasPermission(WorkorderConstant.VERIFIER_PERMISSION, currentRoles)) {
                         menu.add(getV().getString(R.string.workorder_verify_tip));
                     }
-                    if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
+                    if (hasPermission( WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
                         menu.add(getV().getString(R.string.workorder_archive));
                     }
                 }
                 break;
             case WorkorderConstant.WORK_STATUS_VERIFIED:// 已验证
-                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
+                if (hasPermission( WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
                     menu.add(getV().getString(R.string.workorder_archive));
                 }
                 break;
@@ -326,17 +327,23 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 menu.add(getV().getString(R.string.workorder_approval_order));
                 break;
             case WorkorderConstant.WORK_STATUS_UBNORMAL:// 异常
-                menu.add("审批");
+                if (getV().getTagStatus() != null && getV().getTagStatus().equals(WorkorderConstant.APPLICATION_VOID)){
+                    if (hasPermission( WorkorderConstant.VOID_PERMISSION, currentRoles)) {
+                        menu.add("审批");
+                    }
+                }else {
+                    menu.add("审批");
+                }
                 break;
             case WorkorderConstant.WORK_STATUS_MAINTENCE:// 计划性维护
                 if (needSample) {
                     menu.add("抽检");
                 }
-                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.VERIFIER_PERMISSION, currentRoles)) {
+                if (hasPermission( WorkorderConstant.VERIFIER_PERMISSION, currentRoles)) {
                     menu.add("验证");
                 }
 
-                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
+                if (hasPermission( WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
                     menu.add(getV().getString(R.string.workorder_archive));
                 }
                 break;
@@ -344,7 +351,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 if (needSample) {
                     menu.add("抽检");
                 }
-                if (hasPermission(fromMessage, isMaintenanceOrder, WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
+                if (hasPermission( WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
                     menu.add(getV().getString(R.string.workorder_archive));
                 }
                 break;
@@ -435,7 +442,9 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         ToastUtils.showShort(R.string.workorder_sign_error);
                         return;
                     }
-                    if (status == WorkorderConstant.WORK_STATUS_UBNORMAL) {
+                    if (getV().getTagStatus() != null && (getV().getTagStatus().equals(WorkorderConstant.APPLICATION_VOID)||
+                            getV().getTagStatus().equals(WorkorderConstant.APPLICATION_FOR_SUSPENSION)
+                    )) {
                         approvalWorkOrder(context, woId, approvalId, true);
                     } else {
                         approvalWorkOrder(context, woId, approvalId, false);
@@ -484,8 +493,8 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         //判断当前是否有设备任务还在处理 且为维护工单
                         isDoneDevice(isSignOn, isMaintenanceOrder, woId, approvalId, context);
                     } else {
-                            //不是维护工单不需要判断设备完成任务
-                            complete(isSignOn, isMaintenanceOrder, woId, approvalId, context);
+                        //不是维护工单不需要判断设备完成任务
+                        complete(isSignOn, isMaintenanceOrder, woId, approvalId, context);
 
 
                     }
@@ -579,26 +588,18 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
      * @Method：hasPermission
      * @Description：判断当前操作是否有权限在内部，只需要判断从消息中跳转的工单以及非维护工单
      */
-    public boolean hasPermission(boolean fromMessage, boolean isMaintenceOrder, Integer permission, List<Integer> currentRoles) {
-//        if (fromMessage) {
-//            if (!isMaintenceOrder) {
-//
-//            } else {
-//                return true;
-//            }
-//        } else {
-//            return true;
-//        }
-        if (currentRoles.size() > 0) {
-            for (Integer role : currentRoles) {
-                if (role.equals(permission)) {
-                    return true;
+    public boolean hasPermission(Integer permission, List<Integer> currentRoles) {
+        if (currentRoles != null){
+            if (currentRoles.size() > 0) {
+                for (Integer role : currentRoles) {
+                    if (role.equals(permission)) {
+                        return true;
+                    }
                 }
+            } else {
+                return false;
             }
-        } else {
-            return false;
         }
-
         return false;
     }
 

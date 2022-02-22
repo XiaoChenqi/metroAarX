@@ -124,16 +124,16 @@ public class PermissionsManager {
         public List<FunctionService.FunctionBean> show(String opensJson) {
             mFbs.clear();
             mIndex = 0;
-
-            opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
-                    "\"m-requirement-approval\",\"m-requirement-query\"," +
-                    "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
-                    "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
-                    "\"m-ppm\",\"m-inventory-create\",\"m-inventory-create\"," +
-                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
-                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
-                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-one\",\"m-ppm-two\"," +
-                    "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\",\"m-boardingpatrol\",\"m-boardingpatrol-check\",\"m-boardingpatrol-query\"]";
+//
+//            opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
+//                    "\"m-requirement-approval\",\"m-requirement-query\"," +
+//                    "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
+//                    "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
+//                    "\"m-ppm\",\"m-inventory-create\",\"m-inventory-create\"," +
+//                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
+//                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
+//                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-one\",\"m-ppm-two\"," +
+//                    "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\",\"m-boardingpatrol\",\"m-boardingpatrol-check\",\"m-boardingpatrol-query\"]";
 
 
             // 扫一扫

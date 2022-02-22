@@ -30,7 +30,8 @@ class ELHeaderProvider : BaseItemProvider<MaintenanceEnity.ElectronicLedgerEntit
         position: Int
     ) {
         val headerText=item!!.content as String
-        val binding=getBinding<ItemElHeaderBinding>(helper.itemView.rootView)!!
+        //定制机不允许覆盖此文件
+        val binding=getBinding<ItemElHeaderBinding>(helper.itemView)!!
         binding.taskTitleTv.text=headerText
     }
 

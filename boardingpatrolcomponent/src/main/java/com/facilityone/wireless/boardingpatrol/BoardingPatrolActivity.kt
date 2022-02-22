@@ -23,7 +23,7 @@ class BoardingPatrolActivity : BaseFragmentActivity<IPresent<*>>(), OnGoFragment
     }
 
     override fun setRootFragment(): FMFragment? {
-        mInstance = EmptyFragment.getInstance(CommonConstant.MESSAGE_VISITOR)
+        mInstance = EmptyFragment.getInstance(CommonConstant.MESSAGE_BOARDING_PATROL)
         mInstance?.setOnGoFragmentListener(this)
         return mInstance
     }
@@ -32,6 +32,9 @@ class BoardingPatrolActivity : BaseFragmentActivity<IPresent<*>>(), OnGoFragment
         super.onCreate(savedInstanceState)
         setSwipeBackEnable(false)
         MetroUtils.getParamFromMetro(this)
+        toast.setDebugMode(false);
+        toast.init(application)
+//        toast.init(application)
     }
 
     override fun goFragment(bundle: Bundle) {

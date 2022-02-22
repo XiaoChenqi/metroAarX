@@ -186,7 +186,7 @@
                                 android:layout_marginLeft="@dimen/dp_16"
                                 android:paddingTop="@dimen/dp_16"
                                 android:paddingBottom="@dimen/dp_16"
-                                android:text="@string/check_the_content" />
+                                android:text="@string/check_way" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -220,7 +220,7 @@
                                 android:id="@+id/rb_check_multiply"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/check_multiply" />
+                                android:text="@string/check_way_boarding" />
                         </RadioGroup>
                     </LinearLayout>
 

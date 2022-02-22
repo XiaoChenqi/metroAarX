@@ -55,7 +55,9 @@ public class DemandService {
         public Long woId;//工单 ID
         public String code;//工单编号
         public Integer status;//工单状态
+        public Integer newStatus; //新工单状态
     }
+
 
     //需求列表请求体
     public static class DemandListReq {

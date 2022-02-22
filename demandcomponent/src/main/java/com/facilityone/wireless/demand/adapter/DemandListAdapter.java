@@ -74,7 +74,7 @@ public class DemandListAdapter extends BaseQuickAdapter<DemandService.DemandBean
                     case DemandConstant.DEMAND_ORIGIN_EMAIL:
                         helper.setBackgroundRes(R.id.demand_origin_tv, R.drawable.service_control_orgin_email);
                         break;
-                        case DemandConstant.DEMAND_ORIGIN_DINGDING:
+                    case DemandConstant.DEMAND_ORIGIN_DINGDING:
                         helper.setBackgroundRes(R.id.demand_origin_tv, R.drawable.service_control_origin_dingding);
                         break;
                 }
@@ -102,6 +102,7 @@ public class DemandListAdapter extends BaseQuickAdapter<DemandService.DemandBean
                     case DemandConstant.DEMAND_STATUS_CANCEL:
                         helper.setBackgroundRes(R.id.demand_status_tv, R.drawable.demand_fill_cancel_bg);
                         break;
+
                 }
             } else {
                 helper.setVisible(R.id.demand_status_tv, false);
@@ -115,11 +116,11 @@ public class DemandListAdapter extends BaseQuickAdapter<DemandService.DemandBean
                 for (int i = 0; i < item.orders.size(); i++) {
                     DemandService.RelatedOrder order = item.orders.get(i);
                     String status = "";
-                    if(order.status != null) {
-                        status = DemandHelper.getWorkOrderStatusMap(mContext).get(order.status);
+                    if(order.newStatus != null) {
+                        status = DemandHelper.getWorkOrderNewStatusMap(mContext).get(order.newStatus);
                     }
                     if(i != 0) {
-                        buffer.append("、");
+                        buffer.append("\n");
                     }
                     buffer.append(StringUtils.formatString(order.code));
                     if(!TextUtils.isEmpty(status)) {

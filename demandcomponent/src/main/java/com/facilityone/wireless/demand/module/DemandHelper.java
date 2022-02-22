@@ -50,6 +50,20 @@ public class DemandHelper {
         v.put(DemandConstant.WORK_STATUS_ARCHIVED,stauts[7]);
         v.put(DemandConstant.WORK_STATUS_APPROVAL,stauts[8]);
         v.put(DemandConstant.WORK_STATUS_SUSPENDED_NO,stauts[9]);
+        v.put(DemandConstant.WORK_STATUS_DEFERRED_COMPLETION,stauts[10]);
+        v.put(DemandConstant.WORK_STATUS_VOID,stauts[11]);
+        return v;
+    }
+
+    public static Map<Integer,String> getWorkOrderNewStatusMap(Context context){
+        Map<Integer,String> v = new LinkedHashMap<>();
+        String[] stauts = context.getResources().getStringArray(R.array.demand_new_status);
+        v.put(DemandConstant.WORK_STATUS_CREATED,stauts[0]);
+        v.put(DemandConstant.WORK_STATUS_PUBLISHED,stauts[1]);
+        v.put(DemandConstant.WORK_STATUS_PROCESS,stauts[2]);
+        v.put(DemandConstant.WORK_STATUS_SUSPENDED_GO,stauts[3]);
+        v.put(DemandConstant.WORK_STATUS_TERMINATED,stauts[4]);
+        v.put(DemandConstant.WORK_STATUS_COMPLETED,stauts[5]);
         return v;
     }
 }

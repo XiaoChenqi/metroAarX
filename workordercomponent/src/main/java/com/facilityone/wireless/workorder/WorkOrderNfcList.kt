@@ -1,6 +1,7 @@
 package com.facilityone.wireless.workorder
 import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.Color
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
@@ -25,6 +26,7 @@ import com.facilityone.wireless.workorder.module.WorkorderConstant
 import com.facilityone.wireless.workorder.module.WorkorderService
 import com.facilityone.wireless.workorder.presenter.WorkOrderNFCPresenter
 import com.joanzapata.iconify.widget.IconTextView
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 
 /**
  * @Creator:Karelie
@@ -97,7 +99,7 @@ class WorkOrderNfcList : BaseActivity<WorkOrderNFCPresenter>() {
                     //NFC点位上随机值
                     nfcTag =PatrolQrcodeUtils.parseSpotCode(mLocationsBeen?.get(i)?.nfcTag).trim()
                     stepEmid = mLocationsBeen?.get(i)?.emId
-                    var personId : Long = FM.getEmId()
+                    val personId : Long = FM.getEmId()
                     if (!personId.equals(stepEmid)){
                         ToastUtils.showShort("这不是您的点位，请重新选择。")
                         nfcTag = null
@@ -136,6 +138,8 @@ class WorkOrderNfcList : BaseActivity<WorkOrderNFCPresenter>() {
             com.facilityone.wireless.a.arch.R.id.topbar_left_back_id,
             lp
         )
+
+        QMUIStatusBarHelper.translucent(this, Color.BLACK)
     }
 
     private fun initNfc() {

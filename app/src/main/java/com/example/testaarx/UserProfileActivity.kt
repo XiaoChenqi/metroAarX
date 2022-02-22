@@ -17,12 +17,17 @@ class UserProfileActivity: AppCompatActivity() {
     var configName:String?=null
     var configPwd:String?=null
 
+    var btnLine14:Button?=null
+    var btnDebug:Button?=null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
         etUname = findViewById(R.id.etUname)
         etPwd = findViewById(R.id.etPwd)
         btnSaveConfig = findViewById(R.id.btnSaveConfig)
+        btnLine14 = findViewById(R.id.btnEnvLine14)
+        btnDebug = findViewById(R.id.btnEnvDebug)
 
         configName=AppConfig.uname
         configPwd=AppConfig.upwd
@@ -44,6 +49,16 @@ class UserProfileActivity: AppCompatActivity() {
 
         }
 
+        btnDebug?.setOnClickListener {
+            AppConfig.env=AppConfig.DEBUG
+            com.blankj.utilcode.util.ToastUtils.showShort("切换至测试模式,可以使用临时账户登录 ")
+        }
+
+
+        btnLine14?.setOnClickListener {
+            AppConfig.env=AppConfig.LINE14
+            com.blankj.utilcode.util.ToastUtils.showShort("切换至正式环境,只允许使用博坤客户端传递账户 ")
+        }
 
     }
 }

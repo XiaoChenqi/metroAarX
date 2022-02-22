@@ -8,8 +8,9 @@ import com.facilityone.wireless.a.arch.widget.CustomContentItemView
 import com.facilityone.wireless.workorder.R
 import com.facilityone.wireless.workorder.module.WorkorderService
 import com.facilityone.wireless.workorder.module.WorkorderService.WorkOrderEquipmentsBean
+import com.github.mikephil.charting.formatter.IFillFormatter
 
-class WorkOrderNewOrderAdapter(data: ArrayList<WorkorderService.newOrderEnity>) :
+class WorkOrderNewOrderAdapter(data: ArrayList<WorkorderService.newOrderEnity>,private val canAdd:Boolean?=true) :
     BaseQuickAdapter<WorkorderService.newOrderEnity, BaseViewHolder>(
         R.layout.workordernewitem
     ) {
@@ -23,15 +24,14 @@ class WorkOrderNewOrderAdapter(data: ArrayList<WorkorderService.newOrderEnity>) 
         help.addOnClickListener(R.id.civ_service_type)
         help.addOnClickListener(R.id.civ_priority)
         if (help.adapterPosition == (dataSize!! - 1)) {
-            help.setGone(R.id.ll_add_menu, true);
+            if (canAdd == true){
+                help.setGone(R.id.ll_add_menu, false);
+            }else{
+                help.setGone(R.id.ll_add_menu, true);
+            }
+
         } else {
             help.setGone(R.id.ll_add_menu, false);
-        }
-
-        if (dataSize == 1 ){
-            help.setGone(R.id.tv_neworder_delete,  false)
-        }else{
-            help.setGone(R.id.tv_neworder_delete,  true)
         }
 
         if (item!!.typeName != null){

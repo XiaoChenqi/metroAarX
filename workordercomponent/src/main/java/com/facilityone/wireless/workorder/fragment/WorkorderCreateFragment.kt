@@ -124,7 +124,7 @@ class WorkorderCreateFragment : BaseFragment<WorkorderCreatePresenter?>(), View.
         initRecyclerView()
         presenter!!.getUserInfo()
         initData()
-
+        setSwipeBackEnable(false)
     }
 
     override fun onCreateView(

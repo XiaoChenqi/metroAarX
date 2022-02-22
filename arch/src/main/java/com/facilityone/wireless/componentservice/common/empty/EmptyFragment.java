@@ -66,8 +66,20 @@ public class EmptyFragment extends BaseFragment<EmptyPresenter> implements MvpVi
         showLoading();
         // USERNAME = "cylz";
         // PASSWORD = "111111";
-         getPresenter().logon(Constant.USERNAME, PASSWORD);
-        // getPresenter().logon(Constant.USERNAME, PASSWORD);
+//         getPresenter().logon(Constant.USERNAME, PASSWORD);
+
+        if (AppConfig.getEnv().equals(AppConfig.LINE14)){
+             getPresenter().logon(Constant.USERNAME, PASSWORD);
+        }else {
+            String uname=AppConfig.getUname();
+            String upwd=AppConfig.getUpwd();
+            if (!TextUtils.isEmpty(uname)&&!TextUtils.isEmpty(upwd)){
+                getPresenter().logon(uname, upwd);
+
+            }else {
+                ToastUtils.showShort("请先到临时页面设置临时账户登录,正在前往");
+            }
+        }
 //        if (BuildConfig.DEBUG){
 //            String uname=AppConfig.getUname();
 //            String upwd=AppConfig.getUpwd();

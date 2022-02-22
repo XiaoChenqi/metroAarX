@@ -77,6 +77,8 @@ public interface DemandConstant {
     int WORK_STATUS_ARCHIVED = 7;                   // 已存档
     int WORK_STATUS_APPROVAL = 8;                   // 已待审批
     int WORK_STATUS_SUSPENDED_NO = 9;               // 已暂停(不继续工作)
+    int WORK_STATUS_DEFERRED_COMPLETION = 10;               // 延期完成
+    int WORK_STATUS_VOID = 11;               //已作废
 
 
     int DEMAND_RULES_DEL = 1;               // 1—处理权限

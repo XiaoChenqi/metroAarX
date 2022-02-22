@@ -29,7 +29,18 @@
         <item>Archived</item>
         <item>In Approving</item>
         <item>Pause</item>
+        <item>Deferred completion</item>
+        <item>Void</item>
         <!--<item>已暂停(不继续工作)</item>-->
+    </string-array>
+
+    <string-array name="demand_new_status">
+        <item>待派工</item>
+        <item>处理中</item>
+        <item>待存档</item>
+        <item>待审核</item>
+        <item>已存档</item>
+        <item>已作废</item>
     </string-array>
 
 </resources>

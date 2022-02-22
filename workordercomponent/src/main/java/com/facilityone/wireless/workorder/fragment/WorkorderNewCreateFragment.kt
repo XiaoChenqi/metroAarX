@@ -53,6 +53,7 @@ class WorkorderNewCreateFragment : BaseFragment<WorkorderNewCreatePresenter>(),
     var mDepSelectData : SelectDataBean? = null //部门
     var woId:Long? = null //工单ID
     var orderName:String? = null //工单类型名称
+    var canAddNew:Boolean? = null //是否可以添加多个工单
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -89,9 +90,10 @@ class WorkorderNewCreateFragment : BaseFragment<WorkorderNewCreatePresenter>(),
             location = bundle.getParcelable(NEWORDER_LOCATION)
             mDepSelectData = bundle.getParcelable(NEWORDER_DEPSELECT)
             binding.civContact.inputText = bundle.getString(NEWORDER_APPLICANTNAME)
-            binding.civTel.inputText = bundle.getString(NEWORDER_APPLICANTPHONE)
+            binding.civTel.inputText = bundle.getString(NEWORDER_APPLICANTPHONE,"")
             binding.civLocation.tipText = bundle.getString(NEWORDER_LOCATIONNAME)
             woId = bundle.getLong(NEWORDER_WOID,-1)
+            canAddNew = bundle.getBoolean(NEW_ISBUNCHINGORDER,true)
             if (mDepSelectData != null){
                 binding.civDep.tipText = mDepSelectData?.fullName
             }
@@ -114,7 +116,7 @@ class WorkorderNewCreateFragment : BaseFragment<WorkorderNewCreatePresenter>(),
 
         binding.rvNeworder.layoutManager = LinearLayoutManager(context)
         newOrderList = ArrayList()
-        newOrderAdapter = WorkOrderNewOrderAdapter(newOrderList!!)
+        newOrderAdapter = WorkOrderNewOrderAdapter(newOrderList!!,canAddNew)
         newOrderList?.add(addNewItem())
         binding.rvNeworder.adapter = newOrderAdapter
         newOrderAdapter?.setNewData(newOrderList)
@@ -148,36 +150,32 @@ class WorkorderNewCreateFragment : BaseFragment<WorkorderNewCreatePresenter>(),
 
 
     /**
-    *  @Author: Karelie
-    *  @Method：orderUpload
-    *  @Description：提交工单
-    */
+     *  @Author: Karelie
+     *  @Method：orderUpload
+     *  @Description：提交工单
+     */
     fun orderUpload() {
-        var req = WorkorderService.newOrderReq()
-        req?.woId = woId
-        var reqList = ArrayList<WorkorderService.newOrderItemEnity>()
+        val req = WorkorderService.newOrderReq()
+        req.woId = woId
+        val reqList = ArrayList<WorkorderService.newOrderItemEnity>()
         newOrderList!!.forEach {
-            var reqItem = WorkorderService.newOrderItemEnity()
-            reqItem?.orderType = it.type
-            reqItem?.serviceTypeId = it.serviceTypeId
-            reqItem?.priorityId = it.priorityId
-            reqItem?.flowId = it.flowId
-            if (reqItem != null) {
-                reqList?.add(reqItem)
-            }
+            val reqItem = WorkorderService.newOrderItemEnity()
+            reqItem.orderType = it.type
+            reqItem.serviceTypeId = it.serviceTypeId
+            reqItem.priorityId = it.priorityId
+            reqItem.flowId = it.flowId
+            reqList.add(reqItem)
         }
-        req?.workOrderResult = reqList
-        req?.orderType = orderTypeId?.toInt()
-        if (req != null) {
-            presenter.workOrderUpload(req)
-        }
+        req.workOrderResult = reqList
+        req.orderType = orderTypeId?.toInt()
+        presenter.workOrderUpload(req)
     }
 
     /**
-    *  @Author: Karelie
-    *  @Method：judgeReq
-    *  @Description：校验请求体
-    */
+     *  @Author: Karelie
+     *  @Method：judgeReq
+     *  @Description：校验请求体
+     */
     fun judgeReq(){
         if (presenter.hasOmission(newOrderList)){ //先去校验底部新派工单中是否遗漏的内容
             if (presenter.checkList(newOrderList)){ //判断是否有重复的内容
@@ -200,27 +198,33 @@ class WorkorderNewCreateFragment : BaseFragment<WorkorderNewCreatePresenter>(),
         private val REFRESH_POP = 500009 // 跳回列表
         @JvmStatic
         fun getInstance(
-            mServiceTypeSelectData:SelectDataBean, //服务类型
-            woId:Long, //工单Id
-            applicantName:String, //创建人
-            applicantPhone:String, //创建人
-            orderTypeId:Long, //工单类型
-            location:LocationBean,  //位置
-            locationName:String, //位置名称
-            mDepSelectData:SelectDataBean, //部门
-            desc:String //问题描述
-                        ): WorkorderNewCreateFragment {
+            mServiceTypeSelectData:SelectDataBean?, //服务类型
+            woId:Long?, //工单Id
+            applicantName:String?, //创建人
+            applicantPhone:String?, //创建人
+            orderTypeId:Long?, //工单类型
+            location:LocationBean?,  //位置
+            locationName:String?, //位置名称
+            mDepSelectData:SelectDataBean?, //部门
+            desc:String?,//问题描述
+            isbunchingorder:Boolean
+        ): WorkorderNewCreateFragment {
             val fragment = WorkorderNewCreateFragment()
             val bundle = Bundle()
             bundle.putParcelable(NEWORDER_SERVICETYPE,mServiceTypeSelectData)
-            bundle.putLong(NEWORDER_ORDERTY,orderTypeId)
+            if (orderTypeId != null) {
+                bundle.putLong(NEWORDER_ORDERTY,orderTypeId)
+            }
             bundle.putParcelable(NEWORDER_LOCATION,location)
             bundle.putParcelable(NEWORDER_DEPSELECT,mDepSelectData)
             bundle.putString(NEWORDER_APPLICANTNAME,applicantName)
             bundle.putString(NEWORDER_APPLICANTPHONE,applicantPhone)
             bundle.putString(NEWORDER_LOCATIONNAME,locationName)
-            bundle.putLong(NEWORDER_WOID,woId)
+            if (woId != null) {
+                bundle.putLong(NEWORDER_WOID,woId)
+            }
             bundle.putString(NEWORDER_DESC,desc)
+            bundle.putBoolean(NEW_ISBUNCHINGORDER,isbunchingorder)
             fragment.arguments = bundle
             return fragment
         }
@@ -253,10 +257,10 @@ class WorkorderNewCreateFragment : BaseFragment<WorkorderNewCreatePresenter>(),
 
 
     /**
-    *  @Author: Karelie
-    *  @Method：writeIntoList
-    *  @Description：选择好的数据传入Adapter关联数组内并且刷新
-    */
+     *  @Author: Karelie
+     *  @Method：writeIntoList
+     *  @Description：选择好的数据传入Adapter关联数组内并且刷新
+     */
     fun writeIntoList(requestCode: Int,data: Bundle){
         val index = data.getString(ISelectDataService.SELECT_NEWORDER_POSITION)!!.toInt()
         val reason: SelectDataBean? = data.getParcelable(ISelectDataService.SELECT_OFFLINE_DATA_BACK)

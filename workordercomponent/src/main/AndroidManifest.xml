@@ -13,6 +13,7 @@
 
         <activity
             android:name=".WorkOrderActivity"
+            android:exported="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -20,8 +21,27 @@
 
         <activity
             android:name=".WorkOrderNfcList"
+            android:theme="@style/AppTheme.NoActionBar.NoA"
             android:launchMode="singleTask">
         </activity>
+
+        <activity
+            android:name=".WorkorderCreateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent" />
+
+        <activity
+            android:name=".WorkOrderInfoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent" />
+
+
 
     </application>
 

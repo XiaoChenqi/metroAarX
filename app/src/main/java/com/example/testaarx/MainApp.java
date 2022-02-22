@@ -10,6 +10,7 @@ import com.facilityone.wireless.a.arch.offline.util.DBManager;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.basiclib.app.FMChannel;
 import com.facilityone.wireless.componentservice.app.AppService;
+import com.hjq.toast.ToastUtils;
 import com.luojilab.component.componentlib.router.Router;
 import com.tencent.mmkv.MMKV;
 
@@ -35,7 +36,8 @@ public class MainApp extends Application {
         Router.registerComponent("com.facilityone.wireless.maintenance.applike.MaintenanceApplike");
         Router.registerComponent("com.facilityone.wireless.patrol.applike.PatrolApplike");
         Router.registerComponent("com.facilityone.wireless.inventory.applike.InventoryApplike");
-
+//        ToastUtils.setDebugMode(false);
+//        ToastUtils.init(this);
 //        Facility.init(this, "http://192.168.1.89:23456/fz_iframe", BuildConfig.DEBUG);
 
     }

@@ -102,6 +102,12 @@ public class InventoryFragment extends BaseFragment<InventoryPresenter> implemen
         getUndoNumber();
     }
 
+
+    @Override
+    public void leftBackListener() {
+        getActivity().finish();
+    }
+
     private void getUndoNumber() {
         getPresenter().getUndoNumber(FunctionService.UNDO_TYPE_INVENTORY);
     }
