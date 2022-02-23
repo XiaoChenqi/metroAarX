@@ -146,77 +146,86 @@
                             />
                     </LinearLayout>
 
-                    <!--添乘列车号-->
                     <LinearLayout
-                        style="@style/workorderInfoStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:id="@+id/ll_way"
                         >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
-                            android:layout_height="wrap_content"
-                            android:text="添乘列车号："
-                            />
-                        <TextView
-                            android:id="@+id/tv_carNumber"
-                            android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
-                            android:layout_height="wrap_content"
-                            />
+                        <!--添乘列车号-->
+                        <LinearLayout
+                            style="@style/workorderInfoStyle"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                style="@style/h3_text_style"
+                                android:layout_height="wrap_content"
+                                android:text="添乘列车号："
+                                />
+                            <TextView
+                                android:id="@+id/tv_carNumber"
+                                android:layout_width="wrap_content"
+                                style="@style/h3_text_style"
+                                android:layout_height="wrap_content"
+                                />
+                        </LinearLayout>
+
+                        <!--值乘司机-->
+                        <LinearLayout
+                            style="@style/workorderInfoStyle"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                style="@style/h3_text_style"
+                                android:layout_height="wrap_content"
+                                android:text="值乘司机："
+                                />
+                            <TextView
+                                android:id="@+id/tv_driver"
+                                android:layout_width="wrap_content"
+                                style="@style/h3_text_style"
+                                android:layout_height="wrap_content"
+                                />
+                        </LinearLayout>
+
+                        <!--添乘上车时间-->
+                        <LinearLayout
+                            style="@style/workorderInfoStyle"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                style="@style/h3_text_style"
+                                android:layout_height="wrap_content"
+                                android:text="添乘上车时间："
+                                />
+                            <TextView
+                                android:id="@+id/tv_boarding"
+                                android:layout_width="wrap_content"
+                                style="@style/h3_text_style"
+                                android:layout_height="wrap_content"
+                                />
+                        </LinearLayout>
+
+                        <!--添乘下车时间-->
+                        <LinearLayout
+                            style="@style/workorderInfoStyle"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                style="@style/h3_text_style"
+                                android:layout_height="wrap_content"
+                                android:text="添乘下车时间："
+                                />
+                            <TextView
+                                android:id="@+id/tv_getoff"
+                                android:layout_width="wrap_content"
+                                style="@style/h3_text_style"
+                                android:layout_height="wrap_content"
+                                />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <!--值乘司机-->
-                    <LinearLayout
-                        style="@style/workorderInfoStyle"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
-                            android:layout_height="wrap_content"
-                            android:text="值乘司机："
-                            />
-                        <TextView
-                            android:id="@+id/tv_driver"
-                            android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
-                            android:layout_height="wrap_content"
-                            />
-                    </LinearLayout>
 
-                    <!--添乘上车时间-->
-                    <LinearLayout
-                        style="@style/workorderInfoStyle"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
-                            android:layout_height="wrap_content"
-                            android:text="添乘上车时间："
-                            />
-                        <TextView
-                            android:id="@+id/tv_boarding"
-                            android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
-                            android:layout_height="wrap_content"
-                            />
-                    </LinearLayout>
-
-                    <!--添乘下车时间-->
-                    <LinearLayout
-                        style="@style/workorderInfoStyle"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
-                            android:layout_height="wrap_content"
-                            android:text="添乘下车时间："
-                            />
-                        <TextView
-                            android:id="@+id/tv_getoff"
-                            android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
-                            android:layout_height="wrap_content"
-                            />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -236,7 +245,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:paddingLeft="@dimen/dp_15"
+                            android:paddingStart="@dimen/dp_15"
                             android:text="检查信息" />
 
                         <com.joanzapata.iconify.widget.IconTextView

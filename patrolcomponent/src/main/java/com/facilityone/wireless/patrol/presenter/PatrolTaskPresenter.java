@@ -241,8 +241,9 @@ public class PatrolTaskPresenter extends BasePresenter<PatrolTaskFragment> {
                 if (patrolTaskEntities.size() > 0) {
                     PatrolTaskDao taskDao = new PatrolTaskDao();
                     for (PatrolTaskEntity patrolTaskEntity : patrolTaskEntities) {
+                        long id = patrolTaskEntity.getTaskId();
                         if (patrolTaskEntity.getStatus() != null) {
-                            taskDao.update(patrolTaskEntity.getStatus(), patrolTaskEntity.getCompleted(), patrolTaskEntity.getTaskId());
+                            taskDao.update(patrolTaskEntity.getStatus(), patrolTaskEntity.getCompleted(), patrolTaskEntity.getTaskId(),patrolTaskEntity.getpType());
                         }else if (patrolTaskEntity.getpType()!=null){
                             //只判断任务类型
                             taskDao.update(patrolTaskEntity.getTaskId(),patrolTaskEntity.getpType());
@@ -326,7 +327,7 @@ public class PatrolTaskPresenter extends BasePresenter<PatrolTaskFragment> {
      * @Data: 2021/12/15
      * @TIME: 9:52
      * @Introduce: 巡检任务界面先获取当前用户的签到信息并存入数据库当中
-    **/
+     **/
     public void getLastAttendance(){
         box = ObjectBox.INSTANCE.getBoxStore().boxFor(UserInfor.class);
         String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
@@ -340,9 +341,9 @@ public class PatrolTaskPresenter extends BasePresenter<PatrolTaskFragment> {
                     @Override
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         PatrolQueryService.AttendanceResp data = response.body().data;
+                        box.removeAll();
                         if (data != null){
                             UserInfor user = new UserInfor();
-                            box.removeAll();
                             user.setId(0L);
                             user.setUserKey(PatrolConstant.USERLOGIN_ID);
                             if (data.location != null){
@@ -357,6 +358,7 @@ public class PatrolTaskPresenter extends BasePresenter<PatrolTaskFragment> {
                     @Override
                     public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         super.onError(response);
+                        box.removeAll();
                         getV().dismissLoading();
                     }
                 });

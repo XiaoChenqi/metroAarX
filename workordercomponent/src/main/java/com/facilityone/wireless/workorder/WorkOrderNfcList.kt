@@ -128,7 +128,7 @@ class WorkOrderNfcList : BaseActivity<WorkOrderNFCPresenter>() {
     }
 
     private fun initView() {
-        binding.uiTopbar.setTitle("空间位置")
+        binding.uiTopbar.setTitle("空间位置(NFC)")
         val lp = RelativeLayout.LayoutParams(
             RelativeLayout.LayoutParams.WRAP_CONTENT,
             RelativeLayout.LayoutParams.MATCH_PARENT

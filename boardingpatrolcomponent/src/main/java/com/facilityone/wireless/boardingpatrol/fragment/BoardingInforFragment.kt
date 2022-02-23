@@ -15,6 +15,7 @@ import com.facilityone.wireless.boardingpatrol.R
 import com.facilityone.wireless.boardingpatrol.databinding.AdapterBoardingqueryBinding
 import com.facilityone.wireless.boardingpatrol.databinding.FragmentBoardingInforBinding
 import com.facilityone.wireless.boardingpatrol.databinding.LayoutBoardingcreateBinding
+import com.facilityone.wireless.boardingpatrol.moudle.BoardingPatrolConstant.INSPECTION_BOARDING
 import com.facilityone.wireless.boardingpatrol.moudle.BoardingPatrolConstant.INSPECTION_WALK
 import com.facilityone.wireless.boardingpatrol.moudle.BoardingPatrolConstant.INTERVAL_UP
 import com.facilityone.wireless.boardingpatrol.moudle.BoardingService
@@ -23,6 +24,12 @@ import com.facilityone.wireless.boardingpatrol.toast
 import kotlinx.coroutines.channels.ticker
 import java.util.*
 
+/**
+ *  @Author: Karelie
+ *  @Method：BoardingInforFragment
+ *  @Date：2022/2/11 17:57
+ *  @Description：检查详情
+ */
 class BoardingInforFragment : BaseFragment<BoardingInforPresenter>() {
     lateinit var b: FragmentBoardingInforBinding
     override fun setLayout(): Any {
@@ -57,7 +64,7 @@ class BoardingInforFragment : BaseFragment<BoardingInforPresenter>() {
     @SuppressLint("SetTextI18n")
     private fun initView() {
         setTitle("巡查记录")
-        var bundle = arguments
+        val bundle = arguments
         bundle?.getLong(REQUEST_ID).apply {
             presenter.getQueryInfor(this!!)
         }
@@ -80,6 +87,11 @@ class BoardingInforFragment : BaseFragment<BoardingInforPresenter>() {
         enity.unit.apply { b.checkUnit.text = this }
         enity.inspectionMethod.apply {
             b.checkWay.text = if (this == INSPECTION_WALK) "步行" else "添乘"
+            if (this != null && this == INSPECTION_BOARDING){
+                b.llWay.visibility = View.VISIBLE
+            }else{
+                b.llWay.visibility = View.GONE
+            }
         }
         enity.carNumber.apply { b.tvCarNumber.text = this }
         enity.driver.apply { b.tvDriver.text = this }
@@ -102,6 +114,9 @@ class BoardingInforFragment : BaseFragment<BoardingInforPresenter>() {
         enity.condition.apply { b.tvCheckCondition.text = this }
         enity.resolutionCondition.apply { b.tvSolveCondition.text = this }
         enity.needTrackedCondition.apply { b.tvNeedTracked.text = this }
+
+
+
     }
 
     fun refreshError() {

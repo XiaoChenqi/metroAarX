@@ -240,6 +240,8 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
                     }
                 }
 
+
+
                 if (patrolSpotsBeen.size() > 0) {
                     PatrolSpotDao spotDao = new PatrolSpotDao();
                     for (PatrolStatusEntity.PatrolSpotsBean patrolSpotsBean : patrolSpotsBeen) {
@@ -422,6 +424,7 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
                     @Override
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         getV().dismissLoading();
+                        box.removeAll();
                         PatrolQueryService.AttendanceResp data = response.body().data;
                         if(data != null) {
                             UserInfor user = new UserInfor();
@@ -444,6 +447,7 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
                     @Override
                     public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         super.onError(response);
+                        box.removeAll();
                         getV().dismissLoading();
                     }
                 });
@@ -726,7 +730,13 @@ public class PatrolScanPresenter extends BasePresenter<PatrolScanFragment> {
                     if (entity.getCompleted() == DBPatrolConstant.TRUE_VALUE || entity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE) {
                         return false; //此时该任务已经结束 不要再开启
                     }else {
-                        return true; //当前任务表中无数据 且当前点击的任务没有开启过任务
+                        if ((queryData.getTaskId()+"").equals(entity.getTaskId()+"") &&(queryData.getPatrolSpotId()+"").equals(entity.getPatrolSpotId()+"")){
+                            return false;//任务已开启过但是当前任务状态刷新过
+                        }else {
+                            return true; //当前任务表中无数据 且当前点击的任务没有开启过任务
+                        }
+//                        return true; //当前任务表中无数据 且当前点击的任务没有开启过任务
+
                     }
                 } else {
                     return false; //任务列表中未结束 不可开启任务

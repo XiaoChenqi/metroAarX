@@ -870,8 +870,10 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
      */
     private void showRightMenu(Integer status, List<Integer> roles, List<WorkorderLaborerService.WorkorderLaborerBean> list,boolean isBunchingOrder) {
         if (status.equals(WorkorderConstant.WORK_STATUS_COMPLETED)) { //待存档状态下 需要验证和存档的权限
-            if (isBunchingOrder){
-                removeRightView();
+            if (isBunchingOrder){ //外部工单 需要有主管审批权限 不然关闭右上角按钮
+                if (!getPresenter().hasPermission(WorkorderConstant.VOID_PERMISSION, currentRoles)){
+                    removeRightView();
+                }
             }else {
                 if (getTagStatus() != null && getTagStatus().equals(WorkorderConstant.APPLICATION_VOID)){
                     if (!getPresenter().hasPermission(WorkorderConstant.VOID_PERMISSION, currentRoles)) {
@@ -884,7 +886,6 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                     }
                 }
             }
-
         } else if (status.equals(WorkorderConstant.WORK_STATUS_PROCESS)) {
             if (needShowRightMenu(list)) {
                 if (getTagStatus() != null && getTagStatus().equals(WorkorderConstant.APPLICATION_FOR_SUSPENSION)) {
@@ -897,18 +898,23 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                     }
                 }
             } else { //非执行人
-                if (!getPresenter().hasPermission(WorkorderConstant.PAUSE_PERMISSION,currentRoles)
-                ){
-                    //处理中非执行人无操作
-                    removeRightView();
+                if (getTagStatus() != null && getTagStatus().equals(WorkorderConstant.APPLICATION_VOID)){
+                    if (!getPresenter().hasPermission(WorkorderConstant.VOID_PERMISSION, currentRoles)) {
+                        removeRightView();
+                    }else {
+                        setMoreMenuVisible(true);
+                    }
                 }else {
-                    setMoreMenuVisible(true);
+                    if (!getPresenter().hasPermission(WorkorderConstant.PAUSE_PERMISSION,currentRoles)){
+                        //处理中非执行人无操作
+                        removeRightView();
+                    }else {
+                        setMoreMenuVisible(true);
+                    }
                 }
                 refreshStatus =  WorkorderConstant.WORK_STATUS_NONE;
                 mLlInput.setVisibility(View.GONE);
             }
-
-
         } else if (status.equals(WorkorderConstant.WORK_STATUS_CREATED) || status.equals(WorkorderConstant.WORK_STATUS_PUBLISHED)) {
             if (getTagStatus() != null && getTagStatus().equals(WorkorderConstant.APPLICATION_VOID)){
                 if (!getPresenter().hasPermission(WorkorderConstant.VOID_PERMISSION, currentRoles)) {

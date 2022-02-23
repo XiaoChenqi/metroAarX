@@ -347,7 +347,7 @@ public class PatrolMenuPresenter extends CommonBasePresenter<PatrolMenuFragment>
      * @Data: 2021/12/22
      * @TIME: 11:21
      * @Introduce:获取离线数据
-    **/
+     **/
     public void getLastAttendance() {
         getV().showLoading();
         box = ObjectBox.INSTANCE.getBoxStore().boxFor(UserInfor.class);
@@ -363,9 +363,9 @@ public class PatrolMenuPresenter extends CommonBasePresenter<PatrolMenuFragment>
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         getV().dismissLoading();
                         PatrolQueryService.AttendanceResp data = response.body().data;
+                        box.removeAll();
                         if (data != null) {
                             UserInfor user = new UserInfor();
-                            box.removeAll();
                             user.setId(0L);
                             user.setUserKey(PatrolConstant.USERLOGIN_ID);
                             if (data.location != null) {
@@ -381,6 +381,7 @@ public class PatrolMenuPresenter extends CommonBasePresenter<PatrolMenuFragment>
                     public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         super.onError(response);
                         getV().dismissLoading();
+                        box.removeAll();
                     }
                 });
 

@@ -264,17 +264,17 @@ public class PatrolTaskDao {
         mDbManager.update(queryArgs, sql);
     }
 
-    public void update(int status, int complete, Long patrolTaskId) {
+    public void update(int status, int complete, Long patrolTaskId,Integer ptype) {
         Long projectId = FM.getProjectId();
         Long userId = FM.getEmId();
         String sql;
         Object[] queryArgs;
         if(complete == DBPatrolConstant.TRUE_VALUE){
-            sql = "UPDATE DBPATROLTASK SET STATUS = ? ,COMPLETED = ? WHERE PROJECT_ID = ? AND USER_ID = ? AND ID = ?;";
-            queryArgs = new Object[]{ status, DBPatrolConstant.TRUE_VALUE,projectId, userId, patrolTaskId };
+            sql = "UPDATE DBPATROLTASK SET STATUS = ? ,COMPLETED = ? ,PTYPE = ? WHERE PROJECT_ID = ? AND USER_ID = ? AND ID = ?;";
+            queryArgs = new Object[]{ status, DBPatrolConstant.TRUE_VALUE,ptype,projectId, userId, patrolTaskId};
         }else{
-            sql = "UPDATE DBPATROLTASK SET STATUS = ? WHERE PROJECT_ID = ? AND USER_ID = ? AND ID = ?;";
-            queryArgs = new Object[]{ status, projectId, userId, patrolTaskId };
+            sql = "UPDATE DBPATROLTASK SET STATUS = ? ,PTYPE = ?WHERE PROJECT_ID = ? AND USER_ID = ? AND ID = ?;";
+            queryArgs = new Object[]{ status, ptype,projectId, userId, patrolTaskId };
         }
 
         mDbManager.update(queryArgs, sql);

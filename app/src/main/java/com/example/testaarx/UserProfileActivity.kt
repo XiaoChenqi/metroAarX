@@ -57,6 +57,7 @@ class UserProfileActivity: AppCompatActivity() {
 
         btnLine14?.setOnClickListener {
             AppConfig.env=AppConfig.LINE14
+            AppConfig.serverHost="http://222.66.139.92:9999/fz_iframe"
             com.blankj.utilcode.util.ToastUtils.showShort("切换至正式环境,只允许使用博坤客户端传递账户 ")
         }
 

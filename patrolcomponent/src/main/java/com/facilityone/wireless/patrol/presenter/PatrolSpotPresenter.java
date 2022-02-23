@@ -948,7 +948,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
      * @Data: 2021/12/22
      * @TIME: 15:39
      * @Introduce: 判断巡检任务点位可继续性(离线形式)
-    **/
+     **/
     public void judgeTask(PatrolSpotEntity entity,boolean needScan){
         /**
          * 离线操作
@@ -974,7 +974,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
      * @Data: 2021/12/21
      * @TIME: 9:30
      * @Introduce: 根据当前任务数据装填以及任务实体数据已经 needScan判断下一步操作
-    **/
+     **/
     public void doWork(PatrolQueryService.PatrolJudgeBean data, PatrolSpotEntity entity, boolean needScan) {
         if (data != null) {
             /**
@@ -1023,7 +1023,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                         canNotDo(data, entity);
                     }
                 }
-                
+
             }
         }
     }
@@ -1033,7 +1033,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
      * @Data: 2021/12/22
      * @TIME: 15:09
      * @Introduce: 当前任务不可开启
-    **/
+     **/
     private void canNotDo(PatrolQueryService.PatrolJudgeBean data, PatrolSpotEntity entity) {
         if (data.time > 0){
             getV().showOrderTimeDialog(data.time);
@@ -1084,7 +1084,12 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                     if (entity.getCompleted() == DBPatrolConstant.TRUE_VALUE || entity.getRemoteCompleted() == DBPatrolConstant.TRUE_VALUE) {
                         return false; //此时该任务已经结束 不要再开启
                     }else {
-                        return true; //当前任务表中无数据 且当前点击的任务没有开启过任务
+//                        return true; //当前任务表中无数据 且当前点击的任务没有开启过任务
+                        if ((queryData.getTaskId()+"").equals(entity.getTaskId()+"") &&(queryData.getPatrolSpotId()+"").equals(entity.getPatrolSpotId()+"")){
+                            return false;//任务已开启过但是当前任务状态刷新过
+                        }else {
+                            return true; //当前任务表中无数据 且当前点击的任务没有开启过任务
+                        }
                     }
                 } else {
                     return false; //任务列表中未结束 不可开启任务
@@ -1130,7 +1135,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
         }
     }
 
-    
+
     /**
      * @Created by: kuuga
      * @Date: on 2021/8/30 10:25
@@ -1198,9 +1203,9 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                     public void onSuccess(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         getV().dismissLoading();
                         PatrolQueryService.AttendanceResp data = response.body().data;
+                        box.removeAll();
                         if (data != null) {
                             UserInfor user = new UserInfor();
-                            box.removeAll();
                             user.setId(0L);
                             user.setUserKey(PatrolConstant.USERLOGIN_ID);
                             if (data.location != null) {
@@ -1225,6 +1230,7 @@ public class PatrolSpotPresenter extends BasePresenter<PatrolSpotFragment> {
                     @Override
                     public void onError(Response<BaseResponse<PatrolQueryService.AttendanceResp>> response) {
                         super.onError(response);
+                        box.removeAll();
                         getV().dismissLoading();
                     }
                 });
