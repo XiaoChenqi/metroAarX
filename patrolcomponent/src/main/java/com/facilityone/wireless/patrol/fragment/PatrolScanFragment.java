@@ -33,6 +33,7 @@ import com.facilityone.wireless.a.arch.offline.model.service.OnDownloadListener;
 import com.facilityone.wireless.a.arch.offline.model.service.OnPatrolListener;
 import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
 import com.facilityone.wireless.a.arch.offline.objectbox.patrol.CompleteTime;
+import com.facilityone.wireless.a.arch.offline.objectbox.patrol.CompleteTime_;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.basiclib.utils.SystemDateUtils;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.objectbox.Box;
+import io.objectbox.query.Query;
 import me.yokeyword.fragmentation.SwipeBackLayout;
 
 /**
@@ -620,13 +622,20 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
      * @Introduce: 匹配后直接进入
      **/
     public void scanResult(PatrolSpotEntity patrolSpotEntity, Long time) {
+        taskBox = ObjectBox.INSTANCE.getBoxStore().boxFor(CompleteTime.class);
+        Query<CompleteTime> query = taskBox.query().equal(CompleteTime_.taskTip, PatrolConstant.PATROL_TASK_OUTLINE).build();
+        CompleteTime queryData = query.findFirst();
         if (time != 0) {
             PatrolSpotDao dao = new PatrolSpotDao();
             PatrolSpotEntity item = dao.getSpot(patrolSpotEntity.getPatrolSpotId());
             if (item.getTaskStatus() > 0) {
                 enterDeviceList(patrolSpotEntity);
             } else {
-                showOrderTimeDialog(time, patrolSpotEntity);
+                if ((queryData.getTaskId()+"").equals(patrolSpotEntity.getTaskId()+"") &&(queryData.getPatrolSpotId()+"").equals(patrolSpotEntity.getPatrolSpotId()+"")){
+                    enterDeviceList(patrolSpotEntity); //任务已开启过但是当前任务状态刷新过
+                }else {
+                    showOrderTimeDialog(time, patrolSpotEntity); //当前任务表中无数据 且当前点击的任务没有开启过任务
+                }
             }
         } else {
             enterDeviceList(patrolSpotEntity);
