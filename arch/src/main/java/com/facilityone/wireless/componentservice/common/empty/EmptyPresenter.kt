@@ -26,7 +26,7 @@ class EmptyPresenter(private val type: Int) : CommonBasePresenter<EmptyFragment?
         val pId = 1L
         FM.getConfigurator().withProjectId(pId)
         SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PROJECT_ID, pId)
-        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PROJECT_NAME, "移动测试", true)
+        SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.PROJECT_NAME, "14号线", true)
         val httpParams = HttpParams("current_project", pId.toString())
         OkGo.getInstance().addCommonParams(httpParams)
         SPUtils.getInstance(SPKey.SP_MODEL).put(SPKey.HAVE_LOGON, true)
