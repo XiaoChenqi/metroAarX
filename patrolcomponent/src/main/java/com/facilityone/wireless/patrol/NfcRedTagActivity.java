@@ -131,9 +131,12 @@ public class NfcRedTagActivity extends BaseFragmentActivity {
             return;
         }
 
+
+
+        /**请勿覆盖,*/
         // 应用是否打开
         List<Activity> activityList = ActivityUtils.getActivityList();
-        if (activityList == null || activityList.size() < 2) {
+        if (activityList == null) {
             showShort(R.string.patrol_not_open_app_tip);
             this.finish();
             return;
