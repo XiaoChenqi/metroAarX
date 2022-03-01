@@ -631,8 +631,12 @@ public class PatrolScanFragment extends BaseFragment<PatrolScanPresenter> implem
             if (item.getTaskStatus() > 0) {
                 enterDeviceList(patrolSpotEntity);
             } else {
-                if ((queryData.getTaskId()+"").equals(patrolSpotEntity.getTaskId()+"") &&(queryData.getPatrolSpotId()+"").equals(patrolSpotEntity.getPatrolSpotId()+"")){
-                    enterDeviceList(patrolSpotEntity); //任务已开启过但是当前任务状态刷新过
+                if (queryData != null){
+                    if ((queryData.getTaskId()+"").equals(patrolSpotEntity.getTaskId()+"") &&(queryData.getPatrolSpotId()+"").equals(patrolSpotEntity.getPatrolSpotId()+"")){
+                        enterDeviceList(patrolSpotEntity); //任务已开启过但是当前任务状态刷新过
+                    }else {
+                        showOrderTimeDialog(time, patrolSpotEntity); //当前任务表中无数据 且当前点击的任务没有开启过任务
+                    }
                 }else {
                     showOrderTimeDialog(time, patrolSpotEntity); //当前任务表中无数据 且当前点击的任务没有开启过任务
                 }
