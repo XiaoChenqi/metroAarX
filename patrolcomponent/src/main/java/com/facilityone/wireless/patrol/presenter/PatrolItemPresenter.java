@@ -62,12 +62,17 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                 if (itemList != null && itemList.size() > 0) {
                     PatrolPicDao picDao = new PatrolPicDao();
                     for (PatrolItemEntity patrolItemEntity : itemList) {
-                        if (equEntity.getCompleted() != DBPatrolConstant.TRUE_VALUE) {
-                            if (!patrolItemEntity.getContent().equals("车站工况")){
-                                patrolItemEntity.setSelect(patrolItemEntity.getDefaultSelectValue());
+                        if (patrolItemEntity.getResultType()==PatrolDbService.QUESTION_TYPE_TEXT){ //文本类型默认传值
+                            patrolItemEntity.setInput(patrolItemEntity.getDefaultSelectValue() == null ? "" : patrolItemEntity.getDefaultSelectValue());
+                        }else {
+                            if (equEntity.getCompleted() != DBPatrolConstant.TRUE_VALUE) {
+                                if (!patrolItemEntity.getContent().equals("车站工况")){
+                                    patrolItemEntity.setSelect(patrolItemEntity.getDefaultSelectValue());
+                                }
+                                patrolItemEntity.setInput(patrolItemEntity.getDefaultInputValue() == null ? "" : patrolItemEntity.getDefaultInputValue().toString());
                             }
-                            patrolItemEntity.setInput(patrolItemEntity.getDefaultInputValue() == null ? "" : patrolItemEntity.getDefaultInputValue().toString());
                         }
+
                         List<PatrolPicEntity> p = picDao.getPicSyncList(patrolItemEntity.getContentResultId());
                         patrolItemEntity.setPicEntities(p);
                     }
@@ -386,7 +391,7 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                     }
                 });
     }
-    
+
 
     public int haveMiss(List<PatrolItemEntity> itemEntities,Integer choice) {
         if (choice == -1){

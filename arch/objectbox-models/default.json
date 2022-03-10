@@ -71,9 +71,37 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:6762829038290966342",
+      "lastPropertyId": "5:6233655777214101647",
+      "name": "ConstructionTemplate",
+      "properties": [
+        {
+          "id": "1:6503060915304406471",
+          "name": "id"
+        },
+        {
+          "id": "2:1802074271998598541",
+          "name": "status"
+        },
+        {
+          "id": "3:1066765981939134384",
+          "name": "upLoadContent"
+        },
+        {
+          "id": "4:8213035139827793342",
+          "name": "originContent"
+        },
+        {
+          "id": "5:6233655777214101647",
+          "name": "originResponse"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:1779415900769916725",
+  "lastEntityId": "3:6762829038290966342",
   "lastIndexId": "1:2057762943562165752",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

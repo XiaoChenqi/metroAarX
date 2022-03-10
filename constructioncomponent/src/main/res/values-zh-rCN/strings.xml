@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">constructioncomponent</string>
+    <string name="construction_upload">提交</string>
+    <string name="construction_regist">施工监护登记</string>
+    <string name="construction_query">施工监护记录</string>
+
+    <string name="tutelage_infor">监护信息</string>
+    <string name="tutelage_person">监护人员</string>
+    <string name="tutelage_person_hint">请输入监护人员</string>
+    <string name="tutelage_starttime">监护开始时间</string>
+    <string name="tutelage_starttime_hint">请选择监护开始时间</string>
+    <string name="tutelage_endtime">监护结束时间</string>
+    <string name="tutelage_endtime_hint">请选择监护结束时间</string>
+
+    <string name="construction_basicinfor">施工基本信息</string>
+    <string name="construction_name">施工项目名称</string>
+    <string name="construction_person_hint">请输入施工项目名称</string>
+    <string name="construction_data">施工日期</string>
+    <string name="construction_data_hint">请选择施工日期</string>
+    <string name="construction_site">施工站点</string>
+    <string name="construction_site_hint">请输入施工站点</string>
+    <string name="construction_unit">施工单位</string>
+    <string name="construction_unit_hint">请输入施工单位</string>
+    <string name="construction_leader">现场施工负责人</string>
+    <string name="construction_leader_hint">请输入现场施工负责人</string>
+    <string name="all_leader">现场负责人</string>
+    <string name="all_leader_hint">请输入现场负责人</string>
+
+    <string name="construction_project">施工监护项目</string>
+    <string name="construction_project_list">施工监护项目列表</string>
+    <string name="complete">已完成</string>
+    <string name="un_complete">未完成</string>
+
+    <string name="remark">备注</string>
+    <string name="remark_hint">请输入备注...</string>
+
+    <!--开始时间不能晚于结束时间-->
+    <string name="workorder_time_start_error">开始时间不能晚于结束时间</string>
+    <!--结束时间不能早于开始时间-->
+    <string name="workorder_time_end_error">结束时间不能早于开始时间</string>
+
+       <!--确认取消-->
+    <string name="maintenance_submit_ok">确认</string>
+    <string name="maintenance_submit_cancel">取消</string>
+
+    <!--通过不通过-->
+    <string name="maintenance_submit_pass">通过</string>
+    <string name="maintenance_submit_unpass">不通过</string>
+
+      <!--存在漏检项，请确认是否提交-->
+    <string name="maintenance_task_submit_missing">存在漏检项，请确认是否提交</string>
+
+    <!--请确认本次抽检结果-->
+    <string name="maintenance_task_submit_check">请确认本次抽检结果</string>
+</resources>

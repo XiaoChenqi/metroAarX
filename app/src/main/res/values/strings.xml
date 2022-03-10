@@ -36,4 +36,7 @@
 
     <!--服务器地址-->
     <string name="app_version_server">服务器地址</string>
+
+    <!--清理缓存-->
+    <string name="app_version_cache">清理缓存</string>
 </resources>

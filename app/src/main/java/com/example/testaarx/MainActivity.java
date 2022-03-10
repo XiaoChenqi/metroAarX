@@ -13,7 +13,7 @@ import com.example.testaarx.download.OutLineDataActivity;
 import com.example.testaarx.mine.MineSignQrCodeActivity;
 import com.example.testaarx.scan.FmScanBaseActivity;
 import com.facilityone.wireless.boardingpatrol.BoardingPatrolActivity;
-import com.facilityone.wireless.boardingpatrol.BoardingPatrolActivityKt;
+import com.facilityone.wireless.construction.ConstructionActivity;
 import com.facilityone.wireless.demand.DemandActivity;
 import com.facilityone.wireless.demand.DemandCreateActivity;
 import com.facilityone.wireless.inventory.InventoryActivity;
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mServerBtn;
     private Button mProfileBtn;
     private Button boardBtn;
+    private Button constructionBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +186,14 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+
+        constructionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ConstructionActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
     }
 
     private void initView() {
@@ -203,5 +212,6 @@ public class MainActivity extends AppCompatActivity {
         mServerBtn = (Button) findViewById(R.id.serverBtn);
         mProfileBtn=(Button) findViewById(R.id.profileBtn);
         boardBtn = findViewById(R.id.boardBtn);
+        constructionBtn = findViewById(R.id.constructionBtn);
     }
 }

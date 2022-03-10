@@ -64,6 +64,7 @@
                     <!--撰写人-->
                     <LinearLayout
                         style="@style/workorderInfoStyle"
+                        android:layout_marginTop="@dimen/dp_10"
                         >
                         <TextView
                             android:layout_width="wrap_content"
@@ -78,7 +79,7 @@
                         style="@style/workorderInfoStyle">
                         <TextView
                             android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
+                            style="@style/h3_text_title_style"
                             android:layout_height="wrap_content"
                             android:text="检查人："
                             />
@@ -97,7 +98,7 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
+                            style="@style/h3_text_title_style"
                             android:layout_height="wrap_content"
                             android:text="检查单位："
                             />
@@ -116,7 +117,7 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
+                            style="@style/h3_text_title_style"
                             android:layout_height="wrap_content"
                             android:text="检查线路区段："
                             />
@@ -134,7 +135,7 @@
                         >
                         <TextView
                             android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
+                            style="@style/h3_text_title_style"
                             android:layout_height="wrap_content"
                             android:text="检查方式："
                             />
@@ -158,7 +159,7 @@
                             >
                             <TextView
                                 android:layout_width="wrap_content"
-                                style="@style/h3_text_style"
+                                style="@style/h3_text_title_style"
                                 android:layout_height="wrap_content"
                                 android:text="添乘列车号："
                                 />
@@ -176,7 +177,7 @@
                             >
                             <TextView
                                 android:layout_width="wrap_content"
-                                style="@style/h3_text_style"
+                                style="@style/h3_text_title_style"
                                 android:layout_height="wrap_content"
                                 android:text="值乘司机："
                                 />
@@ -194,7 +195,7 @@
                             >
                             <TextView
                                 android:layout_width="wrap_content"
-                                style="@style/h3_text_style"
+                                style="@style/h3_text_title_style"
                                 android:layout_height="wrap_content"
                                 android:text="添乘上车时间："
                                 />
@@ -212,7 +213,7 @@
                             >
                             <TextView
                                 android:layout_width="wrap_content"
-                                style="@style/h3_text_style"
+                                style="@style/h3_text_title_style"
                                 android:layout_height="wrap_content"
                                 android:text="添乘下车时间："
                                 />
@@ -266,12 +267,14 @@
                     <!--检查内容-->
                     <LinearLayout
                         style="@style/workorderInfoStyle"
+                        android:layout_marginTop="@dimen/dp_10"
                         >
                         <TextView
                             android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
+                            style="@style/h3_text_title_style"
                             android:layout_height="wrap_content"
                             android:text="检查内容："
+
                             />
                         <TextView
                             android:layout_width="wrap_content"
@@ -288,7 +291,7 @@
                         >
                         <TextView
                             android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
+                            style="@style/h3_text_title_style"
                             android:layout_height="wrap_content"
                             android:text="检查情况："
                             />
@@ -307,7 +310,7 @@
                         >
                         <TextView
                             android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
+                            style="@style/h3_text_title_style"
                             android:layout_height="wrap_content"
                             android:text="解决情况："
                             />
@@ -326,7 +329,7 @@
                         >
                         <TextView
                             android:layout_width="wrap_content"
-                            style="@style/h3_text_style"
+                            style="@style/h3_text_title_style"
                             android:layout_height="wrap_content"
                             android:text="需跟踪情况："
                             />

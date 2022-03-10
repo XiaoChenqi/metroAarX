@@ -142,10 +142,12 @@ class BoardingPatrolMenuFragment : BaseFragment<BoardingMenuPresenter>(),
         val functionBean:FunctionBean? = mFunctionBeanList?.get(postion)
         var baseFragment: BaseFragment<*>? = null
         when(functionBean?.name){
-            MENU_CHECK -> baseFragment = BoardingCreateFragment.getInstance()
-            MENU_QUERY -> baseFragment = BoardingQueryFragment.getInstance()
+            getString(R.string.check_title) -> baseFragment = BoardingCreateFragment.getInstance()
+            getString(R.string.query_title) -> baseFragment = BoardingQueryFragment.getInstance()
         }
-        start(baseFragment)
+        if (baseFragment != null){
+            start(baseFragment)
+        }
     }
 
 

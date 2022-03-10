@@ -21,6 +21,7 @@ public class DatePickUtils {
     public static final boolean[] YEAR_MONTH = { true, true, false, false, false, false };
     public static final boolean[] YEAR_MONTH_DAY = { true, true, true, false, false, false };
     public static final boolean[] YEAR_MONTH_DAY_H_M = { true, true, true, true, true, false };
+    public static final boolean[] YEAR_MONTH_DAY_H_M_S = { true, true, true, true, true, true};
 
     private static final int DIVIDER_COLOR = 0XFFC3C3C3;
     private static final int TITLE_BG_COLOR = 0XFFECECEC;
@@ -47,6 +48,10 @@ public class DatePickUtils {
 
     public static void pickDateDefaultYMDHM(Activity context, Calendar selectCalendar, OnTimeSelectListener onTimeSelectListener) {
         pickDateDefault(context, selectCalendar, onTimeSelectListener, YEAR_MONTH_DAY_H_M);
+    }
+
+    public static void pickDateDefaultYMDHMS(Activity context, Calendar selectCalendar, OnTimeSelectListener onTimeSelectListener) {
+        pickDateDefault(context, selectCalendar, onTimeSelectListener, YEAR_MONTH_DAY_H_M_S);
     }
 
     public static void pickDateAfterToday(Activity context, Calendar selectCalendar, OnTimeSelectListener onTimeSelectListener) {

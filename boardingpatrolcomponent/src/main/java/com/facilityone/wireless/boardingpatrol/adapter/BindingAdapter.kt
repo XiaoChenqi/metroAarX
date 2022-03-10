@@ -12,13 +12,13 @@ object BindingAdapter {
     @BindingAdapter("querySite")
     @JvmStatic
     fun querySite(title:TextView,enity: BoardingService.BoardingQueryContents){
-        title.text = "检查线路区段："+"${enity.startingStation}至${enity.endingStation}${ if(enity.interval==INTERVAL_UP) "上行" else "下行" }区间"
+        title.text = "${enity.startingStation}至${enity.endingStation}${ if(enity.interval==INTERVAL_UP) "上行" else "下行" }区间"
     }
 
     @BindingAdapter("queryText")
     @JvmStatic
     fun queryText(tV:TextView,date:Long){
-        tV.text = "日期："+TimeUtils.date2String(Date(date), DateUtils.SIMPLE_DATE_FORMAT_YMD)
+        tV.text = TimeUtils.date2String(Date(date), DateUtils.SIMPLE_DATE_FORMAT_YMD)
     }
 
 }

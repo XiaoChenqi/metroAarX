@@ -2096,9 +2096,10 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             case CAUSE_REASON:
                 SelectDataBean cause_reason = data.getParcelable(ISelectDataService.SELECT_OFFLINE_DATA_BACK);
                 if (cause_reason != null) {
-                    mTvToolTotal.setText(cause_reason.getName() +
-                            ((cause_reason.getDesc() == null || cause_reason.getDesc().equals("")) ?
-                                    "" : "：" + cause_reason.getDesc()) + "");
+//                    mTvToolTotal.setText(cause_reason.getName() +
+//                            ((cause_reason.getDesc() == null || cause_reason.getDesc().equals("")) ?
+//                                    "" : "：" + cause_reason.getDesc()) + "");
+                    mTvToolTotal.setText(cause_reason.getFullName()+"");
                     operateOrderReasonId = cause_reason.getId(); //获取ID
                     Log.i("你说你是超级英雄", "onFragmentResult: " + "故障原因对象ID：" + operateOrderReasonId);
                     if (operateOrderReasonId == 1) {

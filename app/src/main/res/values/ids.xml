@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="scan_base_id" type="id"/>
+    <item name="app_clear_clear_right_menu" type="id"/>
 </resources>

@@ -18,6 +18,7 @@ import com.facilityone.wireless.a.arch.ec.module.LocationBean;
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean;
 import com.facilityone.wireless.a.arch.ec.utils.RecyclerViewUtil;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
+import com.facilityone.wireless.a.arch.net.FmNetApi;
 import com.facilityone.wireless.a.arch.offline.dao.SiteDao;
 import com.facilityone.wireless.a.arch.widget.SearchBox;
 import com.facilityone.wireless.basiclib.utils.PinyinUtils;
@@ -81,6 +82,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
     private Long localId; //当前点击后的Id
     private Integer localPostion;//当前选择的位置
     private String newOrderIndex ; //新派工单点击的位置
+    private Long localParentId = -1L; //当前的父级Id
     @Override
     public SelectDataPresenter createPresenter() {
         return new SelectDataPresenter();
@@ -164,42 +166,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
     private void initView() {
 //        setSwipeBackEnable(false);
         mRecyclerView = findViewById(R.id.recyclerView);
-        mSearchBox = findViewById(R.id.search_box2);
-        mSearchBox.setOnSearchBox(new SearchBox.OnSearchBox() {
-            @Override
-            public void onSearchTextChanged(String curCharacter) {
-                //搜索
-                if (TextUtils.isEmpty(curCharacter)) {
-                    mAdapter.setShowSubTitle(false);
-                    if (mTotal != null) {
-                        for (SelectDataBean selectDataBean : mTotal) {
-                            selectDataBean.setStart(0);
-                            selectDataBean.setEnd(0);
-                            selectDataBean.setSubStart(0);
-                            selectDataBean.setSubEnd(0);
-                        }
-                        refreshHaveData(mTotal, true);
-                    }
-                    inShowAllLocation = false;
-                    return;
-                }
-                if (mFromType == ISelectDataService.DATA_TYPE_LOCATION) {
-                    if (mTotalLocation == null) {
-                        refreshHaveData(mTotalLocation, false);
-                        return;
-                    }
-                    mAdapter.setShowSubTitle(true);
-                    inShowAllLocation = true;
-                    getPresenter().filter(mFromType, curCharacter, mTotalLocation);
-                } else {
-                    if (mTotal == null) {
-                        refreshHaveData(mTotal, true);
-                        return;
-                    }
-                    getPresenter().filter(mFromType, curCharacter, mTotal);
-                }
-            }
-        });
+        initSearchBox();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mShow = new ArrayList<>();
         mAdapter = new SelectDataAdapter(mShow, mFromType);
@@ -209,6 +176,75 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         //        if(mFromType != ISelectDataService.DATA_TYPE_EQU && mFromType != ISelectDataService.DATA_TYPE_EQU_ALL) {
         //            setRightTextButton(R.string.arch_confirm, R.id.select_data_back_id);
         //        }
+    }
+
+
+    private void initSearchBox(){
+        mSearchBox = findViewById(R.id.search_box);
+        mSearchBox.setOnSearchBox(new SearchBox.OnSearchBox() {
+            @Override
+            public void onSearchTextChanged(String curCharacter) {
+                Log.i("Karelie", "onSearchTextChanged: "+curCharacter);
+                //搜索
+                if (TextUtils.isEmpty(curCharacter)) {
+                    if (mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT ||
+                            mFromType == ISelectDataService.DATA_TYPE_INVALIDD ||
+                            mFromType == ISelectDataService.DATA_TYPE_REASON){
+                        if (mTotal == null) {
+                            refreshHaveData(mTotal, true);
+                            return;
+                        }
+                        inShowAllLocation = false;
+                        getPresenter().filter(mFromType, curCharacter, SelectDataHelper.sellectList(mTotal,-1));
+                    }else {
+                        mAdapter.setShowSubTitle(false);
+                        if (mTotal != null) {
+                            for (SelectDataBean selectDataBean : mTotal) {
+                                selectDataBean.setStart(0);
+                                selectDataBean.setEnd(0);
+                                selectDataBean.setSubStart(0);
+                                selectDataBean.setSubEnd(0);
+                            }
+                            refreshHaveData(mTotal, true);
+                        }
+                        inShowAllLocation = false;
+                        return;
+                    }
+
+                }
+                if (mFromType == ISelectDataService.DATA_TYPE_LOCATION) {
+                    if (mTotalLocation == null) {
+                        refreshHaveData(mTotalLocation, false);
+                        return;
+                    }
+                    mAdapter.setShowSubTitle(true);
+                    inShowAllLocation = true;
+                    getPresenter().filter(mFromType, curCharacter, mTotalLocation);
+                } else if (
+                        mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT ||
+                                mFromType == ISelectDataService.DATA_TYPE_INVALIDD ||
+                                mFromType == ISelectDataService.DATA_TYPE_REASON
+                ){
+                    if (mTotal == null) {
+                        refreshHaveData(mTotal, true);
+                        return;
+                    }
+                    inShowAllLocation = false;
+                    mAdapter.setShowSubTitle(true);
+                    if (localParentId != null){
+                        getPresenter().filter(mFromType, curCharacter, SelectDataHelper.sellectList(mTotal,localParentId));
+                    }else {
+                        getPresenter().filter(mFromType, curCharacter, SelectDataHelper.sellectList(mTotal,-1));
+                    }
+                }else {
+                    if (mTotal == null) {
+                        refreshHaveData(mTotal, true);
+                        return;
+                    }
+                    getPresenter().filter(mFromType, curCharacter, mTotal);
+                }
+            }
+        });
     }
 
     @Override
@@ -400,10 +436,12 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+
         if (mFromType==ISelectDataService.DATA_TYPE_REASON ||
                 mFromType==ISelectDataService.DATA_TYPE_INVALIDD ||
-                mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT){
-
+                mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT||
+                mFromType == ISelectDataService.DATA_TYPE_INVALIDD
+        ){
             if (mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT
                     || mFromType == ISelectDataService.DATA_TYPE_REASON){
                 if (mLevel <1) {
@@ -416,6 +454,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             localPostion = position;
             secondAllList = new ArrayList<>();
             SelectDataBean beanOne = mShow.get(position);
+            localParentId = beanOne.getId();
             if (checkSecond(beanOne.getId(),secondList)){
                 for (SelectDataBean second : secondList) {
                     if (second.getParentId().equals(beanOne.getId())){
@@ -451,19 +490,19 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         }
     }
 
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/16
-      * @Infor: 查询是否存在二级选项
-      */
-     public boolean checkSecond(Long Id,List<SelectDataBean> list){
-         for (SelectDataBean listChcek : list) {
-             if (listChcek.getParentId().equals(Id)) {
-                 return true;
-             }
-         }
-         return false;
-     }
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/16
+     * @Infor: 查询是否存在二级选项
+     */
+    public boolean checkSecond(Long Id,List<SelectDataBean> list){
+        for (SelectDataBean listChcek : list) {
+            if (listChcek.getParentId().equals(Id)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * @param selectDataBeen
@@ -483,12 +522,17 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             mAdapter.setEmptyView(getNoDataView((ViewGroup) mRecyclerView.getParent()));
         }
 
+        initSearchBox();
+
     }
 
 
     @Override
     public void leftBackListener() {
         mSearchBox.clearSearchBox();
+        if (localParentId != null){
+            localParentId = SelectDataHelper.backParentId(mTotal,localParentId);
+        }
         if (mFromType == ISelectDataService.DATA_TYPE_LOCATION && !mShowSite && mLevel ==2 ) {
             mLevel--;
         }
@@ -496,7 +540,8 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
             if (mFromType==ISelectDataService.DATA_TYPE_REASON
                     || mFromType==ISelectDataService.DATA_TYPE_INVALIDD
                     || mFromType==ISelectDataService.DATA_TYPE_FAULT_OBJECT
-                       ){
+                    || mFromType== ISelectDataService.DATA_TYPE_INVALIDD
+            ){
                 setBackResult(false);
             }else {
                 super.leftBackListener();
@@ -505,14 +550,17 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         } else {
             if (mFromType==ISelectDataService.DATA_TYPE_REASON
                     || mFromType==ISelectDataService.DATA_TYPE_INVALIDD
-                    || mFromType==ISelectDataService.DATA_TYPE_FAULT_OBJECT){
+                    || mFromType==ISelectDataService.DATA_TYPE_FAULT_OBJECT
+                    || mFromType== ISelectDataService.DATA_TYPE_INVALIDD
+            ){
                 mShow.clear();
                 mLevel--;
 //                getPresenter().queryReason(mReasonType);
-                mAdapter.replaceData(getLastList(localId));
+                mAdapter.replaceData(getLastList(localParentId));
                 mAdapter.notifyDataSetChanged();
-                if (mLevel < 2 && (mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT
-                        || mFromType == ISelectDataService.DATA_TYPE_REASON))
+                if (mLevel < 2 && (
+                        mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT
+                                || mFromType == ISelectDataService.DATA_TYPE_REASON))
                 {
                     removeRightView();
                 }
@@ -532,11 +580,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
                 }
             }
         }else {
-            for (SelectDataBean data : allList) {
-                if (data.getParentId()!=null && data.getId()== localId){
-                    lastList.add(data);
-                }
-            }
+            return SelectDataHelper.getLastList(allList,localId);
         }
 
 
@@ -545,6 +589,10 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
 
     @Override
     public boolean onBackPressedSupport() {
+        mSearchBox.clearSearchBox();
+        if (localParentId != null){
+            localParentId = SelectDataHelper.backParentId(mTotal,localParentId);
+        }
         if (mFromType == ISelectDataService.DATA_TYPE_LOCATION && !mShowSite && mLevel == 2) {
             mLevel--;
         }
@@ -552,7 +600,9 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         if (mLevel == 1) {
             if (mFromType==ISelectDataService.DATA_TYPE_REASON
                     || mFromType==ISelectDataService.DATA_TYPE_INVALIDD
-                    || mFromType==ISelectDataService.DATA_TYPE_FAULT_OBJECT){
+                    || mFromType==ISelectDataService.DATA_TYPE_FAULT_OBJECT
+                    || mFromType== ISelectDataService.DATA_TYPE_INVALIDD
+            ){
                 setBackResult(false);
                 return true;
             }else {
@@ -562,11 +612,13 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
         } else {
             if (mFromType==ISelectDataService.DATA_TYPE_REASON
                     || mFromType==ISelectDataService.DATA_TYPE_INVALIDD
-                    || mFromType==ISelectDataService.DATA_TYPE_FAULT_OBJECT){
+                    || mFromType==ISelectDataService.DATA_TYPE_FAULT_OBJECT
+                    || mFromType== ISelectDataService.DATA_TYPE_INVALIDD
+            ){
                 mShow.clear();
                 mLevel--;
 //                getPresenter().queryReason(mReasonType);
-                mAdapter.replaceData(getLastList(localId));
+                mAdapter.replaceData(getLastList(localParentId));
                 mAdapter.notifyDataSetChanged();
                 if (mLevel < 2 && (mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT
                         || mFromType == ISelectDataService.DATA_TYPE_REASON))
@@ -595,7 +647,7 @@ public class SelectDataFragment extends BaseFragment<SelectDataPresenter> implem
                     mBackBean.setLocation(mLocationBean);
                 }
             }
-        }else if (needChange && (mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT
+        }else if (needChange && (mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT || mFromType == ISelectDataService.DATA_TYPE_INVALIDD
                 || mFromType == ISelectDataService.DATA_TYPE_REASON)){
             back = false;
             SelectDataBean bean = getSelectData(localId,allList);

@@ -38,15 +38,25 @@ public class SelectDataAdapter extends BaseQuickAdapter<SelectDataBean, BaseView
             return;
         }
         SpannableStringBuilder ssb = null;
-        ssb = item.getParentId() == null ?
-                new SpannableStringBuilder(StringUtils.formatString(item.getName()))
-                :new SpannableStringBuilder(StringUtils.formatString(item.getFullName()));
-
+        if (item.getParentId() == null){
+            ssb = new SpannableStringBuilder(StringUtils.formatString(item.getName()));
+        }else {
+            if (item.getDesc().isEmpty()){
+                ssb = new SpannableStringBuilder(StringUtils.formatString(item.getName()));
+            }else {
+                ssb = new SpannableStringBuilder(StringUtils.formatString(item.getDesc()));
+            }
+        }
         ForegroundColorSpan span = new ForegroundColorSpan(Color.RED);
         ssb.setSpan(span, item.getStart(), item.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         helper.setText(R.id.title_tv, ssb);
 
-        helper.setGone(R.id.subtitle_tv, mFromType == ISelectDataService.DATA_TYPE_EQU || mFromType == ISelectDataService.DATA_TYPE_EQU_ALL || isShowSubTitle);
+        helper.setGone(R.id.subtitle_tv, (mFromType == ISelectDataService.DATA_TYPE_EQU ||
+                mFromType == ISelectDataService.DATA_TYPE_EQU_ALL ||
+                mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT||
+                mFromType == ISelectDataService.DATA_TYPE_REASON||
+                mFromType== ISelectDataService.DATA_TYPE_INVALIDD||
+                isShowSubTitle) && item.getParentId() != null);
         helper.setGone(R.id.right_icon, item.getHaveChild());
 
         SpannableStringBuilder fullSsb = new SpannableStringBuilder(StringUtils.formatString(item.getFullName()));

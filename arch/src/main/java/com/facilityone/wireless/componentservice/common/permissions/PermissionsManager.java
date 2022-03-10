@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.StringRes;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.facilityone.wireless.a.arch.R;
 import com.facilityone.wireless.a.arch.ec.module.FunctionService;
 import com.facilityone.wireless.a.arch.ec.module.IService;
@@ -12,6 +13,7 @@ import com.facilityone.wireless.componentservice.asset.AssetService;
 import com.facilityone.wireless.componentservice.boardingpatrol.BoardingPatrolService;
 import com.facilityone.wireless.componentservice.bulletin.BulletinService;
 import com.facilityone.wireless.componentservice.chart.ChartService;
+import com.facilityone.wireless.componentservice.construction.ConstructionService;
 import com.facilityone.wireless.componentservice.contract.ContractService;
 import com.facilityone.wireless.componentservice.demand.DemandService;
 import com.facilityone.wireless.componentservice.energy.EnergyService;
@@ -47,17 +49,17 @@ public class PermissionsManager {
     public static final String UNARRANGEORDERNUMBER = "unArrangeOrderNumber";                //待派工工单数量
     public static final String UNAPPROVALORDERNUMBER = "unApprovalOrderNumber";              //待审核工单数量
     public static final String UNARCHIVEDORDERNUMBER = "unArchivedOrderNumber";              //待存档工单数量
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/10
-      * @Infor: 新加
-      */
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/10
+     * @Infor: 新加
+     */
     public static final String ABNORMALORDERNUMBER = "abnormalOrderNumber";              //异常工单数量
     public static final String PATROLTASKNUMBER = "patrolTaskNumber";                        //巡检任务数量
 
-    public static final String UNAPPROVALREQUIREMENTNUMBER = "undoRequirementNumber";  //待处理需求数量
-    public static final String UNDOREQUIREMENTNUMBER = "unEvaluateRequirementNumber";              //待评价需求数量
-    public static final String UNEVALUATEREQUIREMENTNUMBER = "unImprovedRequirementNumber";  //待完善需求数量
+    public static final String UNDOREQUIREMENTNUMBER = "undoRequirementNumber";  //待处理需求数量
+    public static final String UNEVALUATEREQUIREMENTNUMBER = "unEvaluateRequirementNumber";   //待评价需求数量
+    public static final String UNIMPROVEDREQUIREMENTNUMBER = "unImprovedRequirementNumber";  //待完善需求数量
 
     public static final String TOBEOUTINVENTORYNUMBER = "toBeOutInventoryNumber";            //待出库任务提示
     public static final String UNAPPROVALINVENTORYNUMBER = "unApprovalInventoryNumber";      //待审批预定单数量
@@ -68,16 +70,16 @@ public class PermissionsManager {
     public static final String UNDOINSPECTIONNUMBER = "undoInspectionNumber";                 //查验任务数量
     public static final String UNARCHIVEDINSPECTIONNUMBER = "unArchivedInspectionNumber";      //待验证查验任务数量
 
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/24
-      * @Infor: 维护工单模块
-      */
-     public static final String UNDOPPMORDERNUMBER = "undoPPMOrderNumber"; //待处理维护工单数量
-     public static final String UNARRANGEPPMORDERNUMBER = "unArrangePPMOrderNumber"; //待派工维护工单数量
-     public static final String UNAPPROVALPMORDERNUMBER = "unApprovalPPMOrderNumber"; //待审核维护工单数量
-     public static final String ABNORMALPPMORDERNUMBER = "abnormalPPMOrderNumber"; //异常维护工单数量
-     public static final String UNARCHIVEDPPMORDERNUMBER = "unArchivedPPMOrderNumber"; //待存档维护工单数量
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/24
+     * @Infor: 维护工单模块
+     */
+    public static final String UNDOPPMORDERNUMBER = "undoPPMOrderNumber"; //待处理维护工单数量
+    public static final String UNARRANGEPPMORDERNUMBER = "unArrangePPMOrderNumber"; //待派工维护工单数量
+    public static final String UNAPPROVALPMORDERNUMBER = "unApprovalPPMOrderNumber"; //待审核维护工单数量
+    public static final String ABNORMALPPMORDERNUMBER = "abnormalPPMOrderNumber"; //异常维护工单数量
+    public static final String UNARCHIVEDPPMORDERNUMBER = "unArchivedPPMOrderNumber"; //待存档维护工单数量
 
 
     public static class HomeFunction {
@@ -124,7 +126,7 @@ public class PermissionsManager {
         public List<FunctionService.FunctionBean> show(String opensJson) {
             mFbs.clear();
             mIndex = 0;
-//
+
 //            opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
 //                    "\"m-requirement-approval\",\"m-requirement-query\"," +
 //                    "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
@@ -133,7 +135,9 @@ public class PermissionsManager {
 //                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
 //                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
 //                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-one\",\"m-ppm-two\"," +
-//                    "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\",\"m-boardingpatrol\",\"m-boardingpatrol-check\",\"m-boardingpatrol-query\"]";
+//                    "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\"," +
+//                    "\"m-boardingpatrol\",\"m-boardingpatrol-check\",\"m-boardingpatrol-query\"," +
+//                    "\"m-construction\",\"m-construction-register\",\"m-construction-query\"]";
 
 
             // 扫一扫
@@ -172,8 +176,10 @@ public class PermissionsManager {
             chatFunction(opensJson);
 
             monitoringFunction(opensJson);
-
+            //登乘巡查
             boardingPatrolFunction(opensJson);
+            //施工监护
+            constructionFunction(opensJson);
 
 
 
@@ -217,6 +223,35 @@ public class PermissionsManager {
                     CommonConstant.MESSAGE_BOARDING_PATROL,
                     R.drawable.boarding_function,
                     "登乘巡查",
+                    null,
+                    childMenus);
+
+        }
+
+        //施工监护
+        private void constructionFunction(String opensJson){
+
+            int icons[] = {
+                    R.drawable.cons_regist,
+                    R.drawable.cons_query,
+            };
+            String[] per = getStringArray(R.array.home_construction_menu_child_permissions);
+            String[] titles = getStringArray(R.array.home_construction_menu_child_title);
+            List<ChildMenu> childMenus = new ArrayList<>();
+            for (int i = 0; i < icons.length; i++) {
+                ChildMenu childMenu = new ChildMenu(per[i], CommonConstant.MESSAGE_CONSTRUCTION,
+                        icons[i], titles[i], null, i);
+                childMenus.add(childMenu);
+            }
+
+            ConstructionService impl = (ConstructionService) mRouter.getService(ConstructionService.class.getSimpleName());
+
+            homeMenu(opensJson,
+                    getString(R.string.home_construction_permissions),
+                    impl,
+                    CommonConstant.MESSAGE_CONSTRUCTION,
+                    R.drawable.cons_menu,
+                    "现场施工监护",
                     null,
                     childMenus);
 
@@ -271,8 +306,12 @@ public class PermissionsManager {
                 }
                 childMenus.add(childMenu);
             }
-
-            String[] child = { UNDOINSPECTIONNUMBER, UNARCHIVEDINSPECTIONNUMBER };
+            List<String> childList=new ArrayList<>();
+            for (ChildMenu childMenu : childMenus) {
+                childList.add(childMenu.jsonObjectKey);
+            }
+            String[] child = PermissionsHelper.strList2strArray(childList);
+//            String[] child = { UNDOINSPECTIONNUMBER, UNARCHIVEDINSPECTIONNUMBER };
             InspectionService impl = (InspectionService) mRouter.getService(InspectionService.class.getSimpleName());
             homeMenu(opensJson,
                     getString(R.string.home_inspection_permissions),
@@ -356,8 +395,12 @@ public class PermissionsManager {
                 }
                 childMenus.add(childMenu);
             }
-
-            String[] child = { UNPAIDPAYMENTNUMBER, PAIDPAYMENTNUMBER, REFUNDPAYMENTNUMBER };
+            List<String> childList=new ArrayList<>();
+            for (ChildMenu childMenu : childMenus) {
+                childList.add(childMenu.jsonObjectKey);
+            }
+            String[] child = PermissionsHelper.strList2strArray(childList);
+//            String[] child = { UNPAIDPAYMENTNUMBER, PAIDPAYMENTNUMBER, REFUNDPAYMENTNUMBER };
             PaymentService impl = (PaymentService) mRouter.getService(PaymentService.class.getSimpleName());
             homeMenu(opensJson,
                     getString(R.string.home_pay_permissions),
@@ -465,8 +508,12 @@ public class PermissionsManager {
                 }
                 childMenus.add(childMenu);
             }
-
-            String[] child = { TOBEOUTINVENTORYNUMBER, UNAPPROVALINVENTORYNUMBER };
+            List<String> childList=new ArrayList<>();
+            for (ChildMenu childMenu : childMenus) {
+                childList.add(childMenu.jsonObjectKey);
+            }
+            String[] child = PermissionsHelper.strList2strArray(childList);
+//            String[] child = { TOBEOUTINVENTORYNUMBER, UNAPPROVALINVENTORYNUMBER };
 
             InventoryService impl = (InventoryService) mRouter.getService(InventoryService.class.getSimpleName());
             homeMenu(opensJson,
@@ -526,21 +573,27 @@ public class PermissionsManager {
             for (int i = 0; i < icons.length; i++) {
                 ChildMenu childMenu = new ChildMenu(per[i], CommonConstant.MESSAGE_WORK_ORDER,
                         icons[i], titles[i], null, i);
-                if ("m-wo-process".equals(per[i])) {
+                if ("m-ppm-process".equals(per[i])) {
                     childMenu.jsonObjectKey = UNDOPPMORDERNUMBER;
-                } else if ("m-wo-dispach".equals(per[i])) {
+                } else if ("m-ppm-dispach".equals(per[i])) {
                     childMenu.jsonObjectKey = UNARRANGEPPMORDERNUMBER;
-                } else if ("m-wo-approval".equals(per[i])) {
+                } else if ("m-ppm-approval".equals(per[i])) {
                     childMenu.jsonObjectKey = UNAPPROVALPMORDERNUMBER;
-                } else if ("m-wo-abnormal".equals(per[i])){
+                } else if ("m-ppm-exception".equals(per[i])){
                     childMenu.jsonObjectKey = ABNORMALPPMORDERNUMBER;
-                }else if ("m-wo-close".equals(per[i])) {
+                }else if ("m-ppm-close".equals(per[i])) {
                     childMenu.jsonObjectKey = UNARCHIVEDPPMORDERNUMBER;
                 }
                 childMenus.add(childMenu);
             }
 
-            String[] child = { UNDOPPMORDERNUMBER, UNARRANGEPPMORDERNUMBER, UNAPPROVALPMORDERNUMBER,ABNORMALPPMORDERNUMBER, UNARCHIVEDPPMORDERNUMBER };
+            List<String> childList=new ArrayList<>();
+            for (ChildMenu childMenu : childMenus) {
+                childList.add(childMenu.jsonObjectKey);
+            }
+            String[] child = PermissionsHelper.strList2strArray(childList);
+
+//            String[] child = { UNDOPPMORDERNUMBER, UNARRANGEPPMORDERNUMBER, UNAPPROVALPMORDERNUMBER,ABNORMALPPMORDERNUMBER, UNARCHIVEDPPMORDERNUMBER };
 
             MaintenanceService impl = (MaintenanceService) mRouter.getService(MaintenanceService.class.getSimpleName());
             homeMenu(opensJson,
@@ -576,15 +629,18 @@ public class PermissionsManager {
                     childMenu.jsonObjectKey = UNARRANGEORDERNUMBER;
                 } else if ("m-wo-approval".equals(per[i])) {
                     childMenu.jsonObjectKey = UNAPPROVALORDERNUMBER;
-                } else if ("m-wo-abnormal".equals(per[i])){
+                } else if ("m-wo-exception".equals(per[i])){
                     childMenu.jsonObjectKey = ABNORMALORDERNUMBER;
                 }else if ("m-wo-close".equals(per[i])) {
                     childMenu.jsonObjectKey = UNARCHIVEDORDERNUMBER;
                 }
                 childMenus.add(childMenu);
             }
-
-            String[] child = { UNDOORDERNUMBER, UNARRANGEORDERNUMBER, UNAPPROVALORDERNUMBER,ABNORMALORDERNUMBER, UNARCHIVEDORDERNUMBER };
+            List<String> childList=new ArrayList<>();
+            for (ChildMenu childMenu : childMenus) {
+                childList.add(childMenu.jsonObjectKey);
+            }
+            String[] child = PermissionsHelper.strList2strArray(childList);
 
             WorkorderService impl = (WorkorderService) mRouter.getService(WorkorderService.class.getSimpleName());
 
@@ -615,9 +671,8 @@ public class PermissionsManager {
             for (int i = 0; i < icons.length; i++) {
                 ChildMenu childMenu = new ChildMenu(per[i], CommonConstant.MESSAGE_DEMAND,
                         icons[i], titles[i], null, i);
-                if ("m-requirement-approval".equals(per[i])) {
-//                    childMenu.jsonObjectKey = UNAPPROVALREQUIREMENTNUMBER;
-                    childMenu.jsonObjectKey = UNAPPROVALREQUIREMENTNUMBER;
+                if ("m-requirement-approval".equals(per[i])) { //待完善
+                    childMenu.jsonObjectKey = UNEVALUATEREQUIREMENTNUMBER;
                 } else if ("m-requirement-process".equals(per[i])) {
                     childMenu.jsonObjectKey = UNDOREQUIREMENTNUMBER;
 //                    childMenu.jsonObjectKey = UNDOREQUIREMENTNUMBER;
@@ -627,7 +682,12 @@ public class PermissionsManager {
                 childMenus.add(childMenu);
             }
 
-            String[] child = {UNDOREQUIREMENTNUMBER, UNAPPROVALREQUIREMENTNUMBER, UNEVALUATEREQUIREMENTNUMBER };
+            List<String> childList=new ArrayList<>();
+            for (ChildMenu childMenu : childMenus) {
+                childList.add(childMenu.jsonObjectKey);
+            }
+            String[] child = PermissionsHelper.strList2strArray(childList);
+//            String[] child = {UNDOREQUIREMENTNUMBER, UNAPPROVALREQUIREMENTNUMBER, UNEVALUATEREQUIREMENTNUMBER };
 
             DemandService impl = (DemandService) mRouter.getService(DemandService.class.getSimpleName());
             homeMenu(opensJson,
@@ -697,6 +757,8 @@ public class PermissionsManager {
                               int type, int icon,
                               String name, String[] undoKey,
                               List<ChildMenu> cs) {
+
+
 
             //TODO xcq
             if(opensJson!=null&&opensJson.contains(strPermissions))
@@ -817,7 +879,7 @@ public class PermissionsManager {
     }
 
     public static boolean hasPermission(Context context, Integer type) {
-        HomeFunction instance = HomeFunction.getInstance();
+        PermissionsManager.HomeFunction instance = PermissionsManager.HomeFunction.getInstance();
         boolean has = false;
         if (type == null) {
             return false;
@@ -862,6 +924,9 @@ public class PermissionsManager {
                 break;
             case CommonConstant.MESSAGE_BOARDING_PATROL: //登乘巡查
                 has = instance.getFunctionPermission(context.getResources().getString(R.string.home_boardingpatrol_permissions));
+                break;
+            case CommonConstant.MESSAGE_CONSTRUCTION: //登乘巡查
+                has = instance.getFunctionPermission(context.getResources().getString(R.string.home_construction_permissions));
                 break;
 
         }

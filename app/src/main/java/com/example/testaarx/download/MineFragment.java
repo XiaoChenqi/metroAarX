@@ -55,6 +55,8 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
 
     private CustomListItemView mServerConfig;
 
+    private CustomListItemView mCache;
+
     public static final int REQUEST_PHONE_CODE = 1001;
     private boolean mShowUserInfo;
     private boolean mShowDataStatus;
@@ -85,11 +87,13 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
         mDataView = findViewById(R.id.item_data);
         mCheckVersion = findViewById(R.id.item_update);
         mServerConfig = findViewById(R.id.item_server);
+        mCache = findViewById(R.id.item_cache);
 
 
         mDataView.setOnClickListener(this);
         mCheckVersion.setOnClickListener(this);
         mCheckVersion.showRedPoint(false);
+        mCache.setOnClickListener(this);
 
 
 //        refreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
@@ -122,6 +126,9 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
                 break;
             case R.id.item_update:
                 checkUpdate();
+                break;
+            case R.id.item_cache:
+                toFragment=ClearCacheFragment.getInstance();
                 break;
         }
 

@@ -146,5 +146,14 @@
         app:layout_constraintStart_toEndOf="@+id/profileBtn"
         app:layout_constraintTop_toTopOf="@+id/serverBtn" />
 
+    <Button
+        android:id="@+id/constructionBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="施工监护主页"
+        app:layout_constraintStart_toEndOf="@+id/profileBtn"
+        app:layout_constraintTop_toTopOf="@+id/serverBtn" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

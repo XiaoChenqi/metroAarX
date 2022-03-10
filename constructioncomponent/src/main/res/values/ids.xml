@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="construction_main_id" type="id"/>
+    <item name="construction_regist_id" type="id"/>
+    <item name="construction_query_id" type="id"/>
+
+    <item name="construction_upload" type="id"/>
+
+    <item name="maintenance_ele_uoload_menu_id" type="id"/>
+</resources>

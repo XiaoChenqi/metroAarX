@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+        <variable
+            name="data"
+            type="com.facilityone.wireless.construction.module.ConstructionService.ConstructionQueryContents" />
+    </data>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_10"
+        android:background="@color/white"
+        android:layout_marginBottom="@dimen/dp_10"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="标题吧"
+            queryTitle="@{data}"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dp_10"
+            >
+            <TextView
+                style="@style/h3_text_title_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="施工单位："
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="施工单位名称"
+                queryUnit="@{data}"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dp_10"
+            >
+            <TextView
+                style="@style/h3_text_title_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="施工站点："
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                tools:text="施工站点名称"
+                querySite="@{data}"
+                />
+
+            <TextView
+                style="@style/h3_text_title_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="某年某月某日"
+                queryData="@{data}"
+                />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</layout>

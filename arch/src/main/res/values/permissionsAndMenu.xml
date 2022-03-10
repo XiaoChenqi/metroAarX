@@ -23,15 +23,35 @@
     <string name="home_boardingpatrol_menu_title">登乘巡查</string>
     <string name="home_boardingpatrol_permissions" translatable="false">m-boardingpatrol</string>
 
+
+    <!--施工监护-->
+    <string name="home_construction_menu_title">施工监护</string>
+    <string name="home_construction_permissions" translatable="false">m-construction</string>
+
     <string-array name="home_boardingpatrol_menu_child_title">
         <item>巡查登记</item>
         <item>巡查记录</item>
     </string-array>
 
+
+    <string-array name="home_construction_menu_child_title">
+        <item>施工监护登记</item>
+        <item>施工监护记录</item>
+    </string-array>
+
+
     <string-array name="home_boardingpatrol_menu_child_permissions">
         <item>m-boardingpatrol-check</item>
         <item>m-boardingpatrol-query</item>
     </string-array>
+
+
+    <string-array name="home_construction_menu_child_permissions">
+        <item>m-construction-register</item>
+        <item>m-construction-query</item>
+    </string-array>
+
+
 
     <!--扫一扫-->
     <string name="home_scan_menu_title">扫一扫</string>
@@ -64,7 +84,7 @@
     <string name="home_workOrder_permissions" translatable="false">m-wo</string>
 
     <string-array name="home_workOrder_menu_child_title">
-<!--        <item>创建工单</item>-->
+        <!--        <item>创建工单</item>-->
         <item>创建工单</item>
         <item>待处理工单</item>
         <item>待派工工单</item>

@@ -26,7 +26,7 @@ public class DemandPresenter extends CommonBasePresenter<DemandFragment> {
             try {
                 switch (functionBean.index) {
                     case DemandConstant.DEMAND_UNCHECK:
-                        functionBean.undoNum = data.getInt(PermissionsManager.UNAPPROVALREQUIREMENTNUMBER);
+                        functionBean.undoNum = data.getInt(PermissionsManager.UNDOREQUIREMENTNUMBER);
                         break;
                     case DemandConstant.DEMAND_UNFINISH:
                         functionBean.undoNum = data.getInt(PermissionsManager.UNDOREQUIREMENTNUMBER);

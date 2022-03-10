@@ -7,7 +7,7 @@ package com.facilityone.wireless.a.arch.offline.model.entity;
  * Date: 2018/11/1 9:41 AM
  */
 public class PatrolBaseItemEntity {
-    
+
     private Long contentId;
     private String content;
     private String selectEnums;
@@ -18,6 +18,7 @@ public class PatrolBaseItemEntity {
     private Double inputFloor;
     private Double defaultInputValue;
     private String defaultSelectValue;
+    private String defaultTextValue; //默认文本的值
     private String exceptions;
     private String unit;
     private Integer validStatus;
@@ -134,5 +135,13 @@ public class PatrolBaseItemEntity {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public String getDefaultTextValue() {
+        return defaultTextValue;
+    }
+
+    public void setDefaultTextValue(String defaultTextValue) {
+        this.defaultTextValue = defaultTextValue;
     }
 }

@@ -67,16 +67,30 @@ public class SelectDataPresenter extends CommonBasePresenter<SelectDataFragment>
             bean.setEnd(0);
             bean.setSubStart(0);
             bean.setSubEnd(0);
-            if (!TextUtils.isEmpty(bean.getName()) && bean.getName().toLowerCase().contains(curCharacter)) {
-                temp.add(bean);
+            if ((fromType == ISelectDataService.DATA_TYPE_REASON || fromType == ISelectDataService.DATA_TYPE_INVALIDD)&& bean.getParentId() != null){
+                if (!TextUtils.isEmpty(bean.getDesc()) && bean.getDesc().toLowerCase().contains(curCharacter)) {
+                    temp.add(bean);
 
-                int start = bean.getName().toLowerCase().indexOf(curCharacter);
-                int end = start + curCharacter.length();
-                bean.setStart(start);
-                bean.setEnd(end);
+                    int start = bean.getDesc().toLowerCase().indexOf(curCharacter);
+                    int end = start + curCharacter.length();
+                    bean.setStart(start);
+                    bean.setEnd(end);
 
-                continue;
+                    continue;
+                }
+            }else {
+                if (!TextUtils.isEmpty(bean.getName()) && bean.getName().toLowerCase().contains(curCharacter)) {
+                    temp.add(bean);
+
+                    int start = bean.getName().toLowerCase().indexOf(curCharacter);
+                    int end = start + curCharacter.length();
+                    bean.setStart(start);
+                    bean.setEnd(end);
+
+                    continue;
+                }
             }
+
             if (!TextUtils.isEmpty(bean.getNameFirstLetters()) && bean.getNameFirstLetters().contains(curCharacter)) {
                 temp.add(bean);
 
@@ -87,20 +101,41 @@ public class SelectDataPresenter extends CommonBasePresenter<SelectDataFragment>
 
                 continue;
             }
-            if (!TextUtils.isEmpty(bean.getNamePinyin())) {
-                String[] strArr = pinyinToStrArr(bean.getNamePinyin());
-                int start = isMatch(strArr, curCharacter);
-                if (start != -1) {
-                    temp.add(bean);
-                    bean.setStart(start);
-                    String str = strArr[start];
-                    if (str.length() >= curCharacter.length()) {
-                        bean.setEnd(start + 1);
-                    } else {
-                        int end = endIndex(strArr, curCharacter.substring(str.length()), start + 1);
-                        bean.setEnd(end);
+
+            if ((fromType == ISelectDataService.DATA_TYPE_REASON ||
+                    fromType == ISelectDataService.DATA_TYPE_INVALIDD)&& bean.getParentId() != null){
+                if (!TextUtils.isEmpty(bean.getDesc())) {
+                    String[] strArr = pinyinToStrArr(PinyinUtils.ccs2Pinyin(bean.getDesc()));
+                    int start = isMatch(strArr, curCharacter);
+                    if (start != -1) {
+                        temp.add(bean);
+                        bean.setStart(start);
+                        String str = strArr[start];
+                        if (str.length() >= curCharacter.length()) {
+                            bean.setEnd(start + 1);
+                        } else {
+                            int end = endIndex(strArr, curCharacter.substring(str.length()), start + 1);
+                            bean.setEnd(end);
+                        }
+                        continue;
                     }
-                    continue;
+                }
+            }else {
+                if (!TextUtils.isEmpty(bean.getNamePinyin())) {
+                    String[] strArr = pinyinToStrArr(bean.getNamePinyin());
+                    int start = isMatch(strArr, curCharacter);
+                    if (start != -1) {
+                        temp.add(bean);
+                        bean.setStart(start);
+                        String str = strArr[start];
+                        if (str.length() >= curCharacter.length()) {
+                            bean.setEnd(start + 1);
+                        } else {
+                            int end = endIndex(strArr, curCharacter.substring(str.length()), start + 1);
+                            bean.setEnd(end);
+                        }
+                        continue;
+                    }
                 }
             }
             if (fromType == ISelectDataService.DATA_TYPE_EQU || fromType == ISelectDataService.DATA_TYPE_EQU_ALL || fromType == ISelectDataService.DATA_TYPE_LOCATION) {
@@ -145,6 +180,7 @@ public class SelectDataPresenter extends CommonBasePresenter<SelectDataFragment>
         getV().refreshHaveData(temp, false);
 
     }
+
 
     //获取位置数据
     public void queryLocation(final int level, final Long parentId) {

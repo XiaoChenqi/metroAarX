@@ -1,6 +1,7 @@
 package com.facilityone.wireless.a.arch.offline.dao;
 
 import com.facilityone.wireless.a.arch.offline.model.entity.PatrolBaseItemEntity;
+import com.facilityone.wireless.a.arch.offline.model.service.PatrolDbService;
 import com.facilityone.wireless.a.arch.offline.util.DBManager;
 import com.facilityone.wireless.basiclib.app.FM;
 import com.tencent.wcdb.database.SQLiteDatabase;
@@ -88,7 +89,9 @@ public class PatrolBaseItemDao {
                         , entity.getInputUpper()
                         , entity.getInputFloor()
                         , entity.getDefaultInputValue()
-                        , entity.getDefaultSelectValue()
+                        //判断是否是文本，若是文本给定默认值 defaultTextValue 且传入表中字段 DefaultSelectValue中
+                        , entity.getResultType()== PatrolDbService.QUESTION_TYPE_TEXT ?
+                        entity.getDefaultTextValue():entity.getDefaultSelectValue()
                         , entity.getExceptions()
                         , entity.getUnit()
                         , entity.getValidStatus()

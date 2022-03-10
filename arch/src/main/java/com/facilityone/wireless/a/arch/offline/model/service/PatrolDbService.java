@@ -33,7 +33,7 @@ public class PatrolDbService {
     public static final int PATROL_ITEM_STOP = 1;//停运检查项
     public static final int PATROL_ITEM_USE = 2;//在用检查项
     public static final int PATROL_ITEM_NONE = 100;//停运和在用都需要
-    // 0-输入 1-选择
+    // 0-输入 1-选择 2-文本
     public static final int QUESTION_TYPE_INPUT = 0;
     public static final int QUESTION_TYPE_SINGLE = 1;
     public static final int QUESTION_TYPE_TEXT = 2;
