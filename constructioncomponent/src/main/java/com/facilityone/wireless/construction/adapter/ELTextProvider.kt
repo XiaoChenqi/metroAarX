@@ -29,7 +29,7 @@ class ELTextProvider: BaseItemProvider<ConstructionService.ElectronicLedgerEntit
         item: ConstructionService.ElectronicLedgerEntity?,
         position: Int
     ) {
-        val binding=getBinding<ItemClTextBinding>(helper.itemView.rootView)
+        val binding=getBinding<ItemClTextBinding>(helper.itemView)
         binding!!.tvTitle.text=(item!!.content) as String
         binding.etInput.hint = "请输入"+((item.content) as String)
         binding.etInput.setText(item.value?:"")

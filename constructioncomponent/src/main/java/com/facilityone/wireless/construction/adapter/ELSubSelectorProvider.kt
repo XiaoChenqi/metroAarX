@@ -30,7 +30,7 @@ class ELSubSelectorProvider : BaseItemProvider<ConstructionService.ElectronicLed
         position: Int
     ) {
         val selectorModel = item!!.content as SelectorModel
-        val binding = getBinding<ItemClSubSelectorBinding>(helper.itemView.rootView)!!
+        val binding = getBinding<ItemClSubSelectorBinding>(helper.itemView)!!
         binding.taskTitleTv.text = selectorModel.name
         if (3==selectorModel.state){
             binding.rgSelect.clearCheck()

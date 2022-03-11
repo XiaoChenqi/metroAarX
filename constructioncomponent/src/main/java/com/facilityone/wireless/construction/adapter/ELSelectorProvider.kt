@@ -32,7 +32,7 @@ class ELSelectorProvider : BaseItemProvider<ConstructionService.ElectronicLedger
     ) {
 
         val selectorModel=item!!.content as SelectorModel
-        val binding=getBinding<ItemClSelectorBinding>(helper.itemView.rootView)!!
+        val binding=getBinding<ItemClSelectorBinding>(helper.itemView)!!
 
         try {
 

@@ -25,7 +25,7 @@ class ELResultProvider : BaseItemProvider<ConstructionService.ElectronicLedgerEn
         p2: Int
     ) {
         val selectorModel=item!!.content as SelectorModel
-        val binding=getBinding<ItemResultBinding>(helper.itemView.rootView)!!
+        val binding=getBinding<ItemResultBinding>(helper.itemView)!!
         binding.tvTitle.text=selectorModel.name
         if (selectorModel.selectValues!!.isNotEmpty()){
             binding.tvResult.text= selectorModel.selectValues!![0]
