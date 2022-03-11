@@ -23,7 +23,7 @@ class ConstructionActivity : BaseFragmentActivity<IPresent<*>>(), OnGoFragmentLi
     }
 
     override fun setRootFragment(): FMFragment? {
-        mInstance = EmptyFragment.getInstance(CommonConstant.MESSAGE_VISITOR)
+        mInstance = EmptyFragment.getInstance(CommonConstant.MESSAGE_CONSTRUCTION)
         mInstance?.setOnGoFragmentListener(this)
         return mInstance
     }
