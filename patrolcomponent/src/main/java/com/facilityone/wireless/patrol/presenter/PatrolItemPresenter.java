@@ -63,7 +63,9 @@ public class PatrolItemPresenter extends BasePresenter<PatrolItemFragment> {
                     PatrolPicDao picDao = new PatrolPicDao();
                     for (PatrolItemEntity patrolItemEntity : itemList) {
                         if (patrolItemEntity.getResultType()==PatrolDbService.QUESTION_TYPE_TEXT){ //文本类型默认传值
-                            patrolItemEntity.setInput(patrolItemEntity.getDefaultSelectValue() == null ? "" : patrolItemEntity.getDefaultSelectValue());
+                            if (patrolItemEntity.getInput() == null){
+                                patrolItemEntity.setInput(patrolItemEntity.getDefaultSelectValue() == null ? "" : patrolItemEntity.getDefaultSelectValue());
+                            }
                         }else {
                             if (equEntity.getCompleted() != DBPatrolConstant.TRUE_VALUE) {
                                 if (!patrolItemEntity.getContent().equals("车站工况")){
