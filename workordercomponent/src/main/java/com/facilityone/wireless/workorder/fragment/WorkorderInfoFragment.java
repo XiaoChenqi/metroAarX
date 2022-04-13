@@ -183,6 +183,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public static final String WORKORDER_LOCATION = "workorder_location";
     public static final String CAN_OPT = "can_opt";
     public static final String FROME_MESSAGE = "from_message";
+    public static final String IS_SAMPLING = "is_sampling";
     private static final int LABORER_REQUEST_CODE = 4002;
     public static final int DISPATCH_REQUEST_CODE = 4003;
     public static final int APPROVAL_REQUEST_CODE = 4004;
@@ -311,6 +312,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     private Boolean fromMessage = false; //从消息中获取工单详情
     private List<Long> allApprovers; //当前工单审批人数组
     public String completeMessage = null; //完成工单提醒文案
+    private Integer isSampling; //是否是待抽检的工单
 
     @Override
     public WorkorderInfoPresenter createPresenter() {
@@ -359,6 +361,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             isFinish = bundle.getBoolean(IS_FINISH, false);
             isPending = bundle.getInt(IS_PENDING, -1);
             fromMessage = bundle.getBoolean(FROME_MESSAGE, false);
+            isSampling = bundle.getInt(IS_SAMPLING,-1);
         }
         refreshStatus = mStatus;
         if (refreshStatus == WorkorderConstant.WORK_STATUS_NONE) {
@@ -737,7 +740,6 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             } else {
                 mTvToolTotal.setText(data.failueDescription + "");
                 tv_right_icon_tol.setVisibility(View.GONE);
-                // TODO 当Id为1->即选择项为其他原因 需要展示具体原因
                 if (data.causeId == WorkorderConstant.CAUSE_REASON_OTHER) {
                     ll_fault_object_reason.setVisibility(View.VISIBLE);
                     env_fault_object_reason.setDesc(data.causeOther + "");
@@ -821,7 +823,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
                 setMoreMenu();
             }
         } else {
-            setMoreMenuVisible(false);
+            if (isSampling != -1){
+                setMoreMenuVisible(false);
+                removeRightView();
+                setRightTextButton("抽检",R.id.workorder_sampling_id);
+            }else {
+                setMoreMenuVisible(false);
+            }
+
         }
 
         showMenuList();
@@ -1779,7 +1788,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
 
         } else if (id == R.id.ll_device) {//关联设备
-
+            //维护工单涉及关联设备需要修改
             if (isPending != 1) {
 //                boolean pm = mCategory != null && mCategory == WorkorderConstant.WORK_TYPE_PM;
 //                if (!pm) {
@@ -2298,6 +2307,18 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         return infoFragment;
     }
 
+    public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Long woId,boolean isMaintenance, int sampling) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(WORKORDER_STATUS, workorderStatus);
+        bundle.putString(WORKORDER_CODE, code);
+        bundle.putLong(WORKORDER_ID, woId);
+        bundle.putBoolean(IS_MAINTENANCE, isMaintenance);
+        bundle.putInt(IS_SAMPLING, sampling);
+        WorkorderInfoFragment infoFragment = new WorkorderInfoFragment();
+        infoFragment.setArguments(bundle);
+        return infoFragment;
+    }
+
 
     //待存档
     public static WorkorderInfoFragment getInstance(int workorderStatus, String code, Long woId, boolean isMaintenance, boolean isFinish) {
@@ -2404,6 +2425,15 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         pauseDialog.show();
     }
 
+    @Override
+    public void onRightTextMenuClick(View view) {
+        super.onRightTextMenuClick(view);
+        int id = view.getId();
+        if (id==R.id.workorder_sampling_id){
+            // 弹出抽检的弹窗或者直接进入抽检
+            getPresenter().fetchSampleTemplateById(getContext(),mWoId);
+        }
+    }
 
     /**
      * @Created by: kuuga

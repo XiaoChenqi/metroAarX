@@ -10,10 +10,15 @@ import android.view.ViewGroup;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
+import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
 import com.facilityone.wireless.workorder.R;
 import com.facilityone.wireless.workorder.adapter.WorkorderStepAdapter;
+import com.facilityone.wireless.workorder.module.WorkorderConstant;
+import com.facilityone.wireless.workorder.module.WorkorderOptService;
 import com.facilityone.wireless.workorder.module.WorkorderService;
 import com.facilityone.wireless.workorder.presenter.WorkorderStepPresenter;
+import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
@@ -37,7 +42,11 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
     private static final String WORK_TEAM_ID = "work_team_id";
     private static final String COUNT_ACCORD = "count_accord";
     private static final String ATTENTION = "attention";
+    private static final String EQCODE = "eqcode";
+    private static final String EQID = "eqid";
+    private static final String SHOWDIALOG = "showdialog";
     private static final int UPDATE = 7000;
+    private static final int REFRESH = 1001;
 
     private ArrayList<WorkorderService.StepsBean> mSteps;
     private boolean mCanOpt;
@@ -45,8 +54,14 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
     private Long mWoTeamId;
     private Boolean countAccord;//是否需要输入设备数量
     private String attention; //注意事项
+    private Integer time; //完成任务的时间--Min
+    private boolean isMaintence; //是否是维护工单
+    private String eqCode; //设备编号
+    private Long eqId; //设备编号Id
+    private Boolean showDialog; //Shi否需要展示弹窗提示任务开启 -> 工单界面不需要弹
 
     @Override
+
     public WorkorderStepPresenter createPresenter() {
         return new WorkorderStepPresenter();
     }
@@ -77,7 +92,14 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
             mCanOpt = arguments.getBoolean(CAN_OPT, false);
             countAccord = arguments.getBoolean(COUNT_ACCORD);
             attention = arguments.getString(ATTENTION);
+            eqCode = arguments.getString(EQCODE);
+            eqId = arguments.getLong(EQID);
+            showDialog = arguments.getBoolean(SHOWDIALOG);
         }
+        if (showDialog){
+            getPresenter().isDoneDevice(mWoId,eqCode);
+        }
+
     }
 
     public void initStepView(){
@@ -91,6 +113,46 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
             mAdapter.replaceData(data.steps);
         }
     }
+    public void setTaskTime(Integer min){
+        time = min;
+    }
+
+    public void setHasDoneDevice(Boolean cando){
+        if (cando){
+            showTaskDialog(time);
+        }
+    }
+
+    /**
+     * @Creator:Karelie
+     * @Data: 2021/10/12
+     * @TIME: 14:58
+     * @Introduce: 弹出弹窗提示用户是否需要开启任务 （当前没有开启任务）
+     **/
+    public void showTaskDialog(Integer time){
+        FMWarnDialogBuilder builder = new FMWarnDialogBuilder(getContext());
+        builder.setTitle("提示");
+        builder.setCanceledOnTouchOutside(false);
+        String messageFormat="如果您确认开启该维护计划，最少需要%s分钟才能完成提交。同时不能开启其他设备的维护计划。";
+        builder.setTip(String.format(messageFormat,time));
+        builder.addOnBtnCancelClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+            @Override
+            public void onClick(QMUIDialog dialog, View view) {
+                pop();
+                dialog.dismiss();
+            }
+        });
+        builder.addOnBtnSureClickListener(new FMWarnDialogBuilder.OnBtnClickListener() {
+            @Override
+            public void onClick(QMUIDialog dialog, View view) {
+                dialog.dismiss();
+                getPresenter().beganToTask(mWoId,eqCode);
+
+            }
+        });
+        builder.create(R.style.fmDefaultWarnDialog).show();
+    }
+
 
     private void initView() {
         setTitle(R.string.workorder_menu_step);
@@ -119,8 +181,23 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
 //                ToastUtils.showShort(R.string.workorder_steps_completed_notice_tip);
 //                return;
 //            }
-            startForResult(WorkorderStepUpdateFragment.getInstance(stepsBean, mWoId,countAccord,attention), UPDATE);
+            startForResult(WorkorderStepUpdateFragment.getInstance(stepsBean, mWoId,countAccord,attention,position), UPDATE);
         }
+    }
+
+    @Override
+    public void leftBackListener() {
+        Bundle bundle = new Bundle();
+        setFragmentResult(REFRESH, bundle);
+        pop();
+    }
+
+    @Override
+    public boolean onBackPressedSupport() {
+        Bundle bundle = new Bundle();
+        setFragmentResult(REFRESH, bundle);
+        pop();
+        return true;
     }
 
     @Override
@@ -128,7 +205,20 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
         super.onFragmentResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             initStepView();
+        }else if (resultCode == REFRESH){
+            initStepView();
         }
+    }
+
+
+    public void workStart(){
+        WorkorderOptService.WorkOrderDeviceReq request = new WorkorderOptService.WorkOrderDeviceReq();
+        request.woId = mWoId;
+        request.failureDesc = "";
+        request.repairDesc = "";
+        request.operateType = WorkorderConstant.WORKORDER_DEVICE_UPDATE_OPT_TYPE;
+        request.equipmentId = eqId;
+        getPresenter().editorWorkorderDevice(request);
     }
 
     public static WorkorderStepFragment getInstance(ArrayList<WorkorderService.StepsBean> s
@@ -145,6 +235,31 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
         bundle.putBoolean(CAN_OPT, canOpt);
         bundle.putBoolean(COUNT_ACCORD,eqCountAccord);
         bundle.putString(ATTENTION,mattersNeedingAttention);
+        bundle.putBoolean(SHOWDIALOG,false); //默认值，从工单详情进入不需要展示弹窗
+        WorkorderStepFragment instance = new WorkorderStepFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+
+    public static WorkorderStepFragment getInstance(ArrayList<WorkorderService.StepsBean> s
+            , Long woId
+            , Long workTeamId
+            , boolean canOpt
+            , boolean eqCountAccord //是否需要输入设备数量
+            , String mattersNeedingAttention //注意事项
+            , String eqCode //点击的设备号
+            , Long eqId //点击的设备Id
+    ) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(WORKORDER_STEPS, s);
+        bundle.putLong(WORKORDER_ID, woId);
+        bundle.putLong(WORK_TEAM_ID, workTeamId);
+        bundle.putBoolean(CAN_OPT, canOpt);
+        bundle.putBoolean(COUNT_ACCORD,eqCountAccord);
+        bundle.putString(ATTENTION,mattersNeedingAttention);
+        bundle.putString(EQCODE,eqCode);
+        bundle.putLong(EQID,eqId);
+        bundle.putBoolean(SHOWDIALOG,true); //此处跳转需要传默认值
         WorkorderStepFragment instance = new WorkorderStepFragment();
         instance.setArguments(bundle);
         return instance;

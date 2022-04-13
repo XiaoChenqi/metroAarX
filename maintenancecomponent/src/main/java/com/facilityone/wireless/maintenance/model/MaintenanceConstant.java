@@ -70,8 +70,10 @@ public interface MaintenanceConstant {
     int MAINTENANCE_THREE = 2;     //待派工维护工单
     int MAINTENANCE_FOUR = 3;           //待审批维护工单
     int MAINTENANCE_FIVE = 4;      //异常维护工单
-    int MAINTENANCE_SIX = 5;      //待存档维护工单
-    int MAINTENANCE_SEVEN = 6;         //维护工单查询
+    int MAINTENANCE_EIGHT = 5;         //待抽检维护工单
+    int MAINTENANCE_SIX = 6;      //待存档维护工单
+    int MAINTENANCE_SEVEN = 7;         //维护工单查询
+
 
 
     int ZERO = 0;
@@ -81,6 +83,7 @@ public interface MaintenanceConstant {
     int FOUR = 4;
     int FIVE = 5;
     int SIX = 6;
+    int SEVEN = 7;
 
     int CHOICE_NO = 0; //默认状态
     int CHOICE_All = 1; //打开状态
@@ -96,16 +99,16 @@ public interface MaintenanceConstant {
     int STATUS_PERSONAL_SUBMIT = 3;   //已提交
 
 
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/27
-      * @Infor: 工单标签
-      */
-     int APPLICATION_FOR_SUSPENSION = 0 ; //暂停申请中
-     int PAUSE_STILL_WORKING = 1 ; //暂停（继续工作）
-     int PAUSE_NOT_WORKING = 2 ; //暂停(不继续工作)
-     int APPLICATION_VOID = 3 ; //作废申请中
-     int STOP = 4 ; //终止
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/27
+     * @Infor: 工单标签
+     */
+    int APPLICATION_FOR_SUSPENSION = 0 ; //暂停申请中
+    int PAUSE_STILL_WORKING = 1 ; //暂停（继续工作）
+    int PAUSE_NOT_WORKING = 2 ; //暂停(不继续工作)
+    int APPLICATION_VOID = 3 ; //作废申请中
+    int STOP = 4 ; //终止
 
 
 }

@@ -13,10 +13,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.base.BaseScanFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
+import com.facilityone.wireless.basiclib.app.FM;
 import com.facilityone.wireless.workorder.R;
 import com.facilityone.wireless.workorder.adapter.WorkorderDeviceAdapter;
 import com.facilityone.wireless.workorder.module.WorkorderConstant;
 import com.facilityone.wireless.workorder.module.WorkorderDataHolder;
+import com.facilityone.wireless.workorder.module.WorkorderLaborerService;
 import com.facilityone.wireless.workorder.module.WorkorderOptService;
 import com.facilityone.wireless.workorder.module.WorkorderService;
 import com.facilityone.wireless.workorder.presenter.WorkorderDevicePresenter;
@@ -24,6 +26,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 /**
@@ -60,8 +63,15 @@ public class WorkorderDeviceFragment extends BaseScanFragment<WorkorderDevicePre
     private boolean taskStatus; //任务状态
 
     private final static int REFRESH = 500001; // 界面刷新
+    private static final int RE = 1001;
+    public static final int STEP = 4010;
     private WorkorderService.WorkOrderEquipmentsBean deviceInfor = null;
     private Boolean fromQuery; //是否是从查询点进来的
+    private WorkorderService.WorkorderInfoBean workOrderEnity; //当前工单所有内容
+    //维护步骤
+    private ArrayList<WorkorderService.StepsBean> mSteps;
+    //是否可以常规操作
+    private boolean mCanOpt;
 
     @Override
     public WorkorderDevicePresenter createPresenter() {
@@ -102,6 +112,8 @@ public class WorkorderDeviceFragment extends BaseScanFragment<WorkorderDevicePre
         if (mEquipmentsBeanList == null) {
             mEquipmentsBeanList = new ArrayList<>();
         }
+
+        mSteps = new ArrayList<>();
     }
 
     private void initView() {
@@ -158,6 +170,7 @@ public class WorkorderDeviceFragment extends BaseScanFragment<WorkorderDevicePre
     }
 
     private void onRefresh() {
+        getPresenter().getWorkorderInfo(mWoId);
         if (mEquipmentsBeanList == null || mEquipmentsBeanList.size() == 0) {
             mDeviceAdapter.setEmptyView(getNoDataView(mRefreshLayout));
         }
@@ -173,6 +186,8 @@ public class WorkorderDeviceFragment extends BaseScanFragment<WorkorderDevicePre
             } else {
                 mDeviceAdapter.notifyDataSetChanged();
             }
+        }else if (resultCode == RE){
+            getPresenter().getWorkorderInfo(mWoId);
         }
     }
 
@@ -182,6 +197,25 @@ public class WorkorderDeviceFragment extends BaseScanFragment<WorkorderDevicePre
 
     public void refreshEquipmentUI(WorkorderService.WorkorderInfoBean data) {
         List<WorkorderService.WorkOrderEquipmentsBean> workOrderEquipments = data.workOrderEquipments;
+        workOrderEnity = new WorkorderService.WorkorderInfoBean();
+        mCanOpt = false;
+        if (data.status == WorkorderConstant.WORK_STATUS_PROCESS) {
+            Long emId = FM.getEmId();
+            List<WorkorderLaborerService.WorkorderLaborerBean> workOrderLaborers = data.workOrderLaborers;
+            if (workOrderLaborers != null && workOrderLaborers.size() > 0 && emId != null) {
+                for (WorkorderLaborerService.WorkorderLaborerBean workOrderLaborer : workOrderLaborers) {
+                    if (workOrderLaborer.status != null
+                            && workOrderLaborer.laborerId != null
+                            && emId.equals(workOrderLaborer.laborerId)
+                            && workOrderLaborer.status == WorkorderConstant.WORKORDER_STATUS_PERSONAL_ACCEPT) {
+                        mCanOpt = true;
+                        break;
+                    }
+                }
+            }
+        }
+        mSteps = (ArrayList<WorkorderService.StepsBean>) data.steps;
+        workOrderEnity = data;
         mEquipmentsBeanList.clear();
         if (workOrderEquipments != null) {
             mEquipmentsBeanList.addAll(workOrderEquipments);
@@ -247,7 +281,22 @@ public class WorkorderDeviceFragment extends BaseScanFragment<WorkorderDevicePre
 
     public void result(WorkorderService.WorkOrderEquipmentsBean workOrderEquipmentsBean) {
         addDevice = false;
-        startForResult(WorkorderDeviceEditorFragment.getInstance(workOrderEquipmentsBean, mWoId, addDevice,isMaintenanceOrder), EDITOR_ADD_DEVICE_CODE);
+        //TODO 新一批需求 此处跳转至维护步骤列表 如果是维护工单的情况下
+        if (isMaintenanceOrder){
+            startForResult(WorkorderStepFragment.getInstance(
+                    mSteps,
+                    mWoId,
+                    workOrderEnity.workTeamId,
+                    mCanOpt,
+                    workOrderEnity.pmInfo.eqCountAccord,
+                    workOrderEnity.pmInfo.mattersNeedingAttention,
+                    workOrderEquipmentsBean.equipmentCode,
+                    workOrderEquipmentsBean.equipmentId
+            ), STEP);
+        }else {
+            startForResult(WorkorderDeviceEditorFragment.getInstance(workOrderEquipmentsBean, mWoId, addDevice,isMaintenanceOrder), EDITOR_ADD_DEVICE_CODE);
+        }
+
     }
 
     public static WorkorderDeviceFragment getInstance(boolean fromQuery,Long woId, boolean optDevice, boolean needScan, String title, boolean isMaintenanceOrder) {

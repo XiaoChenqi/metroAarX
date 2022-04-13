@@ -117,6 +117,7 @@
         <item>待派工维护工单</item>
         <item>待审批维护工单</item>
         <item>异常维护工单</item>
+        <item>待抽检维护工单</item>
         <item>待存档维护工单</item>
         <item>维护工单查询</item>
     </string-array>
@@ -127,6 +128,7 @@
         <item>m-ppm-dispach</item>
         <item>m-ppm-approval</item>
         <item>m-ppm-exception</item>
+        <item>m-ppm-sampling</item>
         <item>m-ppm-close</item>
         <item>m-ppm-query</item>
     </string-array>

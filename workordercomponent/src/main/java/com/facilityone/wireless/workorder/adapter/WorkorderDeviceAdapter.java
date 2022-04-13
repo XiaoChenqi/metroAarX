@@ -42,7 +42,10 @@ public class WorkorderDeviceAdapter extends BaseQuickAdapter<WorkorderService.Wo
         helper.setText(R.id.tv_desc, StringUtils.formatString(item.failureDesc));
         helper.setText(R.id.tv_deal, StringUtils.formatString(item.repairDesc));
         helper.setText(R.id.tv_location, StringUtils.formatString(item.location));
-
+        if (isMaintenanceOrder){
+            helper.setGone(R.id.ll_device_deal,false);
+            helper.setGone(R.id.ll_device_desc,false);
+        }
 
         int currentPosition = helper.getLayoutPosition();
         helper.setGone(R.id.view_long_bottom, currentPosition == getData().size() - 1);
@@ -73,7 +76,7 @@ public class WorkorderDeviceAdapter extends BaseQuickAdapter<WorkorderService.Wo
         }
 
 //        if (isMaintenanceOrder){
-            helper.setGone(R.id.btn_delete,false);
+        helper.setGone(R.id.btn_delete,false);
 //        }else {
 //            helper.setGone(R.id.btn_delete,true);
 //        }

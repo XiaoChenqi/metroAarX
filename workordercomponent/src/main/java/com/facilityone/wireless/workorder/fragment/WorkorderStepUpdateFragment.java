@@ -52,7 +52,6 @@ import java.util.Locale;
  * Date: 2018/9/25 4:06 PM
  */
 public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdatePresenter> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, BottomTextListSheetBuilder.OnSheetItemClickListener {
-
     private CustomContentItemView mEtWorkTeam;
     private CustomContentItemView mEtStep;
     private EditNumberView mEtDesc;
@@ -67,12 +66,16 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
 
     private EditNumberView mEtStepWarning;
     private TextView mTvStepWarning;
+    private TextView mTvPre;//上一项点击菜单
+    private TextView mTvNext;//下一项点击菜单
 
 
     private static final String WORKORDER_ID = "workorder_id";
     private static final String WORKORDER_STEP = "workorder_tool";
     private static final String COUNT_ACCORD = "count_accord";
     private static final String ATTENTION = "attention";
+    private static final String POSITION = "position";
+    private static final int REFRESH = 1001;
 
     private static final int MAX_PHOTO = 8;
     //图片
@@ -89,6 +92,8 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
     private Boolean haveRemark = false;//备注是否是必填项
     private Boolean needCountAccord; //是否需要输入设备数量
     private String attention; //注意事项
+    private Integer localPosition; //当前界面数据在数组中的位置
+    private List<WorkorderService.StepsBean> steps ; //所有的维护步骤
 
 
     @Override
@@ -111,9 +116,65 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         super.onViewCreated(view, savedInstanceState);
         initData();
         initView();
-        initRecyclerView();
         initOnClick();
+        initBottomMenu();
     }
+
+    private void initBottomMenu() {
+        //上一级菜单
+        mTvPre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                localPosition--;
+                refreshBottomMenu();
+                getPresenter().getInfor(mWoId); //刷新数据
+            }
+        });
+
+        //下一级菜单
+        mTvNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                localPosition++;
+                judgeUpload();
+            }
+        });
+    }
+    /**
+     * 刷新底部按钮名称
+     * */
+    private void refreshBottomMenu(){
+        if (localPosition == 0){
+            //点击的位置为第一个
+            if (steps.size()<2){
+                mTvPre.setVisibility(View.GONE);
+                mTvNext.setVisibility(View.VISIBLE);
+                mTvNext.setText("完成");
+            }else {
+                mTvPre.setVisibility(View.GONE);
+                mTvNext.setVisibility(View.VISIBLE);
+                mTvNext.setText("下一项");
+            }
+        }else if (localPosition==steps.size()-1){
+            //点击的位置为第一个
+            if (steps.size()<2){
+                mTvPre.setVisibility(View.GONE);
+                mTvNext.setVisibility(View.VISIBLE);
+                mTvNext.setText("完成");
+            }else {
+                mTvPre.setVisibility(View.VISIBLE);
+                mTvPre.setText("上一项");
+                mTvNext.setVisibility(View.VISIBLE);
+                mTvNext.setText("完成");
+            }
+        }else {
+            mTvPre.setVisibility(View.VISIBLE);
+            mTvPre.setText("上一项");
+            mTvNext.setVisibility(View.VISIBLE);
+            mTvNext.setText("下一项");
+        }
+    }
+
 
     private void initOnClick() {
         for (int i = 0; i < mRadioGroup.getChildCount(); i++) {
@@ -143,7 +204,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
             mStepsBean = arguments.getParcelable(WORKORDER_STEP);
             needCountAccord = arguments.getBoolean(COUNT_ACCORD,false); //是否需要上传设备数量
             attention = arguments.getString(ATTENTION); //注意事项
-
+            localPosition = arguments.getInt(POSITION); //列表进来的位置
             if (mStepsBean == null){
                 return;
             }
@@ -151,10 +212,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
             if (mStepsBean.accordText != null){
                 needInput = mStepsBean.accordText;  //needInput == true ? 输入文本 : 选择正常异常
             }
-
-
         }
-
     }
 
     /**
@@ -177,7 +235,6 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         } else {
             setTitle(R.string.workorder_menu_step);
         }
-        setRightTextButton(R.string.workorder_save, R.id.workorder_step_save_menu_id);
         mEtWorkTeam = findViewById(R.id.et_work_team_step);
         mEtStep = findViewById(R.id.step_civ);
         mEtDesc = findViewById(R.id.desc_step_env);
@@ -196,6 +253,44 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         mEtStepWarning.canInput(false);
         mEtStepWarning.setInputDisp(false);
         mTvStepWarning = findViewById(R.id.tvStepWarning);
+        mTvPre = findViewById(R.id.workstep_pre_btn);
+        mTvNext = findViewById(R.id.workstep_next_btn);
+        refreshView();
+        getPresenter().getInfor(mWoId); //获取数据
+    }
+
+    public void getInforSuccess(WorkorderService.WorkorderInfoBean data){
+        if (localPosition > data.steps.size()-1){
+            ToastUtils.showShort("数据异常");
+            return;
+        }
+        mStepsBean = data.steps.get(localPosition);
+        steps = new ArrayList<>();
+        steps = data.steps;
+        needCountAccord = data.pmInfo.eqCountAccord;
+        attention = data.pmInfo.mattersNeedingAttention;
+        if (mStepsBean == null){
+            return;
+        }
+
+        if (mStepsBean.accordText != null){
+            needInput = mStepsBean.accordText;  //needInput == true ? 输入文本 : 选择正常异常
+        }
+
+        refreshView();
+    }
+
+    public void getInforError(){
+        ToastUtils.showShort(R.string.workorder_get_data_error);
+    }
+
+    //界面初始化
+    public void refreshView(){
+        if (mStepsBean != null) {
+            setTitle(getString(R.string.workorder_step) + mStepsBean.sort);
+        } else {
+            setTitle(R.string.workorder_menu_step);
+        }
 
         if (mStepsBean != null) {
             mEtWorkTeam.setTipText(StringUtils.formatString(mStepsBean.workTeamName));
@@ -229,15 +324,21 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         if (mStepsBean != null && mStepsBean.finished != null){
             if (mStepsBean.finished) {
                 mNormal.setChecked(true);
+                name = "normal";
             } else {
                 mAbNormal.setChecked(true);
+                name = "abnormal";
             }
         }else {
+            haveRemark = false;
             mStepsBean.finished = null;
+            mRadioGroup.clearCheck();
         }
 
         if (mStepsBean != null && mStepsBean.eqNumber != null){
             mEquipmentNumber.setText(mStepsBean.eqNumber+"");
+        }else {
+            mEquipmentNumber.setText("");
         }
 
         if (!TextUtils.isEmpty(mStepsBean.step)){
@@ -250,14 +351,24 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
             }
         }
 
-        if (needInput && mStepsBean != null && mStepsBean.enterText !=null){
-            mEtMaintenanceResult.setText(mStepsBean.enterText+"");
+        if (needInput && mStepsBean != null ){
+            if (mStepsBean.enterText == null){
+                mEtMaintenanceResult.setText("");
+            }else {
+                mEtMaintenanceResult.setText(mStepsBean.enterText+"");
+            }
+
         }
 
         if (mStepsBean.comment !=null){
             mEtDesc.setDesc(mStepsBean.comment+"");
+        }else {
+            mEtDesc.setDesc("");
         }
-
+        initRecyclerView();
+        if (steps != null){
+            refreshBottomMenu();
+        }
     }
 
     private void initRecyclerView() {
@@ -287,8 +398,9 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         }
     }
 
-    @Override
-    public void onRightTextMenuClick(View view) {
+
+    //校验维护步骤上传条件
+    private void judgeUpload(){
         mRequest = new WorkorderService.WorkorderStepUpdateReq();
         mRequest.woId = mWoId;
         mRequest.stepId = mStepsBean == null ? null : mStepsBean.stepId;
@@ -311,6 +423,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
 
         if (needInput && TextUtils.isEmpty(mEtMaintenanceResult.getText()+"")){
             ToastUtils.showShort("请输入维护结果");
+            localPosition--;
             return;
         }
 
@@ -320,6 +433,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
 
         if (needCountAccord &&TextUtils.isEmpty(mEquipmentNumber.getText()+"")){
             ToastUtils.showShort("请输入设备数量");
+            localPosition--;
             return;
         }
         if (needCountAccord){
@@ -328,6 +442,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
 
         if (!needInput && haveRemark && TextUtils.isEmpty(mEtDesc.getDesc()+"")){
             ToastUtils.showShort("请输入备注");
+            localPosition--;
             return;
         }
 
@@ -338,6 +453,33 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
             showLoading();
             getPresenter().updateStep();
         }
+    }
+
+
+    public void uploadSuccess(){
+        if (mTvNext.getText().equals("完成")){
+            popForResult();
+            return;
+        }
+        refreshBottomMenu();
+        getPresenter().getInfor(mWoId); //刷新数据
+    }
+
+    public void popForResult(){
+        Bundle bundle = new Bundle();
+        setFragmentResult(REFRESH, bundle);
+        pop();
+    }
+
+    @Override
+    public void leftBackListener() {
+        popForResult();
+    }
+
+    @Override
+    public boolean onBackPressedSupport() {
+        popForResult();
+        return true;
     }
 
     @Override
@@ -420,7 +562,6 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
             }
         }
         mRequest.photos = mStepsBean.photos;
-
     }
 
     public void setBundle() {
@@ -448,13 +589,19 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         }
     }
 
-    public static WorkorderStepUpdateFragment getInstance(WorkorderService.StepsBean step
-            , Long woId,boolean countAccord,String attention) {
+    public static WorkorderStepUpdateFragment getInstance(
+            WorkorderService.StepsBean step,
+            Long woId,
+            boolean countAccord,
+            String attention,
+            Integer postion //选中的位置
+    ) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(WORKORDER_STEP, step);
         bundle.putLong(WORKORDER_ID, woId);
         bundle.putBoolean(COUNT_ACCORD, countAccord);
         bundle.putString(ATTENTION,attention);
+        bundle.putInt(POSITION,postion);
         WorkorderStepUpdateFragment fragment = new WorkorderStepUpdateFragment();
         fragment.setArguments(bundle);
         return fragment;

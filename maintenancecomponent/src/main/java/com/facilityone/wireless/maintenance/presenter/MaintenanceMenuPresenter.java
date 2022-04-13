@@ -12,10 +12,10 @@ import org.json.JSONObject;
 import java.util.List;
 
 /**
-  * @Auther: karelie
-  * @Date: 2021/8/17
-  * @Infor: 计划性维护
-  */
+ * @Auther: karelie
+ * @Date: 2021/8/17
+ * @Infor: 计划性维护
+ */
 public class MaintenanceMenuPresenter extends CommonBasePresenter<MaintenanceMenuFragment> {
 
     @Override
@@ -51,6 +51,9 @@ public class MaintenanceMenuPresenter extends CommonBasePresenter<MaintenanceMen
                     case MaintenanceConstant.MAINTENANCE_SEVEN:
                         //维护工单查询
 //                        functionBean.undoNum = data.getInt(PermissionsManager.UNARCHIVEDORDERNUMBER);
+                        break;
+                    case MaintenanceConstant.MAINTENANCE_EIGHT:
+                        functionBean.undoNum = data.getInt(PermissionsManager.UNDOPPMORDERNUMBER);
                         break;
                 }
             } catch (JSONException e) {

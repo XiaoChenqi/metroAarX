@@ -96,6 +96,7 @@
 
 
             <LinearLayout
+                android:id="@+id/ll_device_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/dp_15">
@@ -115,6 +116,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_device_deal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/dp_15">

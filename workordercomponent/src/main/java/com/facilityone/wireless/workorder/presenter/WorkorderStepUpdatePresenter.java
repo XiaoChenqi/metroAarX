@@ -21,7 +21,7 @@ import java.util.List;
  * Date: 2018/9/27 10:44 AM
  */
 public class WorkorderStepUpdatePresenter extends CommonBasePresenter<WorkorderStepUpdateFragment> {
-    
+
     @Override
     public void uploadFileSuccess(List<String> ids, int type) {
         WorkorderService.WorkorderStepUpdateReq request = getV().getRequest();
@@ -45,7 +45,7 @@ public class WorkorderStepUpdatePresenter extends CommonBasePresenter<WorkorderS
                     public void onSuccess(Response<BaseResponse<Object>> response) {
                         getV().dismissLoading();
                         ToastUtils.showShort(R.string.workorder_operate_success);
-                        getV().setBundle();
+                        getV().uploadSuccess();
                     }
 
                     @Override
@@ -53,6 +53,34 @@ public class WorkorderStepUpdatePresenter extends CommonBasePresenter<WorkorderS
                         super.onError(response);
                         getV().dismissLoading();
                         ToastUtils.showShort(R.string.workorder_operate_fail);
+                    }
+                });
+    }
+
+    public void getInfor(Long woId){
+        getV().showLoading();
+        String json = "{\"woId\":" + woId + "}";
+        OkGo.<BaseResponse<WorkorderService.WorkorderInfoBean>>post(FM.getApiHost() + WorkorderUrl.WORKORDER_INFO_URL)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(json)
+                .execute(new FMJsonCallback<BaseResponse<WorkorderService.WorkorderInfoBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<WorkorderService.WorkorderInfoBean>> response) {
+                        getV().dismissLoading();
+                        WorkorderService.WorkorderInfoBean data = response.body().data;
+                        if(data != null) {
+                            getV().getInforSuccess(data);
+                        }else {
+                            getV().getInforError();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<WorkorderService.WorkorderInfoBean>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                        getV().getInforError();
                     }
                 });
     }

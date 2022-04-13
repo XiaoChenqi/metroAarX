@@ -243,13 +243,15 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
                 break;
             case MaintenanceConstant.FIVE:
                 title = "待存档维护工单";
-                //TODO 30号之前不发
                 mQueryMenuIv.setVisibility(View.VISIBLE);
                 mllSpecialty.setVisibility(View.VISIBLE);
                 mllCycle.setVisibility(View.GONE);
                 break;
             case MaintenanceConstant.SIX:
                 title = "维护工单查询列表";
+                break;
+            case MaintenanceConstant.SEVEN:
+                title = "待抽检维护工单";
                 break;
         }
         setTitle(title + "");
@@ -412,6 +414,8 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
                     fragment = workorderService.getWorkorderInfoPendingFragment(status, code, woId, 1,true);
                 }else if (mType == MaintenanceConstant.FOUR){
                     fragment = workorderService.getWorkorderInfoFragment(10, code,true,woId);
+                }else if(mType == MaintenanceConstant.SEVEN){
+                    fragment = workorderService.getWorkorderInfoFragment(MaintenanceConstant.WORKORDER_STATUS_NONE,code,woId,true,1);
                 }else {
                     fragment = workorderService.getWorkorderInfoFragment(status, code, woId, true);
                 }

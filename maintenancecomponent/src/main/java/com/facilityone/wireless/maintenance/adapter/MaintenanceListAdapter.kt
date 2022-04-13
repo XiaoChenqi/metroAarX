@@ -63,27 +63,6 @@ class MaintenanceListAdapter : BaseQuickAdapter<MaintenanceListEnity?, BaseViewH
                 var resId = R.drawable.maintenacne_fill_grey_background
                 helper.setText(R.id.status_tv, MaintenanceHelper.getMaintenanceWorkorderStatusMap(mContext)[item.newStatus])
                 when (item.newStatus) {
-//                    MaintenanceConstant.WORKORDER_STATUS_CREATED -> resId =
-//                            R.drawable.fm_workorder_tag_fill_created_bg
-//                    MaintenanceConstant.WORKORDER_STATUS_PUBLISHED -> resId =
-//                            R.drawable.fm_workorder_tag_fill_published_bg
-//                    MaintenanceConstant.WORKORDER_STATUS_PROCESS -> resId =
-//                            R.drawable.fm_workorder_tag_fill_process_bg
-//                    MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_GO -> resId =
-//                            R.drawable.fm_workorder_tag_fill_suspended_go_bg
-//                    MaintenanceConstant.WORKORDER_STATUS_TERMINATED -> resId =
-//                            R.drawable.fm_workorder_tag_fill_terminated_bg
-//                    MaintenanceConstant.WORKORDER_STATUS_COMPLETED -> resId =
-//                            R.drawable.fm_workorder_tag_fill_completed_bg
-//                    MaintenanceConstant.WORKORDER_STATUS_VERIFIED -> resId =
-//                            R.drawable.fm_workorder_tag_fill_verified_bg
-//                    MaintenanceConstant.WORKORDER_STATUS_ARCHIVED -> resId =
-//                            R.drawable.fm_workorder_tag_fill_archived_bg
-//                    MaintenanceConstant.WORKORDER_STATUS_APPROVAL -> resId =
-//                            R.drawable.fm_workorder_tag_fill_approval_bg
-//                    MaintenanceConstant.WORKORDER_STATUS_SUSPENDED_NO -> resId =
-//                            R.drawable.fm_workorder_tag_fill_suspended_no_bg
-
                     MaintenanceConstant.WORK_NEW_STATUS_DISPATCHING -> resId = //待派工
                         R.drawable.fm_workorder_tag_fill_created_bg
                     MaintenanceConstant.WORK_NEW_STATUS_PROCESS -> resId =     //处理中

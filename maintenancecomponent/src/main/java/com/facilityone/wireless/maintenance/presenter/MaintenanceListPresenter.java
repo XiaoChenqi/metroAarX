@@ -28,110 +28,114 @@ import static com.facilityone.wireless.maintenance.model.MaintenanceUrl.MAINTENA
 
 public class MaintenanceListPresenter extends CommonBasePresenter<MaintenanceListFragment> {
 
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/18
-      * @Infor: 获取列表数据
-      */
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/18
+     * @Infor: 获取列表数据
+     */
 
-     public void getMaintenanceList(Integer type, Page page,MaintenanceService.ConditionBean conditionBean,boolean refresh){
-         getV().showLoading();
-         final MaintenanceEnity.MaintenanceListReq request = new MaintenanceEnity.MaintenanceListReq();
-         if (type == MaintenanceConstant.FIVE){
-             request.searchCondit = conditionBean;
-         }else {
-             request.searchCondition = conditionBean;
-         }
-
-
-         String url = "";
-         switch (type) {
-             case MaintenanceConstant.ZERO:
-                 break;
-             case MaintenanceConstant.ONE: //待处理维护工单
-                 url = MaintenanceUrl.MAINTENANCE_UNDO_URL;
-                 page.setPageSize(99999); //不分页
-                 request.type = 0;
-                 request.page=page;
-                 break;
-             case MaintenanceConstant.TWO: //待派工维护工单
-                 page.setPageSize(99999); //不分页
-                 request.page=page;
-                 url = MaintenanceUrl.MAINTENANCE_LIST_DISPATCH_URL;
-                 break;
-             case MaintenanceConstant.THREE: //待审批维护工单
-                 url = MaintenanceUrl.MAINTENANCE_LIST_APPROVAL_URL;
-                 request.page = page;
-                 break;
-             case MaintenanceConstant.FOUR: //异常维护工单
-                 url = MaintenanceUrl.MAINTENANCE_LIST_ABNOMAL_URL;
-                 request.page = page;
-                 break;
-             case MaintenanceConstant.FIVE: //带存档维护工单
-                 url = MaintenanceUrl.MAINTENANCE_LIST_TO_CLOSED_URL;
-                 request.page = page;
-                 break;
-             case MaintenanceConstant.SIX: //维护工单查询
-                 url = MaintenanceUrl.MAINTENANCE_LIST_TO_QUERY_URL;
-                 request.page = page;
-                 break;
-         }
-         OkGo.<BaseResponse<MaintenanceEnity.MaintenanceListResp>>post(FM.getApiHost() + url)
-                 .tag(getV())
-                 .isSpliceUrl(true)
-                 .upJson(toJson(request))
-                 .execute(new FMJsonCallback<BaseResponse<MaintenanceEnity.MaintenanceListResp>>() {
-                     @Override
-                     public void onSuccess(Response<BaseResponse<MaintenanceEnity.MaintenanceListResp>> response) {
-                         getV().dismissLoading();
-                         MaintenanceEnity.MaintenanceListResp data = response.body().data;
-                         if (data == null || data.contents == null || data.contents.size() == 0) {
-                             getV().noDataRefresh();
-                             return;
-                         }
-                         getV().refreshSuccessUI(data.contents,refresh,data.page);
+    public void getMaintenanceList(Integer type, Page page,MaintenanceService.ConditionBean conditionBean,boolean refresh){
+        getV().showLoading();
+        final MaintenanceEnity.MaintenanceListReq request = new MaintenanceEnity.MaintenanceListReq();
+        if (type == MaintenanceConstant.FIVE){
+            request.searchCondit = conditionBean;
+        }else {
+            request.searchCondition = conditionBean;
+        }
 
 
-                     }
+        String url = "";
+        switch (type) {
+            case MaintenanceConstant.ZERO:
+                break;
+            case MaintenanceConstant.ONE: //待处理维护工单
+                url = MaintenanceUrl.MAINTENANCE_UNDO_URL;
+                page.setPageSize(99999); //不分页
+                request.type = 0;
+                request.page=page;
+                break;
+            case MaintenanceConstant.TWO: //待派工维护工单
+                page.setPageSize(99999); //不分页
+                request.page=page;
+                url = MaintenanceUrl.MAINTENANCE_LIST_DISPATCH_URL;
+                break;
+            case MaintenanceConstant.THREE: //待审批维护工单
+                url = MaintenanceUrl.MAINTENANCE_LIST_APPROVAL_URL;
+                request.page = page;
+                break;
+            case MaintenanceConstant.FOUR: //异常维护工单
+                url = MaintenanceUrl.MAINTENANCE_LIST_ABNOMAL_URL;
+                request.page = page;
+                break;
+            case MaintenanceConstant.FIVE: //带存档维护工单
+                url = MaintenanceUrl.MAINTENANCE_LIST_TO_CLOSED_URL;
+                request.page = page;
+                break;
+            case MaintenanceConstant.SIX: //维护工单查询
+                url = MaintenanceUrl.MAINTENANCE_LIST_TO_QUERY_URL;
+                request.page = page;
+                break;
+            case MaintenanceConstant.SEVEN: //待抽检维护工单
+                url = MaintenanceUrl.MAINTENANCE_UNDO_URL;
+                request.page = page;
+                break;
+        }
+        OkGo.<BaseResponse<MaintenanceEnity.MaintenanceListResp>>post(FM.getApiHost() + url)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(request))
+                .execute(new FMJsonCallback<BaseResponse<MaintenanceEnity.MaintenanceListResp>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<MaintenanceEnity.MaintenanceListResp>> response) {
+                        getV().dismissLoading();
+                        MaintenanceEnity.MaintenanceListResp data = response.body().data;
+                        if (data == null || data.contents == null || data.contents.size() == 0) {
+                            getV().noDataRefresh();
+                            return;
+                        }
+                        getV().refreshSuccessUI(data.contents,refresh,data.page);
 
-                     @Override
-                     public void onError(Response<BaseResponse<MaintenanceEnity.MaintenanceListResp>> response) {
-                         super.onError(response);
-                         getV().dismissLoading();
-                     }
-                 });
-     }
+
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<MaintenanceEnity.MaintenanceListResp>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                    }
+                });
+    }
 
 
-      /**
-       * @Auther: karelie
-       * @Date: 2021/8/19
-       * @Infor: 批量接单/接单
-       */
-      public void receiveOrder(MaintenanceEnity.ReceiveOrderReq req) {
-          getV().showLoading();
-          String url = "";
-          url = MAINTENANCE_ORDER_RECEIVE; //批量接单
-          OkGo.<BaseResponse<Object>>post(FM.getApiHost() + url)
-                  .tag(getV())
-                  .isSpliceUrl(true)
-                  .upJson(toJson(req))
-                  .execute(new FMJsonCallback<BaseResponse<Object>>() {
-                      @Override
-                      public void onSuccess(Response<BaseResponse<Object>> response) {
-                          getV().dismissLoading();
-                          ToastUtils.showShort("接单成功");
-                          getV().initData(); //列表刷新
-                      }
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/19
+     * @Infor: 批量接单/接单
+     */
+    public void receiveOrder(MaintenanceEnity.ReceiveOrderReq req) {
+        getV().showLoading();
+        String url = "";
+        url = MAINTENANCE_ORDER_RECEIVE; //批量接单
+        OkGo.<BaseResponse<Object>>post(FM.getApiHost() + url)
+                .tag(getV())
+                .isSpliceUrl(true)
+                .upJson(toJson(req))
+                .execute(new FMJsonCallback<BaseResponse<Object>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<Object>> response) {
+                        getV().dismissLoading();
+                        ToastUtils.showShort("接单成功");
+                        getV().initData(); //列表刷新
+                    }
 
-                      @Override
-                      public void onError(Response<BaseResponse<Object>> response) {
-                          super.onError(response);
-                          getV().dismissLoading();
-                          ToastUtils.showShort("提交失败");
-                      }
-                  });
-      }
+                    @Override
+                    public void onError(Response<BaseResponse<Object>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
+                        ToastUtils.showShort("提交失败");
+                    }
+                });
+    }
 
     /**
      * 工单周期

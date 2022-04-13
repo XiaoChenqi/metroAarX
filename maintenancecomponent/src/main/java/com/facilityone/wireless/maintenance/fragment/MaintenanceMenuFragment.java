@@ -14,6 +14,7 @@ import com.facilityone.wireless.a.arch.ec.collect.CollectUtils;
 import com.facilityone.wireless.a.arch.ec.module.FunctionService;
 import com.facilityone.wireless.a.arch.ec.module.IService;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
+import com.facilityone.wireless.a.arch.xcq.bean.BaseResponse;
 import com.facilityone.wireless.maintenance.R;
 import com.facilityone.wireless.maintenance.model.MaintenanceConstant;
 import com.facilityone.wireless.maintenance.presenter.MaintenanceMenuPresenter;
@@ -24,10 +25,10 @@ import java.util.List;
 import me.yokeyword.fragmentation.ISupportFragment;
 
 /**
-  * @Auther: karelie
-  * @Date: 2021/8/17
-  * @Infor: 计划性维护菜单界面
-  */
+ * @Auther: karelie
+ * @Date: 2021/8/17
+ * @Infor: 计划性维护菜单界面
+ */
 public class MaintenanceMenuFragment extends BaseFragment<MaintenanceMenuPresenter> implements BaseQuickAdapter.OnItemClickListener {
 
     private RecyclerView mRecyclerView;
@@ -56,10 +57,6 @@ public class MaintenanceMenuFragment extends BaseFragment<MaintenanceMenuPresent
         initView();
     }
 
-    @Override
-    public void leftBackListener() {
-        getActivity().finish();
-    }
     private void initData() {
         mFunctionBeanList = new ArrayList<>();
         Bundle arguments = getArguments();
@@ -138,6 +135,9 @@ public class MaintenanceMenuFragment extends BaseFragment<MaintenanceMenuPresent
             case MaintenanceConstant.MAINTENANCE_SEVEN: //维护工单查询
                 baseFragment = MaintenanceQueryFragment.getInstance(false);
                 break;
+            case MaintenanceConstant.MAINTENANCE_EIGHT: //待抽检维护工单
+                baseFragment = MaintenanceListFragment.getInstance(MaintenanceConstant.SEVEN);
+                break;
 
         }
         if (baseFragment != null) {
@@ -168,8 +168,8 @@ public class MaintenanceMenuFragment extends BaseFragment<MaintenanceMenuPresent
         return menuFragment;
     }
 
-     public static MaintenanceMenuFragment getInstance() {
-         MaintenanceMenuFragment menuFragment = new MaintenanceMenuFragment();
-         return menuFragment;
-     }
+    public static MaintenanceMenuFragment getInstance() {
+        MaintenanceMenuFragment menuFragment = new MaintenanceMenuFragment();
+        return menuFragment;
+    }
 }

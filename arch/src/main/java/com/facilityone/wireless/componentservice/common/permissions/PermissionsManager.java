@@ -80,6 +80,7 @@ public class PermissionsManager {
     public static final String UNAPPROVALPMORDERNUMBER = "unApprovalPPMOrderNumber"; //待审核维护工单数量
     public static final String ABNORMALPPMORDERNUMBER = "abnormalPPMOrderNumber"; //异常维护工单数量
     public static final String UNARCHIVEDPPMORDERNUMBER = "unArchivedPPMOrderNumber"; //待存档维护工单数量
+    public static final String NOTSAMPLEDPPMORDERNUMBER = "notSampledPPMOrderNumber"; //待存档维护工单数量
 
 
     public static class HomeFunction {
@@ -127,17 +128,18 @@ public class PermissionsManager {
             mFbs.clear();
             mIndex = 0;
 
-//            opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
-//                    "\"m-requirement-approval\",\"m-requirement-query\"," +
-//                    "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
-//                    "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
-//                    "\"m-ppm\",\"m-inventory-create\",\"m-inventory-create\"," +
-//                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
-//                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
-//                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-one\",\"m-ppm-two\"," +
-//                    "\"m-ppm-three\",\"m-ppm-four\",\"m-ppm-five\",\"m-ppm-six\",\"m-ppm-seven\"," +
-//                    "\"m-boardingpatrol\",\"m-boardingpatrol-check\",\"m-boardingpatrol-query\"," +
-//                    "\"m-construction\",\"m-construction-register\",\"m-construction-query\"]";
+            opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
+                    "\"m-requirement-approval\",\"m-requirement-query\"," +
+                    "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
+                    "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
+                    "\"m-ppm\",\"m-inventory-create\",\"m-inventory-create\"," +
+                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
+                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
+                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-calendar\",\"m-ppm-process\",\"m-ppm-sampling\"," +
+                    "\"m-ppm-dispach\",\"m-ppm-approval\",\"\tm-ppm-exception\",\"m-ppm-close\",\"m-ppm-query\"," +
+                    "\"m-boardingpatrol\",\"m-boardingpatrol-check\",\"m-boardingpatrol-query\"," +
+                    "\"m-construction\",\"m-construction-register\",\"m-construction-query\",\"m-suspend\"," +
+                    "\"m-suspend-applyfor\",\"m-suspend-record\",\"m-applyfor-dismantle\",\"m-dismantle-record\",\"m-suspend-inquire\"]";
 
 
             // 扫一扫
@@ -562,6 +564,7 @@ public class PermissionsManager {
                     , R.drawable.home_function_order_arrange
                     , R.drawable.home_function_order_approval
                     , R.drawable.home_function_abnormal
+                    , R.drawable.home_function_order_sampled
                     , R.drawable.home_function_order_archive
                     , R.drawable.home_function_order_query
             };
@@ -583,6 +586,8 @@ public class PermissionsManager {
                     childMenu.jsonObjectKey = ABNORMALPPMORDERNUMBER;
                 }else if ("m-ppm-close".equals(per[i])) {
                     childMenu.jsonObjectKey = UNARCHIVEDPPMORDERNUMBER;
+                }else if ("m-ppm-sampling".equals(per[i])){
+                    childMenu.jsonObjectKey = UNDOPPMORDERNUMBER;
                 }
                 childMenus.add(childMenu);
             }

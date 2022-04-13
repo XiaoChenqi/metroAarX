@@ -44,8 +44,13 @@ public class WorkorderServiceImpl implements WorkorderService {
     }
 
     @Override
+    public BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId, boolean isMaintenance, int Sampling) {
+        return WorkorderInfoFragment.getInstance(workorderStatus, code, woId,isMaintenance,Sampling);
+    }
+
+    @Override
     public BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, boolean isExeption, Long woId) {
-         return WorkorderInfoFragment.getInstance(workorderStatus, code, isExeption,woId);
+        return WorkorderInfoFragment.getInstance(workorderStatus, code, isExeption,woId);
     }
 
     @Override
@@ -88,7 +93,7 @@ public class WorkorderServiceImpl implements WorkorderService {
                 locationBean, localMedias, itemId,
                 desc, demandId, phone, people);
     }
-    
+
     @Override
     public BaseFragment getWorkorderCreateFragment(int fromType, long equipmentId
             , String locationName, LocationBean locationBean
@@ -100,14 +105,14 @@ public class WorkorderServiceImpl implements WorkorderService {
                 desc, demandId, phone, people,waterMark);
     }
 
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/23
-      * @Infor: 维护管理中批量派单
-      */
-     @Override
-     public BaseFragment getOrderDispatchFragment(ArrayList<String> woId, String code, String sendWorkContent, Long estimateStartTime, Long estimateEndTime,Long workTeamId) {
-         return WorkorderDispatchFragment.getInstance(woId, code, sendWorkContent, estimateStartTime, estimateEndTime,workTeamId);
-     }
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/23
+     * @Infor: 维护管理中批量派单
+     */
+    @Override
+    public BaseFragment getOrderDispatchFragment(ArrayList<String> woId, String code, String sendWorkContent, Long estimateStartTime, Long estimateEndTime,Long workTeamId) {
+        return WorkorderDispatchFragment.getInstance(woId, code, sendWorkContent, estimateStartTime, estimateEndTime,workTeamId);
+    }
 
 }

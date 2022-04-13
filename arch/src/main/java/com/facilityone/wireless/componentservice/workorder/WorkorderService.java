@@ -22,12 +22,14 @@ public interface WorkorderService extends IService {
     BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId);
 
     BaseFragment getWorkorderInfoFragment(Boolean fromMessage,int workorderStatus, String code, Long woId);
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/19
-      * @Infor: 四运 维护工单跳转
-      */
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/19
+     * @Infor: 四运 维护工单跳转
+     */
     BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId,boolean isMaintenance);
+
+    BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, Long woId,boolean isMaintenance,int Sampling);
 
     BaseFragment getWorkorderInfoFragment(int workorderStatus, String code, boolean isExeption,Long woId);
 

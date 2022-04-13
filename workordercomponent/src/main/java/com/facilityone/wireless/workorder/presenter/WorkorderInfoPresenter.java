@@ -128,7 +128,6 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                             } else {
                                 getV().canOpt(false, false);
                             }
-
                         }
                     }
 
@@ -336,9 +335,6 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 }
                 break;
             case WorkorderConstant.WORK_STATUS_MAINTENCE:// 计划性维护
-                if (needSample) {
-                    menu.add("抽检");
-                }
                 if (hasPermission( WorkorderConstant.VERIFIER_PERMISSION, currentRoles)) {
                     menu.add("验证");
                 }
@@ -348,9 +344,6 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                 }
                 break;
             case WorkorderConstant.WORK_STATUS_MAINTENCE_NOT:// 计划性维护
-                if (needSample) {
-                    menu.add("抽检");
-                }
                 if (hasPermission( WorkorderConstant.ARCHIVE_PERMISSION, currentRoles)) {
                     menu.add(getV().getString(R.string.workorder_archive));
                 }
@@ -1362,6 +1355,8 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 
                                 }
                             }
+                        }else {
+                            ToastUtils.showShort("暂无模板");
                         }
                     }
 
