@@ -52,6 +52,27 @@
     </string-array>
 
 
+    <!--=接地线悬挂-->
+    <string name="home_groundwire_menu_title">接地线悬挂</string>
+    <string name="home_groundwire_permissions" translatable="false">m-suspend</string>
+
+    <string-array name="home_groundwire_menu_child_title">
+        <item>悬挂申请</item>
+        <item>待悬挂记录</item>
+        <item>拆除申请</item>
+        <item>待拆除记录</item>
+        <item>记录查询</item>
+    </string-array>
+
+    <string-array name="home_groundwire_menu_child_permissions">
+        <item>m-suspend-apply</item>
+        <item>m-suspend-record</item>
+        <item>m-applyfor-dismantle</item>
+        <item>m-dismantle-record</item>
+        <item>m-suspend-inquire</item>
+    </string-array>
+
+
 
     <!--扫一扫-->
     <string name="home_scan_menu_title">扫一扫</string>

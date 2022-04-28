@@ -52,12 +52,14 @@ class ELSelectorProvider : BaseItemProvider<MaintenanceEnity.ElectronicLedgerEnt
                 if (selectorModel.selectValues!=null&& selectorModel.selectValues!!.isNotEmpty()){
                     binding.rbNormal.text= selectorModel.selectValues!![0]
                     binding.rbException.text=selectorModel.selectValues!![1]
+                    binding.rbNormal.visibility = View.VISIBLE
+                    binding.rbException.visibility = View.VISIBLE
                 }else{
-                    binding.rbNormal.text= "正常"
-                    binding.rbException.text="异常"
+                    binding.rbNormal.visibility = View.INVISIBLE
+                    binding.rbException.visibility = View.INVISIBLE
                 }
                 //判断上次是否选择过,操作过则重新渲染选择值,反之则清除状态
-                if (item.value!=null){
+                if (!item.value.isNullOrEmpty()){
                     //如果当前tag中存储值和item中存储值相同时则选择对应的选项,反之清除状态
                     if (binding.rgSelect.tag!=null&&item.value as String==binding.rgSelect.tag as String){
                         if (item.value as String== selectorModel.selectValues!![0] ){

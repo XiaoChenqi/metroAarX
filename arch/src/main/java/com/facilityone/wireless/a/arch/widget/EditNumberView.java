@@ -33,6 +33,7 @@ public class EditNumberView extends LinearLayout implements TextWatcher {
     private CharSequence temp;
     private int selectionStart;
     private int selectionEnd;
+    private Boolean canInupt=true;
 
     public EditNumberView(Context context) {
         this(context, null);
@@ -98,17 +99,19 @@ public class EditNumberView extends LinearLayout implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        int number = s.length();
-        selectionStart = mDescEt.getSelectionStart();
-        selectionEnd = mDescEt.getSelectionEnd();
-        if (temp.length() > mMaxNumber) {
-            s.delete(selectionStart - 1, selectionEnd);
-            int tempSelection = selectionStart;
-            mDescEt.setText(s);
-            mDescEt.setSelection(tempSelection);
-        }
-        setInputRemainingNumber(mMaxNumber - number < 0 ? 0 : mMaxNumber - number);
+        if (canInupt){
+            int number = s.length();
+            selectionStart = mDescEt.getSelectionStart();
+            selectionEnd = mDescEt.getSelectionEnd();
+            if (temp.length() > mMaxNumber) {
 
+                s.delete(selectionStart - 1, selectionEnd);
+                int tempSelection = selectionStart;
+                mDescEt.setText(s);
+                mDescEt.setSelection(tempSelection);
+            }
+            setInputRemainingNumber(mMaxNumber - number < 0 ? 0 : mMaxNumber - number);
+        }
     }
 
     private void setInputRemainingNumber(int value) {
@@ -120,6 +123,7 @@ public class EditNumberView extends LinearLayout implements TextWatcher {
     }
 
     public void canInput(boolean b){
+        canInupt=b;
         if (!b){
             mDescEt.setFocusable(false);
             mDescEt.setEnabled(false);

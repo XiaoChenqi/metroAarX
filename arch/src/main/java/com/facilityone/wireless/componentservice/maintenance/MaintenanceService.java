@@ -15,4 +15,6 @@ public interface MaintenanceService extends IService {
 
     BaseFragment getElectronicLedger2(Long woId,String woCode,Long tempLateId);
 
+    BaseFragment getElectronicLedger2(Long woId,String woCode,Long tempLateId,Integer status);
+
 }

@@ -52,8 +52,8 @@ public class MaintenanceMenuPresenter extends CommonBasePresenter<MaintenanceMen
                         //维护工单查询
 //                        functionBean.undoNum = data.getInt(PermissionsManager.UNARCHIVEDORDERNUMBER);
                         break;
-                    case MaintenanceConstant.MAINTENANCE_EIGHT:
-                        functionBean.undoNum = data.getInt(PermissionsManager.UNDOPPMORDERNUMBER);
+                    case MaintenanceConstant.MAINTENANCE_EIGHT: //待抽检维护工单
+                        functionBean.undoNum = data.getInt(PermissionsManager.NOTSAMPLEDPPMORDERNUMBER);
                         break;
                 }
             } catch (JSONException e) {

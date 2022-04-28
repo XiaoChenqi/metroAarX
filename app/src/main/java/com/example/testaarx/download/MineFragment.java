@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.SPUtils;
 
+import com.example.testaarx.HostSettingActivity;
+import com.example.testaarx.MainActivity;
 import com.example.testaarx.R;
 import com.facilityone.wireless.a.arch.ec.module.UserService;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
@@ -94,6 +96,7 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
         mCheckVersion.setOnClickListener(this);
         mCheckVersion.showRedPoint(false);
         mCache.setOnClickListener(this);
+        mServerConfig.setOnClickListener(this);
 
 
 //        refreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
@@ -130,10 +133,13 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
             case R.id.item_cache:
                 toFragment=ClearCacheFragment.getInstance();
                 break;
+            case R.id.item_server:
+                getActivity().startActivity( new Intent(getActivity(), HostSettingActivity.class));
+                break;
         }
 
         if (toFragment != null) {
-            startWithPop(toFragment);
+            start(toFragment);
         }
     }
 
@@ -158,5 +164,10 @@ public class MineFragment extends BaseFragment<MinePresenter> implements View.On
 
     public static MineFragment newInstance() {
         return new MineFragment();
+    }
+
+    @Override
+    public void leftBackListener() {
+        getActivity().finish();
     }
 }

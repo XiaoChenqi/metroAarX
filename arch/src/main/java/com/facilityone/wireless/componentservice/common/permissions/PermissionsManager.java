@@ -17,6 +17,7 @@ import com.facilityone.wireless.componentservice.construction.ConstructionServic
 import com.facilityone.wireless.componentservice.contract.ContractService;
 import com.facilityone.wireless.componentservice.demand.DemandService;
 import com.facilityone.wireless.componentservice.energy.EnergyService;
+
 import com.facilityone.wireless.componentservice.inspection.InspectionService;
 import com.facilityone.wireless.componentservice.inventory.InventoryService;
 import com.facilityone.wireless.componentservice.knowledge.KnowledgeService;
@@ -80,7 +81,14 @@ public class PermissionsManager {
     public static final String UNAPPROVALPMORDERNUMBER = "unApprovalPPMOrderNumber"; //待审核维护工单数量
     public static final String ABNORMALPPMORDERNUMBER = "abnormalPPMOrderNumber"; //异常维护工单数量
     public static final String UNARCHIVEDPPMORDERNUMBER = "unArchivedPPMOrderNumber"; //待存档维护工单数量
+
+    //接地线悬挂模块
+    public static final String TOBESUSPENDEDNUMBER = "toBesuSpendedNumber"; //待悬挂记录数量
+    public static final String DEMOLITIONNUMBER = "demolitionNumber"; //拆除申请数量
+    public static final String DEMOLITIONRECORDNUMBER = "demolitionRecordNumber"; //待拆除记录数量
     public static final String NOTSAMPLEDPPMORDERNUMBER = "notSampledPPMOrderNumber"; //待存档维护工单数量
+
+
 
 
     public static class HomeFunction {
@@ -128,18 +136,18 @@ public class PermissionsManager {
             mFbs.clear();
             mIndex = 0;
 
-            opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
-                    "\"m-requirement-approval\",\"m-requirement-query\"," +
-                    "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
-                    "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
-                    "\"m-ppm\",\"m-inventory-create\",\"m-inventory-create\"," +
-                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
-                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
-                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-calendar\",\"m-ppm-process\",\"m-ppm-sampling\"," +
-                    "\"m-ppm-dispach\",\"m-ppm-approval\",\"\tm-ppm-exception\",\"m-ppm-close\",\"m-ppm-query\"," +
-                    "\"m-boardingpatrol\",\"m-boardingpatrol-check\",\"m-boardingpatrol-query\"," +
-                    "\"m-construction\",\"m-construction-register\",\"m-construction-query\",\"m-suspend\"," +
-                    "\"m-suspend-applyfor\",\"m-suspend-record\",\"m-applyfor-dismantle\",\"m-dismantle-record\",\"m-suspend-inquire\"]";
+//            opensJson = "[\"m-scan\",\"m-quickreport\",\"m-requirement\",\"m-requirement-process\"," +
+//                    "\"m-requirement-approval\",\"m-requirement-query\"," +
+//                    "\"m-wo-approval\",\"m-wo\",\"m-wo-process\",\"m-wo-dispach\",\"m-wo-close\",\"m-wo-abnormal\"," +
+//                    "\"m-wo-query\",\"m-wo-create\",\"m-patrol\",\"m-patrol-task\",\"m-patrol-query\"," +
+//                    "\"m-ppm\",\"m-inventory-create\",\"m-inventory-create\"," +
+//                    "\"m-inventory-in\",\"m-inventory\",\"m-inventory-out\",\"m-inventory-move\"," +
+//                    "\"m-inventory-check\",\"m-inventory-reserve\",\"m-inventory-my\"," +
+//                    "\"m-inventory-approval\",\"m-inventory-query\",\"m-ppm-calendar\",\"m-ppm-process\",\"m-ppm-sampling\"," +
+//                    "\"m-ppm-dispach\",\"m-ppm-approval\",\"\tm-ppm-exception\",\"m-ppm-close\",\"m-ppm-query\"," +
+//                    "\"m-boardingpatrol\",\"m-boardingpatrol-check\",\"m-boardingpatrol-query\"," +
+//                    "\"m-construction\",\"m-construction-register\",\"m-construction-query\",\"m-suspend\"," +
+//                    "\"m-suspend-applyfor\",\"m-suspend-record\",\"m-applyfor-dismantle\",\"m-dismantle-record\",\"m-suspend-inquire\"]";
 
 
             // 扫一扫
@@ -182,7 +190,8 @@ public class PermissionsManager {
             boardingPatrolFunction(opensJson);
             //施工监护
             constructionFunction(opensJson);
-
+            //接地线悬挂
+            groundWireFunction(opensJson);
 
 
             int supplement = mFbs.size() % FunctionService.COUNT;
@@ -554,6 +563,55 @@ public class PermissionsManager {
         }
 
         /**
+         * 接地线悬挂
+         * */
+        private void groundWireFunction(String opensJson){
+//
+//            int icons[] = {
+//                    R.drawable.groundwire_applyfor_icon,
+//                    R.drawable.ground_record_icon,
+//                    R.drawable.groundwire_dismantle_icon,
+//                    R.drawable.groundwire_dismantle_record_icon,
+//                    R.drawable.ground_query_icon,
+//            };
+//            String[] per = getStringArray(R.array.home_groundwire_menu_child_permissions);
+//            String[] titles = getStringArray(R.array.home_groundwire_menu_child_title);
+//            List<ChildMenu> childMenus = new ArrayList<>();
+//            for (int i = 0; i < icons.length; i++) {
+//                ChildMenu childMenu = new ChildMenu(per[i], CommonConstant.MESSAGE_GROUNDWIRE,
+//                        icons[i], titles[i], null, i);
+//                if ("m-suspend-record".equals(per[i])) {
+//                    childMenu.jsonObjectKey = TOBESUSPENDEDNUMBER;
+//                } else if ("m-applyfor-dismantle".equals(per[i])) {
+//                    childMenu.jsonObjectKey = DEMOLITIONNUMBER;
+//                } else if ("m-dismantle-record".equals(per[i])) {
+//                    childMenu.jsonObjectKey = DEMOLITIONRECORDNUMBER;
+//                }
+//                childMenus.add(childMenu);
+//            }
+//            List<String> childList=new ArrayList<>();
+//            for (ChildMenu childMenu : childMenus) {
+//                childList.add(childMenu.jsonObjectKey);
+//            }
+//            GroundWireService impl = null;
+//            String[] child = PermissionsHelper.strList2strArray(childList);
+//            if (mRouter.getService(GroundWireService.class.getSimpleName()) != null){
+//                impl = (GroundWireService) mRouter.getService(GroundWireService.class.getSimpleName());
+//            }
+//
+//
+//            homeMenu(opensJson,
+//                    getString(R.string.home_groundwire_permissions),
+//                    impl,
+//                    CommonConstant.MESSAGE_GROUNDWIRE,
+//                    R.drawable.groundwire_munu_icon,
+//                    "接地线悬挂",
+//                    child,
+//                    childMenus);
+
+        }
+
+        /**
          * 计划性维护
          * */
         private void ppmFunction(String opensJson) {
@@ -587,7 +645,7 @@ public class PermissionsManager {
                 }else if ("m-ppm-close".equals(per[i])) {
                     childMenu.jsonObjectKey = UNARCHIVEDPPMORDERNUMBER;
                 }else if ("m-ppm-sampling".equals(per[i])){
-                    childMenu.jsonObjectKey = UNDOPPMORDERNUMBER;
+                    childMenu.jsonObjectKey = NOTSAMPLEDPPMORDERNUMBER;
                 }
                 childMenus.add(childMenu);
             }
@@ -932,6 +990,9 @@ public class PermissionsManager {
                 break;
             case CommonConstant.MESSAGE_CONSTRUCTION: //登乘巡查
                 has = instance.getFunctionPermission(context.getResources().getString(R.string.home_construction_permissions));
+                break;
+            case CommonConstant.MESSAGE_GROUNDWIRE:
+                has = instance.getFunctionPermission(context.getResources().getString(R.string.home_groundwire_permissions));
                 break;
 
         }

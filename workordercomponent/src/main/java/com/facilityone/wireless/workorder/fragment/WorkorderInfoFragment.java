@@ -313,6 +313,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     private List<Long> allApprovers; //当前工单审批人数组
     public String completeMessage = null; //完成工单提醒文案
     private Integer isSampling; //是否是待抽检的工单
+    private Integer sampStatus; //传递抽检装填
 
     @Override
     public WorkorderInfoPresenter createPresenter() {
@@ -716,7 +717,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public void refreshBasicInfoUI(WorkorderService.WorkorderInfoBean data) {
         //工作组id
         mWoTeamId = data.workTeamId;
-
+        sampStatus = data.newStatus;
         if (data.workDoneReminder != null) {
             completeMessage = data.workDoneReminder + "";
         }
@@ -824,9 +825,11 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             }
         } else {
             if (isSampling != -1){
-                setMoreMenuVisible(false);
+                setMoreMenuVisible(true);
                 removeRightView();
-                setRightTextButton("抽检",R.id.workorder_sampling_id);
+                if (data.needSample){
+                    setRightTextButton("抽检",R.id.workorder_sampling_id);
+                }
             }else {
                 setMoreMenuVisible(false);
             }
@@ -868,7 +871,10 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         updateSpace(data);
 
         currentRoles = data.currentRoles;// 当前人员对该工单所拥有的角色权限数组
-        showRightMenu(data.status, currentRoles,data.workOrderLaborers,data.isBunchingOrder);
+        if (isSampling == -1){
+            showRightMenu(data.status, currentRoles,data.workOrderLaborers,data.isBunchingOrder);
+        }
+
 
         mRefreshLayout.finishRefresh(true);
 
@@ -1017,7 +1023,6 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
     //空间位置
     private void updateSpace(WorkorderService.WorkorderInfoBean data) {
-        //TODO 暂不开放
         mSpaceLocations = (ArrayList<WorkorderService.WorkOrderLocationsBean>) data.workOrderLocations;
         mNewSpace = (ArrayList<WorkorderService.PmSpaceBean>) data.pmPositions;
 
@@ -2430,8 +2435,9 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         super.onRightTextMenuClick(view);
         int id = view.getId();
         if (id==R.id.workorder_sampling_id){
+            //TODO Kuuga
             // 弹出抽检的弹窗或者直接进入抽检
-            getPresenter().fetchSampleTemplateById(getContext(),mWoId);
+            getPresenter().fetchSampleTemplateById(getContext(),mWoId,sampStatus);
         }
     }
 

@@ -36,5 +36,10 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     }
 
+    @Override
+    public BaseFragment getElectronicLedger2(Long woId, String woCode, Long tempLateId, Integer status) {
+        return MaintenanceElectronicLedgerFragment.getInstance(1,woId,woCode,tempLateId,status);
+    }
+
 
 }

@@ -11,11 +11,11 @@ public interface MaintenanceUrl {
     //获取计划性维护详情
     String MAINTENANCE_INFO_URL = "/m/v2/preventive/info";
 
-     /**
-      * @Auther: karelie
-      * @Date: 2021/8/19
-      * @Infor: 四运
-      */
+    /**
+     * @Auther: karelie
+     * @Date: 2021/8/19
+     * @Infor: 四运
+     */
     //待处理维护工单
     String MAINTENANCE_LIST_UNDO_URL = "/m/v1/workorder/ppm/undo";
     //待派工维护工单
@@ -30,6 +30,8 @@ public interface MaintenanceUrl {
     String MAINTENANCE_LIST_TO_QUERY_URL = "/m/v1/workorder/ppm/hquery";
     //待处理工单
     String MAINTENANCE_UNDO_URL = "/m/v1/workorder/ppm/undo";
+    //待抽检工单
+    String MAINTENANCE_SAMPLE_URL = "/m/v1/workorder/ppm/sample";
     //批量接单
     String MAINTENANCE_ORDER_RECEIVE = "/m/v1/workorder/operate/receive/batch";
     //抽检提交

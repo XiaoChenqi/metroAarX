@@ -29,6 +29,7 @@ public class FunctionService {
     public static final int UNDO_TYPE_PAY = 6;            //获取缴费管理类型(待缴费单，已缴费单，退款管理单)
     public static final int UNDO_TYPE_INSPECTION = 7;     //承接查验类型(待处理，待验证)
     public static final int UNDO_TYPE_RIDEPATROL = 8;     //登乘巡查
+    public static final int UNDO_TYPE_GROUNDWIRE = 9;     //接地线悬挂
     /**
      * @Auther: karelie
      * @Date: 2021/8/24
@@ -106,7 +107,11 @@ public class FunctionService {
         public int unApprovalPPMOrderNumber;
         public int abnormalPPMOrderNumber;
         public int unArchivedPPMOrderNumber;
-
+        //接地线悬挂
+        public int toBesuSpendedNumber;
+        public int demolitionNumber;
+        public int demolitionRecordNumber;
+        public int notSampledPPMOrderNumber;
 
     }
 }

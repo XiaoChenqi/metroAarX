@@ -101,7 +101,8 @@ data class TaskContent(
     var contentId: Long?,
     var selectValues: List<String>?,
     var type: Int?,
-    var unit: String?
+    var unit: String?,
+    var value:String?
 ){
     companion object{
         const val CHOICE=0
@@ -117,6 +118,8 @@ data class TaskContent(
  * @Description:提交模板数据
  */
 data class UploadTemplateData(
+    //抽检新一批需求需要判断两种状态
+    var type:Int?=null, //1保存2提交
     var woId:Long?=null,
     var templateId:Long?=null,
     var startTime:Long?=null,
@@ -150,5 +153,8 @@ data class UploadTaskContent(
     val inputValue:String?=null,
     val selectValue:String?=null
 )
+
+
+
 
 

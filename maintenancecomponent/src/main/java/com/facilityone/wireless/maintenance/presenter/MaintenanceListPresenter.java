@@ -76,7 +76,7 @@ public class MaintenanceListPresenter extends CommonBasePresenter<MaintenanceLis
                 request.page = page;
                 break;
             case MaintenanceConstant.SEVEN: //待抽检维护工单
-                url = MaintenanceUrl.MAINTENANCE_UNDO_URL;
+                url = MaintenanceUrl.MAINTENANCE_SAMPLE_URL;
                 request.page = page;
                 break;
         }

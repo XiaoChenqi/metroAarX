@@ -94,6 +94,11 @@ public class MaintenanceMenuFragment extends BaseFragment<MaintenanceMenuPresent
         getUndoNumber();
     }
 
+    @Override
+    public void leftBackListener() {
+        getActivity().finish();
+    }
+
     private void getUndoNumber() {
         getPresenter().getUndoNumber(FunctionService.UNDO_TYPE_MAINTENANCE);
     }

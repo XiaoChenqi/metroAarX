@@ -565,7 +565,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         return;
                     }
 
-                    fetchSampleTemplateById(context,woId);
+                    fetchSampleTemplateById(context,woId,status);
 
                 }
             }
@@ -1289,10 +1289,10 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
      * @Date: on 2022/2/11 11:01
      * @Description:抽检模板弹窗
      */
-    public void showSampleTemplateDialog(Context context,List<WorkorderService.SampleTemplate> menuList,Long woId){
+    public void showSampleTemplateDialog(Context context,List<WorkorderService.SampleTemplate> menuList,Long woId,Integer status){
         BottomTextListSheetBuilder builder = new BottomTextListSheetBuilder(context);
         builder.addArrayItem(WorkOrderUtils.getValueList(menuList));
-        builder.setTitle("请先选择需要抽检的模板");
+        builder.setTitle("请先选择需要抽检的内容");
         builder.setShowTitle(true);
         builder.setOnSheetItemClickListener(new BottomTextListSheetBuilder.OnSheetItemClickListener() {
             @Override
@@ -1304,7 +1304,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                     com.facilityone.wireless.componentservice.maintenance.MaintenanceService workorderService = (com.facilityone.wireless.componentservice.maintenance.MaintenanceService) router.getService(com.facilityone.wireless.componentservice.maintenance.MaintenanceService.class.getSimpleName());
 
                     if (workorderService != null) {
-                        BaseFragment fragment = workorderService.getElectronicLedger2(woId,tag,woCode);
+                        BaseFragment fragment = workorderService.getElectronicLedger2(woId,tag,woCode,status);
                         getV().startForResult(fragment, CODE_FOR_LEDGER);
 
                     }
@@ -1319,7 +1319,7 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
      * @Date: on 2022/2/11 11:01
      * @Description:获取抽检模板ID及状态
      */
-    public void fetchSampleTemplateById(Context context,Long woId){
+    public void fetchSampleTemplateById(Context context,Long woId,Integer status){
         Map<Object, Object> json = new HashMap<>();
         json.put("woId", woId);
         OkGo.<BaseResponse<List<WorkorderService.SampleTemplate>>>
@@ -1344,19 +1344,19 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
 //                                    }
 //
 //                                }
-                                showSampleTemplateDialog(context, data,woId);
+                                showSampleTemplateDialog(context, data,woId,status);
                             }else {
                                 Router router = Router.getInstance();
                                 com.facilityone.wireless.componentservice.maintenance.MaintenanceService workorderService = (com.facilityone.wireless.componentservice.maintenance.MaintenanceService) router.getService(com.facilityone.wireless.componentservice.maintenance.MaintenanceService.class.getSimpleName());
 
                                 if (workorderService != null) {
-                                    BaseFragment fragment = workorderService.getElectronicLedger2(woId,data.get(0).sampleName,data.get(0).sampleId);
+                                    BaseFragment fragment = workorderService.getElectronicLedger2(woId,data.get(0).sampleName,data.get(0).sampleId,status);
                                     getV().startForResult(fragment, CODE_FOR_LEDGER);
 
                                 }
                             }
                         }else {
-                            ToastUtils.showShort("暂无模板");
+                            ToastUtils.showShort("暂无抽检内容");
                         }
                     }
 

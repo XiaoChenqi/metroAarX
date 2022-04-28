@@ -24,6 +24,8 @@ import com.facilityone.wireless.a.arch.ec.module.Page
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder.OnBtnClickListener
 import com.facilityone.wireless.maintenance.model.*
+import com.facilityone.wireless.maintenance.model.MaintenanceConstant.WORKORDER_STATUS_PROCESS
+import com.facilityone.wireless.maintenance.model.MaintenanceConstant.WORK_NEW_STATUS_PROCESS
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import me.yokeyword.fragmentation.ISupportFragment
 import java.util.ArrayList
@@ -49,6 +51,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
     var mStartTime:Long?=null
     private val REFRESH = 500001 // 界面刷新
     private val REFRESH_POP = 500009 // 跳回列表
+    private var mStatus:Int?=null //工单状态
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -78,6 +81,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
             localWoId = bundle.getLong(WOID, -1L)
             mCode=bundle.getString(WOCODE,"电子台账")
             mTemplateId = bundle.getLong(TEMPLATE_ID)
+            mStatus = bundle.getInt(WORKORDER_STATUS,-1)
         }
         setTitle(mCode)
     }
@@ -111,7 +115,11 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
         mRefreshLayout = findViewById(R.id.refreshLayout)
         mRecyclerView = findViewById(R.id.recyclerView)
         mRecyclerView!!.layoutManager = LinearLayoutManager(context)
-        setRightTextButton("提交", R.id.maintenance_ele_uoload_menu_id)
+        if (mStatus != -1 && mStatus== WORK_NEW_STATUS_PROCESS){
+            setRightTextButton("保存", R.id.maintenance_ele_uoload_menu_id)
+        }else{
+            setRightTextButton("提交", R.id.maintenance_ele_uoload_menu_id)
+        }
         val datas: List<MaintenanceEnity.ElectronicLedgerEntity> = ArrayList()
         mElAdapter = ElectronicLedgerAdapter(datas)
         mElAdapter!!.tempRecycleView=mRecyclerView
@@ -151,104 +159,6 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
             val saveDataList = mElAdapter!!.data
             var isUpload = false
             saveInspection(saveDataList)
-//            for (temp in list) {
-//                if (temp.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO) {
-//                    if (TextUtils.isEmpty(temp.value)) {
-//                        ToastUtils.showLong("有类目未选择")
-//                        isUpload = false
-//                        break
-//                    }
-//                } else if (temp.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO_SUB) {
-//                    if (TextUtils.isEmpty(temp.value) || TextUtils.isEmpty(temp.subValue)) {
-//                        ToastUtils.showLong("有类目未选择")
-//                        isUpload = false
-//                        break
-//                    }
-//                }
-//                isUpload = true
-//            }
-//            if (isUpload) {
-//                val checkModels: MutableList<CheckModel> = ArrayList()
-//                for (titleItem in list) {
-//                    if (titleItem.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_HEADER) {
-//                        val tempItem = CheckModel()
-//                        tempItem.title = titleItem.content.toString()
-//                        //同一组对象数组
-//                        val checkContentModels: MutableList<CheckContentModel> = ArrayList()
-//                        for (innerTemp in list) {
-//                            if (innerTemp.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_HEADER || innerTemp.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_EDIT) {
-//                            } else if (innerTemp.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_SUB_HEADER) {
-//                                if (innerTemp.parent == titleItem.parent) {
-//                                    val tempContent = CheckContentModel()
-//                                    tempContent.name = innerTemp.content.toString()
-//                                    checkContentModels.add(tempContent)
-//                                }
-//                            } else {
-//                                val (name, value, state, sub, pid, tips) = innerTemp.content as SelectorModel
-//                                if (pid == titleItem.parent as Long) {
-//                                    //单行文本+单选组
-//                                    if (innerTemp.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO) {
-//                                        val tempContent = CheckContentModel()
-//                                        tempContent.name = name
-//                                        if (value == 0) {
-//                                            tempContent.value = "正常"
-//                                            tempContent.otherValue = "异常"
-//                                        } else {
-//                                            tempContent.value = "携带"
-//                                            tempContent.otherValue = "未携带"
-//                                        }
-//                                        if (state == 0) {
-//                                            tempContent.selectedValue = tempContent.value
-//                                        } else if (state == 1) {
-//                                            tempContent.selectedValue = tempContent.otherValue
-//                                        }
-//                                        checkContentModels.add(tempContent)
-//                                        if (!TextUtils.isEmpty(tips)) {
-//                                            val tipsContent = CheckContentModel()
-//                                            tipsContent.name = tips
-//                                            checkContentModels.add(tipsContent)
-//                                        }
-//                                        //单行文本+单选组+子单选组
-//                                    } else if (innerTemp.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO_SUB) {
-//                                        val tempContent = CheckContentModel()
-//                                        tempContent.name = name + "sameLine_是否合格有效："
-//                                        tempContent.value = "携带sameLine_是"
-//                                        tempContent.otherValue = "未携带sameLine_否"
-//                                        if (state == 0) {
-//                                            if (sub!!.state == 0) {
-//                                                tempContent.selectedValue = "携带sameLine_是"
-//                                            } else if (sub.state == 1) {
-//                                                tempContent.selectedValue = "携带sameLine_否"
-//                                            }
-//                                        } else {
-//                                            if (sub!!.state == 0) {
-//                                                tempContent.selectedValue = "未携带sameLine_是"
-//                                            } else if (sub.state == 1) {
-//                                                tempContent.selectedValue = "未携带sameLine_否"
-//                                            }
-//                                        }
-//                                        checkContentModels.add(tempContent)
-//                                        //单行文本判断
-//                                    } else if (innerTemp.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_SUB_HEADER) {
-//                                        val tempContent = CheckContentModel()
-//                                        tempContent.name = name
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        tempItem.contents = checkContentModels
-//                        checkModels.add(tempItem)
-//                        //输入区域判断
-//                    } else if (titleItem.type == MaintenanceEnity.ElectronicLedgerEntity.TYPE_EDIT) {
-//                        val tempItem = CheckModel()
-//                        tempItem.remark = titleItem.value
-//                        checkModels.add(tempItem)
-//                    }
-//                }
-//                presenter!!.pushAccountCheck(AccountCheck(checkModels))
-//
-////                pop();
-//            }
         }
     }
 
@@ -322,8 +232,8 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
             for (tempItem in dataList){
                 //判断是否与当前任务id相同
                 if (tempItem.taskId==tempTask.taskId){
-                    //判断是否已经填写内容或选择选项
-                    if (!TextUtils.isEmpty(tempItem.value)){
+                    //根据页面类型判断是否判断内容长度
+                    if (checkValueByType(tempItem.value)){
                         hasFilledSize++
                         //判断item类型
                         if (tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_RADIO){
@@ -352,7 +262,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
                                 selectValue = null)
                             tempTaskContents.add(uploadTaskContent)
                         }
-                           else if( tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_EDIT){
+                        else if( tempItem.type==MaintenanceEnity.ElectronicLedgerEntity.TYPE_EDIT){
                             val uploadTaskContent=UploadTaskContent(
                                 tempItem.contentId,
                                 tempItem.content as String,
@@ -366,10 +276,10 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
                 }
 
 
-                }
+            }
             tempTask.contents=tempTaskContents
             tasks.add(tempTask)
-            }
+        }
         val uploadTemplateData=UploadTemplateData()
         uploadTemplateData.woId=localWoId
         uploadTemplateData.templateId= mTemplateModel!!.templateId
@@ -393,52 +303,84 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
             if (allClear){
                 confirmSamplePass(uploadTemplateData)
             }else{
-                val builder = FMWarnDialogBuilder(activity)
-                builder.setTitle("")
-                builder.setSure(R.string.maintenance_submit_ok)
-                builder.setCancel(R.string.maintenance_submit_cancel)
-                builder.setTip(R.string.maintenance_task_submit_missing)
-                builder.addOnBtnSureClickListener(OnBtnClickListener { dialog, view ->
-                    dialog.dismiss()
+                if (mStatus != -1 && mStatus== WORK_NEW_STATUS_PROCESS){
                     confirmSamplePass(uploadTemplateData)
-                })
-                builder.create(R.style.fmDefaultWarnDialog).show()
+                }else{
+                    val builder = FMWarnDialogBuilder(activity)
+                    builder.setTitle("")
+                    builder.setSure(R.string.maintenance_submit_ok)
+                    builder.setCancel(R.string.maintenance_submit_cancel)
+                    builder.setTip(R.string.maintenance_task_submit_missing)
+                    builder.addOnBtnSureClickListener(OnBtnClickListener { dialog, view ->
+                        dialog.dismiss()
+                        confirmSamplePass(uploadTemplateData)
+                    })
+                    builder.create(R.style.fmDefaultWarnDialog).show()
+                }
+
             }
 
         }else{
             ToastUtils.showShort("请先完成抽检后进行提交")
         }
 
-        }
+    }
+
+
 
 
 
 
     /**
      * @Created by: kuuga
+     * @Date: on 2022/04/22 16:44
+     * @Description: 根据提交类型判断是否检查内容空或者null
+     */
+    private fun checkValueByType(value:String?):Boolean{
+        return if (mStatus!= -1 && mStatus== WORK_NEW_STATUS_PROCESS){
+            value!=null
+        }else{
+            !value.isNullOrEmpty()
+        }
+    }
+
+    /**
+     * @Created by: kuuga
      * @Date: on 2021/11/29 14:30
      * @Description: 抽检提交通过确认
      */
-
     private fun confirmSamplePass(upload:UploadTemplateData){
         upload.pass=false
-        val builder = FMWarnDialogBuilder(activity)
-        builder.setTitle("")
-        builder.setSure(R.string.maintenance_submit_pass)
-        builder.setCancel(R.string.maintenance_submit_unpass)
-        builder.setTip(R.string.maintenance_task_submit_check)
-        builder.addOnBtnSureClickListener(OnBtnClickListener { dialog, view ->
-            dialog.dismiss()
-            upload.pass=true
-            LogUtils.d(GsonUtils.toJson(upload))
-            presenter!!.saveTemplateData(upload)
-        }).addOnBtnCancelClickListener { dialog, view ->
-            dialog.dismiss()
-            upload.pass=false
-            LogUtils.d(GsonUtils.toJson(upload))
-            presenter!!.saveTemplateData(upload)
+        if (mStatus != -1 && mStatus== WORK_NEW_STATUS_PROCESS){
+            upload.type = 1;
+        }else{
+            upload.type = 2;
         }
-        builder.create(R.style.fmDefaultWarnDialog).show()
+
+        if (mStatus != -1 && mStatus== WORK_NEW_STATUS_PROCESS){
+            LogUtils.d(GsonUtils.toJson(upload))
+            upload.pass= true
+            presenter!!.saveTemplateData(upload,"保存成功")
+        } else {
+            val builder = FMWarnDialogBuilder(activity)
+            builder.setTitle("")
+            builder.setSure(R.string.maintenance_submit_pass)
+            builder.setCancel(R.string.maintenance_submit_unpass)
+            builder.setTip(R.string.maintenance_task_submit_check)
+            builder.addOnBtnSureClickListener(OnBtnClickListener { dialog, view ->
+                dialog.dismiss()
+                upload.pass=true
+                LogUtils.d(GsonUtils.toJson(upload))
+                presenter!!.saveTemplateData(upload,"提交成功")
+            }).addOnBtnCancelClickListener { dialog, view ->
+                dialog.dismiss()
+                upload.pass=false
+                LogUtils.d(GsonUtils.toJson(upload))
+                presenter!!.saveTemplateData(upload,"提交成功")
+            }
+            builder.create(R.style.fmDefaultWarnDialog).show()
+        }
+
     }
 
 
@@ -479,7 +421,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
 
 
             }
-                    mElAdapter!!.setNewData(taskData);
+            mElAdapter!!.setNewData(taskData);
 
         }
 
@@ -490,12 +432,12 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
      * @Date: on 2021/11/29 14:58
      * @Description:提交成功回调
      */
-    fun onSubmitTemplateSuccess(pass : Boolean){
+    fun onSubmitTemplateSuccess(pass : Boolean,message:String){
         if (!pass){
-            ToastUtils.showShort("提交成功")
+            ToastUtils.showShort(message)
             popLast()
         }else{
-            ToastUtils.showShort("提交成功")
+            ToastUtils.showShort(message)
             popResult()
         }
 
@@ -507,17 +449,22 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
      * @Description: 提交失败回调
      */
     fun onSubmitTemplateFail(){
-        ToastUtils.showShort("提交失败")
+        if (mStatus != -1 && mStatus== WORK_NEW_STATUS_PROCESS){
+            ToastUtils.showShort("保存失败")
+        }else{
+            ToastUtils.showShort("提交失败")
+        }
+
     }
 
     //选择列表项内容
     private fun chooseItemType(taskId:Long,taskContent: TaskContent): MaintenanceEnity.ElectronicLedgerEntity?{
         return when(taskContent.type){
             TaskContent.CHOICE->{
-                MaintenanceEnity.ElectronicLedgerEntity(taskId,taskContent.contentId,2, SelectorModel(taskContent.content,0, taskContent.selectValues))
+                MaintenanceEnity.ElectronicLedgerEntity(taskId,taskContent.contentId,2, SelectorModel(taskContent.content,0, taskContent.selectValues),taskContent.value)
             }
             TaskContent.INPUT->{
-                MaintenanceEnity.ElectronicLedgerEntity(taskId,taskContent.contentId,3,taskContent.content)
+                MaintenanceEnity.ElectronicLedgerEntity(taskId,taskContent.contentId,3,taskContent.content,taskContent.value)
             }
             else->{
                 null
@@ -531,6 +478,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
         private const val WOID = "woid"
         private const val WOCODE="wocode"
         private const val TEMPLATE_ID="template_id"
+        private const val WORKORDER_STATUS="workorder_status"
         private const val MAINTENANCE_INFO = 4001
         private const val REQUEST_LOCATION = 20001
         const val FAULT_DEVICE = 4007
@@ -549,6 +497,19 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
             bundle.putLong(WOID, woId!!)
             bundle.putString(WOCODE,woCode)
             bundle.putLong(TEMPLATE_ID,templateId)
+            val instance = MaintenanceElectronicLedgerFragment()
+            instance.arguments = bundle
+            return instance
+        }
+
+        @JvmStatic
+        fun getInstance(type: Int?, woId: Long?,woCode:String,templateId:Long,status:Int): MaintenanceElectronicLedgerFragment {
+            val bundle = Bundle()
+            bundle.putInt(LIST_TYPE, type!!)
+            bundle.putLong(WOID, woId!!)
+            bundle.putString(WOCODE,woCode)
+            bundle.putLong(TEMPLATE_ID,templateId)
+            bundle.putInt(WORKORDER_STATUS,status)
             val instance = MaintenanceElectronicLedgerFragment()
             instance.arguments = bundle
             return instance

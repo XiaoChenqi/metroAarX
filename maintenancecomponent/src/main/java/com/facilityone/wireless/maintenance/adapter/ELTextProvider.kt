@@ -40,6 +40,12 @@ class ELTextProvider: BaseItemProvider<MaintenanceEnity.ElectronicLedgerEntity, 
         val binding=getBinding<ItemElTextBinding>(helper.itemView)
         binding!!.tvTitle.text=(item!!.content) as String
         binding.etInput.hint = "请输入"+((item.content) as String)
+        if (!item.value.isNullOrEmpty()){
+
+            if (binding.etInput.text.toString()!=item.value){
+                binding.etInput.setText(item.value)
+            }
+        }
         binding.etInput.addTextChangedListener(object :TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 

@@ -268,7 +268,9 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         steps = new ArrayList<>();
         steps = data.steps;
         needCountAccord = data.pmInfo.eqCountAccord;
-        attention = data.pmInfo.mattersNeedingAttention;
+        if (data.pmInfo.mattersNeedingAttention!=null){
+            attention=data.pmInfo.mattersNeedingAttention;
+        }
         if (mStepsBean == null){
             return;
         }
@@ -332,6 +334,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         }else {
             haveRemark = false;
             mStepsBean.finished = null;
+            name="";
             mRadioGroup.clearCheck();
         }
 

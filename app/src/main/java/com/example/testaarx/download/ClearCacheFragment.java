@@ -93,6 +93,7 @@ public class ClearCacheFragment extends BaseFragment<ClearCachePresenter> {
         }
     }
 
+
     private void clearFmCache() {
         QMUITipDialog qmuiTipDialog = showLoading();
         qmuiTipDialog.setCancelable(true);
@@ -150,4 +151,9 @@ public class ClearCacheFragment extends BaseFragment<ClearCachePresenter> {
     public static ClearCacheFragment getInstance() {
         return new ClearCacheFragment();
     }
+
+//    @Override
+//    public void leftBackListener() {
+//        getActivity().finish();
+//    }
 }
