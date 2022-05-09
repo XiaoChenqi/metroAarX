@@ -3,6 +3,7 @@ package com.example.testaarx;
 import android.app.Application;
 
 
+import com.didi.drouter.api.DRouter;
 import com.facilityone.wireless.AppConfig;
 import com.facilityone.wireless.ObjectBox;
 import com.facilityone.wireless.a.arch.Facility;
@@ -38,6 +39,7 @@ public class MainApp extends Application {
         Router.registerComponent("com.facilityone.wireless.inventory.applike.InventoryApplike");
         Router.registerComponent("com.facilityone.wireless.boardingpatrol.applike.BoardingPatrolApplike");
         Router.registerComponent("com.facilityone.wireless.construction.applike.ConstructionApplike");
+        DRouter.init(this);
 //        ToastUtils.setDebugMode(false);
 //        ToastUtils.init(this);
 //        Facility.init(this, "http://192.168.1.89:23456/fz_iframe", BuildConfig.DEBUG);

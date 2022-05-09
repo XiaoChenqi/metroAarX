@@ -337,7 +337,7 @@ public class PatrolMenuPresenter extends CommonBasePresenter<PatrolMenuFragment>
 
                     @Override
                     public void onComplete() {
-
+//                        getV().onUpdateSuccess();
                     }
                 });
     }

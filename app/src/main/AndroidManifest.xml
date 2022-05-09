@@ -81,6 +81,15 @@
             android:name=".UserProfileActivity"
             android:exported="true" />
 
+        <activity android:name=".SchemeActivity" android:exported="true">
+            <intent-filter>
+                <data android:scheme="fmone" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

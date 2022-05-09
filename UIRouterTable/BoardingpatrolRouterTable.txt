@@ -1,0 +1,7 @@
+auto generated, do not change !!!! 
+
+HOST : boardingpatrol
+
+登乘巡查
+/boardingpatrolhome
+

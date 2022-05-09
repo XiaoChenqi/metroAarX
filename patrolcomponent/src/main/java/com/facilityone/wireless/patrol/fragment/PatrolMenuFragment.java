@@ -13,6 +13,7 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.RouteTable;
 import com.facilityone.wireless.a.arch.ec.adapter.FunctionAdapter;
 import com.facilityone.wireless.a.arch.ec.module.FunctionService;
 import com.facilityone.wireless.a.arch.ec.module.IService;
@@ -61,9 +62,14 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
     private float mTempBaseSpot;
     private float mTempPatrol;
     private boolean needDownLoad = true;
+    private Bundle paramsFromBk;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (getArguments()!=null){
+            paramsFromBk=getArguments().getBundle("params");
+        }
+
         initData();
         initView();
     }
@@ -262,6 +268,8 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
                 saveDataSuccess = false;
             }
         });
+
+        onUpdateSuccess();
     }
 
     private void setTipProgress() {
@@ -290,12 +298,15 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
             OfflineService.addOrUpdatePatrolDownloadTime(mRequestTime, FM.getEmId());
             LogUtils.d("巡检离线数据下载完成");
             if (mDialog != null && mDialog.isShowing()) {
+
                 mDialog.setTitle(getString(R.string.patrol_dowmload_progress) + "100%");
                 mDialog.dismiss();
             }
+
             mAllProgress = 0;
             ToastUtils.showShort(R.string.patrol_offline_download_success);
             getPresenter().getServicePatrolTask();
+
 
         }
 
@@ -317,6 +328,9 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         getUndoNumber();
         if (needDownLoad && NetworkUtils.isConnected()){
             requestData();
+
+        }else {
+            onUpdateSuccess();
         }
         requestProjectNeedNfc();
     }
@@ -350,6 +364,31 @@ public class PatrolMenuFragment extends BaseFragment<PatrolMenuPresenter> implem
         }
         if (baseFragment != null) {
             start(baseFragment);
+        }
+    }
+
+
+    public void onUpdateSuccess(){
+        LogUtils.d("数据更新完成回调");
+
+        if (paramsFromBk!=null){
+            String type=paramsFromBk.getString("type");
+            switch (type){
+                case RouteTable.PATROL_QUERY_SPOT:
+                    String taskId=paramsFromBk.getString("taskId");
+                    String taskName=paramsFromBk.getString("taskName");
+                    //清除数据,防止返回二次跳转
+                    paramsFromBk=null;
+                    start(PatrolQuerySpotFragment.getInstance(Long.valueOf(taskId),taskName));
+                    break;
+                case RouteTable.PATROL_QUERY:
+                    //清除数据,防止返回二次跳转
+                    paramsFromBk=null;
+                    start(PatrolQueryFragment.getInstance());
+                    break;
+            }
+
+
         }
     }
 

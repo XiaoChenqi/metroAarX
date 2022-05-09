@@ -196,6 +196,11 @@ dependencies {
 
     //轮子哥Toast
     api 'com.github.getActivity:ToastUtils:10.3'
+
+    //路由框架
+    api 'io.github.didi:drouter-api:2.3.0'
+    api 'io.github.didi:drouter-api-page:1.0.0'
+    api 'io.github.didi:drouter-api-process:1.0.0'
 }
 
 //uploadArchives {

@@ -14,6 +14,8 @@ import android.view.View;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.didi.drouter.annotation.Router;
+import com.facilityone.wireless.RouteTable;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.ec.utils.SPKey;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
@@ -35,7 +37,7 @@ import java.util.List;
  * description:巡检首页
  * Date: 2018/7/3 下午4:07
  */
-
+@Router(path = RouteTable.PATROL)
 @RouteNode(path = "/patrolHome", desc = "巡检首页")
 public class PatrolActivity extends BaseFragmentActivity implements EmptyFragment.OnGoFragmentListener {
 
@@ -210,7 +212,16 @@ public class PatrolActivity extends BaseFragmentActivity implements EmptyFragmen
 
     @Override
     public void goFragment(Bundle bundle) {
-        mInstance.startWithPop(PatrolMenuFragment.getInstance(bundle));
+        boolean isFromBk = getIntent().getBooleanExtra("fromBkMsg",false);
+        if (isFromBk){
+            bundle.putBundle("params",getIntent().getExtras());
+            mInstance.startWithPop(PatrolMenuFragment.getInstance(bundle));
+        }else {
+            mInstance.startWithPop(PatrolMenuFragment.getInstance(bundle));
+        }
+
+
+
     }
 
     @Override
