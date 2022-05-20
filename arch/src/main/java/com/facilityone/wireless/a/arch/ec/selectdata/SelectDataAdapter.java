@@ -51,12 +51,8 @@ public class SelectDataAdapter extends BaseQuickAdapter<SelectDataBean, BaseView
         ssb.setSpan(span, item.getStart(), item.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         helper.setText(R.id.title_tv, ssb);
 
-        helper.setGone(R.id.subtitle_tv, (mFromType == ISelectDataService.DATA_TYPE_EQU ||
-                mFromType == ISelectDataService.DATA_TYPE_EQU_ALL ||
-                mFromType == ISelectDataService.DATA_TYPE_FAULT_OBJECT||
-                mFromType == ISelectDataService.DATA_TYPE_REASON||
-                mFromType== ISelectDataService.DATA_TYPE_INVALIDD||
-                isShowSubTitle) && item.getParentId() != null);
+        helper.setGone(R.id.subtitle_tv, SelectDataHelper.showSubTitleByType(mFromType,item.getParentId()));
+
         helper.setGone(R.id.right_icon, item.getHaveChild());
 
         SpannableStringBuilder fullSsb = new SpannableStringBuilder(StringUtils.formatString(item.getFullName()));

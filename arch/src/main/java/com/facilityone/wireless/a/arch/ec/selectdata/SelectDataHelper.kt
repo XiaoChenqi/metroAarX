@@ -1,5 +1,6 @@
 package com.facilityone.wireless.a.arch.ec.selectdata
 
+import com.facilityone.wireless.a.arch.ec.module.ISelectDataService
 import com.facilityone.wireless.a.arch.ec.module.SelectDataBean
 
 /**
@@ -59,6 +60,22 @@ object SelectDataHelper {
     @JvmStatic
     fun getLastList(listBefore: MutableList<SelectDataBean>, parentId:Long): MutableList<SelectDataBean>? {
         return listBefore.filter { it.parentId == parentId }.map { it }.toMutableList()
+    }
+
+    /**
+     * 根据类型判断是否显示子标题
+     * */
+    @JvmStatic
+    fun showSubTitleByType(type:Int, parentId:Long?): Boolean {
+        return when(type){
+            ISelectDataService.DATA_TYPE_EQU, ISelectDataService.DATA_TYPE_EQU_ALL->true
+            ISelectDataService.DATA_TYPE_FAULT_OBJECT,
+            ISelectDataService.DATA_TYPE_REASON,
+            ISelectDataService.DATA_TYPE_INVALIDD -> parentId!=null
+            else -> {
+                false
+            }
+        }
     }
 
 }
