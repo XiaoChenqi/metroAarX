@@ -3,6 +3,8 @@ package com.facilityone.wireless.demand;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.didi.drouter.annotation.Router;
+import com.facilityone.wireless.RouteTable;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.base.FMFragmentActivity;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
@@ -10,9 +12,12 @@ import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.demand.fragment.DemandFragment;
+import com.facilityone.wireless.demand.fragment.DemandInfoFragment;
+import com.facilityone.wireless.demand.module.DemandConstant;
 import com.luojilab.router.facade.annotation.RouteNode;
 
 @RouteNode(path = "/demandHome", desc = "需求首页")
+@Router(path = RouteTable.DEMAND)
 public class DemandActivity extends BaseFragmentActivity implements EmptyFragment.OnGoFragmentListener {
     //再点一次退出程序时间设置
     private static final long WAIT_TIME = 2000L;
@@ -40,7 +45,25 @@ public class DemandActivity extends BaseFragmentActivity implements EmptyFragmen
 
     @Override
     public void goFragment(Bundle bundle) {
-        mInstance.startWithPop(DemandFragment.getInstance(bundle));
+        boolean isFromBk = getIntent().getBooleanExtra(RouteTable.FROM_BK_MSG,false);
+        if (isFromBk){
+            String type=getIntent().getExtras().getString("type");
+            switch (type){
+                case RouteTable.DEMAND_DETAIL:
+                    Bundle params = getIntent().getExtras();
+                    Long demandId = Long.parseLong(params.getString("taskId"));
+                    DemandInfoFragment instance = DemandInfoFragment.getInstance(DemandConstant.DEMAND_REQUES_QUERY, demandId, true,true);
+                    mInstance.startWithPop(instance);
+                    break;
+                default:
+                    mInstance.startWithPop(DemandFragment.getInstance(bundle));
+
+            }
+
+        }else {
+            mInstance.startWithPop(DemandFragment.getInstance(bundle));
+
+        }
     }
 
     @Override

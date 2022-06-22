@@ -41,6 +41,7 @@ public abstract class BaseFragment<P extends IPresent> extends FMFragment implem
     private QMUITipDialog mDialog;
     private TextView mTip;
     private ScanInterface scanUtil;
+    protected boolean fromBkMsg=false;//是否来自博坤的推送消息
 
 
     private void initDialog() {
@@ -50,6 +51,14 @@ public abstract class BaseFragment<P extends IPresent> extends FMFragment implem
         builder.setTipWord(tip);
         mDialog = builder.create();
         mDialog.setCancelable(false);
+    }
+
+    @Override
+    public void pop() {
+        if (fromBkMsg){
+            getActivity().finish();
+        }
+        super.pop();
     }
 
     public QMUITipDialog showLoading() {
@@ -214,6 +223,7 @@ public abstract class BaseFragment<P extends IPresent> extends FMFragment implem
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         super.onViewCreated(view, savedInstanceState);
+        setSwipeBackEnable(false);
         if (isUseDialog()) {
             initDialog();
         }

@@ -156,8 +156,8 @@ dependencies {
 
     //kotlin标准库
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2"
 
 
     //rxandroid

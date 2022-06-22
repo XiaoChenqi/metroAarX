@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.RouteTable;
 import com.facilityone.wireless.a.arch.ec.module.Page;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.inventory.R;
@@ -33,6 +34,7 @@ public class InventoryQueryFragment extends BaseFragment<InventoryQueryPresenter
     private Page mPage;
     private StorageListAdapter mAdapter;
 
+
     @Override
     public InventoryQueryPresenter createPresenter() {
         return new InventoryQueryPresenter();
@@ -51,6 +53,7 @@ public class InventoryQueryFragment extends BaseFragment<InventoryQueryPresenter
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setSwipeBackEnable(false);
         initView();
     }
 
@@ -67,8 +70,21 @@ public class InventoryQueryFragment extends BaseFragment<InventoryQueryPresenter
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
 
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            fromBkMsg = bundle.getBoolean(RouteTable.FROM_BK_MSG, false);
+
+        }
         //联网获取数据
         onRefresh();
+    }
+
+    @Override
+    public void leftBackListener() {
+        if (fromBkMsg){
+            getActivity().finish();
+        }
+        super.leftBackListener();
     }
 
     private void onRefresh() {
@@ -106,6 +122,14 @@ public class InventoryQueryFragment extends BaseFragment<InventoryQueryPresenter
 
     public static InventoryQueryFragment getInstance() {
         InventoryQueryFragment fragment = new InventoryQueryFragment();
+        return fragment;
+    }
+
+    public static InventoryQueryFragment getInstance(boolean frombkMsg) {
+        InventoryQueryFragment fragment = new InventoryQueryFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(RouteTable.FROM_BK_MSG,frombkMsg);
+        fragment.setArguments(bundle);
         return fragment;
     }
 

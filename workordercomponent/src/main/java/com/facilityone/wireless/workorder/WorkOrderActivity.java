@@ -6,11 +6,14 @@ import static com.facilityone.wireless.a.arch.xcq.Constants.Constant.USERNAME;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.didi.drouter.annotation.Router;
+import com.facilityone.wireless.RouteTable;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
+import com.facilityone.wireless.workorder.fragment.WorkorderInfoFragment;
 import com.facilityone.wireless.workorder.fragment.WorkorderMenuFragment;
 import com.kongzue.dialogx.DialogX;
 import com.luojilab.router.facade.annotation.RouteNode;
@@ -23,6 +26,7 @@ import com.luojilab.router.facade.annotation.RouteNode;
  */
 
 @RouteNode(path = "/workorderHome", desc = "工单首页")
+@Router(path = RouteTable.WORKORDER)
 public class WorkOrderActivity extends BaseFragmentActivity implements EmptyFragment.OnGoFragmentListener {
 
     //再点一次退出程序时间设置
@@ -52,7 +56,32 @@ public class WorkOrderActivity extends BaseFragmentActivity implements EmptyFrag
 
     @Override
     public void goFragment(Bundle bundle) {
-        mInstance.startWithPop(WorkorderMenuFragment.getInstance(bundle));
+        boolean isFromBk = getIntent().getBooleanExtra(RouteTable.FROM_BK_MSG,false);
+        if (isFromBk){
+            String type=getIntent().getExtras().getString("type");
+            switch (type){
+                case RouteTable.WORKORDER_DETAIL:
+                    Bundle params = getIntent().getExtras();
+                    String taskId = params.getString("taskId");
+                    String taskName = params.getString("taskName");
+                    WorkorderInfoFragment fragment=WorkorderInfoFragment.getInstance(Long.valueOf(taskId));
+                    Bundle bundle1=new Bundle();
+                    bundle1.putBoolean("fromAct",true);
+                    bundle1.putBoolean(RouteTable.FROM_BK_MSG, true);
+                    bundle1.putLong("workorder_id",Long.parseLong(taskId));
+                    fragment.setArguments(bundle1);
+                    mInstance.startWithPop(fragment);
+                    break;
+                default:
+                    //默认进入菜单
+                    mInstance.startWithPop(WorkorderMenuFragment.getInstance(bundle));
+                    break;
+            }
+
+
+        }else {
+            mInstance.startWithPop(WorkorderMenuFragment.getInstance(bundle));
+        }
     }
 
     @Override

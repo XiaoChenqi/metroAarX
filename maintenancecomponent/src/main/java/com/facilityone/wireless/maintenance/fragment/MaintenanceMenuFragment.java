@@ -34,6 +34,7 @@ public class MaintenanceMenuFragment extends BaseFragment<MaintenanceMenuPresent
     private RecyclerView mRecyclerView;
     private FunctionAdapter mFunctionAdapter;
     private List<FunctionService.FunctionBean> mFunctionBeanList;
+    private Bundle paramsFromBk;
 
     @Override
     public MaintenanceMenuPresenter createPresenter() {

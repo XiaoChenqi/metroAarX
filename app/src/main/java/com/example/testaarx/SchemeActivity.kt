@@ -17,8 +17,11 @@ class SchemeActivity : Activity() {
         super.onCreate(savedInstanceState)
         DRouter.build(intent.data.toString())
             .putExtra(Extend.START_ACTIVITY_WITH_DEFAULT_SCHEME_HOST, RouteTable.SCHEMA_HOST)
-            .putExtra("fromBkMsg",true)
-            .start(this);
+            .putExtra(RouteTable.FROM_BK_MSG,true)
+            .putExtra("USERNAME",intent.getStringExtra("USERNAME")?:"")
+            .putExtra("PASSWORD",intent.getStringExtra("PASSWORD")?:"")
+            .putExtra("COLOR",intent.getStringExtra("COLOR"))
+            .start(this)
         finish()
     }
 

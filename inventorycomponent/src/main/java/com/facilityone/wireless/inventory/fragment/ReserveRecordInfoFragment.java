@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.RouteTable;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.widget.CustomContentItemView;
 import com.facilityone.wireless.a.arch.widget.EditNumberView;
@@ -127,6 +128,7 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setSwipeBackEnable(false);
         initData();
         initView();
         getReserveRecordInfo();
@@ -140,12 +142,20 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
             mStatus = bundle.getInt(STATUS, -1);
             mWorkorderStatus = bundle.getInt(WORKORDER_STATUS, -1);
             fromMessage =  bundle.getBoolean(FROM_MESSAGE,false);
+            fromBkMsg = bundle.getBoolean(RouteTable.FROM_BK_MSG, false);
+
         }
 
         mRequest = new MaterialService.MaterialOutRequest();
     }
 
-
+    @Override
+    public void leftBackListener() {
+        if (fromBkMsg){
+            getActivity().finish();
+        }
+        super.leftBackListener();
+    }
     private void initView() {
         setTitle(R.string.inventory_reserve_details_title);
 
@@ -439,6 +449,9 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
 
     }
 
+
+
+
     /**
      * 联网获取预定记录详情失败后回调
      */
@@ -654,6 +667,18 @@ public class ReserveRecordInfoFragment extends BaseFragment<ReserveRecordInfoPre
         fragment.setArguments(bundle);
         return fragment;
     }
+
+    public static ReserveRecordInfoFragment getInstance(int type, long activityId,boolean fromMessage,boolean frombkMsg) {
+        ReserveRecordInfoFragment fragment = new ReserveRecordInfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(FROM_TYPE, type);
+        bundle.putLong(ACTIVITY_ID, activityId);
+        bundle.putBoolean(FROM_MESSAGE,fromMessage);
+        bundle.putBoolean(RouteTable.FROM_BK_MSG,frombkMsg);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
 
     public static ReserveRecordInfoFragment getInstance(int type, long activityId, int status, int workorderStatus) {
         ReserveRecordInfoFragment fragment = new ReserveRecordInfoFragment();

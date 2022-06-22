@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.TimeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.RouteTable;
 import com.facilityone.wireless.a.arch.ec.module.AttachmentBean;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.utils.UrlUtils;
@@ -107,6 +108,7 @@ public class MaintenanceContentFragment extends BaseFragment<MaintenanceContentP
     private long mPmId;
     private long mTodoId;
 
+
     @Override
     public MaintenanceContentPresenter createPresenter() {
         return new MaintenanceContentPresenter();
@@ -137,6 +139,8 @@ public class MaintenanceContentFragment extends BaseFragment<MaintenanceContentP
             mPmId = bundle.getLong(MAINTENANCE_PM_ID, -1L);
             mTodoId = bundle.getLong(MAINTENANCE_TODO_ID, -1L);
             mMaintenanceInfo = bundle.getParcelable(MAINTENANCE_INFO);
+            fromBkMsg = bundle.getBoolean(RouteTable.FROM_BK_MSG, false);
+
         }
 
         if (mFrom) {
@@ -150,6 +154,13 @@ public class MaintenanceContentFragment extends BaseFragment<MaintenanceContentP
         }
     }
 
+    @Override
+    public void leftBackListener() {
+        if (fromBkMsg){
+            getActivity().finish();
+        }
+        super.leftBackListener();
+    }
 
     private void initView() {
         setTitle(R.string.maintenance_detail_title);
@@ -585,13 +596,24 @@ public class MaintenanceContentFragment extends BaseFragment<MaintenanceContentP
         return fragment;
     }
 
-    public static MaintenanceContentFragment
-    getInstance(boolean fromHome, Long pmId, Long todoId) {
+    public static MaintenanceContentFragment getInstance(boolean fromHome, Long pmId, Long todoId) {
         MaintenanceContentFragment fragment = new MaintenanceContentFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(MAINTENANCE_FROM, fromHome);
         bundle.putLong(MAINTENANCE_PM_ID, pmId);
         bundle.putLong(MAINTENANCE_TODO_ID, todoId);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+
+    public static MaintenanceContentFragment getInstance(boolean fromHome, Long pmId, Long todoId,Boolean fromBkMsg) {
+        MaintenanceContentFragment fragment = new MaintenanceContentFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(MAINTENANCE_FROM, fromHome);
+        bundle.putLong(MAINTENANCE_PM_ID, pmId);
+        bundle.putLong(MAINTENANCE_TODO_ID, todoId);
+        bundle.putBoolean(RouteTable.FROM_BK_MSG, fromBkMsg);
         fragment.setArguments(bundle);
         return fragment;
     }

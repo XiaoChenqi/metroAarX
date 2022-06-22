@@ -184,6 +184,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public static final String CAN_OPT = "can_opt";
     public static final String FROME_MESSAGE = "from_message";
     public static final String IS_SAMPLING = "is_sampling";
+    public static final String FROM_BK_MSG ="from_bk_msg";
     private static final int LABORER_REQUEST_CODE = 4002;
     public static final int DISPATCH_REQUEST_CODE = 4003;
     public static final int APPROVAL_REQUEST_CODE = 4004;
@@ -314,7 +315,6 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public String completeMessage = null; //完成工单提醒文案
     private Integer isSampling; //是否是待抽检的工单
     private Integer sampStatus; //传递抽检装填
-
     @Override
     public WorkorderInfoPresenter createPresenter() {
         return new WorkorderInfoPresenter();
@@ -362,6 +362,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             isFinish = bundle.getBoolean(IS_FINISH, false);
             isPending = bundle.getInt(IS_PENDING, -1);
             fromMessage = bundle.getBoolean(FROME_MESSAGE, false);
+            fromBkMsg = bundle.getBoolean(FROM_BK_MSG,false);
             isSampling = bundle.getInt(IS_SAMPLING,-1);
         }
         refreshStatus = mStatus;
@@ -374,6 +375,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         mToolCost.name = getString(R.string.workorder_tool_fee);
         mToolCost.amount = 0D;
         mToolCost.chargeId = -1L;
+    }
+
+    @Override
+    public void leftBackListener() {
+        if (fromBkMsg){
+            getActivity().finish();
+        }
+        super.leftBackListener();
     }
 
     private void initView() {

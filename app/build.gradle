@@ -6,6 +6,12 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
+    lintOptions{
+        checkReleaseBuilds false
+        abortOnError false//lint时候终止错误上报,防止编译的时候莫名的失败
+    
+    }
+
     defaultConfig {
         applicationId "com.example.testaarx"
         minSdkVersion 23

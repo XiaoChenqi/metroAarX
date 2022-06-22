@@ -20,6 +20,7 @@ import com.blankj.utilcode.util.PhoneUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facilityone.wireless.RouteTable;
 import com.facilityone.wireless.a.arch.ec.adapter.AttachmentAdapter;
 import com.facilityone.wireless.a.arch.ec.adapter.AudioAdapter;
 import com.facilityone.wireless.a.arch.ec.adapter.GridImageAdapter;
@@ -202,7 +203,17 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
             mType = bundle.getInt(LIST_TYPE);
             fromMsg = bundle.getBoolean(DEMAND_FROM_MSG, false);
             mDemandId = bundle.getLong(DEMAND_ID);
+            fromBkMsg = bundle.getBoolean(RouteTable.FROM_BK_MSG, false);
+
         }
+    }
+
+    @Override
+    public void leftBackListener() {
+        if (fromBkMsg){
+            getActivity().finish();
+        }
+        super.leftBackListener();
     }
 
     private void initView() {
@@ -336,9 +347,71 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
      */
     @Override
     public void onMoreMenuClick(View view) {
-        if (fromMsg) {
-            if (mData != null && mData.status != null) {
-                switch (mData.status) {
+        //无论从何处进入都使用接口状态判断
+        onMoreMenuClickByDataStatus();
+//        if (fromMsg) {
+//            if (mData != null && mData.status != null) {
+//                switch (mData.status) {
+////                    case DemandConstant.DEMAND_STATUS_CREATED://待审批需求
+////                        BottomTextListSheetBuilder builder2 = new BottomTextListSheetBuilder(getContext());
+////                        builder2.addItem(R.string.demand_approval_title)
+////                                .addItem(R.string.demand_cancel)
+////                                .setOnSheetItemClickListener(DemandInfoFragment.this)
+////                                .build().show();
+////                        break;
+//                    case DemandConstant.DEMAND_ASSURE_UNFINISH://待处理报障
+//                        BottomTextListSheetBuilder builder = new BottomTextListSheetBuilder(getContext());
+//                        builder.addItem("保存")
+//                                .addItem(R.string.demand_finish)
+//                                .addItem(R.string.demand_cancel)
+//                                .setOnSheetItemClickListener(DemandInfoFragment.this)
+//                                .build().show();
+//
+//                        break;
+//                    case DemandConstant.DEMAND_ASSURE_EVALUATED://待评价报障
+//                        BottomTextListSheetBuilder builder3 = new BottomTextListSheetBuilder(getContext());
+//                        builder3.addItem(R.string.demand_atisfaction)
+//                                .addItem(R.string.demand_cancel)
+//                                .setOnSheetItemClickListener(DemandInfoFragment.this)
+//                                .build().show();
+//                        break;
+//                }
+//            }
+//        } else {
+//            switch (mType) {
+////                case DemandConstant.DEMAND_REQUEST_UNCHECK://待审批需求
+////                    BottomTextListSheetBuilder builder2 = new BottomTextListSheetBuilder(getContext());
+////                    builder2.addItem(R.string.demand_approval_title)
+////                            .addItem(R.string.demand_cancel)
+////                            .setOnSheetItemClickListener(DemandInfoFragment.this)
+////                            .build().show();
+////                    break;
+//                case DemandConstant.DEMAND_ASSURE_UNFINISH://待处理报障
+//                    BottomTextListSheetBuilder builder = new BottomTextListSheetBuilder(getContext());
+//                    builder.addItem("保存")
+//                            .addItem(R.string.demand_finish)
+//                            .addItem(R.string.demand_cancel)
+//                            .setOnSheetItemClickListener(DemandInfoFragment.this)
+//                            .build().show();
+//
+//                    break;
+//                case DemandConstant.DEMAND_ASSURE_EVALUATED://待评价报障
+//                    BottomTextListSheetBuilder builder3 = new BottomTextListSheetBuilder(getContext());
+//                    builder3.addItem(R.string.demand_atisfaction)
+//                            .addItem(R.string.demand_cancel)
+//                            .setOnSheetItemClickListener(DemandInfoFragment.this)
+//                            .build().show();
+//                    break;
+//            }
+//        }
+    }
+
+    /**
+     * 接口判断菜单显示都条目
+     * */
+    private void onMoreMenuClickByDataStatus(){
+        if (mData != null && mData.status != null) {
+            switch (mData.status) {
 //                    case DemandConstant.DEMAND_STATUS_CREATED://待审批需求
 //                        BottomTextListSheetBuilder builder2 = new BottomTextListSheetBuilder(getContext());
 //                        builder2.addItem(R.string.demand_approval_title)
@@ -346,33 +419,6 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
 //                                .setOnSheetItemClickListener(DemandInfoFragment.this)
 //                                .build().show();
 //                        break;
-                    case DemandConstant.DEMAND_ASSURE_UNFINISH://待处理报障
-                        BottomTextListSheetBuilder builder = new BottomTextListSheetBuilder(getContext());
-                        builder.addItem("保存")
-                                .addItem(R.string.demand_finish)
-                                .addItem(R.string.demand_cancel)
-                                .setOnSheetItemClickListener(DemandInfoFragment.this)
-                                .build().show();
-
-                        break;
-                    case DemandConstant.DEMAND_ASSURE_EVALUATED://待评价报障
-                        BottomTextListSheetBuilder builder3 = new BottomTextListSheetBuilder(getContext());
-                        builder3.addItem(R.string.demand_atisfaction)
-                                .addItem(R.string.demand_cancel)
-                                .setOnSheetItemClickListener(DemandInfoFragment.this)
-                                .build().show();
-                        break;
-                }
-            }
-        } else {
-            switch (mType) {
-//                case DemandConstant.DEMAND_REQUEST_UNCHECK://待审批需求
-//                    BottomTextListSheetBuilder builder2 = new BottomTextListSheetBuilder(getContext());
-//                    builder2.addItem(R.string.demand_approval_title)
-//                            .addItem(R.string.demand_cancel)
-//                            .setOnSheetItemClickListener(DemandInfoFragment.this)
-//                            .build().show();
-//                    break;
                 case DemandConstant.DEMAND_ASSURE_UNFINISH://待处理报障
                     BottomTextListSheetBuilder builder = new BottomTextListSheetBuilder(getContext());
                     builder.addItem("保存")
@@ -1051,6 +1097,17 @@ public class DemandInfoFragment extends BaseFragment<DemandInfoPresenter> implem
         bundle.putInt(LIST_TYPE, type);
         bundle.putLong(DEMAND_ID, reqId);
         bundle.putBoolean(DEMAND_FROM_MSG, fromMsg);
+        DemandInfoFragment instance = new DemandInfoFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+
+    public static DemandInfoFragment getInstance(Integer type, Long reqId, boolean fromMsg,boolean fromBkMsg) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(LIST_TYPE, type);
+        bundle.putLong(DEMAND_ID, reqId);
+        bundle.putBoolean(DEMAND_FROM_MSG, fromMsg);
+        bundle.putBoolean(RouteTable.FROM_BK_MSG,fromBkMsg);
         DemandInfoFragment instance = new DemandInfoFragment();
         instance.setArguments(bundle);
         return instance;

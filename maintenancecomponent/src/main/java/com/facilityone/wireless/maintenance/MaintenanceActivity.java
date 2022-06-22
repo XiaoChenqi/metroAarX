@@ -2,18 +2,27 @@ package com.facilityone.wireless.maintenance;
 
 import android.os.Bundle;
 
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.didi.drouter.annotation.Router;
+import com.facilityone.wireless.RouteTable;
 import com.facilityone.wireless.a.arch.base.FMFragment;
+import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
+import com.facilityone.wireless.componentservice.workorder.WorkorderService;
+import com.facilityone.wireless.maintenance.fragment.MaintenanceContentFragment;
 import com.facilityone.wireless.maintenance.fragment.MaintenanceFragment;
 import com.facilityone.wireless.maintenance.fragment.MaintenanceMenuFragment;
+import com.facilityone.wireless.maintenance.model.MaintenanceConstant;
 import com.luojilab.component.componentlib.router.ui.UIRouter;
 import com.luojilab.router.facade.annotation.RouteNode;
 
 @RouteNode(path = "/maintenanceHome", desc = "计划性维护")
+@Router(path = RouteTable.PPM)
 public class MaintenanceActivity extends BaseFragmentActivity implements EmptyFragment.OnGoFragmentListener {
 
     //再点一次退出程序时间设置
@@ -43,7 +52,27 @@ public class MaintenanceActivity extends BaseFragmentActivity implements EmptyFr
 
     @Override
     public void goFragment(Bundle bundle) {
-        mInstance.startWithPop(MaintenanceMenuFragment.getInstance(bundle));
+        boolean isFromBk = getIntent().getBooleanExtra(RouteTable.FROM_BK_MSG,false);
+        LogUtils.d("是否来自博坤消息",isFromBk);
+
+        if (isFromBk){
+            String type=getIntent().getExtras().getString("type");
+            switch (type){
+                case RouteTable.PPM_CONTENT:
+                    Bundle params = getIntent().getExtras();
+                    Long taskId = Long.parseLong(params.getString("taskId"));
+                    Long code = Long.parseLong(params.getString("todoId"));
+                    MaintenanceContentFragment instance=MaintenanceContentFragment.getInstance(true,taskId,code,true);
+                    mInstance.startWithPop(instance);
+                    break;
+                default:
+                    //默认进入菜单
+                    mInstance.startWithPop( MaintenanceMenuFragment.getInstance(bundle));
+                    break;
+            }
+        }else {
+            mInstance.startWithPop( MaintenanceMenuFragment.getInstance(bundle));
+        }
     }
 
     @Override

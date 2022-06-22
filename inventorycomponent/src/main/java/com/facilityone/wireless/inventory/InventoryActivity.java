@@ -3,15 +3,22 @@ package com.facilityone.wireless.inventory;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.didi.drouter.annotation.Router;
+import com.facilityone.wireless.RouteTable;
 import com.facilityone.wireless.a.arch.base.FMFragment;
 import com.facilityone.wireless.a.arch.mvp.BaseFragmentActivity;
 import com.facilityone.wireless.a.arch.utils.MetroUtils;
 import com.facilityone.wireless.componentservice.common.empty.EmptyFragment;
 import com.facilityone.wireless.componentservice.common.permissions.CommonConstant;
 import com.facilityone.wireless.inventory.fragment.InventoryFragment;
+import com.facilityone.wireless.inventory.fragment.InventoryQueryFragment;
+import com.facilityone.wireless.inventory.fragment.ReserveRecordInfoFragment;
+import com.facilityone.wireless.inventory.model.InventoryConstant;
 import com.luojilab.router.facade.annotation.RouteNode;
 
 @RouteNode(path = "/inventoryHome", desc = "库存")
+@Router(path = RouteTable.INVENTORY)
+
 public class InventoryActivity extends BaseFragmentActivity implements EmptyFragment.OnGoFragmentListener {
 
     //再点一次退出程序时间设置
@@ -40,7 +47,29 @@ public class InventoryActivity extends BaseFragmentActivity implements EmptyFrag
 
     @Override
     public void goFragment(Bundle bundle) {
-        mInstance.startWithPop(InventoryFragment.getInstance(bundle));
+        boolean isFromBk = getIntent().getBooleanExtra(RouteTable.FROM_BK_MSG,false);
+        if (isFromBk){
+            String type=getIntent().getExtras().getString("type");
+            switch (type){
+                case RouteTable.INVENTORY_DETAIL:
+                Bundle params = getIntent().getExtras();
+                long activityId = Long.parseLong(params.getString("taskId"));
+                ReserveRecordInfoFragment instance=ReserveRecordInfoFragment.getInstance(InventoryConstant.INVENTORY_MY,activityId,true,true);
+                mInstance.startWithPop(instance);
+                    break;
+                case RouteTable.INVENTORY_SEARCH:
+                InventoryQueryFragment instanceQuery=InventoryQueryFragment.getInstance(true);
+                mInstance.startWithPop(instanceQuery);
+                    break;
+                default:
+                mInstance.startWithPop(InventoryFragment.getInstance(bundle));
+
+                    break;
+            }
+        }else {
+            mInstance.startWithPop(InventoryFragment.getInstance(bundle));
+
+        }
     }
 
     @Override
