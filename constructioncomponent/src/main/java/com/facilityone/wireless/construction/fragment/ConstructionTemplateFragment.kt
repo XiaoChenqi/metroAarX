@@ -473,7 +473,7 @@ class ConstructionTemplateFragment : BaseFragment<CtPresenter?>(),
                     taskId,
                     taskContent.contentId,
                     2,
-                    SelectorModel(taskContent.content, 0, taskContent.selectValues)
+                    SelectorModel(taskContent.content, 0, taskContent.selectValues,taskContent.selects)
                 )
             }
             TaskContent.INPUT -> {

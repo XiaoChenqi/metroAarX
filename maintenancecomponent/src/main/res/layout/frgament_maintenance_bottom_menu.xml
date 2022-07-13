@@ -40,7 +40,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="完成"
+            android:text="取消"
             android:gravity="center"
             android:paddingTop="@dimen/dp_10"
             android:paddingBottom="@dimen/dp_10"

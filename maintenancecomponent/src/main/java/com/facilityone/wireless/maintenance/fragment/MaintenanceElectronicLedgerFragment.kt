@@ -461,7 +461,7 @@ class MaintenanceElectronicLedgerFragment : BaseFragment<MaintenanceELPresenter?
     private fun chooseItemType(taskId:Long,taskContent: TaskContent): MaintenanceEnity.ElectronicLedgerEntity?{
         return when(taskContent.type){
             TaskContent.CHOICE->{
-                MaintenanceEnity.ElectronicLedgerEntity(taskId,taskContent.contentId,2, SelectorModel(taskContent.content,0, taskContent.selectValues),taskContent.value)
+                MaintenanceEnity.ElectronicLedgerEntity(taskId,taskContent.contentId,2, SelectorModel(taskContent.content,0, taskContent.selectValues,taskContent.selects),taskContent.value)
             }
             TaskContent.INPUT->{
                 MaintenanceEnity.ElectronicLedgerEntity(taskId,taskContent.contentId,3,taskContent.content,taskContent.value)

@@ -376,7 +376,12 @@ public class WorkorderInfoPresenter extends BaseWorkOrderPresenter<WorkorderInfo
                         }
                     }
                     if (isDispatch) {
-                        getV().startForResult(WorkorderDispatchFragment.getInstance(woId, code, sendWorkContent, estimateStartTime, estimateEndTime),
+                        getV().startForResult(WorkorderDispatchFragment.getInstance(woId,
+                                code,
+                                sendWorkContent,
+                                estimateStartTime,
+                                estimateEndTime,
+                                WorkOrderUtils.checkType(isMaintenanceOrder)),
                                 WorkorderInfoFragment.DISPATCH_REQUEST_CODE);
                     } else {
                         FMWarnDialogBuilder warnDialogBuilder = new FMWarnDialogBuilder(context);

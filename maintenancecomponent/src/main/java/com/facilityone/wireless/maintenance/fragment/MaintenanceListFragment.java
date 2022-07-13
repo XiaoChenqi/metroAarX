@@ -179,7 +179,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
                         }
                         mAdapter.replaceData(mList);
                         mAdapter.notifyDataSetChanged();
-                        mTvChooseAll.setText("取消");
+                        mTvChooseAll.setText("取消全选");
                     } else {
                         for (MaintenanceEnity.MaintenanceListEnity data : mList) {
                             if (data.pmId.equals(localWoId)&& data.workTeamId.equals(workTeamId)) {
@@ -190,7 +190,7 @@ public class MaintenanceListFragment extends BaseFragment<MaintenanceListPresent
                         }
                         mAdapter.replaceData(mList);
                         mAdapter.notifyDataSetChanged();
-                        mTvChooseAll.setText("取消");
+                        mTvChooseAll.setText("取消全选");
                     }
                 } else {
                     for (MaintenanceEnity.MaintenanceListEnity data : mList) {

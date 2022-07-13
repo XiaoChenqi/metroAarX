@@ -3,6 +3,7 @@ package com.facilityone.wireless.workorder.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +23,7 @@ import com.facilityone.wireless.a.arch.ec.adapter.GridImageAdapter;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.offline.util.PatrolQrcodeUtils;
 import com.facilityone.wireless.a.arch.utils.PictureSelectorManager;
+import com.facilityone.wireless.a.arch.utils.ViewExt;
 import com.facilityone.wireless.a.arch.widget.BottomTextListSheetBuilder;
 import com.facilityone.wireless.a.arch.widget.CustomContentItemView;
 import com.facilityone.wireless.a.arch.widget.EditNumberView;
@@ -63,6 +65,9 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
     private EditText mEtMaintenanceResult; //输入结果
     private EditText mEquipmentNumber; //设备数量
     private LinearLayout mEqNumber; //设备数量布局
+    private LinearLayout mOptArea; //操作布局
+    private View mMask;//遮罩层
+    private NestedScrollView mStepScrollView;
 
     private EditNumberView mEtStepWarning;
     private TextView mTvStepWarning;
@@ -75,6 +80,8 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
     private static final String COUNT_ACCORD = "count_accord";
     private static final String ATTENTION = "attention";
     private static final String POSITION = "position";
+    //上一步和下一步是否可以操作
+    private static final String STEP_STATUS = "step_status";
     private static final int REFRESH = 1001;
 
     private static final int MAX_PHOTO = 8;
@@ -91,6 +98,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
     private Boolean needInput;//是否需要打开输入结果的输入
     private Boolean haveRemark = false;//备注是否是必填项
     private Boolean needCountAccord; //是否需要输入设备数量
+    private boolean[] mStepStatus;//上一步下一步操作状态
     private String attention; //注意事项
     private Integer localPosition; //当前界面数据在数组中的位置
     private List<WorkorderService.StepsBean> steps ; //所有的维护步骤
@@ -128,6 +136,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
                 localPosition--;
                 refreshBottomMenu();
                 getPresenter().getInfor(mWoId); //刷新数据
+                mStepScrollView.scrollTo(0,0);
             }
         });
 
@@ -135,8 +144,14 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         mTvNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                localPosition++;
-                judgeUpload();
+                if (mStepStatus[localPosition]){
+                    localPosition++;
+                    judgeUpload();
+                }else {
+                    localPosition++;
+                    getPresenter().getInfor(mWoId); //刷新数据
+                }
+                mStepScrollView.scrollTo(0,0);
             }
         });
     }
@@ -205,6 +220,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
             needCountAccord = arguments.getBoolean(COUNT_ACCORD,false); //是否需要上传设备数量
             attention = arguments.getString(ATTENTION); //注意事项
             localPosition = arguments.getInt(POSITION); //列表进来的位置
+            mStepStatus = arguments.getBooleanArray(STEP_STATUS);//上一步下一步操作状态
             if (mStepsBean == null){
                 return;
             }
@@ -235,6 +251,9 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         } else {
             setTitle(R.string.workorder_menu_step);
         }
+        mStepScrollView = findViewById(R.id.stepScrollview);
+        mOptArea = findViewById(R.id.ll_opt_area);
+        mMask = findViewById(R.id.view_mask);
         mEtWorkTeam = findViewById(R.id.et_work_team_step);
         mEtStep = findViewById(R.id.step_civ);
         mEtDesc = findViewById(R.id.desc_step_env);
@@ -345,7 +364,7 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         }
 
         if (!TextUtils.isEmpty(mStepsBean.step)){
-            if (mStepsBean.step.equals("电梯检验合格证")){
+            if (mStepsBean.step.contains("电梯检验合格证")){
                 mNormal.setText("有效");
                 mAbNormal.setText("无效");
             }else {
@@ -371,6 +390,15 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         initRecyclerView();
         if (steps != null){
             refreshBottomMenu();
+        }
+        if (mStepStatus[localPosition]) {
+            ViewExt.enableAll(mOptArea);
+            ViewExt.invisible(mMask);
+
+        } else {
+            ViewExt.visible(mMask);
+            ViewExt.disableAll(mOptArea,R.id.view_mask);
+            ToastUtils.showShort("此步骤需由其他委外单位完成，可直接跳过");
         }
     }
 
@@ -605,6 +633,26 @@ public class WorkorderStepUpdateFragment extends BaseFragment<WorkorderStepUpdat
         bundle.putBoolean(COUNT_ACCORD, countAccord);
         bundle.putString(ATTENTION,attention);
         bundle.putInt(POSITION,postion);
+        WorkorderStepUpdateFragment fragment = new WorkorderStepUpdateFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public static WorkorderStepUpdateFragment getInstance(
+            WorkorderService.StepsBean step,
+            Long woId,
+            boolean countAccord,
+            String attention,
+            Integer postion ,//选中的位置,
+            boolean[] stepStatus
+    ) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(WORKORDER_STEP, step);
+        bundle.putLong(WORKORDER_ID, woId);
+        bundle.putBoolean(COUNT_ACCORD, countAccord);
+        bundle.putString(ATTENTION,attention);
+        bundle.putInt(POSITION,postion);
+        bundle.putBooleanArray(STEP_STATUS,stepStatus);
         WorkorderStepUpdateFragment fragment = new WorkorderStepUpdateFragment();
         fragment.setArguments(bundle);
         return fragment;

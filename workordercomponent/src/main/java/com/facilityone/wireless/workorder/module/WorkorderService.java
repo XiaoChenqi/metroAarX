@@ -934,6 +934,11 @@ public class WorkorderService {
     }
 
 
-    
+
+    public static class WorkTeamEntity{
+        public Long wtId;   //工作组 ID
+        public String name; // 工作组名称
+    }
+
 
 }

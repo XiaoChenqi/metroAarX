@@ -11,6 +11,8 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facilityone.wireless.a.arch.mvp.BaseFragment;
 import com.facilityone.wireless.a.arch.widget.FMWarnDialogBuilder;
+import com.facilityone.wireless.basiclib.app.FM;
+import com.facilityone.wireless.basiclib.utils.GsonUtils;
 import com.facilityone.wireless.workorder.R;
 import com.facilityone.wireless.workorder.adapter.WorkorderStepAdapter;
 import com.facilityone.wireless.workorder.module.WorkorderConstant;
@@ -22,6 +24,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author：gary
@@ -49,6 +52,7 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
     private static final int REFRESH = 1001;
 
     private ArrayList<WorkorderService.StepsBean> mSteps;
+    private List<WorkorderService.WorkTeamEntity> mWorkTeams;
     private boolean mCanOpt;
     private long mWoId;
     private Long mWoTeamId;
@@ -59,6 +63,7 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
     private String eqCode; //设备编号
     private Long eqId; //设备编号Id
     private Boolean showDialog; //Shi否需要展示弹窗提示任务开启 -> 工单界面不需要弹
+    boolean[] mStepStatus;//当前用户与步骤中工作组可操作表
 
     @Override
 
@@ -85,6 +90,8 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
 
     private void initData() {
         Bundle arguments = getArguments();
+        mWorkTeams = new ArrayList<>();
+
         if (arguments != null) {
             mWoId = arguments.getLong(WORKORDER_ID, -1L);
             mWoTeamId = arguments.getLong(WORK_TEAM_ID, -1L);
@@ -96,11 +103,18 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
             eqId = arguments.getLong(EQID);
             showDialog = arguments.getBoolean(SHOWDIALOG);
         }
+        getPresenter().getWorkTeams(FM.getEmId());
         if (showDialog){
             getPresenter().isDoneDevice(mWoId,eqCode);
         }
 
     }
+    public void initWorkTeams(List<WorkorderService.WorkTeamEntity> workTeamEntityList){
+        mWorkTeams=workTeamEntityList;
+        mStepStatus = WorkOrderStepUtils.genStepStatusByWorkTeamId(mSteps,mWorkTeams);
+        System.out.println(GsonUtils.toJson(mStepStatus));
+    }
+
 
     public void initStepView(){
         getPresenter().getStepInfor(mWoId);
@@ -173,15 +187,13 @@ public class WorkorderStepFragment extends BaseFragment<WorkorderStepPresenter> 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         WorkorderService.StepsBean stepsBean = mSteps.get(position);
+        //获取当前是否在工作组中
+        boolean isInWorkTeam = mStepStatus[position];
         if (mCanOpt
                 && stepsBean != null
                 && stepsBean.workTeamId != null
-                && mWoTeamId.equals(stepsBean.workTeamId)) {
-//            if (stepsBean.finished != null && stepsBean.finished) {
-//                ToastUtils.showShort(R.string.workorder_steps_completed_notice_tip);
-//                return;
-//            }
-            startForResult(WorkorderStepUpdateFragment.getInstance(stepsBean, mWoId,countAccord,attention,position), UPDATE);
+                && isInWorkTeam) {
+            startForResult(WorkorderStepUpdateFragment.getInstance(stepsBean, mWoId,countAccord,attention,position,mStepStatus), UPDATE);
         }
     }
 

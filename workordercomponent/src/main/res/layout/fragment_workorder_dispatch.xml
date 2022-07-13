@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.qmuiteam.qmui.widget.QMUITopBarLayout
         android:id="@+id/ui_topbar"
@@ -43,9 +43,9 @@
                         app:fm_content_item_show_line="false"
                         app:fm_content_item_show_red="false"
                         app:fm_content_item_show_tip="true"
-                        app:fm_content_item_show_tip_icon="true"
+                        app:fm_content_item_show_tip_icon="false"
                         app:fm_content_item_title="@string/workorder_arrive_time"
-                        app:fm_content_item_et_hint="@string/workorder_select_start_date_hint"/>
+                        />
 
                     <com.facilityone.wireless.a.arch.widget.CustomContentItemView
                         android:id="@+id/civ_end_time"
@@ -55,9 +55,9 @@
                         app:fm_content_item_show_line="false"
                         app:fm_content_item_show_red="false"
                         app:fm_content_item_show_tip="true"
-                        app:fm_content_item_show_tip_icon="true"
+                        app:fm_content_item_show_tip_icon="false"
                         app:fm_content_item_title="@string/workorder_end_time"
-                        app:fm_content_item_et_hint="@string/workorder_select_end_date_hint"/>
+                        />
 
                     <com.facilityone.wireless.a.arch.widget.CustomContentItemView
                         android:id="@+id/civ_total_time"
@@ -69,7 +69,7 @@
                         app:fm_content_item_show_tip="false"
                         app:fm_content_item_show_tip_icon="false"
                         app:fm_content_item_title="@string/workorder_use_time"
-                        app:fm_content_item_et_hint="@string/workorder_placeholder_time"/>
+                        />
 
                     <LinearLayout
                         android:id="@+id/workorder_dispatch_laborer_ll"

@@ -359,6 +359,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             mCode = bundle.getString(WORKORDER_CODE, "");
             mWoId = bundle.getLong(WORKORDER_ID);
             isMaintenanceOrder = bundle.getBoolean(IS_MAINTENANCE, false);
+            LogUtils.d("当前是否是维护工单"+isMaintenanceOrder);
             isFinish = bundle.getBoolean(IS_FINISH, false);
             isPending = bundle.getInt(IS_PENDING, -1);
             fromMessage = bundle.getBoolean(FROME_MESSAGE, false);
@@ -2375,7 +2376,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
             @Override
             public void onLeftClick(QMUIBottomSheet dialog, SelectDataBean dataBean, Long time) {
-                if (time != null & dataBean != null) {
+                if (time != null && dataBean != null) {
                     if (time < System.currentTimeMillis()) {
                         ToastUtils.showShort("暂停结束时间必须晚于当前时间,请重新选择");
                     } else {
@@ -2396,7 +2397,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
 
             @Override
             public void onRightClick(QMUIBottomSheet dialog, SelectDataBean dataBean, Long time) {
-                if (time != null & dataBean != null) {
+                if (time != null && dataBean != null) {
                     if (time < System.currentTimeMillis()) {
                         ToastUtils.showShort("暂停结束时间必须晚于当前时间,请重新选择");
                     } else {

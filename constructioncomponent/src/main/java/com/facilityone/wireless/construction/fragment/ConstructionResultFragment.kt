@@ -132,7 +132,7 @@ class ConstructionResultFragment: BaseFragment<ConstructionResultPresenter?>(),
                     taskId,
                     taskContent.contentId,
                     6,
-                    SelectorModel(taskContent.content, 0, taskContent.selectValues)
+                    SelectorModel(taskContent.content, 0, taskContent.selectValues,taskContent.selects)
                 )
             }
             TaskContent.INPUT -> {
@@ -140,7 +140,7 @@ class ConstructionResultFragment: BaseFragment<ConstructionResultPresenter?>(),
                     taskId,
                     taskContent.contentId,
                     6,
-                    SelectorModel(taskContent.content, 0, taskContent.selectValues)
+                    SelectorModel(taskContent.content, 0, taskContent.selectValues,null)
                 )
             }
             else -> {

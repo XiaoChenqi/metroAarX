@@ -2,7 +2,6 @@ package com.facilityone.wireless.maintenance.model
 
 import android.os.Parcelable
 
-
 data class SelectorModel(
     var name:String?=null,
     var value:Int?=null,
@@ -10,14 +9,15 @@ data class SelectorModel(
     var sub: SelectorModel?,
     var pid:Long?=null,
     var tips:String?=null,
-    var selectValues: List<String>?
+    var selectValues: List<String>?,
+    var selects: List<SelectValueStatus>?
 
 ){
-    constructor(name: String?,value: Int?,pid:Long?=null):this(name,value,3,null,pid,null,null)
-    constructor(name: String, value: Int, sub: SelectorModel,pid: Long) : this(name,value,3,sub,pid,null,null)
+    constructor(name: String?,value: Int?,pid:Long?=null):this(name,value,3,null,pid,null,null,null)
+    constructor(name: String, value: Int, sub: SelectorModel,pid: Long) : this(name,value,3,sub,pid,null,null,null)
 
-    constructor(name: String?,value: Int?,pid:Long?=null,tip:String):this(name,value,3,null,pid,tip,null)
-    constructor(name: String?,value: Int?,selectValues: List<String>?):this(name,value,3,null,null,null,selectValues)
+    constructor(name: String?,value: Int?,pid:Long?=null,tip:String):this(name,value,3,null,pid,tip,null,null)
+    constructor(name: String?,value: Int?,selectValues: List<String>?,selects: List<SelectValueStatus>?):this(name,value,3,null,null,null,selectValues,selects)
 }
 
 
@@ -67,6 +67,15 @@ data class CheckContentModel(
 }
 
 
+/**
+ * @Created by: kuuga
+ * @Date: on 2022/07/11
+ * @Description:选择项正常异常状态
+ */
+data class SelectValueStatus(
+    var value:String?,
+    var correct:Boolean?
+)
 
 
 
@@ -102,7 +111,8 @@ data class TaskContent(
     var selectValues: List<String>?,
     var type: Int?,
     var unit: String?,
-    var value:String?
+    var value:String?,
+    var selects:List<SelectValueStatus>?
 ){
     companion object{
         const val CHOICE=0

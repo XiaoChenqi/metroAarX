@@ -13,6 +13,10 @@ import com.fm.tool.network.model.BaseResponse;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Author：gary
  * Email: xuhaozv@163.com
@@ -153,6 +157,35 @@ public class WorkorderStepPresenter extends BasePresenter<WorkorderStepFragment>
                         super.onError(response);
                         getV().dismissLoading();
                         ToastUtils.showShort(R.string.workorder_device_exist);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        getV().dismissLoading();
+                    }
+                });
+    }
+    public void getWorkTeams(long emId){
+        getV().showLoading();
+        Map<String,Long> request = new HashMap<>();
+        request.put("laborerId",emId);
+        OkGo.<BaseResponse<List<WorkorderService.WorkTeamEntity>>>post(FM.getApiHost() + WorkorderUrl.WORK_TEAMS)
+                .tag(getV())
+                .upJson(toJson(request))
+                .isSpliceUrl(true)
+                .execute(new FMJsonCallback<BaseResponse<List<WorkorderService.WorkTeamEntity>>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponse<List<WorkorderService.WorkTeamEntity>>> response) {
+                        getV().dismissLoading();
+                        if (response.body().data!=null){
+                            getV().initWorkTeams(response.body().data);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponse<List<WorkorderService.WorkTeamEntity>>> response) {
+                        super.onError(response);
+                        getV().dismissLoading();
                     }
 
                     @Override

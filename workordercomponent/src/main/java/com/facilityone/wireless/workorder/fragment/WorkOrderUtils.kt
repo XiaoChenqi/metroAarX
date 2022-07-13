@@ -33,3 +33,22 @@ fun List<WorkorderService.SampleTemplate>.getKey(obj: String): Long? {
 
 }
 
+/**
+ * @Author kuuga.wu
+ * @Date 2022/6/22
+ * @Desc 派工页面来源
+ */
+enum class WorkOrderDispatchSource( val typeName:String){
+    MAINTENNANCE("维护"),
+    WORKORDER_REPAIR("维修");
+}
+
+fun checkType(source: Boolean): WorkOrderDispatchSource {
+    return if (source) {
+        WorkOrderDispatchSource.MAINTENNANCE
+    } else {
+        WorkOrderDispatchSource.WORKORDER_REPAIR
+    }
+}
+
+

@@ -47,9 +47,9 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
-        if (isInEditMode()) {
-            return;
-        }
+//        if (isInEditMode()) {
+//            return;
+//        }
         setOrientation(VERTICAL);
         LayoutInflater.from(context).inflate(R.layout.custom_content_item, this, true);
         mTitleTv = (TextView) findViewById(R.id.tv_title);
@@ -180,6 +180,11 @@ public class CustomContentItemView extends LinearLayout implements View.OnClickL
 
     public void setHint(String hint){
         mInputEt.setHint(hint);
+    }
+
+    public void setEtAndTipHint(String hint){
+        mInputEt.setHint(hint);
+        mTipTv.setHint(hint);
     }
 
     public void showDashLine(boolean show) {

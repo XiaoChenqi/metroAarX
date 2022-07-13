@@ -56,6 +56,8 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
     private static final String WORKORDER_DISPATCH = "workorder_dispatch";
     private static final String WORKORDER_IDS = "workorder_ids";
     private static final String WORKORDER_TEAMID = "workorder_team_id";
+    private static final String WORKORDER_SOURCE = "workorder_source";//工单的来源类型
+
 
     private String mCode;
     private Long mWoId;
@@ -75,6 +77,8 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
     private ArrayList<Long> mOrderIds;
     private List<WorkorderOptService.Laborers> mLaborerIds;
     private Long workTeamId; //工作组Id
+    private int mWorkOrderSource;
+
 
     @Override
     public WorkorderDispatchPresenter createPresenter() {
@@ -110,6 +114,7 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
             isDispatch = bundle.getBoolean(WORKORDER_DISPATCH,false);
             dispatchIds = new ArrayList<>();
             dispatchIds = bundle.getStringArrayList(WORKORDER_IDS);
+            mWorkOrderSource = bundle.getInt(WORKORDER_SOURCE);
             if (dispatchIds != null){
                 mWoId = Long.parseLong(dispatchIds.get(0));
             }
@@ -124,15 +129,25 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
         mCivStartTime = findViewById(R.id.civ_start_time);
         mCivEndTime = findViewById(R.id.civ_end_time);
         mCivTotalTime = findViewById(R.id.civ_total_time);
+        mCivTotalTime.canInput(false);
+
         mRvLaborers = findViewById(R.id.recyclerView);
         mIvAddLaborers = findViewById(R.id.iv_add_menu);
         desc = findViewById(R.id.env_desc);
         mLaborersLl = findViewById(R.id.workorder_dispatch_laborer_ll);
 
         mIvAddLaborers.setOnClickListener(this);
-        mCivStartTime.setOnClickListener(this);
-        mCivEndTime.setOnClickListener(this);
 
+        //判断是否来自维护
+        if (mWorkOrderSource==WorkOrderDispatchSource.WORKORDER_REPAIR.ordinal()){
+            mCivStartTime.setOnClickListener(this);
+            mCivStartTime.showIcon(true);
+            mCivStartTime.setEtAndTipHint(getString(R.string.workorder_select_start_date_hint));
+            mCivEndTime.setOnClickListener(this);
+            mCivEndTime.showIcon(true);
+            mCivEndTime.setEtAndTipHint(getString(R.string.workorder_select_end_date_hint));
+
+        }
         mCivStartTime.setTipColor(R.color.grey_6);
         mCivEndTime.setTipColor(R.color.grey_6);
         mCivTotalTime.setInputColor(R.color.grey_6);
@@ -380,6 +395,26 @@ public class WorkorderDispatchFragment extends BaseFragment<WorkorderDispatchPre
         bundle.putString(WORKORDER_CONTENT, sendWorkContent);
         bundle.putBoolean(WORKORDER_DISPATCH,true);
         bundle.putLong(WORKORDER_TEAMID,workTeamId);
+        //批量派工只有维护工单存在
+        bundle.putInt(WORKORDER_SOURCE,WorkOrderDispatchSource.MAINTENNANCE.ordinal());
+        WorkorderDispatchFragment instance = new WorkorderDispatchFragment();
+        instance.setArguments(bundle);
+        return instance;
+    }
+
+    //增加来源枚举
+    public static WorkorderDispatchFragment getInstance(Long woId, String code, String sendWorkContent, Long estimateStartTime, Long estimateEndTime,WorkOrderDispatchSource dispatchSource) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(WorkorderInfoFragment.WORKORDER_ID, woId);
+        if (estimateStartTime != null){
+            bundle.putLong(WORKORDER_START, estimateStartTime);
+        }
+        if (estimateEndTime != null){
+            bundle.putLong(WORKORDER_END, estimateEndTime);
+        }
+        bundle.putString(WorkorderInfoFragment.WORKORDER_CODE, code);
+        bundle.putString(WORKORDER_CONTENT, sendWorkContent);
+        bundle.putInt(WORKORDER_SOURCE,dispatchSource.ordinal());
         WorkorderDispatchFragment instance = new WorkorderDispatchFragment();
         instance.setArguments(bundle);
         return instance;

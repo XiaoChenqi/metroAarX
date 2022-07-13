@@ -97,5 +97,7 @@ public interface WorkorderUrl {
     //根据工单ID获取抽检模板数据。
     String SAMPLE_TEMPLATE = "/m/v1/sample/sampleByWoId";
 
+    //获取自己的工作组
+    String WORK_TEAMS = "/m/v1/workteams/laborer";
 
 }

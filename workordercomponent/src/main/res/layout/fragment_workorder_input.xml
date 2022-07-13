@@ -30,4 +30,15 @@
 
     <View style="@style/secant_line_style"/>
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/sp_14"
+        android:textColor="@color/red_ff6666"
+        android:paddingHorizontal="@dimen/dp_20"
+        android:text="注：电梯专业请拍照上传纸质维保单据"/>
+
 </LinearLayout>

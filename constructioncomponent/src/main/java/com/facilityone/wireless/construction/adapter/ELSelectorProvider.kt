@@ -11,7 +11,7 @@ import com.facilityone.wireless.construction.databinding.ItemClSelectorBinding
 
 import com.facilityone.wireless.construction.module.ConstructionService
 import com.facilityone.wireless.construction.module.SelectorModel
-
+import com.facilityone.wireless.construction.module.SelectValueStatus
 
 class ELSelectorProvider : BaseItemProvider<ConstructionService.ElectronicLedgerEntity,BaseViewHolder>() {
 
@@ -69,8 +69,16 @@ class ELSelectorProvider : BaseItemProvider<ConstructionService.ElectronicLedger
                             binding.rgSelect.check(R.id.rbException)
                         }
                     }
+                    val result= selectorModel.selects?.isExceptionValue(item.value) == true
+                    if (result){
+                        binding.taskTitleTv.setTextColor(mContext.resources.getColor(R.color.h3_text_color))
+                    }else{
+                        binding.taskTitleTv.setTextColor(mContext.resources.getColor(R.color.red_ff6666))
+                    }
                 }else{
                     binding.rgSelect.clearCheck()
+                    binding.taskTitleTv.setTextColor(mContext.resources.getColor(R.color.h3_text_color))
+
                 }
 
 
@@ -93,6 +101,13 @@ class ELSelectorProvider : BaseItemProvider<ConstructionService.ElectronicLedger
                                     item.value= selectorModel.selectValues!![1]
                                 }
 
+                                binding.taskTitleTv.setTextColor(
+                                    if (selectorModel.selects?.isExceptionValue(item.value) == true)
+                                        mContext.resources.getColor(R.color.h3_text_color)
+                                    else
+                                        mContext.resources.getColor(R.color.red_ff6666)
+                                )
+
                                 tempAdapter.notifyItemChanged(helper.layoutPosition,
                                 ElectronicLedgerAdapter.ITEM_0_PAYLOAD)
                             }
@@ -105,7 +120,12 @@ class ELSelectorProvider : BaseItemProvider<ConstructionService.ElectronicLedger
                             binding.rgSelect.tag= selectorModel.selectValues!![1]
                             item.value= selectorModel.selectValues!![1]
                         }
-
+                        binding.taskTitleTv.setTextColor(
+                            if (selectorModel.selects?.isExceptionValue(item.value) == true)
+                                mContext.resources.getColor(R.color.h3_text_color)
+                            else
+                                mContext.resources.getColor(R.color.red_ff6666)
+                        )
                         tempAdapter.notifyItemChanged(helper.layoutPosition,
                             ElectronicLedgerAdapter.ITEM_0_PAYLOAD)
                     }
@@ -143,6 +163,17 @@ class ELSelectorProvider : BaseItemProvider<ConstructionService.ElectronicLedger
     fun <DB: ViewDataBinding>getBinding(view: View):DB?{
         return DataBindingUtil.bind(view)
     }
-
+    private fun List<SelectValueStatus>.isExceptionValue(status:String?): Boolean {
+        var result:Boolean=true
+        if (this.isNullOrEmpty()){
+            result = true
+        }
+        this.forEach {
+            if(it.value==status){
+                result = it.correct?:true
+            }
+        }
+        return result
+    }
 
 }
