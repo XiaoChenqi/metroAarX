@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.SPUtils;
@@ -47,11 +48,14 @@ public class WorkorderInputFragment extends BaseFragment<WorkorderInputPresenter
 
     private RecyclerView mPhotoRv;
     private EditNumberView mNumberView;
+    private TextView mTvTips;
+
 
     private static final int MAX_PHOTO = 8;
 
     private Long mWoId;
     private String mWoCode;
+    private Boolean isMaintenance;
     //图片
     private List<LocalMedia> mSelectList;
     private GridImageAdapter mGridImageAdapter;
@@ -85,6 +89,8 @@ public class WorkorderInputFragment extends BaseFragment<WorkorderInputPresenter
         if (bundle != null) {
             mWoId = bundle.getLong(WorkorderInfoFragment.WORKORDER_ID);
             mWoCode = bundle.getString(WorkorderInfoFragment.WORKORDER_CODE,"");
+            isMaintenance = bundle.getBoolean(WorkorderInfoFragment.IS_MAINTENANCE,false);
+
         }
     }
 
@@ -93,6 +99,7 @@ public class WorkorderInputFragment extends BaseFragment<WorkorderInputPresenter
         setRightTextButton(R.string.workorder_save,R.id.workorder_input_save_menu_id);
         mNumberView = findViewById(R.id.env_desc);
         mPhotoRv = findViewById(R.id.rv_photo);
+        mTvTips = findViewById(R.id.tvTips);
 
         mSelectList = new ArrayList<>();
         mGridImageAdapter = new GridImageAdapter(mSelectList, false, true, MAX_PHOTO);
@@ -104,6 +111,7 @@ public class WorkorderInputFragment extends BaseFragment<WorkorderInputPresenter
         mPhotoRv.setAdapter(mGridImageAdapter);
         mGridImageAdapter.setOnItemChildClickListener(this);
         mGridImageAdapter.setOnItemClickListener(this);
+        mTvTips.setVisibility(isMaintenance?View.VISIBLE:View.INVISIBLE);
 
     }
 
@@ -225,10 +233,12 @@ public class WorkorderInputFragment extends BaseFragment<WorkorderInputPresenter
         FileUtils.deleteAllInDir(FMFileUtils.getPicPath());
     }
 
-    public static WorkorderInputFragment getInstance(Long woId, String woCode) {
+    public static WorkorderInputFragment getInstance(Long woId, String woCode,Boolean isMaintenance) {
         Bundle bundle = new Bundle();
         bundle.putLong(WorkorderInfoFragment.WORKORDER_ID, woId);
         bundle.putString(WorkorderInfoFragment.WORKORDER_CODE, woCode);
+        bundle.putBoolean(WorkorderInfoFragment.IS_MAINTENANCE,isMaintenance);
+
         WorkorderInputFragment infoFragment = new WorkorderInputFragment();
         infoFragment.setArguments(bundle);
         return infoFragment;

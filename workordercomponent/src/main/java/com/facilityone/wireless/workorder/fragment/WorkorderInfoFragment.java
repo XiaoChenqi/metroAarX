@@ -1667,7 +1667,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
         }
         switch (dowhat) {
             case WorkorderConstant.PRINT:
-                startForResult(WorkorderInputFragment.getInstance(mWoId, mCode), INPUT_REQUEST_CODE);
+                startForResult(WorkorderInputFragment.getInstance(mWoId, mCode,isMaintenanceOrder), INPUT_REQUEST_CODE);
                 break;
             case WorkorderConstant.DEPATMENT:
                 WorkorderDataHolder.setDeviceData(mWorkOrderEquipments);
@@ -1744,14 +1744,14 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
             expand(!tag);
         } else if (id == R.id.ll_input) {//进入输入页面
             if (isPending != 1) {
-                startForResult(WorkorderInputFragment.getInstance(mWoId, mCode), INPUT_REQUEST_CODE);
+                startForResult(WorkorderInputFragment.getInstance(mWoId, mCode,isMaintenanceOrder), INPUT_REQUEST_CODE);
             } else {
                 if (hasAttendanceData) {
                     if (isAttendance) {
                         if (isMaintenanceOrder) {
                             WorkOrderCanDo(WorkorderConstant.PRINT);
                         } else {
-                            startForResult(WorkorderInputFragment.getInstance(mWoId, mCode), INPUT_REQUEST_CODE);
+                            startForResult(WorkorderInputFragment.getInstance(mWoId, mCode,isMaintenanceOrder), INPUT_REQUEST_CODE);
                         }
 
                     } else {
