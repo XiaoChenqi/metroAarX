@@ -2494,7 +2494,7 @@ public class WorkorderInfoFragment extends BaseFragment<WorkorderInfoPresenter> 
     public void checkRole(LocationBean bean) {
         String userInfo = SPUtils.getInstance(SPKey.SP_MODEL_USER).getString(SPKey.USER_INFO);
         UserService.UserInfoBean infoBean = GsonUtils.fromJson(userInfo, UserService.UserInfoBean.class);
-        if (infoBean.type == 1 && mRealStatus == WorkorderConstant.WORKORER_PROCESS) {
+        if (infoBean.type!=null&&infoBean.type==1 && mRealStatus == WorkorderConstant.WORKORER_PROCESS) {
             getPresenter().getLastAttendance(bean);
         } else {
             canOpt(true, true);
